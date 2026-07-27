@@ -1,0 +1,29 @@
+{
+  "name": "@ftc-dev-tools/mcp",
+  "version": "0.1.0",
+  "description": "stdio MCP server for FTC Dev Tools (Cursor / agent tools over shared)",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": {
+    "ftc-mcp": "./dist/bin.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "node --input-type=module -e \"import fs from 'node:fs'; fs.rmSync('dist',{recursive:true,force:true});\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node ./dist/bin.js"
+  },
+  "dependencies": {
+    "@ftc-dev-tools/shared": "0.1.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.25.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

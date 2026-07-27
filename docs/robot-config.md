@@ -50,7 +50,7 @@ ftc config pull --device SERIAL --name my_robot --yes
 - **FTC: Validate Robot Config**
 - **FTC: Pull Robot Configs** (modal confirm)
 
-## Next Studio-parity slice
+## Related
 
-- **6c** Hardware map inspect + codegen — see [hwmap.md](hwmap.md)
-- Then **Phase 7** MCP server
+- [Hardware map](hwmap.md) (Phase 6c)
+- [MCP server](mcp.md) (Phase 7)

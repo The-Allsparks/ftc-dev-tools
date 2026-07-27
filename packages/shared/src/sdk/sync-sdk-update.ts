@@ -316,16 +316,21 @@ export async function isGitWorkingTreeDirty(
   runner: ProcessRunner,
   projectRoot: string,
 ): Promise<boolean> {
-  const result = await runner.run({
-    command: "git",
-    args: ["status", "--porcelain"],
-    cwd: projectRoot,
-  });
-  if (result.exitCode !== 0) {
-    // Not a git repo or git missing — treat as clean for apply; backup still created.
+  try {
+    const result = await runner.run({
+      command: "git",
+      args: ["status", "--porcelain"],
+      cwd: projectRoot,
+    });
+    if (result.exitCode !== 0) {
+      // Not a git repo or git missing — treat as clean for apply; backup still created.
+      return false;
+    }
+    return result.stdout.trim().length > 0;
+  } catch {
+    // git binary missing / spawn failure — same as "not a repo"
     return false;
   }
-  return result.stdout.trim().length > 0;
 }
 
 async function createBackup(projectRoot: string, relativePaths: string[]): Promise<string> {

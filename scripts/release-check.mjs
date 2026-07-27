@@ -104,6 +104,24 @@ if (extPkg.displayName !== "FTC Dev Tools") {
   fail(`displayName must be "FTC Dev Tools" (found ${JSON.stringify(extPkg.displayName)})`);
 }
 
+const extReadmeRel = "packages/vscode-extension/README.md";
+if (!exists(extReadmeRel)) {
+  fail(`${extReadmeRel} is required so VSIX and Marketplace show extension details`);
+} else {
+  const extReadme = fs.readFileSync(path.join(root, extReadmeRel), "utf8");
+  if (!extReadme.includes("The Allsparks")) {
+    fail(`${extReadmeRel} should credit The Allsparks for VSIX sideload users`);
+  }
+  const vscodeignorePath = path.join(root, "packages/vscode-extension/.vscodeignore");
+  const vscodeignore = fs.readFileSync(vscodeignorePath, "utf8");
+  for (const line of vscodeignore.split("\n")) {
+    const trimmed = line.trim();
+    if (trimmed === "README.md" || trimmed === "**/README.md" || trimmed === "CHANGELOG.md") {
+      fail(`.vscodeignore must not exclude extension readme/changelog (${trimmed})`);
+    }
+  }
+}
+
 // Licenses
 for (const rel of ["LICENSE", "packages/vscode-extension/LICENSE", "NOTICE"]) {
   if (!exists(rel)) fail(`Missing ${rel}`);
@@ -201,6 +219,26 @@ if (!skipPackage) {
       : [];
     if (vsix.length === 0) {
       fail("VSIX missing after package:extension");
+    } else {
+      const vsixPath = path.join(extArtifacts, vsix[0]);
+      let listing = "";
+      try {
+        if (process.platform === "win32") {
+          const ps = [
+            "-NoProfile",
+            "-Command",
+            `$e=[IO.Compression.ZipFile]::OpenRead('${vsixPath.replace(/'/g, "''")}'); ($e.Entries | ForEach-Object FullName) -join [char]10; $e.Dispose()`,
+          ];
+          listing = execFileSync("powershell.exe", ps, { encoding: "utf8" });
+        } else {
+          listing = execFileSync("unzip", ["-l", vsixPath], { encoding: "utf8" });
+        }
+      } catch {
+        fail(`Unable to list VSIX contents for readme check: ${vsixPath}`);
+      }
+      if (!/readme\.md/i.test(listing)) {
+        fail(`VSIX must include readme.md (checked ${vsix[0]})`);
+      }
     }
   }
 }

@@ -46,17 +46,32 @@ export function parseHubWifiSettingsFromHtml(html: string, sourceUrl: string): H
     .replace(/\s+/g, " ");
 
   const ssid =
-    matchLabel(text, /(?:Network\s*Name|Wi-?Fi\s*Network|SSID|Access\s*Point\s*Name)\s*[:：]\s*(\S+)/i) ??
-    matchField(html, /name=["'](?:deviceName|wifiName|ssid|networkName)["'][^>]*value=["']([^"']+)["']/i) ??
-    matchField(html, /value=["']([^"']+)["'][^>]*name=["'](?:deviceName|wifiName|ssid|networkName)["']/i);
+    matchLabel(
+      text,
+      /(?:Network\s*Name|Wi-?Fi\s*Network|SSID|Access\s*Point\s*Name)\s*[:：]\s*(\S+)/i,
+    ) ??
+    matchField(
+      html,
+      /name=["'](?:deviceName|wifiName|ssid|networkName)["'][^>]*value=["']([^"']+)["']/i,
+    ) ??
+    matchField(
+      html,
+      /value=["']([^"']+)["'][^>]*name=["'](?:deviceName|wifiName|ssid|networkName)["']/i,
+    );
 
   const password =
     matchLabel(
       text,
       /(?:Password|Passphrase|RC\s*Password|Access\s*Point\s*Password)\s*[:：]\s*(\S+)/i,
     ) ??
-    matchField(html, /name=["'](?:password|wifiPassword|passphrase)["'][^>]*value=["']([^"']+)["']/i) ??
-    matchField(html, /value=["']([^"']+)["'][^>]*name=["'](?:password|wifiPassword|passphrase)["']/i);
+    matchField(
+      html,
+      /name=["'](?:password|wifiPassword|passphrase)["'][^>]*value=["']([^"']+)["']/i,
+    ) ??
+    matchField(
+      html,
+      /value=["']([^"']+)["'][^>]*name=["'](?:password|wifiPassword|passphrase)["']/i,
+    );
 
   const channel =
     matchLabel(text, /(?:Channel)\s*[:：]\s*([0-9A-Za-z._-]{1,16})/i) ??
@@ -97,10 +112,15 @@ function matchField(html: string, re: RegExp): string | undefined {
 }
 
 function cleanCaptured(value: string): string {
-  return value.replace(/\s+/g, " ").replace(/&nbsp;/g, " ").trim();
+  return value
+    .replace(/\s+/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .trim();
 }
 
-export function toPublicHubSettings(settings: HubWifiSettings): HubWifiManageGetResult["publicSettings"] {
+export function toPublicHubSettings(
+  settings: HubWifiSettings,
+): HubWifiManageGetResult["publicSettings"] {
   return {
     ssid: settings.ssid,
     band: settings.band,
@@ -238,7 +258,9 @@ export async function setHubWifiSettings(
       attemptedEndpoints: attempted,
       message: "Refusing to apply hub Wi-Fi settings without --yes (this disconnects clients).",
       error: interpretFromUnknown(
-        Object.assign(new Error("Manage set requires --yes"), { code: "WIFI_MANAGE_API_UNSUPPORTED" }),
+        Object.assign(new Error("Manage set requires --yes"), {
+          code: "WIFI_MANAGE_API_UNSUPPORTED",
+        }),
       ),
     };
   }
@@ -293,9 +315,7 @@ export async function setHubWifiSettings(
       error: interpretFromUnknown(
         Object.assign(new Error("Manage apply endpoints unsupported on this RC version"), {
           code: "WIFI_MANAGE_API_UNSUPPORTED",
-          technicalDetails: redactSecrets(`Tried: ${attempted.join(", ")}`, [
-            input.password ?? "",
-          ]),
+          technicalDetails: redactSecrets(`Tried: ${attempted.join(", ")}`, [input.password ?? ""]),
         }),
       ),
     };

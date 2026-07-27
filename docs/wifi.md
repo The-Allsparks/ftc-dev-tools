@@ -93,21 +93,21 @@ If this Robot Controller build does not accept the known console POST endpoints,
 
 ## Credentials
 
-| Store | What |
-| --- | --- |
-| `.ftc-dev.json` | **Never** passwords (schema rejects them) |
-| `wifi.json` preference | Robot NIC name, remembered **SSID only** |
-| `wifi-secrets.enc` | Machine-local AES-GCM encrypted passwords (hostname+user keyed) |
-| Env `FTC_WIFI_PASSWORD` | Preferred one-shot password source |
+| Store                   | What                                                            |
+| ----------------------- | --------------------------------------------------------------- |
+| `.ftc-dev.json`         | **Never** passwords (schema rejects them)                       |
+| `wifi.json` preference  | Robot NIC name, remembered **SSID only**                        |
+| `wifi-secrets.enc`      | Machine-local AES-GCM encrypted passwords (hostname+user keyed) |
+| Env `FTC_WIFI_PASSWORD` | Preferred one-shot password source                              |
 
 ## Defaults
 
-| Item | Value |
-| --- | --- |
-| Wireless adb | `192.168.43.1:5555` |
-| Robot Controller Console | `http://192.168.43.1:8080` |
-| Hub subnet route | `192.168.43.0/24` |
-| Preference file | `%APPDATA%/ftc-dev-tools/wifi.json` (Windows) or `~/.config/ftc-dev-tools/wifi.json` |
+| Item                     | Value                                                                                |
+| ------------------------ | ------------------------------------------------------------------------------------ |
+| Wireless adb             | `192.168.43.1:5555`                                                                  |
+| Robot Controller Console | `http://192.168.43.1:8080`                                                           |
+| Hub subnet route         | `192.168.43.0/24`                                                                    |
+| Preference file          | `%APPDATA%/ftc-dev-tools/wifi.json` (Windows) or `~/.config/ftc-dev-tools/wifi.json` |
 
 ## Extension
 
@@ -127,11 +127,11 @@ Optional checks (never fail overall readiness alone):
 
 ## Troubleshooting
 
-| Problem | Try |
-| --- | --- |
-| Join fails | Confirm SSID/password; correct robot NIC; elevated terminal on Windows |
-| Manage set unsupported | `ftc wifi open-console` and apply manually |
-| Console unreachable | Join hub SSID; `ftc wifi route ensure --yes` |
-| Internet drops | Dual NIC + `prefer-internet` / `prefer-robot` + route ensure |
-| Metric change denied | Elevated terminal; `--yes`; check `ftc wifi interfaces` |
-| Last adapter disable refused | Enable another NIC first, or pass `--force` |
+| Problem                      | Try                                                                    |
+| ---------------------------- | ---------------------------------------------------------------------- |
+| Join fails                   | Confirm SSID/password; correct robot NIC; elevated terminal on Windows |
+| Manage set unsupported       | `ftc wifi open-console` and apply manually                             |
+| Console unreachable          | Join hub SSID; `ftc wifi route ensure --yes`                           |
+| Internet drops               | Dual NIC + `prefer-internet` / `prefer-robot` + route ensure           |
+| Metric change denied         | Elevated terminal; `--yes`; check `ftc wifi interfaces`                |
+| Last adapter disable refused | Enable another NIC first, or pass `--force`                            |

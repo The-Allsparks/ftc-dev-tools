@@ -42,14 +42,14 @@ Safety (same conventions as `ftc opmode create`):
 
 ## Mapped XML types (common)
 
-| Config XML | Java type |
-| --- | --- |
-| `Motor` | `DcMotor` |
-| `Servo` | `Servo` |
-| `ContinuousRotationServo` | `CRServo` |
-| `LynxEmbeddedIMU` / `IMU` | `IMU` |
-| `DigitalDevice` | `DigitalChannel` |
-| `Webcam` | `WebcamName` |
+| Config XML                | Java type        |
+| ------------------------- | ---------------- |
+| `Motor`                   | `DcMotor`        |
+| `Servo`                   | `Servo`          |
+| `ContinuousRotationServo` | `CRServo`        |
+| `LynxEmbeddedIMU` / `IMU` | `IMU`            |
+| `DigitalDevice`           | `DigitalChannel` |
+| `Webcam`                  | `WebcamName`     |
 
 Unknown tags appear in `show` as unmapped and are skipped by codegen.
 

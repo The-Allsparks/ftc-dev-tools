@@ -486,7 +486,8 @@ async function updateSdkCommand(): Promise<void> {
     return;
   }
 
-  const toApply = dry.plan?.entries.filter((e) => e.action === "add" || e.action === "overwrite") ?? [];
+  const toApply =
+    dry.plan?.entries.filter((e) => e.action === "add" || e.action === "overwrite") ?? [];
   const summary = [
     dry.message,
     "",
@@ -590,7 +591,9 @@ async function wifiStatusCommand(): Promise<void> {
   output.clear();
   output.appendLine("FTC Wi-Fi Status");
   output.appendLine(report.message);
-  output.appendLine(`Console: ${report.console.url} (${report.console.reachable ? "reachable" : "unreachable"})`);
+  output.appendLine(
+    `Console: ${report.console.url} (${report.console.reachable ? "reachable" : "unreachable"})`,
+  );
   if (report.selectedInterface) {
     output.appendLine(`Robot NIC: ${report.selectedInterface.name}`);
   }

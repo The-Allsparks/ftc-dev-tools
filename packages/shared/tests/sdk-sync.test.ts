@@ -67,7 +67,10 @@ async function writeProject(root: string, robotCoreVersion: string): Promise<voi
 }
 
 async function writeUpstream(root: string, robotCoreVersion: string): Promise<void> {
-  await fs.writeFile(path.join(root, "settings.gradle"), "include ':FtcRobotController', ':TeamCode'\n");
+  await fs.writeFile(
+    path.join(root, "settings.gradle"),
+    "include ':FtcRobotController', ':TeamCode'\n",
+  );
   await fs.writeFile(path.join(root, "build.gradle"), "// new build\n");
   await fs.writeFile(path.join(root, "build.common.gradle"), "// new common\n");
   await fs.writeFile(
@@ -126,7 +129,10 @@ describe("planSdkUpdate / applySdkUpdate", () => {
     expect(result.appliedPaths).not.toContain("TeamCode");
     const deps = await fs.readFile(path.join(project, "build.dependencies.gradle"), "utf8");
     expect(deps).toContain("11.2.0");
-    const marker = await fs.readFile(path.join(project, "FtcRobotController", "marker.txt"), "utf8");
+    const marker = await fs.readFile(
+      path.join(project, "FtcRobotController", "marker.txt"),
+      "utf8",
+    );
     expect(marker).toBe("new-rc\n");
     const teamAfter = await fs.readFile(path.join(project, "TeamCode", "src", "MyOpMode.java"));
     expect(teamAfter.equals(teamBefore)).toBe(true);

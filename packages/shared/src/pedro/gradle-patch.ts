@@ -61,7 +61,7 @@ export function patchBuildDependenciesGradle(
     } else {
       next =
         `repositories {\n${mavenLine}\n}\n\n` +
-        ( /dependencies\s*\{/.test(next) ? next : `dependencies {\n${next.trimEnd()}\n}\n`);
+        (/dependencies\s*\{/.test(next) ? next : `dependencies {\n${next.trimEnd()}\n}\n`);
       changes.push("Add repositories {} block with byalazar maven URL");
     }
   }
@@ -96,7 +96,10 @@ export function patchBuildDependenciesGradle(
   return { text: next, changes };
 }
 
-export function patchCompileSdkInText(text: string, targetSdk: number): { text: string; changed: boolean } {
+export function patchCompileSdkInText(
+  text: string,
+  targetSdk: number,
+): { text: string; changed: boolean } {
   const re = /(compileSdk(?:Version)?\s*(?:=|:)?\s*)(\d+)/;
   if (!re.test(text)) {
     return { text, changed: false };

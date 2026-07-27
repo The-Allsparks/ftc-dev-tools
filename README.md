@@ -38,27 +38,27 @@ Physical REV Control Hub compatibility has **not** been claimed as validated in 
 
 ### Shipped preview
 
-| Capability | Notes |
-| --- | --- |
-| **FTC SDK auto-update** | `ftc sdk check` / `ftc sdk update` with dry-run, confirmation, dirty-tree guard, and backups |
-| **Wi-Fi configuration (Phase 1–3)** | Wireless adb, dual-NIC routing, OS join, hub manage, stay-online metrics/adapters |
-| **Control Hub OS helpers (Phase 4)** | Explicit status / check / download / guided apply (never automatic flash) |
-| **Pedro Pathing (Phase 5)** | `ftc pedro status` / `add` / `scaffold` for official FTC projects |
-| **OpModes (Phase 6a)** | `ftc opmode list` / `create` TeleOp & Autonomous templates |
-| **Robot config (Phase 6b)** | `ftc config list` / `show` / `validate` / `pull` for TeamCode `res/xml` |
-| **Hardware map (Phase 6c)** | `ftc hwmap show` / `codegen` — config XML → `hardwareMap.get` OpMode |
+| Capability                           | Notes                                                                                        |
+| ------------------------------------ | -------------------------------------------------------------------------------------------- |
+| **FTC SDK auto-update**              | `ftc sdk check` / `ftc sdk update` with dry-run, confirmation, dirty-tree guard, and backups |
+| **Wi-Fi configuration (Phase 1–3)**  | Wireless adb, dual-NIC routing, OS join, hub manage, stay-online metrics/adapters            |
+| **Control Hub OS helpers (Phase 4)** | Explicit status / check / download / guided apply (never automatic flash)                    |
+| **Pedro Pathing (Phase 5)**          | `ftc pedro status` / `add` / `scaffold` for official FTC projects                            |
+| **OpModes (Phase 6a)**               | `ftc opmode list` / `create` TeleOp & Autonomous templates                                   |
+| **Robot config (Phase 6b)**          | `ftc config list` / `show` / `validate` / `pull` for TeamCode `res/xml`                      |
+| **Hardware map (Phase 6c)**          | `ftc hwmap show` / `codegen` — config XML → `hardwareMap.get` OpMode                         |
 
 ### Planned (high priority — later phases)
 
-| Capability | Notes |
-| --- | --- |
+| Capability               | Notes                                                              |
+| ------------------------ | ------------------------------------------------------------------ |
 | **MCP server (Phase 7)** | Thin stdio MCP over shared for Cursor agents (after Studio parity) |
 
 ### Planned (strong interest)
 
-| Capability | Notes |
-| --- | --- |
-| **Telemetry dashboard** | Live / recorded telemetry view in the editor (beyond Logcat) |
+| Capability                       | Notes                                                                    |
+| -------------------------------- | ------------------------------------------------------------------------ |
+| **Telemetry dashboard**          | Live / recorded telemetry view in the editor (beyond Logcat)             |
 | **Android Studio parity extras** | OpMode create (6a), robot config (6b), hardware-map codegen (6c) shipped |
 
 ### Maybe later
@@ -110,11 +110,11 @@ examples/             Sample FTC-like layout (not a full SDK)
 
 Android Studio itself is **optional**. Install JDK + `adb`/SDK tools without it:
 
-| OS | Command |
-| --- | --- |
+| OS          | Command                                                              |
+| ----------- | -------------------------------------------------------------------- |
 | **Windows** | `scripts\install-deps-windows.cmd` or `npm run install-deps:windows` |
-| macOS | `bash scripts/install-deps-macos.sh` or `npm run install-deps:macos` |
-| Linux | `bash scripts/install-deps-linux.sh` or `npm run install-deps:linux` |
+| macOS       | `bash scripts/install-deps-macos.sh` or `npm run install-deps:macos` |
+| Linux       | `bash scripts/install-deps-linux.sh` or `npm run install-deps:linux` |
 
 Details: [docs/install-without-android-studio.md](docs/install-without-android-studio.md) and [scripts/README.md](scripts/README.md).
 

@@ -194,7 +194,10 @@ export async function applySdkUpdate(options: ApplySdkUpdateOptions): Promise<Sd
         };
       }
 
-      const backupDirectory = await createBackup(projectRoot, toApply.map((e) => e.relativePath));
+      const backupDirectory = await createBackup(
+        projectRoot,
+        toApply.map((e) => e.relativePath),
+      );
       const appliedPaths: string[] = [];
       for (const entry of toApply) {
         const from = path.join(sourceRoot, entry.relativePath);

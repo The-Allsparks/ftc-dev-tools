@@ -55,10 +55,7 @@ class FakeRunner implements ProcessRunner {
 async function writeOfficialProject(root: string): Promise<void> {
   await fs.writeFile(path.join(root, "settings.gradle"), "include ':TeamCode'\n");
   await fs.writeFile(path.join(root, "build.gradle"), "// root\n");
-  await fs.writeFile(
-    path.join(root, "build.common.gradle"),
-    "android {\n    compileSdk 30\n}\n",
-  );
+  await fs.writeFile(path.join(root, "build.common.gradle"), "android {\n    compileSdk 30\n}\n");
   await fs.writeFile(
     path.join(root, "build.dependencies.gradle"),
     `repositories {

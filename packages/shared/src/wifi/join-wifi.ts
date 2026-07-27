@@ -147,7 +147,11 @@ export async function joinRobotWifi(options: JoinWifiOptions): Promise<WifiJoinR
       ssid,
       interfaceName,
       message: `Failed to join Wi-Fi "${ssid}".`,
-      error: { ...friendly, technicalDetails: technical, code: friendly.code || "WIFI_JOIN_FAILED" },
+      error: {
+        ...friendly,
+        technicalDetails: technical,
+        code: friendly.code || "WIFI_JOIN_FAILED",
+      },
     };
   }
 }
@@ -168,7 +172,9 @@ async function joinWindows(
     });
     if (add.exitCode !== 0) {
       throw Object.assign(
-        new Error(redactSecrets(add.stderr || add.stdout || "netsh add profile failed", [password])),
+        new Error(
+          redactSecrets(add.stderr || add.stdout || "netsh add profile failed", [password]),
+        ),
         { code: "WIFI_JOIN_FAILED" },
       );
     }
@@ -179,7 +185,9 @@ async function joinWindows(
     const connect = await runner.run({ command: "netsh", args: connectArgs });
     if (connect.exitCode !== 0) {
       throw Object.assign(
-        new Error(redactSecrets(connect.stderr || connect.stdout || "netsh connect failed", [password])),
+        new Error(
+          redactSecrets(connect.stderr || connect.stdout || "netsh connect failed", [password]),
+        ),
         { code: "WIFI_JOIN_FAILED" },
       );
     }
@@ -220,7 +228,9 @@ async function joinLinux(
   const result = await runner.run({ command: "nmcli", args });
   if (result.exitCode !== 0) {
     throw Object.assign(
-      new Error(redactSecrets(result.stderr || result.stdout || "nmcli connect failed", [password])),
+      new Error(
+        redactSecrets(result.stderr || result.stdout || "nmcli connect failed", [password]),
+      ),
       { code: "WIFI_JOIN_FAILED" },
     );
   }

@@ -52,7 +52,10 @@ describe("wifi credentials", () => {
     tempDirs.push(dir);
     const secrets = path.join(dir, "wifi-secrets.enc");
     const pref = path.join(dir, "wifi.json");
-    await storeWifiPassword("FTC-TEST", "s3cret-pass", { secretsPath: secrets, preferencePath: pref });
+    await storeWifiPassword("FTC-TEST", "s3cret-pass", {
+      secretsPath: secrets,
+      preferencePath: pref,
+    });
     const loaded = await loadWifiPassword("FTC-TEST", { secretsPath: secrets });
     expect(loaded).toBe("s3cret-pass");
     const raw = await fs.readFile(secrets, "utf8");

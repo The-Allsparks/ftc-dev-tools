@@ -24,7 +24,10 @@ const MODULE_TAGS = new Set([
  * Map FTC robot-config XML tags → hardwareMap Java types.
  * Unknown tags still appear in `show` with category unknown.
  */
-const TAG_MAP: Record<string, Omit<XmlTypeMapping, "includedInCodegen"> & { includedInCodegen?: boolean }> = {
+const TAG_MAP: Record<
+  string,
+  Omit<XmlTypeMapping, "includedInCodegen"> & { includedInCodegen?: boolean }
+> = {
   motor: {
     javaType: "DcMotor",
     javaImport: "com.qualcomm.robotcore.hardware.DcMotor",

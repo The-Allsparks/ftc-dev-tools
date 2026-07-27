@@ -14,7 +14,9 @@ export function registerHubCommand(program: Command): void {
 
   hub
     .command("status")
-    .description("Show Control Hub identity, OS/RC versions when readable, and console reachability")
+    .description(
+      "Show Control Hub identity, OS/RC versions when readable, and console reachability",
+    )
     .option("--device <serial>", "Target device serial")
     .option("--url <url>", "Robot Controller Console base URL")
     .option("--json", "Emit stable machine-readable JSON")
@@ -47,7 +49,9 @@ export function registerHubCommand(program: Command): void {
             console.log(`OS:         ${report.device.osVersion ?? "(unknown)"}`);
             console.log(`RC app:     ${report.device.robotControllerVersion ?? "(unknown)"}`);
           }
-          console.log(`Console:    ${report.consoleUrl} (${report.consoleReachable ? "reachable" : "unreachable"})`);
+          console.log(
+            `Console:    ${report.consoleUrl} (${report.consoleReachable ? "reachable" : "unreachable"})`,
+          );
           for (const warning of report.warnings) {
             console.log(`Warning:    ${warning}`);
           }

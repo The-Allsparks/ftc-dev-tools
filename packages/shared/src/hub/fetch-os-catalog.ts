@@ -27,7 +27,9 @@ export async function fetchHubOsCatalog(
   });
   if (!response.ok) {
     throw Object.assign(
-      new Error(`Failed to fetch Control Hub OS catalog (${response.status} ${response.statusText})`),
+      new Error(
+        `Failed to fetch Control Hub OS catalog (${response.status} ${response.statusText})`,
+      ),
       { code: "HUB_UPDATE_NETWORK" },
     );
   }

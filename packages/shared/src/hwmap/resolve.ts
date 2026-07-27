@@ -9,10 +9,7 @@ import type { HardwareMapEntry } from "./types.js";
 /** True when --config looks like a path rather than a res/xml base name. */
 function isPathLikeConfigRef(name: string): boolean {
   return (
-    name.includes("/") ||
-    name.includes("\\") ||
-    name.includes("..") ||
-    /^[A-Za-z]:/.test(name)
+    name.includes("/") || name.includes("\\") || name.includes("..") || /^[A-Za-z]:/.test(name)
   );
 }
 

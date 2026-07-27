@@ -101,9 +101,9 @@ describe("hwmap show / codegen", () => {
 
     const shown = await showHardwareMap(root, "my_robot");
     expect(shown.success).toBe(true);
-    expect(shown.entries.some((e) => e.configName === "leftFront" && e.javaType === "DcMotor")).toBe(
-      true,
-    );
+    expect(
+      shown.entries.some((e) => e.configName === "leftFront" && e.javaType === "DcMotor"),
+    ).toBe(true);
     expect(shown.entries.some((e) => e.configName === "imu" && e.javaType === "IMU")).toBe(true);
     expect(shown.entries.filter((e) => e.includedInCodegen)).toHaveLength(5);
     expect(shown.entries.some((e) => e.category === "module")).toBe(true);
@@ -249,7 +249,7 @@ describe("hwmap show / codegen", () => {
   });
 
   it("escapes Unicode breakouts in generated Java strings", () => {
-    const payload = '\\u0022); System.exit(1); //';
+    const payload = "\\u0022); System.exit(1); //";
     const escaped = escapeJavaString(payload);
     // Backslash becomes \\u005c so \\u0022 cannot fire at Java translation time.
     expect(escaped.startsWith("\\u005cu0022")).toBe(true);

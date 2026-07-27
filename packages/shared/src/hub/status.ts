@@ -64,18 +64,19 @@ export async function getHubStatus(options: GetHubStatusOptions): Promise<HubSta
 
     if (selected && selected.state === "device") {
       const adb = await discoverAdb(options.runner);
-      const props = adb.found && adb.adbPath
-        ? await readProps(options.runner, adb.adbPath, selected.serial, [
-            "ro.product.model",
-            "ro.product.manufacturer",
-            "ro.build.display.id",
-            "ro.build.version.incremental",
-            "ro.build.version.release",
-            "ro.rev.os.version",
-            "ro.revos.version",
-            "persist.rev.os.version",
-          ])
-        : {};
+      const props =
+        adb.found && adb.adbPath
+          ? await readProps(options.runner, adb.adbPath, selected.serial, [
+              "ro.product.model",
+              "ro.product.manufacturer",
+              "ro.build.display.id",
+              "ro.build.version.incremental",
+              "ro.build.version.release",
+              "ro.rev.os.version",
+              "ro.revos.version",
+              "persist.rev.os.version",
+            ])
+          : {};
       const rcVersion =
         adb.found && adb.adbPath
           ? await readRobotControllerVersion(options.runner, adb.adbPath, selected.serial)
@@ -200,14 +201,7 @@ async function readRobotControllerVersion(
   const result = await runner.run(
     {
       command: adbPath,
-      args: [
-        "-s",
-        serial,
-        "shell",
-        "dumpsys",
-        "package",
-        "com.qualcomm.ftcrobotcontroller",
-      ],
+      args: ["-s", serial, "shell", "dumpsys", "package", "com.qualcomm.ftcrobotcontroller"],
     },
     { timeoutMs: 20_000 },
   );
@@ -235,6 +229,8 @@ function buildStatusMessage(
   if (device?.robotControllerVersion) {
     parts.push(`RC app ${device.robotControllerVersion}`);
   }
-  parts.push(consoleReachable ? `console reachable (${consoleUrl})` : `console unreachable (${consoleUrl})`);
+  parts.push(
+    consoleReachable ? `console reachable (${consoleUrl})` : `console unreachable (${consoleUrl})`,
+  );
   return parts.join(" · ");
 }

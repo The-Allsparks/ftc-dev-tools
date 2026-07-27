@@ -62,7 +62,7 @@ describe("opmode templates and parse", () => {
       name: "My Tele",
       group: "drive",
     });
-    expect(src).toContain("@TeleOp(name=\"My Tele\", group=\"drive\")");
+    expect(src).toContain('@TeleOp(name="My Tele", group="drive")');
     expect(src).toContain("extends LinearOpMode");
     expect(src).toContain("waitForStart()");
   });

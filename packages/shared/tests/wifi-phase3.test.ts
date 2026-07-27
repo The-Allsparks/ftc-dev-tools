@@ -34,7 +34,11 @@ class FakeRunner implements ProcessRunner {
 
   async run(spec: CommandSpec): Promise<CommandResult> {
     this.commands.push(spec);
-    if (spec.command === "netsh" && spec.args.includes("show") && spec.args.includes("interfaces")) {
+    if (
+      spec.command === "netsh" &&
+      spec.args.includes("show") &&
+      spec.args.includes("interfaces")
+    ) {
       return {
         exitCode: 0,
         signal: null,
@@ -139,7 +143,11 @@ Idx     Met         MTU          State                Name
     class SingleUpRunner extends FakeRunner {
       override async run(spec: CommandSpec): Promise<CommandResult> {
         this.commands.push(spec);
-        if (spec.command === "netsh" && spec.args.includes("show") && spec.args.includes("interfaces")) {
+        if (
+          spec.command === "netsh" &&
+          spec.args.includes("show") &&
+          spec.args.includes("interfaces")
+        ) {
           return {
             exitCode: 0,
             signal: null,
@@ -181,7 +189,11 @@ Idx     Met         MTU          State                Name
     class SingleUpRunner extends FakeRunner {
       override async run(spec: CommandSpec): Promise<CommandResult> {
         this.commands.push(spec);
-        if (spec.command === "netsh" && spec.args.includes("show") && spec.args.includes("interfaces")) {
+        if (
+          spec.command === "netsh" &&
+          spec.args.includes("show") &&
+          spec.args.includes("interfaces")
+        ) {
           return {
             exitCode: 0,
             signal: null,
@@ -212,9 +224,7 @@ Idx     Met         MTU          State                Name
     });
     expect(result.success).toBe(true);
     expect(
-      single.commands.some(
-        (c) => c.command === "netsh" && c.args.includes("admin=DISABLED"),
-      ),
+      single.commands.some((c) => c.command === "netsh" && c.args.includes("admin=DISABLED")),
     ).toBe(true);
   });
 

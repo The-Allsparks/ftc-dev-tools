@@ -16,7 +16,8 @@ const fixtureReleases = [
     tag_name: "v11.2",
     name: "v11.2",
     html_url: "https://github.com/FIRST-Tech-Challenge/FtcRobotController/releases/tag/v11.2",
-    zipball_url: "https://api.github.com/repos/FIRST-Tech-Challenge/FtcRobotController/zipball/v11.2",
+    zipball_url:
+      "https://api.github.com/repos/FIRST-Tech-Challenge/FtcRobotController/zipball/v11.2",
     published_at: "2026-07-07T00:00:00Z",
     draft: false,
     prerelease: false,
@@ -25,7 +26,8 @@ const fixtureReleases = [
     tag_name: "v11.1",
     name: "v11.1",
     html_url: "https://github.com/FIRST-Tech-Challenge/FtcRobotController/releases/tag/v11.1",
-    zipball_url: "https://api.github.com/repos/FIRST-Tech-Challenge/FtcRobotController/zipball/v11.1",
+    zipball_url:
+      "https://api.github.com/repos/FIRST-Tech-Challenge/FtcRobotController/zipball/v11.1",
     draft: false,
     prerelease: false,
   },

@@ -120,7 +120,14 @@ export async function codegenHardwareMapOpMode(
 
     const javaRoot = path.join(projectRoot, "TeamCode", "src", "main", "java");
     const relativePath = path
-      .join("TeamCode", "src", "main", "java", packageToRelativePath(packageName), `${className}.java`)
+      .join(
+        "TeamCode",
+        "src",
+        "main",
+        "java",
+        packageToRelativePath(packageName),
+        `${className}.java`,
+      )
       .replace(/\\/g, "/");
     const absolutePath = path.resolve(projectRoot, relativePath);
     const relToJava = path.relative(path.resolve(javaRoot), absolutePath);

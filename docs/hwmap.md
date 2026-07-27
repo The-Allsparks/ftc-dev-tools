@@ -62,7 +62,4 @@ Unknown tags appear in `show` as unmapped and are skipped by codegen.
 
 - [Robot configuration](robot-config.md) (Phase 6b)
 - [OpModes](opmodes.md) (Phase 6a)
-
-## Next
-
-- **Phase 7** MCP server over shared
+- [MCP server](mcp.md) (Phase 7)

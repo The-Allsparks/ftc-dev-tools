@@ -1,7 +1,7 @@
 {
   "name": "@ftc-dev-tools/shared",
   "version": "0.1.0",
-  "description": "Shared TypeScript services for FTC Dev Tools CLI and VS Code extension",
+  "description": "Shared TypeScript services for FTC Dev Tools CLI, VS Code extension, and MCP server",
   "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",

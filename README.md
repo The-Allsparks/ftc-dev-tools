@@ -26,6 +26,7 @@ Physical REV Control Hub compatibility has **not** been claimed as validated in 
 - `ftc opmode` — list / create TeleOp & Autonomous stubs; see [docs/opmodes.md](docs/opmodes.md)
 - `ftc config` — list / show / validate / pull robot config XML; see [docs/robot-config.md](docs/robot-config.md)
 - `ftc hwmap` — show hardware map / generate OpMode stubs from config; see [docs/hwmap.md](docs/hwmap.md)
+- `ftc-mcp` — stdio MCP server for Cursor agents; see [docs/mcp.md](docs/mcp.md)
 - Optional `.ftc-dev.json` configuration + JSON Schema
 - VS Code/Cursor extension commands, FTC view, status bar, and output channel
 - Cancellable robot log streaming in the extension (`FTC: Stop Robot Logs`)
@@ -47,19 +48,13 @@ Physical REV Control Hub compatibility has **not** been claimed as validated in 
 | **OpModes (Phase 6a)**               | `ftc opmode list` / `create` TeleOp & Autonomous templates                                   |
 | **Robot config (Phase 6b)**          | `ftc config list` / `show` / `validate` / `pull` for TeamCode `res/xml`                      |
 | **Hardware map (Phase 6c)**          | `ftc hwmap show` / `codegen` — config XML → `hardwareMap.get` OpMode                         |
-
-### Planned (high priority — later phases)
-
-| Capability               | Notes                                                              |
-| ------------------------ | ------------------------------------------------------------------ |
-| **MCP server (Phase 7)** | Thin stdio MCP over shared for Cursor agents (after Studio parity) |
+| **MCP server (Phase 7)**             | Thin stdio MCP (`ftc-mcp`) over shared for Cursor agents                                     |
 
 ### Planned (strong interest)
 
-| Capability                       | Notes                                                                    |
-| -------------------------------- | ------------------------------------------------------------------------ |
-| **Telemetry dashboard**          | Live / recorded telemetry view in the editor (beyond Logcat)             |
-| **Android Studio parity extras** | OpMode create (6a), robot config (6b), hardware-map codegen (6c) shipped |
+| Capability              | Notes                                                        |
+| ----------------------- | ------------------------------------------------------------ |
+| **Telemetry dashboard** | Live / recorded telemetry view in the editor (beyond Logcat) |
 
 ### Maybe later
 
@@ -94,6 +89,7 @@ Priorities may shift with community feedback.
 packages/
   shared/             Shared TypeScript services
   cli/                `ftc` command-line tool
+  mcp/                `ftc-mcp` stdio MCP server for agents
   vscode-extension/   VS Code / Cursor extension
 docs/                 Student, coach, and mentor docs
 examples/             Sample FTC-like layout (not a full SDK)
@@ -227,6 +223,7 @@ Official-style Android Studio projects with:
 - [OpModes](docs/opmodes.md)
 - [Robot configuration](docs/robot-config.md)
 - [Hardware map](docs/hwmap.md)
+- [MCP server](docs/mcp.md)
 - [Wi-Fi manage API notes](docs/wifi-manage-api.md)
 - [Configuration](docs/configuration.md)
 - [Architecture](docs/architecture.md)

@@ -8,13 +8,14 @@ Provide a shared TypeScript core that powers:
 
 1. A standalone CLI (`ftc`)
 2. A VS Code / Cursor extension
+3. A stdio MCP server (`ftc-mcp`) for Cursor agents
 
-Both surfaces must share project detection, Gradle Wrapper invocation, ADB device handling, log filtering, configuration validation, and student-friendly error interpretation. Neither surface reimplements those concerns independently.
+All surfaces must share project detection, Gradle Wrapper invocation, ADB device handling, log filtering, configuration validation, and student-friendly error interpretation. Neither surface reimplements those concerns independently.
 
 ## Design principles
 
 - **Wrap, do not replace**: Use the project's checked-in Gradle Wrapper and system `adb`. Do not reimplement Gradle or ADB.
-- **Shared core, thin UIs**: CLI and extension depend on `@ftc-dev-tools/shared`. The extension may shell out to the CLI for long-running streams when that simplifies cancellation UX, but business logic lives in shared.
+- **Shared core, thin UIs**: CLI, extension, and MCP depend on `@ftc-dev-tools/shared`. The extension may shell out to the CLI for long-running streams when that simplifies cancellation UX, but business logic lives in shared.
 - **Explicit device selection**: Never silently pick among multiple connected Android devices.
 - **Safety by default**: No firmware changes, no OS/Wi-Fi changes, no automatic uninstalls, no arbitrary command execution from config files.
 - **Deterministic errors**: Rule-based friendly error interpretation only. No AI classification in 0.1.0.
@@ -26,6 +27,7 @@ Both surfaces must share project detection, Gradle Wrapper invocation, ADB devic
 packages/
   shared/            # @ftc-dev-tools/shared — types, services, mocks
   cli/               # @ftc-dev-tools/cli — executable `ftc`
+  mcp/               # @ftc-dev-tools/mcp — stdio MCP (`ftc-mcp`)
   vscode-extension/  # ftc-dev-tools extension (thin UI)
 docs/                # Student/coach/mentor documentation
 examples/            # Minimal sample FTC-like layout for detection tests
@@ -47,7 +49,7 @@ Owns:
 - Errors: rule-based interpreter
 - Doctor: checklist aggregation
 
-Does **not** own CLI argument parsing or VS Code UI.
+Does **not** own CLI argument parsing, MCP protocol framing, or VS Code UI.
 
 ### `@ftc-dev-tools/cli`
 
@@ -59,6 +61,16 @@ Owns:
 - Signal handling (Ctrl+C) for log streams
 
 Delegates all substantive work to shared services.
+
+### `@ftc-dev-tools/mcp`
+
+Owns:
+
+- stdio MCP protocol framing (`@modelcontextprotocol/sdk`)
+- Tool registration and confirmation gates (`yes` / `dryRun`)
+- Cursor / agent-facing tool descriptions
+
+Delegates all substantive work to shared services. Does not replace the extension for interactive UX (tree, status bar, live Logcat).
 
 ### `vscode-extension`
 
@@ -150,8 +162,7 @@ Optional `.ftc-dev.json` validated against an in-repo JSON Schema. Unknown prope
 
 Post-scaffold priorities (subject to change):
 
-- **Shipped preview**: FTC SDK check/update; Wi-Fi Phase 1–3; Control Hub OS helpers (Phase 4); Pedro Pathing (Phase 5); OpMode create (Phase 6a); robot config XML (Phase 6b); hardware map (Phase 6c)
-- **High**: MCP server (Phase 7)
+- **Shipped preview**: FTC SDK check/update; Wi-Fi Phase 1–3; Control Hub OS helpers (Phase 4); Pedro Pathing (Phase 5); OpMode create (Phase 6a); robot config XML (Phase 6b); hardware map (Phase 6c); MCP server (Phase 7)
 - **Strong interest**: telemetry dashboard
 - **Maybe**: Road Runner (Pedro Pathing is the committed pathing focus), AI-assisted fixes, remote deploy beyond LAN
 - **Hard line unless redesigned**: automatic firmware flash / factory reset, silent device selection, auto-uninstall

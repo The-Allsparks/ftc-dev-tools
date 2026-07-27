@@ -1,5 +1,7 @@
 # Contributor Covenant Code of Conduct
 
+FTC Dev Tools is maintained by The Allsparks for our team and the wider FTC community. We expect participation to remain welcoming to students, coaches, mentors, educators, and contributors of differing experience levels.
+
 ## Our Pledge
 
 We as members, contributors, and leaders pledge to make participation in our

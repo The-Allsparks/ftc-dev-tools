@@ -41,4 +41,4 @@ Defaults:
 ## Next Studio-parity slices
 
 - **6b** Robot config XML helpers — see [robot-config.md](robot-config.md)
-- **6c** Hardware map inspect + codegen from config
+- **6c** Hardware map inspect + codegen — see [hwmap.md](hwmap.md)

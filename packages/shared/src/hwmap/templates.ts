@@ -1,4 +1,5 @@
 import type { OpModeKind, OpModeStyle } from "../opmode/types.js";
+import { isValidFtcDeviceName } from "../robot-config/defaults.js";
 import type { HardwareMapEntry } from "./types.js";
 
 export interface HwMapOpModeTemplateInput {
@@ -13,7 +14,13 @@ export interface HwMapOpModeTemplateInput {
 }
 
 export function renderHwMapOpModeSource(input: HwMapOpModeTemplateInput): string {
-  const codegenEntries = input.entries.filter((e) => e.includedInCodegen && e.javaType && e.javaImport);
+  const codegenEntries = input.entries.filter(
+    (e) =>
+      e.includedInCodegen &&
+      e.javaType &&
+      e.javaImport &&
+      isValidFtcDeviceName(e.configName),
+  );
   const imports = collectImports(input, codegenEntries);
   const annotation = buildAnnotation(input);
   const fields = codegenEntries
@@ -32,6 +39,8 @@ export function renderHwMapOpModeSource(input: HwMapOpModeTemplateInput): string
       ? inits
       : "        // No mapped devices from config — add hardwareMap.get(...) as needed.";
 
+  const configComment = sanitizeJavaComment(input.configName);
+
   if (input.style === "iterative") {
     return `package ${input.packageName};
 
@@ -42,7 +51,7 @@ public class ${input.className} extends OpMode {
 ${fieldBlock}
     @Override
     public void init() {
-        // Generated from robot config: ${input.configName}
+        // Generated from robot config: ${configComment}
 ${initBlock}
         telemetry.addData("Status", "Initialized");
     }
@@ -64,7 +73,7 @@ public class ${input.className} extends LinearOpMode {
 ${fieldBlock}
     @Override
     public void runOpMode() {
-        // Generated from robot config: ${input.configName}
+        // Generated from robot config: ${configComment}
 ${initBlock}
 
         telemetry.addData("Status", "Initialized");
@@ -108,6 +117,44 @@ function buildAnnotation(input: HwMapOpModeTemplateInput): string {
   return `@${type}(${parts.join(", ")})`;
 }
 
-function escapeJavaString(value: string): string {
-  return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+/**
+ * Escape for a Java "..." string literal in generated source.
+ * Backslashes become \\u005c so a following uXXXX cannot form a Unicode escape
+ * at the Java translation phase (CWE-94).
+ */
+export function escapeJavaString(value: string): string {
+  let out = "";
+  for (const ch of value) {
+    switch (ch) {
+      case "\\":
+        out += "\\u005c";
+        break;
+      case '"':
+        out += '\\"';
+        break;
+      case "\n":
+        out += "\\n";
+        break;
+      case "\r":
+        out += "\\r";
+        break;
+      case "\t":
+        out += "\\t";
+        break;
+      default: {
+        const code = ch.charCodeAt(0);
+        if (code < 0x20) {
+          out += `\\u${code.toString(16).padStart(4, "0")}`;
+        } else {
+          out += ch;
+        }
+      }
+    }
+  }
+  return out;
+}
+
+/** Keep // comments from being terminated or extended via Unicode escapes. */
+function sanitizeJavaComment(value: string): string {
+  return value.replace(/\\|[\u0000-\u001f]/g, "_");
 }

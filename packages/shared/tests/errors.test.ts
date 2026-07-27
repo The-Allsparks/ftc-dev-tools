@@ -65,6 +65,12 @@ describe("friendly error interpretation", () => {
       "CONFIG_ABORTED",
       "CONFIG_REMOTE_EMPTY",
       "CONFIG_PULL_FAILED",
+      "HWMAP_PROJECT_UNSUPPORTED",
+      "HWMAP_NO_CONFIG",
+      "HWMAP_CONFIG_AMBIGUOUS",
+      "HWMAP_EMPTY",
+      "HWMAP_ABORTED",
+      "HWMAP_DIRTY_TREE",
     ]) {
       expect(codes).toContain(required);
     }

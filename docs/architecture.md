@@ -150,8 +150,8 @@ Optional `.ftc-dev.json` validated against an in-repo JSON Schema. Unknown prope
 
 Post-scaffold priorities (subject to change):
 
-- **Shipped preview**: FTC SDK check/update; Wi-Fi Phase 1–3; Control Hub OS helpers (Phase 4); Pedro Pathing (Phase 5); OpMode create (Phase 6a); robot config XML (Phase 6b)
-- **High**: Studio parity 6c (hardware map), then MCP server (Phase 7)
+- **Shipped preview**: FTC SDK check/update; Wi-Fi Phase 1–3; Control Hub OS helpers (Phase 4); Pedro Pathing (Phase 5); OpMode create (Phase 6a); robot config XML (Phase 6b); hardware map (Phase 6c)
+- **High**: MCP server (Phase 7)
 - **Strong interest**: telemetry dashboard
 - **Maybe**: Road Runner (Pedro Pathing is the committed pathing focus), AI-assisted fixes, remote deploy beyond LAN
 - **Hard line unless redesigned**: automatic firmware flash / factory reset, silent device selection, auto-uninstall

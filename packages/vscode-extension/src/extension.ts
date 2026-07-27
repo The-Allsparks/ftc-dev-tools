@@ -35,6 +35,8 @@ import {
   pullRobotConfigs,
   showRobotConfig,
   validateRobotConfig,
+  showHardwareMap,
+  codegenHardwareMapOpMode,
   runDoctor,
   selectDeploymentDevice,
   setAdapterAdminState,
@@ -136,6 +138,8 @@ export function activate(context: vscode.ExtensionContext): void {
   register("ftc.configShow", configShowCommand);
   register("ftc.configValidate", configValidateCommand);
   register("ftc.configPull", configPullCommand);
+  register("ftc.hwmapShow", hwmapShowCommand);
+  register("ftc.hwmapCodegen", hwmapCodegenCommand);
   register("ftc.openTechnicalOutput", async () => {
     output.show(true);
   });
@@ -1393,6 +1397,145 @@ async function configPullCommand(): Promise<void> {
     return;
   }
   vscode.window.showInformationMessage(result.message);
+}
+
+async function hwmapShowCommand(): Promise<void> {
+  const root = getWorkspaceRoot();
+  if (!root) {
+    vscode.window.showWarningMessage("Open an FTC project folder first.");
+    return;
+  }
+  const configName = await pickHwMapConfigName(root);
+  if (configName === null) {
+    return;
+  }
+  const report = await showHardwareMap(root, configName);
+  output.clear();
+  output.appendLine("Hardware map");
+  output.appendLine(report.message);
+  if (report.configPath) {
+    output.appendLine(`Config: ${report.configPath}`);
+  }
+  for (const entry of report.entries) {
+    const type = entry.javaType ?? "(unmapped)";
+    const flag = entry.includedInCodegen ? "" : " [skip codegen]";
+    output.appendLine(`- ${entry.configName} → ${type} (${entry.xmlType})${flag}`);
+  }
+  output.show(true);
+  if (!report.success && report.error) {
+    await showFriendlyError(report.error);
+    return;
+  }
+  vscode.window.showInformationMessage(report.message);
+}
+
+/** Returns config name, or null if cancelled / unavailable. */
+async function pickHwMapConfigName(root: string): Promise<string | null> {
+  const listed = await listRobotConfigs(root);
+  if (listed.error) {
+    await showFriendlyError(listed.error);
+    return null;
+  }
+  if (listed.configs.length === 0) {
+    vscode.window.showWarningMessage(listed.message);
+    return null;
+  }
+  if (listed.configs.length === 1) {
+    return listed.configs[0]!.name;
+  }
+  const picked = await vscode.window.showQuickPick(
+    listed.configs.map((c) => ({
+      label: c.name,
+      description: `${c.deviceCount} named entries`,
+      detail: c.relativePath,
+    })),
+    { placeHolder: "Robot config for hardware map" },
+  );
+  return picked ? picked.label : null;
+}
+
+async function hwmapCodegenCommand(): Promise<void> {
+  const root = getWorkspaceRoot();
+  if (!root) {
+    vscode.window.showWarningMessage("Open an FTC project folder first.");
+    return;
+  }
+  const configName = await pickHwMapConfigName(root);
+  if (configName === null) {
+    return;
+  }
+  const typePick = await vscode.window.showQuickPick(
+    [
+      { label: "TeleOp", opModeKind: "teleop" as const },
+      { label: "Autonomous", opModeKind: "autonomous" as const },
+    ],
+    { placeHolder: "OpMode type" },
+  );
+  if (!typePick) {
+    return;
+  }
+  const className = await vscode.window.showInputBox({
+    prompt: "Java class name for generated OpMode",
+    placeHolder: "ConfigTeleOp",
+    ignoreFocusOut: true,
+    validateInput: (value) =>
+      /^[A-Za-z_][A-Za-z0-9_]*$/.test(value.trim()) ? undefined : "Invalid Java class name",
+  });
+  if (!className) {
+    return;
+  }
+
+  const runner = new NodeProcessRunner();
+  const dry = await codegenHardwareMapOpMode({
+    projectRoot: root,
+    runner,
+    configName,
+    className: className.trim(),
+    kind: typePick.opModeKind,
+    dryRun: true,
+  });
+  output.clear();
+  output.appendLine(dry.message);
+  if (dry.sourcePreview) {
+    output.appendLine("");
+    output.appendLine(dry.sourcePreview);
+  }
+  output.show(true);
+  if (!dry.success) {
+    if (dry.error) {
+      await showFriendlyError(dry.error);
+    }
+    return;
+  }
+
+  const confirm = await vscode.window.showWarningMessage(
+    `${dry.message}`,
+    { modal: true },
+    "Generate",
+    "Cancel",
+  );
+  if (confirm !== "Generate") {
+    return;
+  }
+
+  const result = await codegenHardwareMapOpMode({
+    projectRoot: root,
+    runner,
+    configName,
+    className: className.trim(),
+    kind: typePick.opModeKind,
+    yes: true,
+  });
+  output.appendLine(result.message);
+  if (!result.success && result.error) {
+    await showFriendlyError(result.error);
+    return;
+  }
+  vscode.window.showInformationMessage(result.message);
+  if (result.absolutePath) {
+    const doc = await vscode.workspace.openTextDocument(result.absolutePath);
+    await vscode.window.showTextDocument(doc);
+  }
 }
 
 async function refreshStatus(): Promise<void> {

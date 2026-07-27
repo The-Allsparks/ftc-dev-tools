@@ -52,5 +52,5 @@ ftc config pull --device SERIAL --name my_robot --yes
 
 ## Next Studio-parity slice
 
-- **6c** Hardware map inspect + codegen from config XML
+- **6c** Hardware map inspect + codegen — see [hwmap.md](hwmap.md)
 - Then **Phase 7** MCP server

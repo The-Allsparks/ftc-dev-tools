@@ -766,6 +766,72 @@ const RULES: ErrorRule[] = [
       "Retry `ftc config pull --device SERIAL --yes`.",
     ],
   },
+  {
+    code: "HWMAP_PROJECT_UNSUPPORTED",
+    test: ({ text, codeHint }) =>
+      codeHint === "HWMAP_PROJECT_UNSUPPORTED" || /TeamCode missing/i.test(text),
+    title: "Project not ready for hardware map",
+    summary: "Hardware map helpers require an official FTC project with TeamCode.",
+    suggestedActions: [
+      "Open an official FtcRobotController-based project root.",
+      "Run `ftc doctor` to verify project detection.",
+    ],
+  },
+  {
+    code: "HWMAP_NO_CONFIG",
+    test: ({ text, codeHint }) =>
+      codeHint === "HWMAP_NO_CONFIG" || /No robot config XML found/i.test(text),
+    title: "No robot config for hardware map",
+    summary: "No robot configuration XML is available under TeamCode/src/main/res/xml.",
+    suggestedActions: [
+      "Run `ftc config list` or `ftc config pull --yes`.",
+      "Then retry with `ftc hwmap show --config NAME`.",
+    ],
+  },
+  {
+    code: "HWMAP_CONFIG_AMBIGUOUS",
+    test: ({ text, codeHint }) =>
+      codeHint === "HWMAP_CONFIG_AMBIGUOUS" || /Multiple robot configs found/i.test(text),
+    title: "Multiple robot configs",
+    summary: "More than one robot config XML exists; choose one explicitly.",
+    suggestedActions: [
+      "Pass `--config NAME` (see `ftc config list`).",
+    ],
+  },
+  {
+    code: "HWMAP_EMPTY",
+    test: ({ text, codeHint }) =>
+      codeHint === "HWMAP_EMPTY" || /No codegen-ready hardware map devices/i.test(text),
+    title: "No codegen-ready devices",
+    summary: "The selected config has no mapped actuators/sensors for hardwareMap stubs.",
+    suggestedActions: [
+      "Confirm the XML contains Motor/Servo/IMU/etc. entries.",
+      "Run `ftc hwmap show --config NAME` to inspect mappings.",
+    ],
+  },
+  {
+    code: "HWMAP_ABORTED",
+    test: ({ text, codeHint }) =>
+      codeHint === "HWMAP_ABORTED" || /Hardware map codegen requires --yes/i.test(text),
+    title: "Hardware map codegen aborted",
+    summary: "The OpMode was not generated because confirmation was missing.",
+    suggestedActions: [
+      "Re-run with `--dry-run` to preview.",
+      "Re-run with `--yes` to write the OpMode.",
+    ],
+  },
+  {
+    code: "HWMAP_DIRTY_TREE",
+    test: ({ text, codeHint }) =>
+      codeHint === "HWMAP_DIRTY_TREE" ||
+      /Refusing hwmap codegen while the git working tree is dirty/i.test(text),
+    title: "Git working tree is dirty",
+    summary: "Refusing to generate an OpMode while there are uncommitted changes.",
+    suggestedActions: [
+      "Commit or stash your changes.",
+      "Or pass `--force` if you intentionally want to proceed.",
+    ],
+  },
 ];
 export function interpretError(input: string | ErrorContext): FriendlyError {
   const ctx: ErrorContext = typeof input === "string" ? { text: input } : input;

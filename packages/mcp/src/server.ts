@@ -58,10 +58,7 @@ const projectRootShape = {
 };
 
 const confirmShape = {
-  yes: z
-    .boolean()
-    .optional()
-    .describe("Must be true to apply changes (unless dryRun is true)"),
+  yes: z.boolean().optional().describe("Must be true to apply changes (unless dryRun is true)"),
   dryRun: z.boolean().optional().describe("Preview without writing or mutating devices"),
 };
 
@@ -90,7 +87,8 @@ export function createFtcMcpServer(): McpServer {
     "devices",
     {
       title: "List devices",
-      description: "List connected Android devices via adb (Control Hub labeling is probable only).",
+      description:
+        "List connected Android devices via adb (Control Hub labeling is probable only).",
       inputSchema: z.object(projectRootShape),
       annotations: { readOnlyHint: true, openWorldHint: false },
     },

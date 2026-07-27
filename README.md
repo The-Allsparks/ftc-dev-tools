@@ -52,9 +52,9 @@ Physical REV Control Hub compatibility has **not** been claimed as validated in 
 
 ### Planned (strong interest)
 
-| Capability                  | Notes                                                        |
-| --------------------------- | ------------------------------------------------------------ |
-| **Telemetry dashboard**     | Live / recorded telemetry view in the editor (beyond Logcat) |
+| Capability              | Notes                                                        |
+| ----------------------- | ------------------------------------------------------------ |
+| **Telemetry dashboard** | Live / recorded telemetry view in the editor (beyond Logcat) |
 
 ### Maybe later
 

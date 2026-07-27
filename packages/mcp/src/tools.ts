@@ -55,10 +55,7 @@ export async function toolDevices(args: ProjectRootArgs): Promise<CallToolResult
     const devices = await provider.listDevices();
     return jsonResult({ projectRoot: ctx.projectRoot, devices });
   } catch (error) {
-    return jsonResult(
-      { projectRoot: ctx.projectRoot, error: interpretFromUnknown(error) },
-      true,
-    );
+    return jsonResult({ projectRoot: ctx.projectRoot, error: interpretFromUnknown(error) }, true);
   }
 }
 

@@ -105,7 +105,9 @@ export function registerConfigCommand(program: Command): void {
 
   config
     .command("pull")
-    .description("Pull robot config XML from /sdcard/FIRST on a connected device into TeamCode res/xml")
+    .description(
+      "Pull robot config XML from /sdcard/FIRST on a connected device into TeamCode res/xml",
+    )
     .option("--device <serial>", "Target device serial")
     .option("--name <file>", "Pull a single remote XML file name")
     .option("--dry-run", "List remote files without copying")
@@ -171,7 +173,9 @@ export function registerConfigCommand(program: Command): void {
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(result.message);
-          for (const file of result.pulledFiles.length > 0 ? result.pulledFiles : result.plannedFiles) {
+          for (const file of result.pulledFiles.length > 0
+            ? result.pulledFiles
+            : result.plannedFiles) {
             console.log(`  - ${file}`);
           }
           if (result.error) {

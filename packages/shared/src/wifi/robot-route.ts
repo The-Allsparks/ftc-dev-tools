@@ -128,9 +128,7 @@ export async function removeRobotRoute(options: RemoveRobotRouteOptions): Promis
     network,
     mask,
     commandDisplay:
-      platform === "win32"
-        ? `route delete ${network}`
-        : `ip route del ${destinationCidr}`,
+      platform === "win32" ? `route delete ${network}` : `ip route del ${destinationCidr}`,
   };
 
   if (!options.yes) {
@@ -175,7 +173,15 @@ async function applyRouteAdd(
   if (platform === "win32") {
     const args =
       plan.interfaceIndex !== undefined
-        ? ["add", plan.network, "mask", plan.mask, DEFAULT_CONTROL_HUB_HOST, "IF", String(plan.interfaceIndex)]
+        ? [
+            "add",
+            plan.network,
+            "mask",
+            plan.mask,
+            DEFAULT_CONTROL_HUB_HOST,
+            "IF",
+            String(plan.interfaceIndex),
+          ]
         : ["add", plan.network, "mask", plan.mask, DEFAULT_CONTROL_HUB_HOST];
     const result = await runner.run({ command: "route", args });
     if (/already exists|The route addition failed/i.test(`${result.stdout}\n${result.stderr}`)) {
@@ -238,7 +244,10 @@ function mapRouteResult(
       ? "Adding the robot route requires an elevated shell (Run as Administrator)."
       : "Failed to modify robot subnet route.",
     error: interpretFromUnknown(
-      Object.assign(new Error(combined || "route command failed"), { code, technicalDetails: combined }),
+      Object.assign(new Error(combined || "route command failed"), {
+        code,
+        technicalDetails: combined,
+      }),
     ),
   };
 }

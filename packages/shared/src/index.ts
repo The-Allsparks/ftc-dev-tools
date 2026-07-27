@@ -164,11 +164,7 @@ export {
   isRobotRoutePresent,
 } from "./wifi/robot-route.js";
 export type { EnsureRobotRouteOptions, RemoveRobotRouteOptions } from "./wifi/robot-route.js";
-export {
-  connectWifiAdb,
-  disconnectWifiAdb,
-  enableTcpip,
-} from "./wifi/wireless-adb.js";
+export { connectWifiAdb, disconnectWifiAdb, enableTcpip } from "./wifi/wireless-adb.js";
 export type {
   ConnectWifiAdbOptions,
   DisconnectWifiAdbOptions,

@@ -8,7 +8,11 @@ const ALLOWED_DOWNLOAD_HOST_SUFFIXES = [
   "revrobotics.com",
 ] as const;
 
-const ALLOWED_METADATA_HOST_SUFFIXES = ["docs.revrobotics.com", "api.github.com", "github.com"] as const;
+const ALLOWED_METADATA_HOST_SUFFIXES = [
+  "docs.revrobotics.com",
+  "api.github.com",
+  "github.com",
+] as const;
 
 export function isAllowedHost(hostname: string, allowlist: readonly string[]): boolean {
   const host = hostname.toLowerCase();

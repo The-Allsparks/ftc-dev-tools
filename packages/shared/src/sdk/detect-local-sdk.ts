@@ -75,7 +75,9 @@ async function readManifestVersion(
   }
 }
 
-export function parseFtcMavenArtifacts(gradleText: string): Array<{ name: string; version: string }> {
+export function parseFtcMavenArtifacts(
+  gradleText: string,
+): Array<{ name: string; version: string }> {
   const artifacts: Array<{ name: string; version: string }> = [];
   for (const match of gradleText.matchAll(ARTIFACT_RE)) {
     const name = match[1];

@@ -29,7 +29,9 @@ export async function resolvePedroFtcVersion(options: {
     );
   }
   const xml = await response.text();
-  const versions = [...xml.matchAll(/<version>([^<]+)<\/version>/g)].map((m) => m[1]!).filter(Boolean);
+  const versions = [...xml.matchAll(/<version>([^<]+)<\/version>/g)]
+    .map((m) => m[1]!)
+    .filter(Boolean);
   const stable = versions.filter((v) => !/[a-zA-Z]/.test(v));
   const pool = stable.length > 0 ? stable : versions;
   if (pool.length === 0) {

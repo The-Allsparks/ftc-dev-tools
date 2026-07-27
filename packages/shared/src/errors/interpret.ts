@@ -363,7 +363,8 @@ const RULES: ErrorRule[] = [
   },
   {
     code: "WIFI_TCPIP_FAILED",
-    test: ({ text, codeHint }) => codeHint === "WIFI_TCPIP_FAILED" || /adb tcpip failed/i.test(text),
+    test: ({ text, codeHint }) =>
+      codeHint === "WIFI_TCPIP_FAILED" || /adb tcpip failed/i.test(text),
     title: "adb tcpip failed",
     summary: "Could not switch a USB-connected device to wireless adb mode.",
     suggestedActions: [
@@ -605,7 +606,8 @@ const RULES: ErrorRule[] = [
       codeHint === "PEDRO_PROJECT_UNSUPPORTED" ||
       /build.dependencies.gradle missing|TeamCode missing|Not an official FTC/i.test(text),
     title: "Project not ready for Pedro Pathing",
-    summary: "Pedro helpers require an official FTC project with TeamCode and build.dependencies.gradle.",
+    summary:
+      "Pedro helpers require an official FTC project with TeamCode and build.dependencies.gradle.",
     suggestedActions: [
       "Open an official FtcRobotController-based project.",
       "Run `ftc doctor` to verify project detection.",
@@ -618,15 +620,13 @@ const RULES: ErrorRule[] = [
       /Pedro add requires --yes|Pedro scaffold requires --yes/i.test(text),
     title: "Pedro Pathing change aborted",
     summary: "The Pedro Pathing change was not confirmed.",
-    suggestedActions: [
-      "Re-run with `--dry-run` to preview.",
-      "Re-run with `--yes` to apply.",
-    ],
+    suggestedActions: ["Re-run with `--dry-run` to preview.", "Re-run with `--yes` to apply."],
   },
   {
     code: "PEDRO_DIRTY_TREE",
     test: ({ text, codeHint }) =>
-      codeHint === "PEDRO_DIRTY_TREE" || /Refusing Pedro changes while the git working tree is dirty/i.test(text),
+      codeHint === "PEDRO_DIRTY_TREE" ||
+      /Refusing Pedro changes while the git working tree is dirty/i.test(text),
     title: "Git working tree is dirty",
     summary: "Refusing to modify the project while there are uncommitted changes.",
     suggestedActions: [
@@ -739,15 +739,13 @@ const RULES: ErrorRule[] = [
       codeHint === "CONFIG_ABORTED" || /Config pull requires --yes/i.test(text),
     title: "Robot config action aborted",
     summary: "The robot config change was not confirmed.",
-    suggestedActions: [
-      "Re-run with `--dry-run` to preview.",
-      "Re-run with `--yes` to apply.",
-    ],
+    suggestedActions: ["Re-run with `--dry-run` to preview.", "Re-run with `--yes` to apply."],
   },
   {
     code: "CONFIG_REMOTE_EMPTY",
     test: ({ text, codeHint }) =>
-      codeHint === "CONFIG_REMOTE_EMPTY" || /No remote robot configs|No config XML found under/i.test(text),
+      codeHint === "CONFIG_REMOTE_EMPTY" ||
+      /No remote robot configs|No config XML found under/i.test(text),
     title: "No remote robot configs",
     summary: "The connected device has no XML configs under /sdcard/FIRST.",
     suggestedActions: [
@@ -758,7 +756,8 @@ const RULES: ErrorRule[] = [
   {
     code: "CONFIG_PULL_FAILED",
     test: ({ text, codeHint }) =>
-      codeHint === "CONFIG_PULL_FAILED" || /adb pull failed|Failed to list remote FIRST/i.test(text),
+      codeHint === "CONFIG_PULL_FAILED" ||
+      /adb pull failed|Failed to list remote FIRST/i.test(text),
     title: "Robot config pull failed",
     summary: "adb could not list or pull configuration XML from the device.",
     suggestedActions: [
@@ -794,9 +793,7 @@ const RULES: ErrorRule[] = [
       codeHint === "HWMAP_CONFIG_AMBIGUOUS" || /Multiple robot configs found/i.test(text),
     title: "Multiple robot configs",
     summary: "More than one robot config XML exists; choose one explicitly.",
-    suggestedActions: [
-      "Pass `--config NAME` (see `ftc config list`).",
-    ],
+    suggestedActions: ["Pass `--config NAME` (see `ftc config list`)."],
   },
   {
     code: "HWMAP_EMPTY",

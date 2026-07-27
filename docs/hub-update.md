@@ -4,12 +4,12 @@ FTC Dev Tools Phase 4 provides **explicit** Control Hub Operating System helpers
 
 ## What we automate
 
-| Step | Command | Behavior |
-| --- | --- | --- |
-| Status | `ftc hub status` | Device serial/connection, OS/RC versions when readable (adb + RC Console), console reachability |
-| Check | `ftc hub update check` | Compare local OS to the published REV changelog catalog |
-| Download | `ftc hub update download --yes` | Download allowlisted OS zip into a machine-local cache |
-| Apply | `ftc hub update apply --yes` | Guided Manage-page flow by default (opens console + prints zip path) |
+| Step     | Command                         | Behavior                                                                                        |
+| -------- | ------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Status   | `ftc hub status`                | Device serial/connection, OS/RC versions when readable (adb + RC Console), console reachability |
+| Check    | `ftc hub update check`          | Compare local OS to the published REV changelog catalog                                         |
+| Download | `ftc hub update download --yes` | Download allowlisted OS zip into a machine-local cache                                          |
+| Apply    | `ftc hub update apply --yes`    | Guided Manage-page flow by default (opens console + prints zip path)                            |
 
 ## Commands
 
@@ -54,10 +54,10 @@ ftc hub update apply --yes
 
 ## Cache location
 
-| Platform | Path |
-| --- | --- |
-| Windows | `%APPDATA%/ftc-dev-tools/hub-updates/` |
-| macOS/Linux | `~/.cache/ftc-dev-tools/hub-updates/` |
+| Platform    | Path                                   |
+| ----------- | -------------------------------------- |
+| Windows     | `%APPDATA%/ftc-dev-tools/hub-updates/` |
+| macOS/Linux | `~/.cache/ftc-dev-tools/hub-updates/`  |
 
 ## Hard lines
 

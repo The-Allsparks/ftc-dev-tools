@@ -15,17 +15,11 @@ export interface HwMapOpModeTemplateInput {
 
 export function renderHwMapOpModeSource(input: HwMapOpModeTemplateInput): string {
   const codegenEntries = input.entries.filter(
-    (e) =>
-      e.includedInCodegen &&
-      e.javaType &&
-      e.javaImport &&
-      isValidFtcDeviceName(e.configName),
+    (e) => e.includedInCodegen && e.javaType && e.javaImport && isValidFtcDeviceName(e.configName),
   );
   const imports = collectImports(input, codegenEntries);
   const annotation = buildAnnotation(input);
-  const fields = codegenEntries
-    .map((e) => `    private ${e.javaType} ${e.fieldName};`)
-    .join("\n");
+  const fields = codegenEntries.map((e) => `    private ${e.javaType} ${e.fieldName};`).join("\n");
   const inits = codegenEntries
     .map(
       (e) =>

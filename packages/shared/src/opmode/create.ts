@@ -61,7 +61,14 @@ export async function createOpMode(options: CreateOpModeOptions): Promise<Create
     }
 
     const relativePath = path
-      .join("TeamCode", "src", "main", "java", packageToRelativePath(packageName), `${className}.java`)
+      .join(
+        "TeamCode",
+        "src",
+        "main",
+        "java",
+        packageToRelativePath(packageName),
+        `${className}.java`,
+      )
       .replace(/\\/g, "/");
     const absolutePath = path.join(projectRoot, relativePath);
 

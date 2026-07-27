@@ -63,7 +63,13 @@ export async function addPedroPathing(options: AddPedroOptions): Promise<PedroAd
       fullpanelsVersion: PEDRO_FULLPANELS_VERSION,
     });
     for (const change of patched.changes) {
-      plan.push({ kind: change.startsWith("Add byalazar") || change.includes("repositories") ? "repo" : "dependency", description: change });
+      plan.push({
+        kind:
+          change.startsWith("Add byalazar") || change.includes("repositories")
+            ? "repo"
+            : "dependency",
+        description: change,
+      });
     }
 
     const compileSdkTargets: string[] = [];
@@ -154,7 +160,12 @@ export async function addPedroPathing(options: AddPedroOptions): Promise<PedroAd
     }
 
     const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const backupDirectory = path.join(projectRoot, ".ftc-dev-tools", "backups", `pedro-add-${stamp}`);
+    const backupDirectory = path.join(
+      projectRoot,
+      ".ftc-dev-tools",
+      "backups",
+      `pedro-add-${stamp}`,
+    );
     await fs.mkdir(backupDirectory, { recursive: true });
     await fs.copyFile(
       status.dependenciesPath,

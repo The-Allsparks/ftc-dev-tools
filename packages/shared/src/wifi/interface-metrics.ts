@@ -437,10 +437,13 @@ export async function setInterfaceMetric(
     });
     // Some kernels ignore metric on link; try ifmetric as fallback messaging
     if (result.exitCode !== 0) {
-      throw Object.assign(new Error(result.stderr || result.stdout || "ip link set metric failed"), {
-        code: "WIFI_METRIC_FAILED",
-        technicalDetails: `${result.stdout}\n${result.stderr}`,
-      });
+      throw Object.assign(
+        new Error(result.stderr || result.stdout || "ip link set metric failed"),
+        {
+          code: "WIFI_METRIC_FAILED",
+          technicalDetails: `${result.stdout}\n${result.stderr}`,
+        },
+      );
     }
     return;
   }

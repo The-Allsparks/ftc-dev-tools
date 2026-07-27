@@ -67,7 +67,9 @@ export function registerSdkCommand(program: Command): void {
 
   sdk
     .command("update")
-    .description("Sync SDK-owned project files from an official FTC release (never touches TeamCode)")
+    .description(
+      "Sync SDK-owned project files from an official FTC release (never touches TeamCode)",
+    )
     .option("--dry-run", "Show the planned file sync without writing")
     .option("--yes", "Apply the update without an interactive confirmation prompt")
     .option("--force", "Allow update when the git working tree is dirty")
@@ -95,7 +97,9 @@ export function registerSdkCommand(program: Command): void {
           console.log(
             "This will overwrite SDK-owned files (FtcRobotController, Gradle files, wrapper).",
           );
-          console.log("TeamCode will not be modified. A backup will be written under .ftc-dev-tools/backups/.");
+          console.log(
+            "TeamCode will not be modified. A backup will be written under .ftc-dev-tools/backups/.",
+          );
           const ok = await confirm("Continue with SDK update?");
           if (!ok) {
             const aborted = {

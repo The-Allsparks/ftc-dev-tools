@@ -2,7 +2,11 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import crypto from "node:crypto";
-import { getWifiPreferencePath, loadWifiPreference, saveWifiPreference } from "./interface-preference.js";
+import {
+  getWifiPreferencePath,
+  loadWifiPreference,
+  saveWifiPreference,
+} from "./interface-preference.js";
 
 const SERVICE = "ftc-dev-tools-wifi";
 
@@ -77,7 +81,10 @@ export async function storeWifiPassword(
   const { path: resolved, secrets } = await loadSecretsFile(options.secretsPath);
   await fs.mkdir(path.dirname(resolved), { recursive: true });
   secrets.bySsid[ssid] = encryptPassword(password);
-  await fs.writeFile(resolved, `${JSON.stringify(secrets, null, 2)}\n`, { encoding: "utf8", mode: 0o600 });
+  await fs.writeFile(resolved, `${JSON.stringify(secrets, null, 2)}\n`, {
+    encoding: "utf8",
+    mode: 0o600,
+  });
 
   const { path: prefPath, preference } = await loadWifiPreference(options.preferencePath);
   await saveWifiPreference({ ...preference, rememberedSsid: ssid }, prefPath);
@@ -114,7 +121,10 @@ export async function clearWifiPassword(
     return;
   }
   delete secrets.bySsid[ssid];
-  await fs.writeFile(resolved, `${JSON.stringify(secrets, null, 2)}\n`, { encoding: "utf8", mode: 0o600 });
+  await fs.writeFile(resolved, `${JSON.stringify(secrets, null, 2)}\n`, {
+    encoding: "utf8",
+    mode: 0o600,
+  });
 }
 
 /** Redact password-like values from a string for logging. */

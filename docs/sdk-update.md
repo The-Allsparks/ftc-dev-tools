@@ -55,13 +55,13 @@ Never touched:
 
 ## Safety rails
 
-| Guard | Behavior |
-| --- | --- |
-| Confirmation | Real applies require `--yes` (CLI) or a modal confirm (extension) |
-| Dirty git tree | Refused by default; pass `--force` to proceed |
-| Backup | Before writing, copies overwritten paths to `.ftc-dev-tools/backups/sdk-<timestamp>/` |
-| Dry run | `--dry-run` shows the plan without writing |
-| Offline | `check` fails softly with a friendly network error; doctor marks freshness `skip` |
+| Guard          | Behavior                                                                              |
+| -------------- | ------------------------------------------------------------------------------------- |
+| Confirmation   | Real applies require `--yes` (CLI) or a modal confirm (extension)                     |
+| Dirty git tree | Refused by default; pass `--force` to proceed                                         |
+| Backup         | Before writing, copies overwritten paths to `.ftc-dev-tools/backups/sdk-<timestamp>/` |
+| Dry run        | `--dry-run` shows the plan without writing                                            |
+| Offline        | `check` fails softly with a friendly network error; doctor marks freshness `skip`     |
 
 ## Recommended workflow
 

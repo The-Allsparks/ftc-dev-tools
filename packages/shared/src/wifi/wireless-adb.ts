@@ -81,7 +81,9 @@ export async function connectWifiAdb(options: ConnectWifiAdbOptions): Promise<Wi
       endpoint,
       message: "adb not found.",
       routeResult,
-      error: interpretFromUnknown(Object.assign(new Error("adb not found"), { code: "ADB_NOT_FOUND" })),
+      error: interpretFromUnknown(
+        Object.assign(new Error("adb not found"), { code: "ADB_NOT_FOUND" }),
+      ),
     };
   }
 
@@ -95,7 +97,8 @@ export async function connectWifiAdb(options: ConnectWifiAdbOptions): Promise<Wi
 
   const combined = `${result.stdout}\n${result.stderr}`.trim();
   const connected =
-    /connected to|already connected/i.test(combined) && !/cannot connect|failed to connect/i.test(combined);
+    /connected to|already connected/i.test(combined) &&
+    !/cannot connect|failed to connect/i.test(combined);
 
   if (!connected) {
     return {
@@ -152,7 +155,9 @@ export async function disconnectWifiAdb(
   };
 }
 
-export async function enableTcpip(options: EnableTcpipOptions): Promise<{ success: boolean; message: string }> {
+export async function enableTcpip(
+  options: EnableTcpipOptions,
+): Promise<{ success: boolean; message: string }> {
   if (!options.yes) {
     return {
       success: false,

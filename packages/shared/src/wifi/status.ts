@@ -65,7 +65,9 @@ export async function getWifiStatus(options: GetWifiStatusOptions): Promise<Wifi
       : "Robot Controller Console is not reachable.",
   );
   if (selectedInterface) {
-    parts.push(`Robot interface: ${selectedInterface.name}${selectedInterface.index !== undefined ? ` (#${selectedInterface.index})` : ""}.`);
+    parts.push(
+      `Robot interface: ${selectedInterface.name}${selectedInterface.index !== undefined ? ` (#${selectedInterface.index})` : ""}.`,
+    );
   } else {
     parts.push("No robot network interface selected.");
   }

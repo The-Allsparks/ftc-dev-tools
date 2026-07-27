@@ -7,10 +7,7 @@ import type { ProcessRunner } from "../types/process.js";
 import { DEFAULT_ROBOT_CONSOLE_URL } from "../wifi/defaults.js";
 import { openRobotConsole } from "../wifi/open-console.js";
 import { selectDeploymentDevice } from "../devices/selection.js";
-import {
-  DEFAULT_HUB_OS_UPLOAD_FIELD_NAMES,
-  HUB_OS_UPLOAD_POST_CANDIDATES,
-} from "./defaults.js";
+import { DEFAULT_HUB_OS_UPLOAD_FIELD_NAMES, HUB_OS_UPLOAD_POST_CANDIDATES } from "./defaults.js";
 import { downloadHubOsUpdate } from "./download.js";
 import { getHubStatus } from "./status.js";
 import type { HubApplyMode, HubApplyResult, HubOsRelease } from "./types.js";
@@ -39,9 +36,7 @@ export interface ApplyHubOsUpdateOptions {
   platform?: NodeJS.Platform;
 }
 
-export async function applyHubOsUpdate(
-  options: ApplyHubOsUpdateOptions,
-): Promise<HubApplyResult> {
+export async function applyHubOsUpdate(options: ApplyHubOsUpdateOptions): Promise<HubApplyResult> {
   const planLines: string[] = [];
   const mode: HubApplyMode = options.attemptUpload ? "upload-attempt" : "guided";
   const consoleUrl = (options.consoleUrl ?? DEFAULT_ROBOT_CONSOLE_URL).replace(/\/$/, "");
@@ -54,11 +49,7 @@ export async function applyHubOsUpdate(
         devices,
         explicitSerial: options.deviceSerial,
       });
-      if (
-        selection.ok &&
-        selection.device.serial.includes(":") &&
-        !options.allowWifiAdb
-      ) {
+      if (selection.ok && selection.device.serial.includes(":") && !options.allowWifiAdb) {
         return {
           success: false,
           dryRun: options.dryRun === true,
@@ -338,10 +329,7 @@ async function attemptOsUpload(options: {
         });
         const text = await response.text();
         notes.push(`${endpoint} field=${field} → HTTP ${response.status}`);
-        if (
-          response.ok ||
-          /update|reboot|success|verification succeeded/i.test(text)
-        ) {
+        if (response.ok || /update|reboot|success|verification succeeded/i.test(text)) {
           return {
             success: true,
             attemptedEndpoints,

@@ -38,7 +38,9 @@ async function readPasswordFromStdinPrompt(): Promise<string | undefined> {
 export function registerWifiCommand(program: Command): void {
   const wifi = program
     .command("wifi")
-    .description("Wireless Control Hub adb, dual-NIC routing, and Robot Controller Console helpers");
+    .description(
+      "Wireless Control Hub adb, dual-NIC routing, and Robot Controller Console helpers",
+    );
 
   wifi
     .command("status")
@@ -61,8 +63,12 @@ export function registerWifiCommand(program: Command): void {
         console.log(JSON.stringify(report, null, 2));
       } else {
         console.log("FTC Wi-Fi Status\n");
-        console.log(`Console: ${report.console.reachable ? "reachable" : "unreachable"} (${report.console.url})`);
-        console.log(`Route:   ${report.robotRoutePresent ? "present" : "not present"} for hub subnet`);
+        console.log(
+          `Console: ${report.console.reachable ? "reachable" : "unreachable"} (${report.console.url})`,
+        );
+        console.log(
+          `Route:   ${report.robotRoutePresent ? "present" : "not present"} for hub subnet`,
+        );
         if (report.selectedInterface) {
           console.log(
             `Robot NIC: ${report.selectedInterface.name}${report.selectedInterface.index !== undefined ? ` (#${report.selectedInterface.index})` : ""}`,
@@ -114,8 +120,12 @@ export function registerWifiCommand(program: Command): void {
       if (options.json) {
         console.log(JSON.stringify(payload, null, 2));
       } else {
-        console.log(`Robot network interface set to ${selected.name}${selected.index !== undefined ? ` (#${selected.index})` : ""}.`);
-        console.log("Join the Control Hub SSID on this adapter in your OS, then run `ftc wifi route ensure --yes`.");
+        console.log(
+          `Robot network interface set to ${selected.name}${selected.index !== undefined ? ` (#${selected.index})` : ""}.`,
+        );
+        console.log(
+          "Join the Control Hub SSID on this adapter in your OS, then run `ftc wifi route ensure --yes`.",
+        );
       }
     });
 
@@ -128,24 +138,26 @@ export function registerWifiCommand(program: Command): void {
     .option("--yes", "Apply the route change")
     .option("--json", "Emit stable machine-readable JSON")
     .option("--verbose", "Include technical details for failures")
-    .action(async (options: { subnet?: string; yes?: boolean; json?: boolean; verbose?: boolean }) => {
-      const ctx = createCliContext(process.cwd(), options.verbose === true);
-      const result = await ensureRobotRoute({
-        runner: ctx.runner,
-        destinationCidr: options.subnet,
-        yes: options.yes === true,
-      });
-      if (options.json) {
-        console.log(JSON.stringify(result, null, 2));
-      } else {
-        console.log(result.message);
-        console.log(`Plan: ${result.plan.commandDisplay}`);
-        if (result.error) {
-          printFriendlyError(result.error, options.verbose === true);
+    .action(
+      async (options: { subnet?: string; yes?: boolean; json?: boolean; verbose?: boolean }) => {
+        const ctx = createCliContext(process.cwd(), options.verbose === true);
+        const result = await ensureRobotRoute({
+          runner: ctx.runner,
+          destinationCidr: options.subnet,
+          yes: options.yes === true,
+        });
+        if (options.json) {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(result.message);
+          console.log(`Plan: ${result.plan.commandDisplay}`);
+          if (result.error) {
+            printFriendlyError(result.error, options.verbose === true);
+          }
         }
-      }
-      process.exitCode = result.success ? 0 : 1;
-    });
+        process.exitCode = result.success ? 0 : 1;
+      },
+    );
 
   route
     .command("remove")
@@ -154,23 +166,25 @@ export function registerWifiCommand(program: Command): void {
     .option("--yes", "Apply the route removal")
     .option("--json", "Emit stable machine-readable JSON")
     .option("--verbose", "Include technical details for failures")
-    .action(async (options: { subnet?: string; yes?: boolean; json?: boolean; verbose?: boolean }) => {
-      const ctx = createCliContext(process.cwd(), options.verbose === true);
-      const result = await removeRobotRoute({
-        runner: ctx.runner,
-        destinationCidr: options.subnet,
-        yes: options.yes === true,
-      });
-      if (options.json) {
-        console.log(JSON.stringify(result, null, 2));
-      } else {
-        console.log(result.message);
-        if (result.error) {
-          printFriendlyError(result.error, options.verbose === true);
+    .action(
+      async (options: { subnet?: string; yes?: boolean; json?: boolean; verbose?: boolean }) => {
+        const ctx = createCliContext(process.cwd(), options.verbose === true);
+        const result = await removeRobotRoute({
+          runner: ctx.runner,
+          destinationCidr: options.subnet,
+          yes: options.yes === true,
+        });
+        if (options.json) {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(result.message);
+          if (result.error) {
+            printFriendlyError(result.error, options.verbose === true);
+          }
         }
-      }
-      process.exitCode = result.success ? 0 : 1;
-    });
+        process.exitCode = result.success ? 0 : 1;
+      },
+    );
 
   wifi
     .command("connect")
@@ -235,32 +249,30 @@ export function registerWifiCommand(program: Command): void {
     .option("--port <port>", "TCP port", "5555")
     .option("--yes", "Confirm tcpip mode change")
     .option("--json", "Emit stable machine-readable JSON")
-    .action(
-      async (options: { device?: string; port?: string; yes?: boolean; json?: boolean }) => {
-        const ctx = createCliContext(process.cwd());
-        try {
-          const result = await enableTcpip({
-            runner: ctx.runner,
-            deviceSerial: options.device,
-            port: Number.parseInt(options.port ?? "5555", 10),
-            yes: options.yes === true,
-          });
-          if (options.json) {
-            console.log(JSON.stringify(result, null, 2));
-          } else {
-            console.log(result.message);
-          }
-          process.exitCode = result.success ? 0 : 1;
-        } catch (error) {
-          if (options.json) {
-            console.log(JSON.stringify({ success: false, message: String(error) }, null, 2));
-          } else {
-            console.error(String(error));
-          }
-          process.exitCode = 1;
+    .action(async (options: { device?: string; port?: string; yes?: boolean; json?: boolean }) => {
+      const ctx = createCliContext(process.cwd());
+      try {
+        const result = await enableTcpip({
+          runner: ctx.runner,
+          deviceSerial: options.device,
+          port: Number.parseInt(options.port ?? "5555", 10),
+          yes: options.yes === true,
+        });
+        if (options.json) {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log(result.message);
         }
-      },
-    );
+        process.exitCode = result.success ? 0 : 1;
+      } catch (error) {
+        if (options.json) {
+          console.log(JSON.stringify({ success: false, message: String(error) }, null, 2));
+        } else {
+          console.error(String(error));
+        }
+        process.exitCode = 1;
+      }
+    });
 
   wifi
     .command("open-console")
@@ -359,7 +371,9 @@ export function registerWifiCommand(program: Command): void {
         console.log(result.message);
         if (result.publicSettings) {
           console.log(`SSID:    ${result.publicSettings.ssid ?? "(unknown)"}`);
-          console.log(`Password:${result.publicSettings.passwordSet ? " (set — not printed)" : " (unknown)"}`);
+          console.log(
+            `Password:${result.publicSettings.passwordSet ? " (set — not printed)" : " (unknown)"}`,
+          );
           console.log(`Band:    ${result.publicSettings.band ?? "(unknown)"}`);
           console.log(`Channel: ${result.publicSettings.channel ?? "(unknown)"}`);
         }
@@ -425,7 +439,9 @@ export function registerWifiCommand(program: Command): void {
 
   wifi
     .command("prefer-internet")
-    .description("Prefer an interface for internet (lower metric); keep hub traffic on robot subnet route")
+    .description(
+      "Prefer an interface for internet (lower metric); keep hub traffic on robot subnet route",
+    )
     .argument("<name-or-index>", "Internet network interface name or index")
     .option("--robot <name>", "Robot NIC to deprioritize (defaults to selected robot interface)")
     .option("--internet-metric <n>", "Metric for internet NIC", "10")

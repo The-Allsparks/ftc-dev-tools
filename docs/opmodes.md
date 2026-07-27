@@ -19,12 +19,12 @@ ftc opmode create ArcadeDrive --type teleop --iterative --dry-run
 
 Defaults:
 
-| Setting | Default |
-| --- | --- |
-| Style | `LinearOpMode` (`--iterative` for classic `OpMode`) |
-| Package | `org.firstinspires.ftc.teamcode` |
-| Display name | class name |
-| Path | `TeamCode/src/main/java/org/firstinspires/ftc/teamcode/<Class>.java` |
+| Setting      | Default                                                              |
+| ------------ | -------------------------------------------------------------------- |
+| Style        | `LinearOpMode` (`--iterative` for classic `OpMode`)                  |
+| Package      | `org.firstinspires.ftc.teamcode`                                     |
+| Display name | class name                                                           |
+| Path         | `TeamCode/src/main/java/org/firstinspires/ftc/teamcode/<Class>.java` |
 
 ## Safety
 

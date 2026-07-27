@@ -1,9 +1,5 @@
 import type { Command } from "commander";
-import {
-  addPedroPathing,
-  detectPedroStatus,
-  scaffoldPedroPathing,
-} from "@ftc-dev-tools/shared";
+import { addPedroPathing, detectPedroStatus, scaffoldPedroPathing } from "@ftc-dev-tools/shared";
 import { createCliContext, printFriendlyError } from "../context.js";
 
 async function confirm(question: string): Promise<boolean> {
@@ -40,7 +36,9 @@ export function registerPedroCommand(program: Command): void {
         console.log(report.message);
         console.log(`FTC artifact: ${report.ftcVersion ?? "(missing)"}`);
         console.log(`Byalazar repo: ${report.byalazarRepoPresent ? "yes" : "no"}`);
-        console.log(`Package: ${report.pedroPathingPackagePresent ? report.pedroPathingPackagePath : "(missing)"}`);
+        console.log(
+          `Package: ${report.pedroPathingPackagePresent ? report.pedroPathingPackagePath : "(missing)"}`,
+        );
         console.log(
           `compileSdk: ${report.compileSdk ?? "(unknown)"}${report.compileSdkOk ? "" : " (below recommended 34)"}`,
         );
@@ -57,7 +55,10 @@ export function registerPedroCommand(program: Command): void {
   pedro
     .command("add")
     .description("Add Pedro Pathing Maven repo + dependencies to build.dependencies.gradle")
-    .option("--version <ver>", "Pin com.pedropathing:ftc version (default: latest stable from Maven Central)")
+    .option(
+      "--version <ver>",
+      "Pin com.pedropathing:ftc version (default: latest stable from Maven Central)",
+    )
     .option("--no-patch-compile-sdk", "Do not bump compileSdk to 34")
     .option("--dry-run", "Show planned gradle changes without writing")
     .option("--yes", "Apply without an interactive confirmation prompt")
@@ -132,7 +133,9 @@ export function registerPedroCommand(program: Command): void {
 
   pedro
     .command("scaffold")
-    .description("Copy TeamCode/**/pedroPathing/** from the Pedro Quickstart (never unrelated TeamCode)")
+    .description(
+      "Copy TeamCode/**/pedroPathing/** from the Pedro Quickstart (never unrelated TeamCode)",
+    )
     .option("--tag <tag>", "Quickstart release tag (default: latest)")
     .option("--dry-run", "Show planned file copies without writing")
     .option("--yes", "Apply without an interactive confirmation prompt")

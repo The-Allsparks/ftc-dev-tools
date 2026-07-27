@@ -2,7 +2,10 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { isValidAndroidXmlResourceName, isValidFtcDeviceName } from "../src/robot-config/defaults.js";
+import {
+  isValidAndroidXmlResourceName,
+  isValidFtcDeviceName,
+} from "../src/robot-config/defaults.js";
 import { listRobotConfigs, showRobotConfig } from "../src/robot-config/list.js";
 import { parseRobotConfigXml } from "../src/robot-config/parse.js";
 import { pullRobotConfigs } from "../src/robot-config/pull.js";
@@ -151,7 +154,11 @@ describe("list / show / validate robot configs", () => {
     const xmlDir = path.join(root, "TeamCode", "src", "main", "res", "xml");
     await fs.mkdir(xmlDir, { recursive: true });
     await fs.writeFile(path.join(xmlDir, "my_robot.xml"), SAMPLE_ROBOT_XML, "utf8");
-    await fs.writeFile(path.join(xmlDir, "teamwebcamcalibrations.xml"), "<Calibrations/>\n", "utf8");
+    await fs.writeFile(
+      path.join(xmlDir, "teamwebcamcalibrations.xml"),
+      "<Calibrations/>\n",
+      "utf8",
+    );
     await fs.writeFile(path.join(xmlDir, "not_a_robot.xml"), "<SomethingElse/>\n", "utf8");
 
     const listed = await listRobotConfigs(root);

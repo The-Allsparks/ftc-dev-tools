@@ -150,5 +150,10 @@ export function escapeJavaString(value: string): string {
 
 /** Keep // comments from being terminated or extended via Unicode escapes. */
 function sanitizeJavaComment(value: string): string {
-  return value.replace(/\\|[\u0000-\u001f]/g, "_");
+  let out = "";
+  for (const ch of value) {
+    const code = ch.codePointAt(0) ?? 0;
+    out += ch === "\\" || code <= 0x1f ? "_" : ch;
+  }
+  return out;
 }

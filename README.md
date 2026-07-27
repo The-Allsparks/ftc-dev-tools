@@ -1,8 +1,20 @@
 # FTC Dev Tools
 
-Community tools that make building, deploying, diagnosing, and viewing logs for **FIRST Tech Challenge** Android robot projects simpler from **VS Code**, **Cursor**, or a terminal.
+Community tools that make building, deploying, diagnosing, and managing FIRST Tech Challenge Android robot projects simpler from VS Code, Cursor, or a terminal.
 
-> **Disclaimer:** This project is community-developed and is **not** officially affiliated with or endorsed by FIRST, REV Robotics, Microsoft, or Anysphere.
+## Built by The Allsparks
+
+FTC Dev Tools is created and maintained by **The Allsparks**, a FIRST Tech Challenge team based in Las Vegas, Nevada.
+
+We originally built these tools to improve our own team’s development workflow, make it easier for our students to work outside Android Studio, and reduce the setup and deployment difficulties commonly encountered by FTC teams.
+
+We publish the project for the broader FTC community because useful team-built tools should be shared, improved collaboratively, and made available to students, coaches, mentors, and software contributors everywhere.
+
+The Allsparks remain the project’s founding maintainers, but FTC Dev Tools is intended to be a community project. Contributions, testing, documentation improvements, feature requests, and feedback from other FTC teams are welcome.
+
+> **Disclaimer:** This project is community-developed and unofficial. It is **not** affiliated with or endorsed by FIRST, REV Robotics, Microsoft, Anysphere, or other referenced vendors or community projects.
+>
+> FIRST®, FIRST Tech Challenge®, FTC®, REV Robotics®, Visual Studio Code®, and Cursor® may be trademarks of their respective owners. Their names are used only to describe compatibility and intended use.
 
 ## Current status
 
@@ -95,6 +107,17 @@ docs/                 Student, coach, and mentor docs
 examples/             Sample FTC-like layout (not a full SDK)
 ```
 
+## Names and identifiers
+
+| Kind                | Value                         |
+| ------------------- | ----------------------------- |
+| Public project name | **FTC Dev Tools**             |
+| Provenance          | Built by The Allsparks        |
+| GitHub organization | `The-Allsparks`               |
+| Repository          | `The-Allsparks/ftc-dev-tools` |
+| npm scope           | `@ftc-dev-tools`              |
+| CLI executable      | `ftc`                         |
+
 ## Installation
 
 ### Prerequisites
@@ -117,7 +140,7 @@ Details: [docs/install-without-android-studio.md](docs/install-without-android-s
 ### From source
 
 ```bash
-git clone https://github.com/ftc-dev-tools/ftc-dev-tools.git
+git clone https://github.com/The-Allsparks/ftc-dev-tools.git
 cd ftc-dev-tools
 npm install
 npm run build
@@ -210,6 +233,17 @@ Official-style Android Studio projects with:
 
 ## Documentation
 
+### Project identity and stewardship
+
+- [Project governance](GOVERNANCE.md)
+- [Authors and contributors](AUTHORS.md)
+- [Supporting The Allsparks](SUPPORT.md)
+- [Project principles](docs/project-principles.md)
+- [How The Allsparks use FTC Dev Tools](docs/team-use.md)
+- [NOTICE](NOTICE) (attribution and independence statement)
+
+### Guides
+
 - [Getting started](docs/getting-started.md)
 - [Install without Android Studio](docs/install-without-android-studio.md)
 - [Windows setup](docs/windows-setup.md)
@@ -230,6 +264,26 @@ Official-style Android Studio projects with:
 - [Releasing](docs/releasing.md)
 - [Physical device testing](docs/physical-device-testing.md)
 
+## Project stewardship
+
+FTC Dev Tools is an Allsparks-led open-source project.
+
+The Allsparks maintain the project direction, releases, safety standards, and compatibility goals. Community contributors do not need to be members of The Allsparks.
+
+See [GOVERNANCE.md](GOVERNANCE.md) for details.
+
+## Support The Allsparks
+
+FTC Dev Tools is free and open source. The Allsparks maintain it for our team and the wider FTC community.
+
+Optional donations help continue project development and support robotics education. They are processed through our nonprofit fiscal sponsor; The Allsparks itself is not an independent 501(c)(3).
+
+Donations do **not** purchase features, roadmap influence, support contracts, governance authority, or endorsements.
+
+**[Support The Allsparks](https://hcb.hackclub.com/donations/start/the-allsparks)**
+
+Details: [SUPPORT.md](SUPPORT.md).
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
@@ -238,7 +292,7 @@ Please use **GitHub Discussions** (when enabled on the repository) for Q&A and d
 
 ## Licensing
 
-Apache License 2.0 — see [LICENSE](LICENSE).
+Apache License 2.0 — see [LICENSE](LICENSE). Attribution and independence statements: [NOTICE](NOTICE). Authors: [AUTHORS.md](AUTHORS.md).
 
 ## Development commands
 
@@ -251,4 +305,5 @@ npm run format:check
 npm run typecheck
 npm run package:cli
 npm run package:extension
+npm run check:identity
 ```

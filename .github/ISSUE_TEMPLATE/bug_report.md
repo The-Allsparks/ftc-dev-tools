@@ -12,11 +12,13 @@ A clear description of what went wrong.
 
 ## Environment
 
-- OS:
-- Node.js version:
 - FTC Dev Tools version:
-- Editor (VS Code / Cursor / terminal only):
 - FTC SDK / season (if known):
+- Host operating system:
+- Node.js version:
+- Editor (VS Code / Cursor / terminal only):
+- Device type (Control Hub / Driver Hub / phone Robot Controller / mocked / none):
+- Connection (USB / Wi-Fi / N/A):
 
 ## Steps to reproduce
 
@@ -30,7 +32,10 @@ A clear description of what went wrong.
 
 ## Logs / technical details
 
-Paste `ftc doctor --json` and relevant verbose output. Do **not** include passwords, Wi-Fi credentials, or other secrets.
+Paste `ftc doctor --json` and relevant verbose output.
+
+- Remove passwords, Wi-Fi credentials, tokens, student information, and other private data before posting.
+- Prefer redacted serials when they are not needed to reproduce the issue.
 
 ## Project layout notes
 

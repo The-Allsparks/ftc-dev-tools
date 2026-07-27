@@ -23,6 +23,7 @@ Local packaging:
 ```bash
 npm run build
 npm test
+npm run check:identity
 npm run package:cli
 npm run package:extension
 ```
@@ -31,5 +32,13 @@ npm run package:extension
 
 1. CI green on Windows, macOS, Linux
 2. Docs updated for behavior changes
-3. No claim of physical Control Hub validation unless performed
-4. SAFETY invariants unchanged (no auto-uninstall, no firmware/Wi-Fi mutation)
+3. `npm run check:identity` passes
+4. No claim of physical Control Hub validation unless performed
+5. SAFETY invariants unchanged (no auto-uninstall, no firmware/Wi-Fi mutation)
+6. GitHub repository description (settings UI / API; not set by this repo alone) should stay aligned with:
+
+```text
+FTC development tools built by The Allsparks for our team and the wider FTC community. Open source, Apache 2.0 licensed, with optional support through our nonprofit fiscal sponsor.
+```
+
+7. Confirm Marketplace publisher ownership before publishing a VSIX (`publisher` in `packages/vscode-extension/package.json` is currently `ftc-dev-tools`)

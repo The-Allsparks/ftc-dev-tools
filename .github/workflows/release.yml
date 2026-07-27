@@ -21,6 +21,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm run check:identity
       - run: npm run build
       - run: npm test
       - run: npm run package:cli
@@ -37,7 +38,9 @@ jobs:
           {
             echo "## FTC Dev Tools ${GITHUB_REF_NAME}"
             echo
-            echo "Community-developed tooling. Not affiliated with FIRST, REV Robotics, Microsoft, or Anysphere."
+            echo "Built by The Allsparks for our team and the wider FTC community."
+            echo
+            echo "Community-developed tooling. Not affiliated with or endorsed by FIRST, REV Robotics, Microsoft, Anysphere, or other referenced organizations."
             echo
             echo "### Changes"
             git log --pretty=format:'- %s (%h)' $(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo HEAD~20)..HEAD

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/ftc-dev-tools/ftc-dev-tools/main/packages/shared/schemas/ftc-dev.schema.json",
+  "$schema": "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/packages/shared/schemas/ftc-dev.schema.json",
   "module": "TeamCode",
   "deployment": {
     "preferredConnection": "any",

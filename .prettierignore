@@ -1,0 +1,7 @@
+**/node_modules
+**/dist
+**/out
+**/coverage
+**/*.vsix
+**/artifacts
+package-lock.json

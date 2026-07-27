@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: [20, 22]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Format check
+        run: npm run format:check
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Test
+        run: npm test
+      - name: Build packages
+        run: npm run build
+      - name: Package CLI
+        run: npm run package:cli
+      - name: Package VSIX
+        run: npm run package:extension
+      - name: Upload artifacts (Node 22 / Ubuntu)
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 22
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: |
+            packages/cli/artifacts/*
+            packages/vscode-extension/artifacts/*
+
+  docs-links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check internal doc links exist
+        run: |
+          python3 - <<'PY'
+          import pathlib, re, sys
+          root = pathlib.Path('.')
+          pattern = re.compile(r'\[([^\]]+)\]\(([^)]+)\)')
+          missing = []
+          for path in list(root.glob('*.md')) + list((root/'docs').glob('*.md')):
+            text = path.read_text(encoding='utf-8')
+            for _, target in pattern.findall(text):
+              if target.startswith('http') or target.startswith('#') or target.startswith('mailto:'):
+                continue
+              cleaned = target.split('#',1)[0]
+              if not cleaned:
+                continue
+              candidate = (path.parent / cleaned).resolve()
+              if not candidate.exists():
+                missing.append(f'{path}: {target}')
+          if missing:
+            print('Missing links:')
+            print('\n'.join(missing))
+            sys.exit(1)
+          print('Internal documentation links OK')
+          PY

@@ -1,0 +1,41 @@
+{
+  "name": "ftc-dev-tools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CLI and VS Code/Cursor extension for building, deploying, and diagnosing FIRST Tech Challenge Android robot projects",
+  "license": "Apache-2.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "npm run build --workspace @ftc-dev-tools/shared && npm run build --workspace @ftc-dev-tools/cli && npm run build --workspace ftc-dev-tools",
+    "clean": "npm run clean --workspaces --if-present",
+    "lint": "eslint \"packages/*/src/**/*.ts\" \"packages/*/tests/**/*.ts\"",
+    "lint:fix": "eslint \"packages/*/src/**/*.ts\" \"packages/*/tests/**/*.ts\" --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc -b && npm run typecheck --workspace ftc-dev-tools",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "package:cli": "npm run package --workspace @ftc-dev-tools/cli",
+    "package:extension": "npm run package --workspace ftc-dev-tools",
+    "doctor": "npm run build --workspace @ftc-dev-tools/shared && npm run build --workspace @ftc-dev-tools/cli && node packages/cli/dist/bin.js doctor",
+    "install-deps:windows": "powershell -ExecutionPolicy Bypass -File ./scripts/install-deps-windows.ps1",
+    "install-deps:macos": "bash ./scripts/install-deps-macos.sh",
+    "install-deps:linux": "bash ./scripts/install-deps-linux.sh"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "@types/node": "^22.13.10",
+    "eslint": "^9.22.0",
+    "eslint-config-prettier": "^10.1.1",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.1",
+    "vitest": "^3.0.8"
+  }
+}

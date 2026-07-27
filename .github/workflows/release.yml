@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - run: npm run package:cli
+      - run: npm run package:extension
+      - name: Generate checksums
+        run: |
+          mkdir -p release-assets
+          cp packages/cli/artifacts/* release-assets/ || true
+          cp packages/vscode-extension/artifacts/* release-assets/ || true
+          cd release-assets
+          sha256sum * > SHA256SUMS.txt || shasum -a 256 * > SHA256SUMS.txt
+      - name: Build release notes
+        run: |
+          {
+            echo "## FTC Dev Tools ${GITHUB_REF_NAME}"
+            echo
+            echo "Community-developed tooling. Not affiliated with FIRST, REV Robotics, Microsoft, or Anysphere."
+            echo
+            echo "### Changes"
+            git log --pretty=format:'- %s (%h)' $(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo HEAD~20)..HEAD
+          } > RELEASE_NOTES.md
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_file: RELEASE_NOTES.md
+          files: |
+            release-assets/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

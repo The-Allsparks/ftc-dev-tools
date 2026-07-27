@@ -1,0 +1,37 @@
+import { Command } from "commander";
+import { PACKAGE_VERSION } from "@ftc-dev-tools/shared";
+import { registerBuildCommand } from "./commands/build.js";
+import { registerCleanCommand } from "./commands/clean.js";
+import { registerDeployCommand } from "./commands/deploy.js";
+import { registerDevicesCommand } from "./commands/devices.js";
+import { registerDoctorCommand } from "./commands/doctor.js";
+import { registerLogsCommand } from "./commands/logs.js";
+import { registerSdkCommand } from "./commands/sdk.js";
+import { registerHubCommand } from "./commands/hub.js";
+import { registerConfigCommand } from "./commands/config.js";
+import { registerOpModeCommand } from "./commands/opmode.js";
+import { registerPedroCommand } from "./commands/pedro.js";
+import { registerWifiCommand } from "./commands/wifi.js";
+
+export async function runCli(argv: string[]): Promise<void> {
+  const program = new Command();
+  program
+    .name("ftc")
+    .description("Build, deploy, and diagnose FIRST Tech Challenge Android robot projects")
+    .version(PACKAGE_VERSION);
+
+  registerDoctorCommand(program);
+  registerDevicesCommand(program);
+  registerBuildCommand(program);
+  registerDeployCommand(program);
+  registerLogsCommand(program);
+  registerCleanCommand(program);
+  registerSdkCommand(program);
+  registerWifiCommand(program);
+  registerHubCommand(program);
+  registerPedroCommand(program);
+  registerOpModeCommand(program);
+  registerConfigCommand(program);
+
+  await program.parseAsync(argv);
+}

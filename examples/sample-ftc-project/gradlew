@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "Sample gradlew placeholder - not a real Gradle Wrapper"
+exit 1

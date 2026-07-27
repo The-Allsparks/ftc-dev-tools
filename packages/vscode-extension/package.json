@@ -1,0 +1,244 @@
+{
+  "name": "ftc-dev-tools",
+  "displayName": "FTC Dev Tools",
+  "description": "Build, deploy, and diagnose FIRST Tech Challenge Android robot projects from VS Code or Cursor",
+  "version": "0.1.0",
+  "publisher": "ftc-dev-tools",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ftc-dev-tools/ftc-dev-tools.git"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "workspaceContains:settings.gradle",
+    "workspaceContains:settings.gradle.kts",
+    "workspaceContains:.ftc-dev.json"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "ftc.runDoctor",
+        "title": "FTC: Run Environment Check"
+      },
+      {
+        "command": "ftc.showDevices",
+        "title": "FTC: Show Devices"
+      },
+      {
+        "command": "ftc.build",
+        "title": "FTC: Build Robot Code"
+      },
+      {
+        "command": "ftc.deploy",
+        "title": "FTC: Deploy to Robot"
+      },
+      {
+        "command": "ftc.buildAndDeploy",
+        "title": "FTC: Build and Deploy"
+      },
+      {
+        "command": "ftc.selectDevice",
+        "title": "FTC: Select Deployment Device"
+      },
+      {
+        "command": "ftc.viewLogs",
+        "title": "FTC: View Robot Logs"
+      },
+      {
+        "command": "ftc.viewErrorLogs",
+        "title": "FTC: View Error Logs"
+      },
+      {
+        "command": "ftc.stopLogs",
+        "title": "FTC: Stop Robot Logs"
+      },
+      {
+        "command": "ftc.clean",
+        "title": "FTC: Clean Project"
+      },
+      {
+        "command": "ftc.checkSdk",
+        "title": "FTC: Check SDK Version"
+      },
+      {
+        "command": "ftc.updateSdk",
+        "title": "FTC: Update FTC SDK"
+      },
+      {
+        "command": "ftc.wifiStatus",
+        "title": "FTC: Wi-Fi Status"
+      },
+      {
+        "command": "ftc.wifiSelectInterface",
+        "title": "FTC: Select Robot Network Interface"
+      },
+      {
+        "command": "ftc.wifiEnsureRoute",
+        "title": "FTC: Ensure Robot Network Route"
+      },
+      {
+        "command": "ftc.wifiConnect",
+        "title": "FTC: Connect Wi-Fi ADB"
+      },
+      {
+        "command": "ftc.wifiDisconnect",
+        "title": "FTC: Disconnect Wi-Fi ADB"
+      },
+      {
+        "command": "ftc.wifiOpenConsole",
+        "title": "FTC: Open Robot Controller Console"
+      },
+      {
+        "command": "ftc.wifiJoin",
+        "title": "FTC: Join Robot Wi-Fi"
+      },
+      {
+        "command": "ftc.wifiManageGet",
+        "title": "FTC: Get Hub Wi-Fi Settings"
+      },
+      {
+        "command": "ftc.wifiManageSet",
+        "title": "FTC: Manage Hub Wi-Fi"
+      },
+      {
+        "command": "ftc.wifiPreferInternet",
+        "title": "FTC: Prefer Internet Interface"
+      },
+      {
+        "command": "ftc.wifiPreferRobot",
+        "title": "FTC: Prefer Robot Interface"
+      },
+      {
+        "command": "ftc.wifiAdapterEnable",
+        "title": "FTC: Enable Network Adapter"
+      },
+      {
+        "command": "ftc.wifiAdapterDisable",
+        "title": "FTC: Disable Network Adapter"
+      },
+      {
+        "command": "ftc.hubStatus",
+        "title": "FTC: Control Hub Status"
+      },
+      {
+        "command": "ftc.hubUpdateCheck",
+        "title": "FTC: Check Control Hub OS Update"
+      },
+      {
+        "command": "ftc.hubUpdateDownload",
+        "title": "FTC: Download Control Hub OS"
+      },
+      {
+        "command": "ftc.hubUpdateApply",
+        "title": "FTC: Apply Control Hub OS Update"
+      },
+      {
+        "command": "ftc.pedroStatus",
+        "title": "FTC: Pedro Pathing Status"
+      },
+      {
+        "command": "ftc.pedroAdd",
+        "title": "FTC: Add Pedro Pathing"
+      },
+      {
+        "command": "ftc.pedroScaffold",
+        "title": "FTC: Scaffold Pedro Pathing"
+      },
+      {
+        "command": "ftc.opmodeList",
+        "title": "FTC: List OpModes"
+      },
+      {
+        "command": "ftc.opmodeCreate",
+        "title": "FTC: Create OpMode"
+      },
+      {
+        "command": "ftc.configList",
+        "title": "FTC: List Robot Configs"
+      },
+      {
+        "command": "ftc.configShow",
+        "title": "FTC: Show Robot Config"
+      },
+      {
+        "command": "ftc.configValidate",
+        "title": "FTC: Validate Robot Config"
+      },
+      {
+        "command": "ftc.configPull",
+        "title": "FTC: Pull Robot Configs"
+      },
+      {
+        "command": "ftc.openTechnicalOutput",
+        "title": "FTC: Open Technical Output"
+      },
+      {
+        "command": "ftc.refreshView",
+        "title": "FTC: Refresh View"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "ftcDevTools",
+          "title": "FTC",
+          "icon": "media/ftc.svg"
+        }
+      ]
+    },
+    "views": {
+      "ftcDevTools": [
+        {
+          "id": "ftc.robotView",
+          "name": "FTC Robot"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "ftc.refreshView",
+          "when": "view == ftc.robotView",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "FTC Dev Tools",
+      "properties": {
+        "ftc.preferredDeviceSerial": {
+          "type": "string",
+          "default": "",
+          "description": "Local preferred Android device serial for deployment. Machine-local; not a team secret."
+        },
+        "ftc.robotNetworkInterface": {
+          "type": "string",
+          "default": "",
+          "description": "Network interface name used for Control Hub / robot Wi-Fi traffic in dual-NIC setups."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node ./esbuild.mjs",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "package": "npm run build && node -e \"require('fs').mkdirSync('artifacts',{recursive:true})\" && vsce package --no-dependencies -o artifacts/ftc-dev-tools-0.1.0.vsix",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@ftc-dev-tools/shared": "0.1.0"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.2.2",
+    "esbuild": "^0.25.1"
+  }
+}

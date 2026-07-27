@@ -1,13 +1,22 @@
 {
   "name": "ftc-dev-tools",
   "displayName": "FTC Dev Tools",
-  "description": "Build, deploy, and diagnose FIRST Tech Challenge Android robot projects from VS Code or Cursor",
+  "description": "Build, deploy, and diagnose FIRST Tech Challenge Android robot projects from VS Code or Cursor. Created by The Allsparks for our team and the wider FTC community.",
   "version": "0.1.0",
   "publisher": "ftc-dev-tools",
   "license": "Apache-2.0",
+  "author": {
+    "name": "The Allsparks contributors",
+    "url": "https://github.com/The-Allsparks"
+  },
+  "homepage": "https://github.com/The-Allsparks/ftc-dev-tools",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ftc-dev-tools/ftc-dev-tools.git"
+    "url": "https://github.com/The-Allsparks/ftc-dev-tools.git",
+    "directory": "packages/vscode-extension"
+  },
+  "bugs": {
+    "url": "https://github.com/The-Allsparks/ftc-dev-tools/issues"
   },
   "engines": {
     "vscode": "^1.85.0"

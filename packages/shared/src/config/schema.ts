@@ -1,7 +1,7 @@
 /** Inlined JSON Schema so bundlers do not depend on import.meta file URLs. */
 export const ftcDevSchema = {
   $schema: "https://json-schema.org/draft/2020-12/schema",
-  $id: "https://raw.githubusercontent.com/ftc-dev-tools/ftc-dev-tools/main/packages/shared/schemas/ftc-dev.schema.json",
+  $id: "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/packages/shared/schemas/ftc-dev.schema.json",
   title: "FTC Dev Tools project configuration",
   type: "object",
   additionalProperties: true,

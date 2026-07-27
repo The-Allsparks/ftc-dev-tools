@@ -3,8 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "CLI and VS Code/Cursor extension for building, deploying, and diagnosing FIRST Tech Challenge Android robot projects",
+  "description": "CLI and VS Code/Cursor extension for building, deploying, and diagnosing FIRST Tech Challenge Android robot projects. Created by The Allsparks for our team and the wider FTC community.",
   "license": "Apache-2.0",
+  "author": {
+    "name": "The Allsparks contributors",
+    "url": "https://github.com/The-Allsparks"
+  },
+  "homepage": "https://github.com/The-Allsparks/ftc-dev-tools",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/The-Allsparks/ftc-dev-tools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/The-Allsparks/ftc-dev-tools/issues"
+  },
   "workspaces": [
     "packages/*"
   ],
@@ -21,6 +33,7 @@
     "typecheck": "tsc -b && npm run typecheck --workspace ftc-dev-tools",
     "test": "vitest run",
     "test:watch": "vitest",
+    "check:identity": "node scripts/check-project-identity.mjs",
     "package:cli": "npm run package --workspace @ftc-dev-tools/cli",
     "package:extension": "npm run package --workspace ftc-dev-tools",
     "doctor": "npm run build --workspace @ftc-dev-tools/shared && npm run build --workspace @ftc-dev-tools/cli && node packages/cli/dist/bin.js doctor",

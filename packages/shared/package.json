@@ -3,6 +3,19 @@
   "version": "0.1.0",
   "description": "Shared TypeScript services for FTC Dev Tools CLI and VS Code extension",
   "license": "Apache-2.0",
+  "author": {
+    "name": "The Allsparks contributors",
+    "url": "https://github.com/The-Allsparks"
+  },
+  "homepage": "https://github.com/The-Allsparks/ftc-dev-tools",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/The-Allsparks/ftc-dev-tools.git",
+    "directory": "packages/shared"
+  },
+  "bugs": {
+    "url": "https://github.com/The-Allsparks/ftc-dev-tools/issues"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

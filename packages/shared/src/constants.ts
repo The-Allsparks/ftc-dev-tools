@@ -1,6 +1,6 @@
 /** Replaceable public schema URL once hosted. */
 export const FTC_DEV_SCHEMA_URL =
-  "https://raw.githubusercontent.com/ftc-dev-tools/ftc-dev-tools/main/packages/shared/schemas/ftc-dev.schema.json";
+  "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/packages/shared/schemas/ftc-dev.schema.json";
 
 export const PACKAGE_VERSION = "0.1.0";
 

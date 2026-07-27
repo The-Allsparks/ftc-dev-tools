@@ -25,3 +25,5 @@ Contributors do not need to be members of The Allsparks.
 Substantial contributors may be added to this file with their consent.
 
 Do not add personal information beyond what a contributor has already chosen to make public through GitHub or explicitly approves for inclusion.
+
+Financial supporters help sustain the project but are not automatically listed as project authors or contributors.

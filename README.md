@@ -241,6 +241,7 @@ Official-style Android Studio projects with:
 
 - [Project governance](GOVERNANCE.md)
 - [Authors and contributors](AUTHORS.md)
+- [Supporting The Allsparks](SUPPORT.md)
 - [Project principles](docs/project-principles.md)
 - [How The Allsparks use FTC Dev Tools](docs/team-use.md)
 - [NOTICE](NOTICE) (attribution and independence statement)
@@ -273,6 +274,18 @@ FTC Dev Tools is an Allsparks-led open-source project.
 The Allsparks maintain the project direction, releases, safety standards, and compatibility goals. Community contributors do not need to be members of The Allsparks.
 
 See [GOVERNANCE.md](GOVERNANCE.md) for details.
+
+## Support The Allsparks
+
+FTC Dev Tools is free and open source. The Allsparks maintain it for our team and the wider FTC community.
+
+Optional donations help continue project development and support robotics education. They are processed through our nonprofit fiscal sponsor; The Allsparks itself is not an independent 501(c)(3).
+
+Donations do **not** purchase features, roadmap influence, support contracts, governance authority, or endorsements.
+
+**[Support The Allsparks](https://hcb.hackclub.com/donations/start/the-allsparks)**
+
+Details: [SUPPORT.md](SUPPORT.md).
 
 ## Contributing
 

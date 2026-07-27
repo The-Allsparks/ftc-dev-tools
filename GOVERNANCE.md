@@ -76,6 +76,21 @@ Team-specific robot code, strategy, credentials, device settings, network passwo
 
 Features intended for inclusion in FTC Dev Tools must be generalized, documented, reviewed, and safe for use by other teams.
 
+## Financial independence
+
+The project’s technical direction is determined through the project’s governance process.
+
+Financial contributions do not purchase influence over:
+
+- architecture
+- roadmap
+- releases
+- maintainership
+- issue priority
+- pull request acceptance
+
+Optional support for The Allsparks is documented in [SUPPORT.md](SUPPORT.md) and does not change these rules.
+
 ## Independence and trademarks
 
 FTC Dev Tools is a community-developed project. It is not officially affiliated with or endorsed by FIRST, REV Robotics, Microsoft, Anysphere, or other referenced organizations.

@@ -54,7 +54,21 @@ function parseJson(rel) {
 
 const expectedRepo = "The-Allsparks/ftc-dev-tools";
 const expectedRepoUrl = `https://github.com/${expectedRepo}`;
+const expectedHomepage = "https://www.theallsparks.org";
+const officialDonationUrl = "https://hcb.hackclub.com/donations/start/the-allsparks";
 const staleOrg = "github.com/ftc-dev-tools/ftc-dev-tools";
+const bannedPaymentPatterns = [
+  /paypal\.me\//i,
+  /paypal\.com\//i,
+  /venmo\.com\//i,
+  /cash\.app\//i,
+  /cashapp\.com\//i,
+  /buymeacoffee\.com\//i,
+  /ko-fi\.com\//i,
+  /patreon\.com\//i,
+  /\bbc1[a-z0-9]{20,}\b/i,
+  /\b0x[a-fA-F0-9]{40}\b/,
+];
 
 // --- Required identity files ---
 const readme = read("README.md");
@@ -88,6 +102,19 @@ mustInclude(
   "Link to project principles from the README.",
 );
 mustInclude("README.md", readme, "docs/team-use.md", "Link to team-use docs from the README.");
+mustInclude("README.md", readme, "SUPPORT.md", "Link to SUPPORT.md from the README.");
+mustInclude(
+  "README.md",
+  readme,
+  "## Support The Allsparks",
+  "README should include a Support The Allsparks section.",
+);
+mustInclude(
+  "README.md",
+  readme,
+  officialDonationUrl,
+  "README must link the official HCB donation URL exactly.",
+);
 mustInclude("README.md", readme, expectedRepoUrl, `Clone/docs URLs should use ${expectedRepoUrl}.`);
 mustNotMatch(
   "README.md",
@@ -100,6 +127,18 @@ mustNotMatch(
   readme,
   new RegExp(staleOrg.replace(/\./g, "\\.")),
   "Stale GitHub org URL.",
+);
+mustNotMatch(
+  "README.md",
+  readme,
+  /Allsparks[^\n.]{0,120}\bis an independent\b/i,
+  "Do not describe The Allsparks as an independent nonprofit; use fiscal-sponsorship language.",
+);
+mustMatch(
+  "README.md",
+  readme,
+  /fiscal\s+sponsor/i,
+  "README support language should refer to fiscal sponsorship.",
 );
 
 mustInclude(
@@ -114,7 +153,19 @@ mustInclude(
   "not officially affiliated",
   "Governance independence statement required.",
 );
+mustInclude(
+  "GOVERNANCE.md",
+  governance,
+  "Financial independence",
+  "Governance must document that donations do not purchase technical influence.",
+);
 mustInclude("AUTHORS.md", authors, "The Allsparks", "AUTHORS.md must name founding organization.");
+mustInclude(
+  "AUTHORS.md",
+  authors,
+  "Financial supporters",
+  "AUTHORS.md should clarify donors are not automatically listed as authors.",
+);
 mustInclude("NOTICE", notice, "The Allsparks", "NOTICE must credit The Allsparks.");
 mustInclude(
   "NOTICE",
@@ -123,6 +174,105 @@ mustInclude(
   "NOTICE must deny official affiliation.",
 );
 mustInclude("NOTICE", notice, "LICENSE", "NOTICE should point readers to LICENSE.");
+
+const support = read("SUPPORT.md");
+mustInclude(
+  "SUPPORT.md",
+  support,
+  officialDonationUrl,
+  "SUPPORT.md must use the official HCB donation URL exactly.",
+);
+mustInclude("SUPPORT.md", support, "fiscal", "SUPPORT.md must explain fiscal sponsorship.");
+mustInclude(
+  "SUPPORT.md",
+  support,
+  "Hack Foundation",
+  "SUPPORT.md should name The Hack Foundation as the 501(c)(3) operator of HCB.",
+);
+mustMatch(
+  "SUPPORT.md",
+  support,
+  /not\b[^\n.]{0,40}\bindependent(ly)?\b[^\n.]{0,40}(nonprofit|non-profit|501)/i,
+  "SUPPORT.md must state The Allsparks is not an independent nonprofit/501(c)(3).",
+);
+mustNotMatch(
+  "SUPPORT.md",
+  support,
+  /Allsparks[^\n.]{0,120}\bis an independent\b/i,
+  "Do not claim The Allsparks is an independent nonprofit.",
+);
+mustNotMatch(
+  "SUPPORT.md",
+  support,
+  /tax[- ]deductible|guaranteed\s+deduct/i,
+  "Do not promise tax deductibility; defer to the official donation page and receipt.",
+);
+mustInclude(
+  "SUPPORT.md",
+  support,
+  "priority support",
+  "SUPPORT.md should state donations do not purchase priority support.",
+);
+mustInclude(
+  "SUPPORT.md",
+  support,
+  "roadmap influence",
+  "SUPPORT.md should state donations do not purchase roadmap influence.",
+);
+
+// --- Funding / sponsorship ---
+const funding = read(".github/FUNDING.yml");
+if (funding !== null) {
+  if (!/^https:\/\//.test(officialDonationUrl)) {
+    errors.push("Official donation URL must use HTTPS.");
+  }
+  mustInclude(
+    ".github/FUNDING.yml",
+    funding,
+    officialDonationUrl,
+    "FUNDING.yml must use the official HCB donation URL exactly.",
+  );
+  const customUrls = [...funding.matchAll(/^\s*-\s*"([^"]+)"\s*$/gm)].map((m) => m[1]);
+  const customUrlsAlt = [...funding.matchAll(/^\s*-\s*'([^']+)'\s*$/gm)].map((m) => m[1]);
+  const bareUrls = [...funding.matchAll(/^\s*-\s*(https:\/\/\S+)\s*$/gm)].map((m) => m[1]);
+  const urls = [...new Set([...customUrls, ...customUrlsAlt, ...bareUrls])];
+  if (urls.length !== 1) {
+    errors.push(
+      `.github/FUNDING.yml: expected exactly one funding URL, found ${urls.length}: ${JSON.stringify(urls)}.`,
+    );
+  } else if (urls[0] !== officialDonationUrl) {
+    errors.push(
+      `.github/FUNDING.yml: funding URL must be exactly ${JSON.stringify(officialDonationUrl)} (found ${JSON.stringify(urls[0])}).`,
+    );
+  }
+  for (const key of [
+    "github",
+    "patreon",
+    "open_collective",
+    "ko_fi",
+    "tidelift",
+    "community_bridge",
+    "liberapay",
+    "issuehunt",
+    "lfx_crowdfunding",
+    "polar",
+    "buy_me_a_coffee",
+    "thanks_dev",
+  ]) {
+    if (new RegExp(`^\\s*${key}\\s*:`, "mi").test(funding)) {
+      errors.push(
+        `.github/FUNDING.yml: do not add ${key} funding entries; keep only the official HCB custom URL.`,
+      );
+    }
+  }
+  for (const pattern of bannedPaymentPatterns) {
+    if (pattern.test(funding)) {
+      errors.push(
+        `.github/FUNDING.yml: banned personal/payment link pattern ${pattern} is not allowed.`,
+      );
+    }
+  }
+}
 
 // --- Package metadata ---
 const packageFiles = [
@@ -165,8 +315,10 @@ for (const rel of packageFiles) {
     errors.push(`${rel}: repository URL uses stale org ${staleOrg}.`);
   }
 
-  if (pkg.homepage && !String(pkg.homepage).includes(expectedRepo)) {
-    errors.push(`${rel}: homepage should point to ${expectedRepoUrl}.`);
+  if (pkg.homepage && String(pkg.homepage) !== expectedHomepage) {
+    errors.push(
+      `${rel}: homepage should be ${JSON.stringify(expectedHomepage)} (found ${JSON.stringify(pkg.homepage)}).`,
+    );
   }
 
   // Guard against accidental rebranding to an unrelated org while keeping npm scope.
@@ -257,6 +409,30 @@ for (const filePath of markdownRoots) {
 
   if (text.includes(staleOrg)) {
     errors.push(`${rel}: contains stale repository URL ${staleOrg}.`);
+  }
+
+  for (const pattern of bannedPaymentPatterns) {
+    if (pattern.test(text)) {
+      errors.push(`${rel}: banned personal/payment link pattern ${pattern} is not allowed.`);
+    }
+  }
+
+  const donationLike = [];
+  for (const match of text.matchAll(/\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/g)) {
+    donationLike.push(match[1]);
+  }
+  for (const match of text.matchAll(/(?<!\()https?:\/\/[^\s)"'\]]+/g)) {
+    donationLike.push(match[0].replace(/[.,);]+$/, ""));
+  }
+  for (const url of [...new Set(donationLike)]) {
+    if (
+      (/hcb\.hackclub\.com\/donations\//i.test(url) || /\/donations?\//i.test(url)) &&
+      url !== officialDonationUrl
+    ) {
+      errors.push(
+        `${rel}: unofficial donation URL ${JSON.stringify(url)}; use exactly ${JSON.stringify(officialDonationUrl)}.`,
+      );
+    }
   }
 }
 

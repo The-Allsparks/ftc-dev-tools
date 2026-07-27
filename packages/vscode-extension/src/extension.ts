@@ -53,6 +53,11 @@ import type {
 } from "@ftc-dev-tools/shared";
 import { FtcRobotTreeProvider } from "./views/robot-tree.js";
 import { StatusController } from "./status-controller.js";
+import {
+  configureRecommendedExtensionsCommand,
+  setUpThisComputerCommand,
+  setUpThisFtcProjectCommand,
+} from "./setup-commands.js";
 
 let output: vscode.OutputChannel;
 let status: StatusController;
@@ -140,6 +145,11 @@ export function activate(context: vscode.ExtensionContext): void {
   register("ftc.configPull", configPullCommand);
   register("ftc.hwmapShow", hwmapShowCommand);
   register("ftc.hwmapCodegen", hwmapCodegenCommand);
+  register("ftc.configureRecommendedExtensions", () =>
+    configureRecommendedExtensionsCommand(getWorkspaceRoot, output),
+  );
+  register("ftc.setUpComputer", () => setUpThisComputerCommand(output));
+  register("ftc.setUpProject", () => setUpThisFtcProjectCommand(getWorkspaceRoot, output));
   register("ftc.openTechnicalOutput", async () => {
     output.show(true);
   });

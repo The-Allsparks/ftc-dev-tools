@@ -21,7 +21,7 @@ Full guide: [install-without-android-studio.md](install-without-android-studio.m
 ## Install FTC Dev Tools from source
 
 ```bash
-git clone https://github.com/ftc-dev-tools/ftc-dev-tools.git
+git clone https://github.com/The-Allsparks/ftc-dev-tools.git
 cd ftc-dev-tools
 npm install
 npm run build

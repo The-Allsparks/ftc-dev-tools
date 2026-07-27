@@ -12,7 +12,7 @@ The tools work with **no config file**. Defaults are applied automatically.
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/ftc-dev-tools/ftc-dev-tools/main/packages/shared/schemas/ftc-dev.schema.json",
+  "$schema": "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/packages/shared/schemas/ftc-dev.schema.json",
   "teamNumber": 12345,
   "module": "TeamCode",
   "deployment": {
@@ -40,4 +40,4 @@ The tools work with **no config file**. Defaults are applied automatically.
 | `module`, `logs.defaultFilter`, team number | `.ftc-dev.json` (team-shared, non-secret)                                 |
 | Preferred device serial for one laptop      | VS Code/Cursor setting `ftc.preferredDeviceSerial` (workspace/user local) |
 
-The schema lives in `packages/shared/schemas/ftc-dev.schema.json`. The `$schema` URL is replaceable once the repository is published.
+The schema lives in `packages/shared/schemas/ftc-dev.schema.json`. The published `$schema` URL points at the `main` branch of `The-Allsparks/ftc-dev-tools`.

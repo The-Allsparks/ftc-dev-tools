@@ -35,6 +35,7 @@ Only mark Control Hub support as validated after:
 ## Safety reminders
 
 - Never factory-reset as part of a test script
-- Never flash firmware
-- Never change Wi-Fi settings from this tool
+- Never flash Expansion Hub / Control Hub **firmware** as an automatic background action
+- Never change hub Wi-Fi credentials or OS without explicit confirmation and a recovery plan (see [wifi.md](wifi.md) and [hub-update.md](hub-update.md))
 - Never uninstall automatically to “make deploy work”
+- Record results using the maturity template in [feature-maturity.md](feature-maturity.md) without personal data

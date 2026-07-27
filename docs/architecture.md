@@ -155,25 +155,48 @@ Optional `.ftc-dev.json` validated against an in-repo JSON Schema. Unknown prope
 
 ## CI / release
 
-- PR workflow: install, lint, format check, typecheck, test, build, VSIX + CLI package dry-run on matrix
+- PR workflow: install, identity check, lint, format check, typecheck, test, build, VSIX + CLI package dry-run on matrix
 - Release workflow (manual or tag): attach CLI archive, VSIX, checksums, notes — **no** automatic npm / Marketplace publish in 0.1.0
+- Local dry-run: `npm run release:check` (see [branding-and-publishing.md](branding-and-publishing.md))
 
-## Deferred from 0.1.0 (see README roadmap)
+## Integrated capabilities (post-scaffold)
 
-Post-scaffold priorities (subject to change):
+First-class product surfaces (CLI + extension + shared; MCP subset where noted):
 
-- **Shipped preview**: FTC SDK check/update; Wi-Fi Phase 1–3; Control Hub OS helpers (Phase 4); Pedro Pathing (Phase 5); OpMode create (Phase 6a); robot config XML (Phase 6b); hardware map (Phase 6c); MCP server (Phase 7)
-- **Strong interest**: telemetry dashboard
-- **Maybe**: Road Runner (Pedro Pathing is the committed pathing focus), AI-assisted fixes, remote deploy beyond LAN
-- **Hard line unless redesigned**: automatic firmware flash / factory reset, silent device selection, auto-uninstall
+- FTC SDK check/update
+- Wi-Fi ADB, dual-NIC routing, hub Wi-Fi manage
+- Control Hub OS helpers (explicit; `--attempt-upload` remains experimental)
+- Pedro Pathing add/scaffold
+- OpMode list/create
+- Robot config list/show/validate/pull
+- Hardware map show/codegen
+- MCP server (`ftc-mcp`)
+
+Maturity levels (mock-tested through hardware-validated) live in [feature-maturity.md](feature-maturity.md). Do not call Control Hub–affecting features **Stable** until physical checklists pass.
+
+## Still deferred / investigative
+
+- Telemetry / FTC Dashboard interoperability ([telemetry-spike.md](telemetry-spike.md))
+- Java debugger attach via JDWP ([debugger-spike.md](debugger-spike.md)) — safety-critical; no support claim until hardware validation
+- Richer Logcat UX, diagnostic bundles, TeamCode unit-test starters
+- Road Runner (Pedro Pathing remains the committed pathing focus)
+- AI-assisted fixes (only if rule-based errors stay the default)
+- Remote deploy beyond LAN
+
+## Hard line unless redesigned
+
+- Automatic firmware flash / factory reset
+- Silent multi-device selection
+- Auto-uninstall
 
 ## Safety invariants
 
 Encoded in shared deployment and process helpers:
 
 - No multi-device silent selection
-- No factory reset / firmware / system settings / Wi-Fi mutation APIs
+- No factory reset / automatic firmware flash
 - No automatic uninstall
 - No project file deletion
 - No command execution from config values
+- Wi-Fi / hub OS mutations only when explicitly confirmed (`--yes` / modal)
 - Argument sanitization and direct process execution preferred over shells

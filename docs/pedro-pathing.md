@@ -1,6 +1,6 @@
 # Pedro Pathing
 
-FTC Dev Tools Phase 5 adds first-class **Pedro Pathing** helpers for official FTC projects. It does **not** install Road Runner.
+FTC Dev Tools includes first-class **Pedro Pathing** helpers for official FTC projects. It does **not** install Road Runner.
 
 ## Commands
 

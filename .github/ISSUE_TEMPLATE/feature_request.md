@@ -23,14 +23,14 @@ What FTC workflow problem does this solve for students, coaches, or mentors?
 
 ## Roadmap check
 
-Prefer filing against the roadmap when relevant:
+Prefer filing against current integrated surfaces or planned work when relevant:
 
-- FTC SDK automatic updates (**shipped preview** — improve/fix bugs welcome)
-- Explicit Wi-Fi configuration (**shipped preview**)
-- Pedro Pathing (**shipped preview**)
-- Telemetry dashboard (**planned, strong interest**)
-- OpMode / robot-config / hardware-map tooling (**shipped preview**)
-- Control Hub firmware updates (**out of scope unless redesigned**)
-- AI-generated fixes (**maybe later**)
+**Integrated (improve/fix bugs welcome):** FTC SDK update, Wi-Fi helpers, Control Hub OS helpers, Pedro Pathing, OpMode/config/hardware-map tooling, MCP server, build/deploy/logs/doctor.
+
+**Planned / investigative:** telemetry / FTC Dashboard interoperability, JDWP debugger investigation, richer Logcat + diagnostic bundles, TeamCode unit-test starters, SDK sample browser.
+
+**Out of scope unless redesigned:** Control Hub firmware flash / factory reset as an automatic action; silent multi-device selection; auto-uninstall; AI-generated fixes as the default error path.
+
+See [docs/feature-maturity.md](../../docs/feature-maturity.md) and [docs/parity-audit.md](../../docs/parity-audit.md).
 
 Team-specific robot code, strategy, credentials, and private operations belong outside this repository. See [docs/team-use.md](../../docs/team-use.md).

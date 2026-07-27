@@ -1,6 +1,6 @@
 # Hardware map
 
-Phase 6c bridges robot config XML to code: inspect name → type mappings and generate a new OpMode with `hardwareMap.get(...)` stubs (similar to OnBot Java’s hardware helpers).
+Bridges robot config XML to code: inspect name → type mappings and generate a new OpMode with `hardwareMap.get(...)` stubs (similar to OnBot Java’s hardware helpers).
 
 ## Commands
 

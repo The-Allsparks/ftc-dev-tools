@@ -1,6 +1,6 @@
 # Control Hub OS update helpers
 
-FTC Dev Tools Phase 4 provides **explicit** Control Hub Operating System helpers. It does **not** replace the [REV Hardware Client](https://docs.revrobotics.com/rev-hardware-client), and it never flashes firmware in the background.
+FTC Dev Tools provides **explicit** Control Hub Operating System helpers. It does **not** replace the [REV Hardware Client](https://docs.revrobotics.com/rev-hardware-client), and it never flashes firmware in the background.
 
 ## What we automate
 

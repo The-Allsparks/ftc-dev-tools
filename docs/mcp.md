@@ -1,4 +1,4 @@
-# MCP server (Phase 7)
+# MCP server
 
 Thin **stdio MCP** surface over `@ftc-dev-tools/shared` for Cursor (and other MCP hosts). It does **not** replace the CLI or VS Code/Cursor extension.
 

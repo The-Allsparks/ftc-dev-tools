@@ -24,9 +24,12 @@ Local packaging:
 npm run build
 npm test
 npm run check:identity
-npm run package:cli
-npm run package:extension
+npm run release:check
 ```
+
+`release:check` validates package versions, repository URLs, publisher format, extension icon/metadata, licenses, README links, changelog entry, and packages CLI + VSIX. Use `--allow-dirty` while iterating locally; use `--skip-package` for a metadata-only pass.
+
+Marketplace and Open VSX auto-publish remain **disabled**. See [branding-and-publishing.md](branding-and-publishing.md).
 
 ## Checklist before tagging
 

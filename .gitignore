@@ -13,6 +13,9 @@ Thumbs.db
 !.env.example
 packages/cli/ftc-*.zip
 packages/cli/ftc-*.tar.gz
+packages/cli/artifacts/*.tar.gz
+packages/cli/artifacts/*.sha256
+packages/vscode-extension/artifacts/
 *.tsbuildinfo
 .idea/
 .vscode/*

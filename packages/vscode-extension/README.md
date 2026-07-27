@@ -25,10 +25,10 @@ Most features call the shared **`ftc` CLI** under the hood. Install the CLI sepa
 
 Install guides (no Android Studio required):
 
-| OS | Documentation |
-| --- | --- |
-| Windows | [Install without Android Studio](https://github.com/The-Allsparks/ftc-dev-tools/blob/main/docs/install-without-android-studio.md) |
-| macOS / Linux | Same doc + repo `scripts/install-deps-*.sh` |
+| OS            | Documentation                                                                                                                     |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Windows       | [Install without Android Studio](https://github.com/The-Allsparks/ftc-dev-tools/blob/main/docs/install-without-android-studio.md) |
+| macOS / Linux | Same doc + repo `scripts/install-deps-*.sh`                                                                                       |
 
 3. Run **FTC: Run Environment Check** (or `ftc doctor` in a terminal) and fix anything marked failed.
 
@@ -43,15 +43,15 @@ Install guides (no Android Studio required):
 
 ## Command Palette cheat sheet
 
-| Command | Purpose |
-| --- | --- |
-| FTC: Run Environment Check | JDK, adb, Gradle wrapper, project layout |
+| Command                                      | Purpose                                                         |
+| -------------------------------------------- | --------------------------------------------------------------- |
+| FTC: Run Environment Check                   | JDK, adb, Gradle wrapper, project layout                        |
 | FTC: Set Up This Computer / This FTC Project | Guided JDK, SDK, tasks, snippets (preview before writing files) |
-| FTC: Build Robot Code | Gradle assemble via project wrapper |
-| FTC: Deploy to Robot | Install APK to selected device |
-| FTC: View Robot Logs / Error Logs | TeamCode-focused logcat in the output panel |
-| FTC: Check SDK Version | Compare project SDK to Maven |
-| FTC: Select Deployment Device | Required when multiple devices are connected |
+| FTC: Build Robot Code                        | Gradle assemble via project wrapper                             |
+| FTC: Deploy to Robot                         | Install APK to selected device                                  |
+| FTC: View Robot Logs / Error Logs            | TeamCode-focused logcat in the output panel                     |
+| FTC: Check SDK Version                       | Compare project SDK to Maven                                    |
+| FTC: Select Deployment Device                | Required when multiple devices are connected                    |
 
 Full CLI reference: [README on GitHub](https://github.com/The-Allsparks/ftc-dev-tools/blob/main/README.md).
 

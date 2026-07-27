@@ -1,0 +1,10 @@
+# CODEOWNERS
+
+# Preferred form once a GitHub maintainer team exists under The-Allsparks:
+# * @The-Allsparks/<maintainer-team-slug>
+#
+# No maintainer team slug is configured yet. Do not invent usernames or team
+# slugs here — invalid entries create false confidence about review ownership.
+#
+# Manual follow-up: create an organization team for FTC Dev Tools maintainers,
+# then replace this comment block with a single ownership rule covering `*`.

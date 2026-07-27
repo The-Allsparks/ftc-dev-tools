@@ -197,6 +197,8 @@ export class FtcRobotTreeProvider implements vscode.TreeDataProvider<RobotNode> 
               actionNode("config-show", "Show Robot Config", "ftc.configShow"),
               actionNode("config-validate", "Validate Robot Config", "ftc.configValidate"),
               actionNode("config-pull", "Pull Robot Configs", "ftc.configPull"),
+              actionNode("hwmap-show", "Show Hardware Map", "ftc.hwmapShow"),
+              actionNode("hwmap-codegen", "Generate OpMode from Config", "ftc.hwmapCodegen"),
               actionNode("wifi-console", "Open RC Console", "ftc.wifiOpenConsole"),
               actionNode("doctor", "Run Environment Check", "ftc.runDoctor"),
             ],

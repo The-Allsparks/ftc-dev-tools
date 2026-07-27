@@ -25,6 +25,7 @@ Physical REV Control Hub compatibility has **not** been claimed as validated in 
 - `ftc pedro` — detect / add deps / scaffold Pedro Pathing; see [docs/pedro-pathing.md](docs/pedro-pathing.md)
 - `ftc opmode` — list / create TeleOp & Autonomous stubs; see [docs/opmodes.md](docs/opmodes.md)
 - `ftc config` — list / show / validate / pull robot config XML; see [docs/robot-config.md](docs/robot-config.md)
+- `ftc hwmap` — show hardware map / generate OpMode stubs from config; see [docs/hwmap.md](docs/hwmap.md)
 - Optional `.ftc-dev.json` configuration + JSON Schema
 - VS Code/Cursor extension commands, FTC view, status bar, and output channel
 - Cancellable robot log streaming in the extension (`FTC: Stop Robot Logs`)
@@ -45,12 +46,12 @@ Physical REV Control Hub compatibility has **not** been claimed as validated in 
 | **Pedro Pathing (Phase 5)** | `ftc pedro status` / `add` / `scaffold` for official FTC projects |
 | **OpModes (Phase 6a)** | `ftc opmode list` / `create` TeleOp & Autonomous templates |
 | **Robot config (Phase 6b)** | `ftc config list` / `show` / `validate` / `pull` for TeamCode `res/xml` |
+| **Hardware map (Phase 6c)** | `ftc hwmap show` / `codegen` — config XML → `hardwareMap.get` OpMode |
 
 ### Planned (high priority — later phases)
 
 | Capability | Notes |
 | --- | --- |
-| **Studio parity 6c** | Hardware-map inspect/codegen from robot config XML |
 | **MCP server (Phase 7)** | Thin stdio MCP over shared for Cursor agents (after Studio parity) |
 
 ### Planned (strong interest)
@@ -58,7 +59,7 @@ Physical REV Control Hub compatibility has **not** been claimed as validated in 
 | Capability | Notes |
 | --- | --- |
 | **Telemetry dashboard** | Live / recorded telemetry view in the editor (beyond Logcat) |
-| **Android Studio parity extras** | Hardware-map codegen (6c); OpMode create (6a) and robot config (6b) shipped |
+| **Android Studio parity extras** | OpMode create (6a), robot config (6b), hardware-map codegen (6c) shipped |
 
 ### Maybe later
 
@@ -225,6 +226,7 @@ Official-style Android Studio projects with:
 - [Pedro Pathing](docs/pedro-pathing.md)
 - [OpModes](docs/opmodes.md)
 - [Robot configuration](docs/robot-config.md)
+- [Hardware map](docs/hwmap.md)
 - [Wi-Fi manage API notes](docs/wifi-manage-api.md)
 - [Configuration](docs/configuration.md)
 - [Architecture](docs/architecture.md)

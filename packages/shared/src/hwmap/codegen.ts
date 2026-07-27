@@ -5,6 +5,7 @@ import { interpretFromUnknown } from "../errors/interpret.js";
 import {
   DEFAULT_OPMODE_PACKAGE,
   isValidJavaClassName,
+  isValidJavaPackageName,
   packageToRelativePath,
 } from "../opmode/defaults.js";
 import type { OpModeKind, OpModeStyle } from "../opmode/types.js";
@@ -50,6 +51,20 @@ export async function codegenHardwareMapOpMode(
         message: `Invalid Java class name: ${className}`,
         error: interpretFromUnknown(
           Object.assign(new Error(`Invalid Java class name: ${className}`), {
+            code: "OPMODE_INVALID_NAME",
+          }),
+        ),
+      };
+    }
+
+    if (!isValidJavaPackageName(packageName)) {
+      return {
+        success: false,
+        dryRun,
+        className,
+        message: `Invalid Java package name: ${packageName}`,
+        error: interpretFromUnknown(
+          Object.assign(new Error(`Invalid Java package name: ${packageName}`), {
             code: "OPMODE_INVALID_NAME",
           }),
         ),
@@ -103,10 +118,25 @@ export async function codegenHardwareMapOpMode(
       };
     }
 
+    const javaRoot = path.join(projectRoot, "TeamCode", "src", "main", "java");
     const relativePath = path
       .join("TeamCode", "src", "main", "java", packageToRelativePath(packageName), `${className}.java`)
       .replace(/\\/g, "/");
-    const absolutePath = path.join(projectRoot, relativePath);
+    const absolutePath = path.resolve(projectRoot, relativePath);
+    const relToJava = path.relative(path.resolve(javaRoot), absolutePath);
+    if (relToJava.startsWith("..") || path.isAbsolute(relToJava)) {
+      return {
+        success: false,
+        dryRun,
+        className,
+        message: `Invalid Java package name: ${packageName}`,
+        error: interpretFromUnknown(
+          Object.assign(new Error(`Invalid Java package name: ${packageName}`), {
+            code: "OPMODE_INVALID_NAME",
+          }),
+        ),
+      };
+    }
 
     let exists = false;
     try {

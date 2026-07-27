@@ -302,7 +302,12 @@ export type {
   OpModeListResult,
   CreateOpModeResult,
 } from "./opmode/types.js";
-export { DEFAULT_OPMODE_PACKAGE, isValidJavaClassName, packageToRelativePath } from "./opmode/defaults.js";
+export {
+  DEFAULT_OPMODE_PACKAGE,
+  isValidJavaClassName,
+  isValidJavaPackageName,
+  packageToRelativePath,
+} from "./opmode/defaults.js";
 export { renderOpModeSource } from "./opmode/templates.js";
 export type { OpModeTemplateInput } from "./opmode/templates.js";
 export { listOpModes, parseOpModeFromSource } from "./opmode/list.js";
@@ -335,3 +340,16 @@ export {
 export { validateRobotConfig } from "./robot-config/validate.js";
 export { pullRobotConfigs } from "./robot-config/pull.js";
 export type { PullRobotConfigOptions } from "./robot-config/pull.js";
+
+export type {
+  HardwareMapCategory,
+  HardwareMapEntry,
+  HardwareMapShowResult,
+  HardwareMapCodegenResult,
+} from "./hwmap/types.js";
+export { resolveXmlTypeMapping, toJavaFieldName } from "./hwmap/map-types.js";
+export { showHardwareMap } from "./hwmap/show.js";
+export { codegenHardwareMapOpMode } from "./hwmap/codegen.js";
+export type { CodegenHardwareMapOptions } from "./hwmap/codegen.js";
+export { renderHwMapOpModeSource } from "./hwmap/templates.js";
+export type { HwMapOpModeTemplateInput } from "./hwmap/templates.js";

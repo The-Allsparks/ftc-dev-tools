@@ -177,6 +177,14 @@
         "title": "FTC: Pull Robot Configs"
       },
       {
+        "command": "ftc.hwmapShow",
+        "title": "FTC: Show Hardware Map"
+      },
+      {
+        "command": "ftc.hwmapCodegen",
+        "title": "FTC: Generate OpMode from Config"
+      },
+      {
         "command": "ftc.openTechnicalOutput",
         "title": "FTC: Open Technical Output"
       },

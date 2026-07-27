@@ -3,6 +3,19 @@
   "version": "0.1.0",
   "description": "stdio MCP server for FTC Dev Tools (Cursor / agent tools over shared)",
   "license": "Apache-2.0",
+  "author": {
+    "name": "The Allsparks contributors",
+    "url": "https://github.com/The-Allsparks"
+  },
+  "homepage": "https://www.theallsparks.org",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/The-Allsparks/ftc-dev-tools.git",
+    "directory": "packages/mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/The-Allsparks/ftc-dev-tools/issues"
+  },
   "type": "module",
   "bin": {
     "ftc-mcp": "./dist/bin.js"

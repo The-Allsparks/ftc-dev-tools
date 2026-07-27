@@ -1,0 +1,185 @@
+{
+  "FTC Iterative TeleOp": {
+    "prefix": "ftc-teleop",
+    "description": "Iterative OpMode TeleOp skeleton (generic package placeholder)",
+    "body": [
+      "package ${1:org.firstinspires.ftc.teamcode};",
+      "",
+      "import com.qualcomm.robotcore.eventloop.opmode.OpMode;",
+      "import com.qualcomm.robotcore.eventloop.opmode.TeleOp;",
+      "import com.qualcomm.robotcore.hardware.DcMotor;",
+      "",
+      "@TeleOp(name = \"${2:TeleOp}\", group = \"${3:TeleOp}\")",
+      "public class ${4:MyTeleOp} extends OpMode {",
+      "    private DcMotor ${5:leftDrive};",
+      "",
+      "    @Override",
+      "    public void init() {",
+      "        ${5:leftDrive} = hardwareMap.get(DcMotor.class, \"${6:left_drive}\");",
+      "        ${5:leftDrive}.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);",
+      "        telemetry.addData(\"Status\", \"Initialized\");",
+      "    }",
+      "",
+      "    @Override",
+      "    public void loop() {",
+      "        double power = -gamepad1.left_stick_y;",
+      "        ${5:leftDrive}.setPower(power);",
+      "        telemetry.addData(\"power\", power);",
+      "    }",
+      "",
+      "    @Override",
+      "    public void stop() {",
+      "        ${5:leftDrive}.setPower(0);",
+      "    }",
+      "}"
+    ]
+  },
+  "FTC Linear TeleOp": {
+    "prefix": "ftc-teleop-linear",
+    "description": "LinearOpMode TeleOp with safe finally stop",
+    "body": [
+      "package ${1:org.firstinspires.ftc.teamcode};",
+      "",
+      "import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;",
+      "import com.qualcomm.robotcore.eventloop.opmode.TeleOp;",
+      "import com.qualcomm.robotcore.hardware.DcMotor;",
+      "",
+      "@TeleOp(name = \"${2:Linear TeleOp}\", group = \"${3:TeleOp}\")",
+      "public class ${4:MyLinearTeleOp} extends LinearOpMode {",
+      "    @Override",
+      "    public void runOpMode() {",
+      "        DcMotor drive = hardwareMap.get(DcMotor.class, \"${5:left_drive}\");",
+      "        drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);",
+      "",
+      "        waitForStart();",
+      "        try {",
+      "            while (opModeIsActive()) {",
+      "                drive.setPower(-gamepad1.left_stick_y);",
+      "                telemetry.addData(\"power\", drive.getPower());",
+      "                telemetry.update();",
+      "            }",
+      "        } finally {",
+      "            drive.setPower(0);",
+      "        }",
+      "    }",
+      "}"
+    ]
+  },
+  "FTC Linear Autonomous": {
+    "prefix": "ftc-auto",
+    "description": "LinearOpMode Autonomous skeleton with elapsed time and safe stop",
+    "body": [
+      "package ${1:org.firstinspires.ftc.teamcode};",
+      "",
+      "import com.qualcomm.robotcore.eventloop.opmode.Autonomous;",
+      "import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;",
+      "import com.qualcomm.robotcore.hardware.DcMotor;",
+      "import com.qualcomm.robotcore.util.ElapsedTime;",
+      "",
+      "@Autonomous(name = \"${2:Auto}\", group = \"${3:Auto}\")",
+      "public class ${4:MyAuto} extends LinearOpMode {",
+      "    private final ElapsedTime runtime = new ElapsedTime();",
+      "",
+      "    @Override",
+      "    public void runOpMode() {",
+      "        DcMotor drive = hardwareMap.get(DcMotor.class, \"${5:left_drive}\");",
+      "        drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);",
+      "",
+      "        waitForStart();",
+      "        runtime.reset();",
+      "        try {",
+      "            drive.setPower(${6:0.3});",
+      "            while (opModeIsActive() && runtime.seconds() < ${7:1.0}) {",
+      "                telemetry.addData(\"runtime\", runtime.seconds());",
+      "                telemetry.update();",
+      "            }",
+      "        } finally {",
+      "            drive.setPower(0);",
+      "        }",
+      "    }",
+      "}"
+    ]
+  },
+  "FTC DcMotorEx init": {
+    "prefix": "ftc-motor",
+    "description": "DcMotorEx initialization with brake and zero power",
+    "body": [
+      "DcMotorEx ${1:motor} = hardwareMap.get(DcMotorEx.class, \"${2:motor}\");",
+      "${1:motor}.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);",
+      "${1:motor}.setDirection(DcMotor.Direction.${3|FORWARD,REVERSE|});",
+      "${1:motor}.setPower(0);"
+    ]
+  },
+  "FTC Servo init": {
+    "prefix": "ftc-servo",
+    "description": "Servo initialization",
+    "body": [
+      "Servo ${1:servo} = hardwareMap.get(Servo.class, \"${2:servo}\");",
+      "${1:servo}.setPosition(${3:0.5});"
+    ]
+  },
+  "FTC Gamepad edge": {
+    "prefix": "ftc-gamepad-edge",
+    "description": "Rising-edge detection for a gamepad button",
+    "body": [
+      "boolean ${1:pressed} = gamepad1.${2:a};",
+      "if (${1:pressed} && !${3:wasPressed}) {",
+      "    ${4:// action once per press}",
+      "}",
+      "${3:wasPressed} = ${1:pressed};"
+    ]
+  },
+  "FTC IMU init": {
+    "prefix": "ftc-imu",
+    "description": "IMU initialization using hardwareMap (name must match robot config)",
+    "body": [
+      "IMU ${1:imu} = hardwareMap.get(IMU.class, \"${2:imu}\");",
+      "RevHubOrientationOnRobot orientation = new RevHubOrientationOnRobot(",
+      "        RevHubOrientationOnRobot.LogoFacingDirection.${3|UP,DOWN,FORWARD,BACKWARD,LEFT,RIGHT|},",
+      "        RevHubOrientationOnRobot.UsbFacingDirection.${4|UP,DOWN,FORWARD,BACKWARD,LEFT,RIGHT|});",
+      "${1:imu}.initialize(new IMU.Parameters(orientation));"
+    ]
+  },
+  "FTC Telemetry": {
+    "prefix": "ftc-telemetry",
+    "description": "Telemetry addData + update",
+    "body": ["telemetry.addData(\"${1:label}\", ${2:value});", "telemetry.update();"]
+  },
+  "FTC ElapsedTime": {
+    "prefix": "ftc-elapsed",
+    "description": "ElapsedTime field and reset",
+    "body": [
+      "private final ElapsedTime ${1:timer} = new ElapsedTime();",
+      "// ...",
+      "${1:timer}.reset();",
+      "while (opModeIsActive() && ${1:timer}.seconds() < ${2:1.0}) {",
+      "    idle();",
+      "}"
+    ]
+  },
+  "FTC VisionPortal skeleton": {
+    "prefix": "ftc-vision",
+    "description": "VisionPortal builder skeleton (requires vision libraries on classpath)",
+    "body": [
+      "VisionPortal ${1:portal} = new VisionPortal.Builder()",
+      "        .setCamera(hardwareMap.get(WebcamName.class, \"${2:Webcam 1}\"))",
+      "        .addProcessor(${3:processor})",
+      "        .build();"
+    ]
+  },
+  "FTC AprilTag processor skeleton": {
+    "prefix": "ftc-apriltag",
+    "description": "AprilTagProcessor builder skeleton",
+    "body": [
+      "AprilTagProcessor ${1:aprilTag} = new AprilTagProcessor.Builder()",
+      "        .setDrawTagID(true)",
+      "        .setDrawAxes(true)",
+      "        .build();"
+    ]
+  },
+  "FTC Safe stop finally": {
+    "prefix": "ftc-safe-stop",
+    "description": "try/finally pattern that zeros a motor",
+    "body": ["try {", "    ${1:// opmode body}", "} finally {", "    ${2:motor}.setPower(0);", "}"]
+  }
+}

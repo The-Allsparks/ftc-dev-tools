@@ -279,6 +279,7 @@ const packageFiles = [
   "package.json",
   "packages/cli/package.json",
   "packages/shared/package.json",
+  "packages/mcp/package.json",
   "packages/vscode-extension/package.json",
 ];
 
@@ -433,6 +434,46 @@ for (const filePath of markdownRoots) {
         `${rel}: unofficial donation URL ${JSON.stringify(url)}; use exactly ${JSON.stringify(officialDonationUrl)}.`,
       );
     }
+  }
+}
+
+// --- Stale org URL must not reappear in tracked source/docs/config ---
+function walkFiles(dir, out = []) {
+  if (!fs.existsSync(dir)) return out;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (
+      entry.name === "node_modules" ||
+      entry.name === "dist" ||
+      entry.name === "artifacts" ||
+      entry.name === ".git" ||
+      entry.name === "coverage"
+    ) {
+      continue;
+    }
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      walkFiles(full, out);
+    } else if (/\.(md|json|ts|mjs|yml|yaml|txt)$/i.test(entry.name)) {
+      out.push(full);
+    }
+  }
+  return out;
+}
+
+for (const filePath of walkFiles(root)) {
+  const rel = path.relative(root, filePath).replaceAll("\\", "/");
+  if (rel.startsWith("packages/cli/artifacts/")) continue;
+  // These scripts intentionally mention the banned string as the detection needle.
+  if (
+    rel === "scripts/check-project-identity.mjs" ||
+    rel === "scripts/release-check.mjs" ||
+    rel === "scripts/create-parity-issues.mjs"
+  ) {
+    continue;
+  }
+  const text = fs.readFileSync(filePath, "utf8");
+  if (text.includes(staleOrg)) {
+    errors.push(`${rel}: contains stale repository URL ${staleOrg}.`);
   }
 }
 

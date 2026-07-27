@@ -24,6 +24,7 @@
   "categories": [
     "Other"
   ],
+  "icon": "media/icon.png",
   "activationEvents": [
     "onStartupFinished",
     "workspaceContains:settings.gradle",
@@ -194,12 +195,30 @@
         "title": "FTC: Generate OpMode from Config"
       },
       {
+        "command": "ftc.configureRecommendedExtensions",
+        "title": "FTC: Configure Recommended Extensions"
+      },
+      {
+        "command": "ftc.setUpComputer",
+        "title": "FTC: Set Up This Computer"
+      },
+      {
+        "command": "ftc.setUpProject",
+        "title": "FTC: Set Up This FTC Project"
+      },
+      {
         "command": "ftc.openTechnicalOutput",
         "title": "FTC: Open Technical Output"
       },
       {
         "command": "ftc.refreshView",
         "title": "FTC: Refresh View"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "java",
+        "path": "./snippets/ftc-java.code-snippets"
       }
     ],
     "viewsContainers": {

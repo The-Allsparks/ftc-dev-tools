@@ -5,3 +5,7 @@
 **/*.vsix
 **/artifacts
 package-lock.json
+
+# VS Code snippets must remain strict JSON (no trailing commas)
+**/*.code-snippets
+

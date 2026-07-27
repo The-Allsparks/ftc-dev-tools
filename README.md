@@ -18,11 +18,11 @@ The Allsparks remain the project’s founding maintainers, but FTC Dev Tools is 
 
 ## Current status
 
-**Version 0.1.0 (+ SDK update preview toward 0.2.0)**
+**Version 0.1.0**
 
-Usable locally for environment checks, device listing, Gradle Wrapper builds/cleans, ADB deploy orchestration, Logcat viewing, student-friendly errors, a thin VS Code/Cursor extension UI, **FTC SDK check / update**, **Wi-Fi adb + dual-NIC stay-online** helpers, **explicit Control Hub OS update** helpers, and **Pedro Pathing** add/scaffold.
+Integrated tooling for environment checks, device listing, Gradle Wrapper builds/cleans, ADB deploy orchestration, Logcat viewing, student-friendly errors, VS Code/Cursor UI, FTC SDK check/update, Wi-Fi ADB + dual-NIC helpers, Control Hub OS helpers, Pedro Pathing, OpMode/config/hardware-map helpers, and the `ftc-mcp` agent server.
 
-Physical REV Control Hub compatibility has **not** been claimed as validated in this repository yet. CI uses mocked devices. See [docs/physical-device-testing.md](docs/physical-device-testing.md).
+Physical REV Control Hub compatibility has **not** been claimed as validated in this repository yet. CI uses mocked devices. See [docs/physical-device-testing.md](docs/physical-device-testing.md) and [docs/feature-maturity.md](docs/feature-maturity.md).
 
 ## Supported features (0.1.0)
 
@@ -40,44 +40,39 @@ Physical REV Control Hub compatibility has **not** been claimed as validated in 
 - `ftc hwmap` — show hardware map / generate OpMode stubs from config; see [docs/hwmap.md](docs/hwmap.md)
 - `ftc-mcp` — stdio MCP server for Cursor agents; see [docs/mcp.md](docs/mcp.md)
 - Optional `.ftc-dev.json` configuration + JSON Schema
-- VS Code/Cursor extension commands, FTC view, status bar, and output channel
+- VS Code/Cursor extension commands, FTC view, status bar, output channel, and Java snippets
+- Guided setup commands: **FTC: Set Up This Computer**, **FTC: Set Up This FTC Project**, **FTC: Configure Recommended Extensions**
 - Cancellable robot log streaming in the extension (`FTC: Stop Robot Logs`)
 - Unit/integration-style tests with `MockDeviceProvider`
 - GitHub Actions CI on Windows, macOS, and Linux
 
-## Roadmap (not all shipped)
+Maturity for each area (mock-tested through hardware-validated) is tracked in [docs/feature-maturity.md](docs/feature-maturity.md). Parity analysis vs Android Studio and FTC for VS Code: [docs/parity-audit.md](docs/parity-audit.md).
 
-0.1.0 is the scaffold. Later releases aim for **Android Studio workflow parity** for FTC robot projects — and extras Android Studio does not prioritize — without replacing the official SDK.
+## Roadmap
 
-### Shipped preview
-
-| Capability                           | Notes                                                                                        |
-| ------------------------------------ | -------------------------------------------------------------------------------------------- |
-| **FTC SDK auto-update**              | `ftc sdk check` / `ftc sdk update` with dry-run, confirmation, dirty-tree guard, and backups |
-| **Wi-Fi configuration (Phase 1–3)**  | Wireless adb, dual-NIC routing, OS join, hub manage, stay-online metrics/adapters            |
-| **Control Hub OS helpers (Phase 4)** | Explicit status / check / download / guided apply (never automatic flash)                    |
-| **Pedro Pathing (Phase 5)**          | `ftc pedro status` / `add` / `scaffold` for official FTC projects                            |
-| **OpModes (Phase 6a)**               | `ftc opmode list` / `create` TeleOp & Autonomous templates                                   |
-| **Robot config (Phase 6b)**          | `ftc config list` / `show` / `validate` / `pull` for TeamCode `res/xml`                      |
-| **Hardware map (Phase 6c)**          | `ftc hwmap show` / `codegen` — config XML → `hardwareMap.get` OpMode                         |
-| **MCP server (Phase 7)**             | Thin stdio MCP (`ftc-mcp`) over shared for Cursor agents                                     |
+Integrated features above are first-class product surfaces. Remaining work aims at **practical FTC workflow parity** (editing via recommended language tooling, build/deploy, logs/diagnostics, tests, samples/docs, robot config workflow, device management, reliable onboarding)—not full Android Studio clone parity. Interactive breakpoint debugging is a separate advanced capability and may remain experimental.
 
 ### Planned (strong interest)
 
-| Capability              | Notes                                                        |
-| ----------------------- | ------------------------------------------------------------ |
-| **Telemetry dashboard** | Live / recorded telemetry view in the editor (beyond Logcat) |
+| Capability                                     | Notes                                                                                             |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| **Telemetry / FTC Dashboard interoperability** | Prefer existing community tools; see [docs/telemetry-spike.md](docs/telemetry-spike.md)           |
+| **Java debugger attach (investigation)**       | JDWP spike only until Control Hub validated; see [docs/debugger-spike.md](docs/debugger-spike.md) |
+| **Richer Logcat / diagnostic bundles**         | Process filters, clickable stack traces, redacted share bundles                                   |
+| **TeamCode unit-test starter workflow**        | Document + Gradle/test commands; do not reinvent Test Explorer                                    |
 
 ### Maybe later
 
 - **Road Runner** integration (optional; Pedro Pathing is the committed pathing focus)
 - AI-assisted fixes (only if rule-based errors stay the default)
 - Remote deployment beyond the local network
+- SDK sample browser / import workflow
 
 ### Still out of scope unless redesigned
 
 - Control Hub **firmware** flashing / factory reset as an automatic background action
 - Silent multi-device selection, auto-uninstall, or arbitrary commands from `.ftc-dev.json`
+- Generic Java language server, Android XML visual layout editor, full profiler/emulator tooling (delegate to established VS Code extensions)
 
 Priorities may shift with community feedback.
 
@@ -109,14 +104,17 @@ examples/             Sample FTC-like layout (not a full SDK)
 
 ## Names and identifiers
 
-| Kind                | Value                         |
-| ------------------- | ----------------------------- |
-| Public project name | **FTC Dev Tools**             |
-| Provenance          | Built by The Allsparks        |
-| GitHub organization | `The-Allsparks`               |
-| Repository          | `The-Allsparks/ftc-dev-tools` |
-| npm scope           | `@ftc-dev-tools`              |
-| CLI executable      | `ftc`                         |
+| Kind                | Value                                                                       |
+| ------------------- | --------------------------------------------------------------------------- |
+| Public project name | **FTC Dev Tools**                                                           |
+| Provenance          | Built by The Allsparks                                                      |
+| GitHub organization | `The-Allsparks`                                                             |
+| Repository          | `The-Allsparks/ftc-dev-tools`                                               |
+| npm scope           | `@ftc-dev-tools`                                                            |
+| Extension publisher | `ftc-dev-tools` (Marketplace ID; ownership must be verified before publish) |
+| CLI executable      | `ftc`                                                                       |
+
+Details: [docs/branding-and-publishing.md](docs/branding-and-publishing.md).
 
 ## Installation
 
@@ -258,11 +256,19 @@ Official-style Android Studio projects with:
 - [Robot configuration](docs/robot-config.md)
 - [Hardware map](docs/hwmap.md)
 - [MCP server](docs/mcp.md)
+- [Snippets](docs/snippets.md)
 - [Wi-Fi manage API notes](docs/wifi-manage-api.md)
 - [Configuration](docs/configuration.md)
 - [Architecture](docs/architecture.md)
+- [Branding and publishing](docs/branding-and-publishing.md)
+- [Feature maturity](docs/feature-maturity.md)
+- [Parity audit](docs/parity-audit.md)
+- [Recommended extensions](docs/recommended-extensions.md)
+- [Debugger spike](docs/debugger-spike.md)
+- [Telemetry spike](docs/telemetry-spike.md)
 - [Releasing](docs/releasing.md)
 - [Physical device testing](docs/physical-device-testing.md)
+- [Changelog](CHANGELOG.md)
 
 ## Project stewardship
 
@@ -306,4 +312,5 @@ npm run typecheck
 npm run package:cli
 npm run package:extension
 npm run check:identity
+npm run release:check -- --allow-dirty
 ```

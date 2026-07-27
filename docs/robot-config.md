@@ -1,6 +1,6 @@
 # Robot configuration XML
 
-Phase 6b adds helpers to list, inspect, validate, and pull FTC robot configuration XML so teams can work with Driver Station configs from Cursor/VS Code without Android Studio’s config editor.
+Helpers to list, inspect, validate, and pull FTC robot configuration XML so teams can work with Driver Station configs from Cursor/VS Code without Android Studio’s config editor.
 
 ## Commands
 

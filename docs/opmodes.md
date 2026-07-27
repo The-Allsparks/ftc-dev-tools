@@ -1,6 +1,6 @@
 # OpModes
 
-Phase 6a adds OpMode list/create helpers so teams can scaffold TeleOp and Autonomous classes in Cursor/VS Code without Android Studio’s new-file wizard.
+FTC Dev Tools includes OpMode list/create helpers so teams can scaffold TeleOp and Autonomous classes in Cursor/VS Code without Android Studio’s new-file wizard.
 
 ## Commands
 

@@ -34,6 +34,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "check:identity": "node scripts/check-project-identity.mjs",
+    "release:check": "node scripts/release-check.mjs",
     "package:cli": "npm run package --workspace @ftc-dev-tools/cli",
     "package:extension": "npm run package --workspace ftc-dev-tools",
     "doctor": "npm run build --workspace @ftc-dev-tools/shared && npm run build --workspace @ftc-dev-tools/cli && node packages/cli/dist/bin.js doctor",

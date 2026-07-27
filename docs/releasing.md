@@ -38,7 +38,7 @@ npm run package:extension
 6. GitHub repository description (settings UI / API; not set by this repo alone) should stay aligned with:
 
 ```text
-FTC development tools created by The Allsparks for our team and the wider FTC community—build, deploy, diagnose, configure, and manage FTC Android projects from VS Code, Cursor, or the terminal.
+FTC development tools built by The Allsparks for our team and the wider FTC community. Open source, Apache 2.0 licensed, with optional support through our nonprofit fiscal sponsor.
 ```
 
 7. Confirm Marketplace publisher ownership before publishing a VSIX (`publisher` in `packages/vscode-extension/package.json` is currently `ftc-dev-tools`)

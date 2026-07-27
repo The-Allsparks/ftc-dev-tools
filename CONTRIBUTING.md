@@ -112,6 +112,22 @@ By contributing, you agree that your contribution may be distributed under the p
 
 Do not submit content you do not have the right to license under Apache-2.0.
 
+## Financial contributions
+
+Financial contributions help support The Allsparks and the continued development of FTC Dev Tools.
+
+They do not affect:
+
+- pull request review
+- issue priority
+- feature acceptance
+- maintainer decisions
+- project governance
+
+All technical contributions are evaluated using the same project standards.
+
+Optional donation details: [SUPPORT.md](SUPPORT.md).
+
 ## Pull requests
 
 Use the PR template. Keep changes focused. Prefer clear commits over large mixed patches.

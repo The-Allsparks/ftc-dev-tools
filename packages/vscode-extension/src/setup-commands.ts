@@ -1,7 +1,12 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as vscode from "vscode";
-import { NodeProcessRunner, OfficialFtcProjectAdapter, runDoctor, listCliConsumerInstallCommands } from "@ftc-dev-tools/shared";
+import {
+  NodeProcessRunner,
+  OfficialFtcProjectAdapter,
+  runDoctor,
+  listCliConsumerInstallCommands,
+} from "@ftc-dev-tools/shared";
 
 const FTC_PROJECT_RECOMMENDED_EXTENSIONS = [
   "vscjava.vscode-java-pack",

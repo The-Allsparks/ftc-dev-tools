@@ -29,9 +29,7 @@ export function cliGitHubReleaseTarballUrl(version: string = PACKAGE_VERSION): s
 }
 
 /** One global install command from the latest published GitHub Release asset (Node + network; no git clone). */
-export function buildCliInstallFromGitHubRelease(
-  version: string = PACKAGE_VERSION,
-): string {
+export function buildCliInstallFromGitHubRelease(version: string = PACKAGE_VERSION): string {
   const url = cliGitHubReleaseTarballUrl(version);
   return `npm install -g "${url}"`;
 }

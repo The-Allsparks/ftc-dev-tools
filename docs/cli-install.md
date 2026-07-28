@@ -70,8 +70,8 @@ Maintainers and contributors who work on FTC Dev Tools itself should clone the r
 
 ## Troubleshooting
 
-| Symptom | What to try |
-| -------- | ------------ |
-| `ftc: command not found` | Ensure Node global bin is on your `PATH` (restart the terminal after `npm install -g`). |
-| `Cannot find module '@ftc-dev-tools/shared'` | Re-install from a current release tarball (older archives may not bundle shared). |
-| No release yet | Wait for tag `v*` on GitHub or use [from source](../README.md#from-source-contributors) until the first release ships. |
+| Symptom                                      | What to try                                                                                                            |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `ftc: command not found`                     | Ensure Node global bin is on your `PATH` (restart the terminal after `npm install -g`).                                |
+| `Cannot find module '@ftc-dev-tools/shared'` | Re-install from a current release tarball (older archives may not bundle shared).                                      |
+| No release yet                               | Wait for tag `v*` on GitHub or use [from source](../README.md#from-source-contributors) until the first release ships. |

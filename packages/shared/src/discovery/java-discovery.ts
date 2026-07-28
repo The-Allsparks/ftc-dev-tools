@@ -31,6 +31,10 @@ export async function discoverJava(
 }
 
 export function parseJavaMajorVersion(versionText: string): number | undefined {
+  const legacyQuoted = versionText.match(/version\s+"1\.(\d+)/i);
+  if (legacyQuoted) {
+    return Number.parseInt(legacyQuoted[1] ?? "", 10);
+  }
   const match =
     versionText.match(/version\s+"(\d+)(?:\.\d+)*"/i) ??
     versionText.match(/version\s+(\d+)(?:\.\d+)*/i);

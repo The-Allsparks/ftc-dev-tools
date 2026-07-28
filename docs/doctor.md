@@ -2,6 +2,8 @@
 
 The doctor command checks **machine readiness** (JDK, Android SDK, adb, Node) separately from **project readiness** (official FTC layout, Gradle wrapper, Gradle init). Optional **robot** and **other** sections cover devices, Wi-Fi, and SDK freshness.
 
+The **Supported JDK version** check requires JDK 17 (matching current FTC seasons and the `install-deps` scripts). Other Java versions fail with install guidance; see [install-without-android-studio.md](install-without-android-studio.md).
+
 ## CLI
 
 ```bash

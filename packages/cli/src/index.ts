@@ -13,6 +13,7 @@ import { registerHwMapCommand } from "./commands/hwmap.js";
 import { registerOpModeCommand } from "./commands/opmode.js";
 import { registerPedroCommand } from "./commands/pedro.js";
 import { registerWifiCommand } from "./commands/wifi.js";
+import { registerSetupCommand } from "./commands/setup.js";
 
 export async function runCli(argv: string[]): Promise<void> {
   const program = new Command();
@@ -29,6 +30,7 @@ export async function runCli(argv: string[]): Promise<void> {
   registerCleanCommand(program);
   registerSdkCommand(program);
   registerWifiCommand(program);
+  registerSetupCommand(program);
   registerHubCommand(program);
   registerPedroCommand(program);
   registerOpModeCommand(program);

@@ -18,21 +18,10 @@ import {
   setRobotNetworkInterface,
 } from "@ftc-dev-tools/shared";
 import { createCliContext, printFriendlyError } from "../context.js";
+import { readHiddenPassword } from "../read-hidden-password.js";
 
 async function readPasswordFromStdinPrompt(): Promise<string | undefined> {
-  if (!process.stdin.isTTY) {
-    return undefined;
-  }
-  process.stdout.write("Hub Wi-Fi password (input hidden not guaranteed in all terminals): ");
-  return await new Promise((resolve) => {
-    const onData = (chunk: Buffer): void => {
-      process.stdin.off("data", onData);
-      process.stdin.pause();
-      resolve(chunk.toString("utf8").trim() || undefined);
-    };
-    process.stdin.resume();
-    process.stdin.once("data", onData);
-  });
+  return readHiddenPassword("Hub Wi-Fi password: ");
 }
 
 export function registerWifiCommand(program: Command): void {
@@ -295,7 +284,7 @@ export function registerWifiCommand(program: Command): void {
     .requiredOption("--ssid <name>", "Wi-Fi network name (SSID)")
     .option("--interface <name>", "Network interface (defaults to selected robot NIC)")
     .option("--password-env <VAR>", "Env var holding the password", "FTC_WIFI_PASSWORD")
-    .option("--no-remember", "Do not store the password in the machine-local secret file")
+    .option("--remember", "Store the password in the machine-local obfuscated secret file")
     .option("--yes", "Confirm joining the network")
     .option("--json", "Emit stable machine-readable JSON")
     .option("--verbose", "Include technical details for failures")
@@ -321,7 +310,7 @@ export function registerWifiCommand(program: Command): void {
           password,
           interfaceName: options.interface,
           passwordEnvVar: envName,
-          remember: options.remember !== false,
+          remember: options.remember === true,
           yes: options.yes === true,
         });
         if (options.json) {

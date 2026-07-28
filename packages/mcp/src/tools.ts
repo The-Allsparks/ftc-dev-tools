@@ -22,7 +22,8 @@ import {
 } from "@ftc-dev-tools/shared";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { createMcpContext, tryCreateDeviceProvider } from "./context.js";
-import { confirmationRequired, jsonResult } from "./result.js";
+import { runGatedMutation } from "./mutation-gate.js";
+import { jsonResult } from "./result.js";
 
 export interface ProjectRootArgs {
   projectRoot?: string;
@@ -32,9 +33,12 @@ function ctxFrom(args: ProjectRootArgs, verbose = false) {
   return createMcpContext(args.projectRoot, verbose);
 }
 
-function needsYes(args: { yes?: boolean; dryRun?: boolean }): boolean {
-  return args.dryRun !== true && args.yes !== true;
-}
+type ConfirmArgs = {
+  yes?: boolean;
+  dryRun?: boolean;
+  confirmPlanId?: string;
+  confirmPlanHash?: string;
+};
 
 export async function toolDoctor(args: ProjectRootArgs): Promise<CallToolResult> {
   const ctx = ctxFrom(args);
@@ -60,69 +64,87 @@ export async function toolDevices(args: ProjectRootArgs): Promise<CallToolResult
 }
 
 export async function toolBuild(
-  args: ProjectRootArgs & { yes?: boolean; verbose?: boolean },
+  args: ProjectRootArgs & ConfirmArgs & { verbose?: boolean },
 ): Promise<CallToolResult> {
-  if (args.yes !== true) {
-    return confirmationRequired("run a Gradle build");
-  }
   const ctx = ctxFrom(args, args.verbose === true);
-  const outcome = await buildProject({
-    adapter: ctx.adapter,
-    runner: ctx.runner,
-    logger: ctx.logger,
-    cwd: ctx.projectRoot,
-    verbose: args.verbose === true,
-  });
-  return jsonResult(
-    {
-      projectRoot: ctx.projectRoot,
-      success: outcome.result.success,
-      result: outcome.result,
-      error: outcome.friendlyError,
+  const payload = { verbose: args.verbose === true };
+  return runGatedMutation(
+    args,
+    "build",
+    ctx.projectRoot,
+    payload,
+    "Run a Gradle build.",
+    async (dryRun) => {
+      if (dryRun) {
+        return {
+          success: true,
+          dryRun: true,
+          message: "Dry run: would run Gradle build for this project.",
+        };
+      }
+      const outcome = await buildProject({
+        adapter: ctx.adapter,
+        runner: ctx.runner,
+        logger: ctx.logger,
+        cwd: ctx.projectRoot,
+        verbose: args.verbose === true,
+      });
+      return {
+        success: outcome.result.success,
+        dryRun: false,
+        result: outcome.result,
+        error: outcome.friendlyError,
+      };
     },
-    !outcome.result.success,
   );
 }
 
 export async function toolDeploy(
-  args: ProjectRootArgs & {
-    yes?: boolean;
-    dryRun?: boolean;
-    device?: string;
-    verbose?: boolean;
-  },
+  args: ProjectRootArgs &
+    ConfirmArgs & {
+      device?: string;
+      verbose?: boolean;
+    },
 ): Promise<CallToolResult> {
-  if (needsYes(args)) {
-    return confirmationRequired("deploy to a device");
-  }
   const ctx = ctxFrom(args, args.verbose === true);
-  try {
-    const devices = await ctx.createDeviceProvider();
-    const outcome = await deployProject({
-      adapter: ctx.adapter,
-      runner: ctx.runner,
-      devices,
-      logger: ctx.logger,
-      cwd: ctx.projectRoot,
-      deviceSerial: args.device,
-      dryRun: args.dryRun === true,
-      verbose: args.verbose === true,
-    });
-    return jsonResult(
-      {
-        projectRoot: ctx.projectRoot,
-        success: outcome.result.success,
-        result: outcome.result,
-        error: outcome.friendlyError,
-      },
-      !outcome.result.success,
-    );
-  } catch (error) {
-    return jsonResult(
-      { projectRoot: ctx.projectRoot, success: false, error: interpretFromUnknown(error) },
-      true,
-    );
-  }
+  const payload = {
+    device: args.device,
+    verbose: args.verbose === true,
+  };
+  return runGatedMutation(
+    args,
+    "deploy",
+    ctx.projectRoot,
+    payload,
+    "Deploy to a connected Android device.",
+    async (dryRun) => {
+      try {
+        const devices = await ctx.createDeviceProvider();
+        const outcome = await deployProject({
+          adapter: ctx.adapter,
+          runner: ctx.runner,
+          devices,
+          logger: ctx.logger,
+          cwd: ctx.projectRoot,
+          deviceSerial: args.device,
+          dryRun,
+          verbose: args.verbose === true,
+        });
+        return {
+          success: outcome.result.success,
+          dryRun,
+          result: outcome.result,
+          error: outcome.friendlyError,
+        };
+      } catch (error) {
+        return {
+          success: false,
+          dryRun,
+          error: interpretFromUnknown(error),
+        };
+      }
+    },
+  );
 }
 
 export async function toolSdkCheck(
@@ -140,26 +162,32 @@ export async function toolSdkCheck(
 }
 
 export async function toolSdkUpdate(
-  args: ProjectRootArgs & {
-    yes?: boolean;
-    dryRun?: boolean;
-    force?: boolean;
-    version?: string;
-  },
+  args: ProjectRootArgs &
+    ConfirmArgs & {
+      force?: boolean;
+      version?: string;
+    },
 ): Promise<CallToolResult> {
-  if (needsYes(args)) {
-    return confirmationRequired("update FTC SDK-owned project files");
-  }
   const ctx = ctxFrom(args);
-  const result = await applySdkUpdate({
-    projectRoot: ctx.projectRoot,
-    runner: ctx.runner,
-    dryRun: args.dryRun === true,
-    yes: args.yes === true || args.dryRun === true,
-    force: args.force === true,
-    targetTag: args.version,
-  });
-  return jsonResult({ ...result, projectRoot: ctx.projectRoot }, !result.success);
+  const payload = { force: args.force === true, version: args.version };
+  return runGatedMutation(
+    args,
+    "sdk_update",
+    ctx.projectRoot,
+    payload,
+    "Sync SDK-owned project files from an official FTC release.",
+    async (dryRun) => {
+      const result = await applySdkUpdate({
+        projectRoot: ctx.projectRoot,
+        runner: ctx.runner,
+        dryRun,
+        yes: true,
+        force: args.force === true,
+        targetTag: args.version,
+      });
+      return { ...result };
+    },
+  );
 }
 
 export async function toolWifiStatus(args: ProjectRootArgs): Promise<CallToolResult> {
@@ -212,51 +240,67 @@ export async function toolPedroStatus(args: ProjectRootArgs): Promise<CallToolRe
 }
 
 export async function toolPedroAdd(
-  args: ProjectRootArgs & {
-    yes?: boolean;
-    dryRun?: boolean;
-    force?: boolean;
-    version?: string;
-    patchCompileSdk?: boolean;
-  },
+  args: ProjectRootArgs &
+    ConfirmArgs & {
+      force?: boolean;
+      version?: string;
+      patchCompileSdk?: boolean;
+    },
 ): Promise<CallToolResult> {
-  if (needsYes(args)) {
-    return confirmationRequired("add Pedro Pathing dependencies");
-  }
   const ctx = ctxFrom(args);
-  const result = await addPedroPathing({
-    projectRoot: ctx.projectRoot,
-    runner: ctx.runner,
-    version: args.version,
-    dryRun: args.dryRun === true,
-    yes: args.yes === true || args.dryRun === true,
+  const payload = {
     force: args.force === true,
+    version: args.version,
     patchCompileSdk: args.patchCompileSdk !== false,
-  });
-  return jsonResult({ ...result, projectRoot: ctx.projectRoot }, !result.success);
+  };
+  return runGatedMutation(
+    args,
+    "pedro_add",
+    ctx.projectRoot,
+    payload,
+    "Add Pedro Pathing Maven repo and dependencies.",
+    async (dryRun) => {
+      const result = await addPedroPathing({
+        projectRoot: ctx.projectRoot,
+        runner: ctx.runner,
+        version: args.version,
+        dryRun,
+        yes: true,
+        force: args.force === true,
+        patchCompileSdk: args.patchCompileSdk !== false,
+      });
+      return { ...result };
+    },
+  );
 }
 
 export async function toolPedroScaffold(
-  args: ProjectRootArgs & {
-    yes?: boolean;
-    dryRun?: boolean;
-    force?: boolean;
-    tag?: string;
-  },
+  args: ProjectRootArgs &
+    ConfirmArgs & {
+      force?: boolean;
+      tag?: string;
+    },
 ): Promise<CallToolResult> {
-  if (needsYes(args)) {
-    return confirmationRequired("scaffold Pedro Pathing into TeamCode");
-  }
   const ctx = ctxFrom(args);
-  const result = await scaffoldPedroPathing({
-    projectRoot: ctx.projectRoot,
-    runner: ctx.runner,
-    tag: args.tag,
-    dryRun: args.dryRun === true,
-    yes: args.yes === true || args.dryRun === true,
-    force: args.force === true,
-  });
-  return jsonResult({ ...result, projectRoot: ctx.projectRoot }, !result.success);
+  const payload = { force: args.force === true, tag: args.tag };
+  return runGatedMutation(
+    args,
+    "pedro_scaffold",
+    ctx.projectRoot,
+    payload,
+    "Scaffold Pedro Pathing into TeamCode.",
+    async (dryRun) => {
+      const result = await scaffoldPedroPathing({
+        projectRoot: ctx.projectRoot,
+        runner: ctx.runner,
+        tag: args.tag,
+        dryRun,
+        yes: true,
+        force: args.force === true,
+      });
+      return { ...result };
+    },
+  );
 }
 
 export async function toolOpModeList(args: ProjectRootArgs): Promise<CallToolResult> {
@@ -266,36 +310,50 @@ export async function toolOpModeList(args: ProjectRootArgs): Promise<CallToolRes
 }
 
 export async function toolOpModeCreate(
-  args: ProjectRootArgs & {
-    className: string;
-    type: "teleop" | "autonomous";
-    style?: "linear" | "iterative";
-    group?: string;
-    name?: string;
-    packageName?: string;
-    yes?: boolean;
-    dryRun?: boolean;
-    force?: boolean;
-  },
+  args: ProjectRootArgs &
+    ConfirmArgs & {
+      className: string;
+      type: "teleop" | "autonomous";
+      style?: "linear" | "iterative";
+      group?: string;
+      name?: string;
+      packageName?: string;
+      force?: boolean;
+    },
 ): Promise<CallToolResult> {
-  if (needsYes(args)) {
-    return confirmationRequired("create an OpMode");
-  }
   const ctx = ctxFrom(args);
-  const result = await createOpMode({
-    projectRoot: ctx.projectRoot,
-    runner: ctx.runner,
+  const payload = {
     className: args.className,
-    kind: args.type,
+    type: args.type,
     style: args.style ?? "linear",
     group: args.group,
     name: args.name,
     packageName: args.packageName,
-    dryRun: args.dryRun === true,
-    yes: args.yes === true || args.dryRun === true,
     force: args.force === true,
-  });
-  return jsonResult({ ...result, projectRoot: ctx.projectRoot }, !result.success);
+  };
+  return runGatedMutation(
+    args,
+    "opmode_create",
+    ctx.projectRoot,
+    payload,
+    "Create an OpMode stub in TeamCode.",
+    async (dryRun) => {
+      const result = await createOpMode({
+        projectRoot: ctx.projectRoot,
+        runner: ctx.runner,
+        className: args.className,
+        kind: args.type,
+        style: args.style ?? "linear",
+        group: args.group,
+        name: args.name,
+        packageName: args.packageName,
+        dryRun,
+        yes: true,
+        force: args.force === true,
+      });
+      return { ...result };
+    },
+  );
 }
 
 export async function toolConfigList(args: ProjectRootArgs): Promise<CallToolResult> {
@@ -321,33 +379,36 @@ export async function toolConfigValidate(
 }
 
 export async function toolConfigPull(
-  args: ProjectRootArgs & {
-    yes?: boolean;
-    dryRun?: boolean;
-    device?: string;
-  },
+  args: ProjectRootArgs &
+    ConfirmArgs & {
+      device?: string;
+    },
 ): Promise<CallToolResult> {
-  if (needsYes(args)) {
-    return confirmationRequired("pull robot configs from the hub");
-  }
   const ctx = ctxFrom(args);
-  try {
-    const deviceProvider = await ctx.createDeviceProvider();
-    const result = await pullRobotConfigs({
-      projectRoot: ctx.projectRoot,
-      runner: ctx.runner,
-      deviceProvider,
-      deviceSerial: args.device,
-      dryRun: args.dryRun === true,
-      yes: args.yes === true || args.dryRun === true,
-    });
-    return jsonResult({ ...result, projectRoot: ctx.projectRoot }, !result.success);
-  } catch (error) {
-    return jsonResult(
-      { projectRoot: ctx.projectRoot, success: false, error: interpretFromUnknown(error) },
-      true,
-    );
-  }
+  const payload = { device: args.device };
+  return runGatedMutation(
+    args,
+    "config_pull",
+    ctx.projectRoot,
+    payload,
+    "Pull robot configs from the Control Hub.",
+    async (dryRun) => {
+      try {
+        const deviceProvider = await ctx.createDeviceProvider();
+        const result = await pullRobotConfigs({
+          projectRoot: ctx.projectRoot,
+          runner: ctx.runner,
+          deviceProvider,
+          deviceSerial: args.device,
+          dryRun,
+          yes: true,
+        });
+        return { ...result };
+      } catch (error) {
+        return { success: false, dryRun, error: interpretFromUnknown(error) };
+      }
+    },
+  );
 }
 
 export async function toolHwMapShow(
@@ -359,36 +420,51 @@ export async function toolHwMapShow(
 }
 
 export async function toolHwMapCodegen(
-  args: ProjectRootArgs & {
-    className: string;
-    config?: string;
-    type?: "teleop" | "autonomous";
-    style?: "linear" | "iterative";
-    group?: string;
-    name?: string;
-    packageName?: string;
-    yes?: boolean;
-    dryRun?: boolean;
-    force?: boolean;
-  },
+  args: ProjectRootArgs &
+    ConfirmArgs & {
+      className: string;
+      config?: string;
+      type?: "teleop" | "autonomous";
+      style?: "linear" | "iterative";
+      group?: string;
+      name?: string;
+      packageName?: string;
+      force?: boolean;
+    },
 ): Promise<CallToolResult> {
-  if (needsYes(args)) {
-    return confirmationRequired("generate a hardware-map OpMode");
-  }
   const ctx = ctxFrom(args);
-  const result = await codegenHardwareMapOpMode({
-    projectRoot: ctx.projectRoot,
-    runner: ctx.runner,
-    configName: args.config,
+  const payload = {
     className: args.className,
-    kind: args.type ?? "teleop",
+    config: args.config,
+    type: args.type ?? "teleop",
     style: args.style ?? "linear",
     group: args.group,
     name: args.name,
     packageName: args.packageName,
-    dryRun: args.dryRun === true,
-    yes: args.yes === true || args.dryRun === true,
     force: args.force === true,
-  });
-  return jsonResult({ ...result, projectRoot: ctx.projectRoot }, !result.success);
+  };
+  return runGatedMutation(
+    args,
+    "hwmap_codegen",
+    ctx.projectRoot,
+    payload,
+    "Generate a hardware-map OpMode from a robot config.",
+    async (dryRun) => {
+      const result = await codegenHardwareMapOpMode({
+        projectRoot: ctx.projectRoot,
+        runner: ctx.runner,
+        configName: args.config,
+        className: args.className,
+        kind: args.type ?? "teleop",
+        style: args.style ?? "linear",
+        group: args.group,
+        name: args.name,
+        packageName: args.packageName,
+        dryRun,
+        yes: true,
+        force: args.force === true,
+      });
+      return { ...result };
+    },
+  );
 }

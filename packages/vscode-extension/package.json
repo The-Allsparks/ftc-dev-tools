@@ -26,7 +26,6 @@
   ],
   "icon": "media/icon.png",
   "activationEvents": [
-    "onStartupFinished",
     "workspaceContains:settings.gradle",
     "workspaceContains:settings.gradle.kts",
     "workspaceContains:.ftc-dev.json"
@@ -207,6 +206,14 @@
         "title": "FTC: Set Up This FTC Project"
       },
       {
+        "command": "ftc.restoreProjectSetup",
+        "title": "FTC: Restore Project Setup Backup"
+      },
+      {
+        "command": "ftc.selectProjectRoot",
+        "title": "FTC: Select Project Root"
+      },
+      {
         "command": "ftc.installCli",
         "title": "FTC: Install FTC CLI"
       },
@@ -270,7 +277,7 @@
   "scripts": {
     "build": "node ./esbuild.mjs",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
-    "package": "npm run build && node -e \"require('fs').mkdirSync('artifacts',{recursive:true})\" && vsce package --no-dependencies -o artifacts/ftc-dev-tools-0.1.0.vsix",
+    "package": "npm run build && node ./scripts/package-vsix.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

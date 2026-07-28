@@ -4,6 +4,7 @@ import path from "node:path";
 import { interpretFromUnknown } from "../errors/interpret.js";
 import type { CommandSpec, ProcessRunner } from "../types/process.js";
 import { fetchLatestSdkRelease, fetchSdkReleaseByTag } from "./github-releases.js";
+import { replacePathExact } from "./sdk-backup-restore.js";
 import type { FetchLike, SdkUpdatePlan, SdkUpdatePlanEntry, SdkUpdateResult } from "./types.js";
 
 /** Relative paths synced from an official FtcRobotController release. Never includes TeamCode. */
@@ -194,16 +195,29 @@ export async function applySdkUpdate(options: ApplySdkUpdateOptions): Promise<Sd
         };
       }
 
-      const backupDirectory = await createBackup(
-        projectRoot,
-        toApply.map((e) => e.relativePath),
-      );
+      const relativePaths = toApply.map((e) => e.relativePath);
+      const backupDirectory = await createBackup(projectRoot, relativePaths);
       const appliedPaths: string[] = [];
-      for (const entry of toApply) {
-        const from = path.join(sourceRoot, entry.relativePath);
-        const to = path.join(projectRoot, entry.relativePath);
-        await copyPath(from, to);
-        appliedPaths.push(entry.relativePath);
+      try {
+        for (const entry of toApply) {
+          const from = path.join(sourceRoot, entry.relativePath);
+          const to = path.join(projectRoot, entry.relativePath);
+          await replacePathExact(from, to);
+          appliedPaths.push(entry.relativePath);
+        }
+      } catch (applyError) {
+        const rollback = await restorePathsFromBackup(projectRoot, backupDirectory, appliedPaths);
+        return {
+          success: false,
+          dryRun: false,
+          plan,
+          backupDirectory,
+          appliedPaths,
+          message: rollback.restored
+            ? `SDK update failed after ${appliedPaths.length} path(s); restored prior files from backup.`
+            : `SDK update failed after ${appliedPaths.length} path(s); automatic rollback may be incomplete — use \`ftc sdk restore ${path.basename(backupDirectory)}\`.`,
+          error: interpretFromUnknown(applyError),
+        };
       }
 
       return {
@@ -227,6 +241,30 @@ export async function applySdkUpdate(options: ApplySdkUpdateOptions): Promise<Sd
       message: "SDK update failed.",
       error: interpretFromUnknown(error),
     };
+  }
+}
+
+async function restorePathsFromBackup(
+  projectRoot: string,
+  backupDirectory: string,
+  relativePaths: string[],
+): Promise<{ restored: boolean }> {
+  if (relativePaths.length === 0) {
+    return { restored: true };
+  }
+  try {
+    for (const relativePath of relativePaths) {
+      const from = path.join(backupDirectory, relativePath);
+      const to = path.join(projectRoot, relativePath);
+      if (await pathExists(from)) {
+        await replacePathExact(from, to);
+      } else {
+        await fs.rm(to, { recursive: true, force: true }).catch(() => undefined);
+      }
+    }
+    return { restored: true };
+  } catch {
+    return { restored: false };
   }
 }
 

@@ -9,7 +9,7 @@ import { getWifiStatus } from "../wifi/status.js";
 import { loadWifiPreference } from "../wifi/interface-preference.js";
 import { listNetworkInterfaces, findInterfaceByNameOrIndex } from "../wifi/list-interfaces.js";
 import type { DeviceProvider } from "../types/device.js";
-import type { DoctorCheck, DoctorReport } from "../types/errors.js";
+import type { DoctorCheck, DoctorReadiness, DoctorReport } from "../types/errors.js";
 import type { ProcessRunner } from "../types/process.js";
 import type { ProjectAdapter } from "../types/project.js";
 import { interpretError } from "../errors/interpret.js";
@@ -111,12 +111,52 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorReport> {
   }
 
   const requiredFailed = checks.some((check) => check.required && check.status === "fail");
-  const ready = !requiredFailed;
+
+  const computerIds = new Set(["os", "node", "java", "android-sdk", "adb"]);
+  const projectIds = new Set(["ftc-project", "gradle-wrapper", "gradle-init"]);
+  const robotIds = new Set(["devices"]);
+
+  const computerReady = !checks.some(
+    (c) => computerIds.has(c.id) && (c.status === "fail" || c.status === "warn"),
+  );
+  const projectReadyToBuild = !checks.some(
+    (c) => projectIds.has(c.id) && (c.status === "fail" || c.status === "warn"),
+  );
+  const robotReadyToDeploy = !checks.some(
+    (c) => robotIds.has(c.id) && (c.status === "fail" || c.status === "warn"),
+  );
+
+  const readiness: DoctorReadiness = {
+    computerReady,
+    projectReadyToBuild,
+    robotReadyToDeploy,
+  };
+  const ready = !requiredFailed && computerReady && projectReadyToBuild && robotReadyToDeploy;
+
+  let summaryLine: string;
+  if (ready) {
+    summaryLine = "Ready to deploy (computer, project, and robot checks passed).";
+  } else if (requiredFailed) {
+    summaryLine = "Environment checks failed (required items missing).";
+  } else {
+    const parts: string[] = [];
+    if (!computerReady) {
+      parts.push("computer not ready");
+    }
+    if (!projectReadyToBuild) {
+      parts.push("project not ready to build");
+    }
+    if (!robotReadyToDeploy) {
+      parts.push("robot not ready to deploy");
+    }
+    summaryLine = `Not ready to deploy: ${parts.join("; ")}.`;
+  }
 
   return {
     ready,
+    readiness,
     checks,
-    summaryLine: ready ? "Ready to deploy." : "Environment checks failed.",
+    summaryLine,
     generatedAt: new Date().toISOString(),
     version: PACKAGE_VERSION,
   };
@@ -278,6 +318,7 @@ async function checkWifiConsole(options: DoctorOptions): Promise<DoctorCheck> {
       deviceProvider: options.deviceProvider,
       fetchImpl: options.fetchImpl,
       platform: options.platform,
+      signal: controller.signal,
     });
     if (report.console.reachable) {
       return {
@@ -377,9 +418,9 @@ async function checkWifiRobotInterface(options: DoctorOptions): Promise<DoctorCh
     return {
       id: "wifi-robot-interface",
       label: "Robot network interface selected",
-      status: "pass",
+      status: "warn",
       required: false,
-      detail: `${selected.name} (could not re-list interfaces)`,
+      detail: `${selected.name} (could not re-list interfaces to verify)`,
     };
   }
 }

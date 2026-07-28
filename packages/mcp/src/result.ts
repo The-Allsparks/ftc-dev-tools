@@ -18,7 +18,7 @@ export function confirmationRequired(action: string): CallToolResult {
     {
       success: false,
       code: "CONFIRMATION_REQUIRED",
-      message: `Refused: set yes=true to ${action}, or dryRun=true to preview when supported.`,
+      message: `Refused (${action}): run dryRun=true to preview, then apply with confirmPlanId and confirmPlanHash from that response.`,
     },
     true,
   );

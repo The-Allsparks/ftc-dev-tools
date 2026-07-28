@@ -58,8 +58,21 @@ const projectRootShape = {
 };
 
 const confirmShape = {
-  yes: z.boolean().optional().describe("Must be true to apply changes (unless dryRun is true)"),
   dryRun: z.boolean().optional().describe("Preview without writing or mutating devices"),
+  confirmPlanId: z
+    .string()
+    .optional()
+    .describe("Plan id from a prior dryRun preview (required to apply)"),
+  confirmPlanHash: z
+    .string()
+    .optional()
+    .describe("Plan hash from a prior dryRun preview (required to apply)"),
+  yes: z
+    .boolean()
+    .optional()
+    .describe(
+      "Not accepted alone for MCP mutations; use dryRun then confirmPlanId/confirmPlanHash",
+    ),
 };
 
 /**

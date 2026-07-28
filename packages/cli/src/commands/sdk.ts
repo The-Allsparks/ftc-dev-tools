@@ -1,5 +1,10 @@
 import type { Command } from "commander";
-import { applySdkUpdate, checkSdkStatus } from "@ftc-dev-tools/shared";
+import {
+  applySdkUpdate,
+  checkSdkStatus,
+  listSdkBackups,
+  restoreSdkBackup,
+} from "@ftc-dev-tools/shared";
 import { createCliContext, printFriendlyError } from "../context.js";
 
 export function registerSdkCommand(program: Command): void {
@@ -149,6 +154,64 @@ export function registerSdkCommand(program: Command): void {
         process.exitCode = result.success ? 0 : 1;
       },
     );
+
+  sdk
+    .command("backups")
+    .description("List SDK update backups under .ftc-dev-tools/backups/")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(async (options: { json?: boolean }) => {
+      const ctx = createCliContext(process.cwd(), false);
+      const backups = await listSdkBackups(ctx.cwd);
+      if (options.json) {
+        console.log(JSON.stringify({ backups }, null, 2));
+        return;
+      }
+      if (backups.length === 0) {
+        console.log("No SDK backups found.");
+        return;
+      }
+      console.log("SDK backups:\n");
+      for (const backup of backups) {
+        console.log(`  ${backup.id}  (${backup.createdAt})`);
+      }
+    });
+
+  sdk
+    .command("restore")
+    .description("Restore SDK-owned paths from a backup (rollback / switch versions)")
+    .argument("<backup-id>", "Backup folder id (see ftc sdk backups)")
+    .option("--yes", "Apply restore without an interactive confirmation prompt")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(async (backupId: string, options: { yes?: boolean; json?: boolean }) => {
+      const ctx = createCliContext(process.cwd(), false);
+      if (!options.yes && process.stdin.isTTY) {
+        console.log(`This will overwrite SDK-owned paths from backup ${backupId}.`);
+        const ok = await confirm("Continue with SDK restore?");
+        if (!ok) {
+          process.exitCode = 1;
+          console.log("Cancelled.");
+          return;
+        }
+      } else if (!options.yes) {
+        console.error("Refusing restore without --yes in non-interactive mode.");
+        process.exitCode = 1;
+        return;
+      }
+
+      const result = await restoreSdkBackup({
+        projectRoot: ctx.cwd,
+        backupId,
+      });
+      if (options.json) {
+        console.log(JSON.stringify(result, null, 2));
+      } else {
+        console.log(result.message);
+        for (const p of result.restoredPaths) {
+          console.log(`  ${p}`);
+        }
+      }
+      process.exitCode = result.success ? 0 : 1;
+    });
 }
 
 async function confirm(question: string): Promise<boolean> {

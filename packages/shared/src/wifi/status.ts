@@ -14,6 +14,7 @@ export interface GetWifiStatusOptions {
   consoleUrl?: string;
   preferencePath?: string;
   platform?: NodeJS.Platform;
+  signal?: AbortSignal;
 }
 
 export async function getWifiStatus(options: GetWifiStatusOptions): Promise<WifiStatusReport> {
@@ -21,6 +22,7 @@ export async function getWifiStatus(options: GetWifiStatusOptions): Promise<Wifi
   const consoleProbe = await probeRobotConsole({
     url: options.consoleUrl,
     fetchImpl: options.fetchImpl,
+    signal: options.signal,
   });
 
   let interfaces: NetworkInterfaceInfo[] = [];

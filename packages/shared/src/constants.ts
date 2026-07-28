@@ -2,6 +2,9 @@
 export const FTC_DEV_SCHEMA_URL =
   "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/packages/shared/schemas/ftc-dev.schema.json";
 
+export const DOCTOR_REPORT_SCHEMA_URL =
+  "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/packages/shared/schemas/doctor-report.schema.json";
+
 export const PACKAGE_VERSION = "0.1.0";
 
 export const DEFAULT_MODULE_NAME = "TeamCode";

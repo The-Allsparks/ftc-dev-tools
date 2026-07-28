@@ -20,8 +20,11 @@ export type { FtcProjectInfo, ProjectAdapter, BuildResult, DeployResult } from "
 export type {
   FriendlyError,
   DoctorCheck,
+  DoctorCheckCategory,
   DoctorReadiness,
   DoctorReport,
+  DoctorReportSection,
+  DoctorReportSections,
   CheckStatus,
 } from "./types/errors.js";
 export type {
@@ -33,6 +36,7 @@ export type {
 
 export {
   FTC_DEV_SCHEMA_URL,
+  DOCTOR_REPORT_SCHEMA_URL,
   PACKAGE_VERSION,
   DEFAULT_MODULE_NAME,
   DEFAULT_ROBOT_CONTROLLER_APPLICATION_ID,
@@ -113,6 +117,18 @@ export { interpretError, interpretFromUnknown, listErrorRuleCodes } from "./erro
 export { defaultConfig, loadProjectConfig } from "./config/load.js";
 export { runDoctor } from "./doctor/run-doctor.js";
 export type { DoctorOptions } from "./doctor/run-doctor.js";
+export {
+  buildDoctorSections,
+  partitionChecksBySection,
+  categoryForCheckId,
+  formatDoctorCheckLine,
+  formatSectionSummaryLine,
+  statusMarkForCheck,
+  DOCTOR_SECTION_ORDER,
+  DOCTOR_SECTION_TITLES,
+} from "./doctor/doctor-sections.js";
+export type { DoctorSectionId } from "./doctor/doctor-sections.js";
+export { notAnFtcProjectRootError, projectNotDetectedWrapperError } from "./doctor/wrong-folder-errors.js";
 export { buildProject, cleanProject } from "./services/build.js";
 export type { BuildServiceOptions, BuildServiceOutcome } from "./services/build.js";
 export { deployProject } from "./services/deploy.js";

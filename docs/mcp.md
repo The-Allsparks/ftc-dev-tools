@@ -69,6 +69,8 @@ Most tools accept an optional `projectRoot` argument. If omitted, the server use
 | Tool                                              | Mirrors                       |
 | ------------------------------------------------- | ----------------------------- |
 | `doctor`                                          | `ftc doctor --json`           |
+
+Doctor JSON includes `sections` (machine / project / robot / optional) — see [doctor.md](doctor.md).
 | `devices`                                         | `ftc devices --json`          |
 | `sdk_check`                                       | `ftc sdk check --json`        |
 | `wifi_status`                                     | `ftc wifi status --json`      |

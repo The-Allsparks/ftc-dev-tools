@@ -9,10 +9,12 @@ import { getWifiStatus } from "../wifi/status.js";
 import { loadWifiPreference } from "../wifi/interface-preference.js";
 import { listNetworkInterfaces, findInterfaceByNameOrIndex } from "../wifi/list-interfaces.js";
 import type { DeviceProvider } from "../types/device.js";
-import type { DoctorCheck, DoctorReadiness, DoctorReport } from "../types/errors.js";
+import type { DoctorCheck, DoctorReadiness, DoctorReport, DoctorReportSection, DoctorReportSections } from "../types/errors.js";
 import type { ProcessRunner } from "../types/process.js";
 import type { ProjectAdapter } from "../types/project.js";
 import { interpretError } from "../errors/interpret.js";
+import { buildDoctorSections, categoryForCheckId } from "./doctor-sections.js";
+import { notAnFtcProjectRootError, projectNotDetectedWrapperError } from "./wrong-folder-errors.js";
 
 export interface DoctorOptions {
   cwd: string;
@@ -152,13 +154,41 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorReport> {
     summaryLine = `Not ready to deploy: ${parts.join("; ")}.`;
   }
 
+  const checksWithCategory = checks.map((check) => ({
+    ...check,
+    category: categoryForCheckId(check.id),
+  }));
+
+  const sectionList = buildDoctorSections({
+    checks: checksWithCategory,
+    readiness,
+  });
+  const sections = sectionsRecordFromList(sectionList);
+
   return {
     ready,
     readiness,
-    checks,
+    checks: checksWithCategory,
+    sections,
     summaryLine,
     generatedAt: new Date().toISOString(),
     version: PACKAGE_VERSION,
+  };
+}
+
+function sectionsRecordFromList(sectionList: DoctorReportSection[]): DoctorReportSections {
+  const machine = sectionList.find((s) => s.id === "machine");
+  const project = sectionList.find((s) => s.id === "project");
+  if (!machine || !project) {
+    throw new Error("Doctor report must include machine and project sections");
+  }
+  const robot = sectionList.find((s) => s.id === "robot");
+  const other = sectionList.find((s) => s.id === "other");
+  return {
+    machine,
+    project,
+    ...(robot ? { robot } : {}),
+    ...(other ? { other } : {}),
   };
 }
 
@@ -454,10 +484,8 @@ async function checkProject(adapter: ProjectAdapter, cwd: string): Promise<Docto
         label: "FTC project detected",
         status: "fail",
         required: true,
-        friendlyError: interpretError({
-          text: "unsupported project layout",
-          codeHint: "UNSUPPORTED_PROJECT_LAYOUT",
-        }),
+        detail: cwd,
+        friendlyError: notAnFtcProjectRootError(`Working directory: ${cwd}`),
       };
     }
     const info = await adapter.inspect(cwd);
@@ -493,10 +521,7 @@ async function checkWrapper(
       label: "Gradle Wrapper found",
       status: "fail",
       required: true,
-      friendlyError: interpretError({
-        text: "Gradle Wrapper missing",
-        codeHint: "GRADLE_WRAPPER_MISSING",
-      }),
+      friendlyError: projectNotDetectedWrapperError(),
     };
   }
   const wrapper = await findGradleWrapper(cwd, platform);

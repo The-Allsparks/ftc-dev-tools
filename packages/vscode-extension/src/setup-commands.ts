@@ -6,8 +6,10 @@ import {
   INSTALL_WITHOUT_ANDROID_STUDIO_DOCS_URL,
   NodeProcessRunner,
   OfficialFtcProjectAdapter,
+  buildDoctorSections,
   buildInstallDepsCommand,
   listCliConsumerInstallCommands,
+  formatDoctorCheckLine,
   runDoctor,
   parseJsonStrict,
   mergeExtensionsJson,
@@ -98,10 +100,12 @@ export async function setUpThisComputerCommand(
     checkWifi: false,
   });
 
-  for (const check of report.checks) {
-    output.appendLine(
-      `[${check.status}] ${check.id}: ${check.label}${check.detail ? ` — ${check.detail}` : ""}`,
-    );
+  for (const section of buildDoctorSections(report)) {
+    output.appendLine("");
+    output.appendLine(section.title);
+    for (const check of section.checks) {
+      output.appendLine(`  ${formatDoctorCheckLine(check)} [${check.status}]`);
+    }
   }
   output.appendLine(report.summaryLine);
   output.appendLine("");

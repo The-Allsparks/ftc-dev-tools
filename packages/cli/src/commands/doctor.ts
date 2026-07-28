@@ -1,5 +1,9 @@
 import type { Command } from "commander";
-import { runDoctor } from "@ftc-dev-tools/shared";
+import {
+  buildDoctorSections,
+  formatDoctorCheckLine,
+  runDoctor,
+} from "@ftc-dev-tools/shared";
 import { createCliContext, printFriendlyError } from "../context.js";
 
 export function registerDoctorCommand(program: Command): void {
@@ -28,22 +32,22 @@ export function registerDoctorCommand(program: Command): void {
         console.log(JSON.stringify(report, null, 2));
       } else {
         console.log("FTC Development Check\n");
-        for (const check of report.checks) {
-          const mark =
-            check.status === "pass"
-              ? "✓"
-              : check.status === "warn"
-                ? "!"
-                : check.status === "skip"
-                  ? "-"
-                  : "✗";
-          const detail = check.detail ? ` (${check.detail})` : "";
-          console.log(`${mark} ${check.label}${detail}`);
-          if (check.status === "fail" && check.friendlyError) {
-            printFriendlyError(check.friendlyError, options.verbose === true);
+        const sections = buildDoctorSections(report);
+        for (const section of sections) {
+          console.log(`${section.title}`);
+          console.log(`${"─".repeat(section.title.length)}`);
+          for (const check of section.checks) {
+            console.log(formatDoctorCheckLine(check));
+            if (
+              (check.status === "fail" || check.status === "warn") &&
+              check.friendlyError
+            ) {
+              printFriendlyError(check.friendlyError, options.verbose === true);
+            }
           }
+          console.log("");
         }
-        console.log(`\n${report.summaryLine}`);
+        console.log(report.summaryLine);
       }
 
       process.exitCode = report.ready ? 0 : 1;

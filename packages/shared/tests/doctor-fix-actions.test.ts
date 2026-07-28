@@ -25,7 +25,7 @@ describe("buildDoctorCheckUiItem", () => {
     expect(buildDoctorCheckUiItem(check("java", "pass"))).toBeUndefined();
   });
 
-  it("maps Java failures to install-deps terminal action on Windows", () => {
+  it("maps Java failures to install-deps command on Windows", () => {
     const item = buildDoctorCheckUiItem(
       check("java", "fail", {
         code: "INCOMPATIBLE_JAVA",
@@ -36,8 +36,8 @@ describe("buildDoctorCheckUiItem", () => {
       "win32",
     );
     expect(item?.primaryAction?.id).toBe("install-deps");
-    expect(item?.primaryAction?.kind).toBe("terminal");
-    expect(item?.primaryAction?.terminalCommand).toMatch(/install-deps-windows/);
+    expect(item?.primaryAction?.kind).toBe("vscode-command");
+    expect(item?.primaryAction?.command).toBe("ftc.runInstallDeps");
   });
 
   it("maps wrong-folder project checks to select project root", () => {

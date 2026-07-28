@@ -15,7 +15,9 @@ This repository includes installer scripts that download Google’s official com
 
 If you installed **FTC Dev Tools from a VSIX** and do **not** have the `ftc-dev-tools` GitHub repo on disk, use these commands. Each one downloads the installer script **and** [`android-cmdline-tools.json`](https://github.com/The-Allsparks/ftc-dev-tools/blob/main/scripts/android-cmdline-tools.json) into the same folder (the script reads the manifest from its directory).
 
-The commands below match **FTC: Set Up This Computer** in the extension (use **Copy … install command** there).
+The commands below match **FTC: Set Up This Computer** in the extension (use **Copy … install command** there, or **Run trusted installer…** for a consent modal before the integrated terminal runs the same one-liner).
+
+**FTC: Run Trusted Install-Deps Installer** (`ftc.runInstallDeps`) and doctor **Run install-deps script** use the same flow: you confirm what will be installed (JDK, Android SDK/platform-tools, PATH/`ANDROID_HOME`), optionally skip JDK or SDK, then the full command is logged to the FTC output channel.
 
 ### Windows (PowerShell)
 

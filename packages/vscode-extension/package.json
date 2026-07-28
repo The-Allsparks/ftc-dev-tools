@@ -202,6 +202,10 @@
         "title": "FTC: Set Up This Computer"
       },
       {
+        "command": "ftc.runInstallDeps",
+        "title": "FTC: Run Trusted Install-Deps Installer"
+      },
+      {
         "command": "ftc.setUpProject",
         "title": "FTC: Set Up This FTC Project"
       },

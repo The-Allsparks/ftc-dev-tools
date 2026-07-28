@@ -60,7 +60,7 @@ The `doctor` tool mirrors `ftc doctor --json`. See [mcp.md](mcp.md).
 
 After each run:
 
-- **Fail or warn checks** open a quick pick listing each issue with a plain-language summary (from `friendlyError` when present). Choosing a row opens a message with **Fix** actions tied to that check (for example **Run install-deps script**, **Select FTC project root**, **Show connected devices**). Actions run existing extension commands, open documented URLs, or start an integrated terminal with the install-deps one-liner from [install-without-android-studio.md](install-without-android-studio.md).
+- **Fail or warn checks** open a quick pick listing each issue with a plain-language summary (from `friendlyError` when present). Choosing a row opens a message with **Fix** actions tied to that check (for example **Run install-deps script**, **Select FTC project root**, **Show connected devices**). Actions run existing extension commands or open documented URLs. **Run install-deps script** opens a consent modal, logs the command to the output channel, then starts the integrated terminal (see [install-without-android-studio.md](install-without-android-studio.md)).
 - **Full success** shows an information message suggesting the next wizard step (typically **Build robot code**, or **Set up this FTC project** / **Show connected devices** when only part of the pipeline was in scope).
 
 Mapping logic lives in `@ftc-dev-tools/shared` (`doctor-fix-actions`) so CLI/MCP consumers can reuse the same action ids later.

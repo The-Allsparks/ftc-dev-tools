@@ -70,8 +70,10 @@ export {
   INSTALL_DEPS_LINUX_SH_RAW_URL,
   INSTALL_DEPS_CONTRIBUTOR_COMMANDS,
   buildInstallDepsCommand,
+  describeInstallDepsConsentMessage,
+  installDepsOsForPlatform,
 } from "./install-deps-urls.js";
-export type { InstallDepsOs } from "./install-deps-urls.js";
+export type { InstallDepsOs, BuildInstallDepsOptions } from "./install-deps-urls.js";
 
 export { ConsoleLogger } from "./logger.js";
 export type { Logger, LogLevel } from "./logger.js";

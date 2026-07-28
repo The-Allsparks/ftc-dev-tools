@@ -134,6 +134,18 @@ export {
   notAnFtcProjectRootError,
   projectNotDetectedWrapperError,
 } from "./doctor/wrong-folder-errors.js";
+export {
+  buildDoctorCheckUiItem,
+  listActionableDoctorChecks,
+  resolveDoctorProgressNextStep,
+  resolveDoctorSuccessNextStep,
+  reloadWindowAction,
+} from "./doctor/doctor-fix-actions.js";
+export type {
+  DoctorCheckUiItem,
+  DoctorFixAction,
+  DoctorFixActionKind,
+} from "./doctor/doctor-fix-actions.js";
 export { buildProject, cleanProject } from "./services/build.js";
 export type { BuildServiceOptions, BuildServiceOutcome } from "./services/build.js";
 export { deployProject } from "./services/deploy.js";

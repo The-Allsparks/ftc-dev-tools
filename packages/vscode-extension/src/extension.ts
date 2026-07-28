@@ -68,6 +68,7 @@ import {
   selectFtcProjectRootCommand,
 } from "./workspace-root.js";
 import { registerFtcTaskProvider } from "./ftc-task-provider.js";
+import { showDoctorResultsUi } from "./doctor-ui.js";
 
 let output: vscode.OutputChannel;
 let status: StatusController;
@@ -254,14 +255,10 @@ async function runDoctorCommand(): Promise<void> {
   output.show(true);
   if (!report.ready) {
     status.setState("build-failed");
-    const failed = report.checks.find((check) => check.status === "fail" && check.friendlyError);
-    if (failed?.friendlyError) {
-      await showFriendlyError(failed.friendlyError);
-    }
   } else {
-    vscode.window.showInformationMessage("FTC environment looks ready.");
     await refreshStatus();
   }
+  await showDoctorResultsUi(report, output);
 }
 
 async function showDevicesCommand(): Promise<void> {

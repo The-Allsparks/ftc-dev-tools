@@ -270,7 +270,9 @@ function jdkInstallSuggestedActions(platform: NodeJS.Platform): string[] {
   const actions: string[] = [];
   const os = installDepsOsForPlatform(platform);
   if (os) {
-    actions.push(`Run the install-deps one-liner for your OS (installs JDK ${REQUIRED_JDK_MAJOR}): ${buildInstallDepsCommand(os)}`);
+    actions.push(
+      `Run the install-deps one-liner for your OS (installs JDK ${REQUIRED_JDK_MAJOR}): ${buildInstallDepsCommand(os)}`,
+    );
   }
   actions.push(
     `See ${INSTALL_WITHOUT_ANDROID_STUDIO_DOCS_URL} for manual setup.`,

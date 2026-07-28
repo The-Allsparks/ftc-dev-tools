@@ -106,7 +106,9 @@ describe("runDoctor Java version", () => {
   it("includes platform install-deps guidance on Windows", async () => {
     const report = await runDoctorWithJava('openjdk version "11.0.22"', "win32");
     const javaCheck = report.checks.find((c) => c.id === "java");
-    expect(javaCheck?.friendlyError?.suggestedActions.join(" ")).toMatch(/install-deps-windows\.ps1/);
+    expect(javaCheck?.friendlyError?.suggestedActions.join(" ")).toMatch(
+      /install-deps-windows\.ps1/,
+    );
   });
 
   it("warns when java -version output cannot be parsed", async () => {

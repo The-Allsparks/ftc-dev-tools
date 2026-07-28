@@ -3,6 +3,7 @@ import * as os from "node:os";
 import * as path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { REQUIRED_JDK_MAJOR } from "../src/constants.js";
+import { DOCTOR_CHECK_LABELS } from "../src/doctor/doctor-copy.js";
 import { runDoctor } from "../src/doctor/run-doctor.js";
 import type { CommandResult, CommandSpec, ProcessRunner } from "../src/types/process.js";
 import type { ProjectAdapter } from "../src/types/project.js";
@@ -89,7 +90,7 @@ describe("runDoctor Java version", () => {
     const report = await runDoctorWithJava('openjdk version "17.0.9" 2023-10-17');
     const javaCheck = report.checks.find((c) => c.id === "java");
     expect(javaCheck?.status).toBe("pass");
-    expect(javaCheck?.label).toBe("Supported JDK version");
+    expect(javaCheck?.label).toBe(DOCTOR_CHECK_LABELS.java);
     expect(report.readiness.computerReady).toBeTypeOf("boolean");
   });
 

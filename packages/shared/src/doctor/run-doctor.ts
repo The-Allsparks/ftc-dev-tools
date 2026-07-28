@@ -24,6 +24,12 @@ import type {
 import type { ProcessRunner } from "../types/process.js";
 import type { ProjectAdapter } from "../types/project.js";
 import { interpretError } from "../errors/interpret.js";
+import {
+  DOCTOR_CHECK_LABELS,
+  DOCTOR_SKIP_DETAILS,
+  summaryLines,
+  wifiConsoleSkipDetail,
+} from "./doctor-copy.js";
 import { buildDoctorSections, categoryForCheckId } from "./doctor-sections.js";
 import { notAnFtcProjectRootError, projectNotDetectedWrapperError } from "./wrong-folder-errors.js";
 
@@ -64,10 +70,10 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorReport> {
   } else {
     checks.push({
       id: "devices",
-      label: "Connected Android devices",
+      label: DOCTOR_CHECK_LABELS.devicesGeneric,
       status: "skip",
       required: false,
-      detail: "Device provider unavailable.",
+      detail: DOCTOR_SKIP_DETAILS.devicesNoProvider,
     });
   }
 
@@ -76,47 +82,47 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorReport> {
   } else {
     checks.push({
       id: "gradle-init",
-      label: "Gradle can initialize",
+      label: DOCTOR_CHECK_LABELS.gradleInit,
       status: "skip",
       required: false,
-      detail: "Skipped because project or wrapper checks failed.",
+      detail: DOCTOR_SKIP_DETAILS.gradleInitBlocked,
     });
   }
 
   if (options.checkFtcSdkVersion === false) {
     checks.push({
       id: "ftc-sdk-version",
-      label: "FTC SDK version freshness",
+      label: DOCTOR_CHECK_LABELS.ftcSdkVersion,
       status: "skip",
       required: false,
-      detail: "Skipped by request.",
+      detail: DOCTOR_SKIP_DETAILS.ftcSdkDisabled,
     });
   } else if (projectCheck.status === "pass") {
     checks.push(await checkFtcSdkVersion(options));
   } else {
     checks.push({
       id: "ftc-sdk-version",
-      label: "FTC SDK version freshness",
+      label: DOCTOR_CHECK_LABELS.ftcSdkVersion,
       status: "skip",
       required: false,
-      detail: "Skipped because project detection failed.",
+      detail: DOCTOR_SKIP_DETAILS.ftcSdkNoProject,
     });
   }
 
   if (options.checkWifi === false) {
     checks.push({
       id: "wifi-console",
-      label: "Robot Controller Console reachable",
+      label: DOCTOR_CHECK_LABELS.wifiConsole,
       status: "skip",
       required: false,
-      detail: "Skipped by request.",
+      detail: DOCTOR_SKIP_DETAILS.wifiChecksDisabled,
     });
     checks.push({
       id: "wifi-robot-interface",
-      label: "Robot network interface selected",
+      label: DOCTOR_CHECK_LABELS.wifiRobotInterface,
       status: "skip",
       required: false,
-      detail: "Skipped by request.",
+      detail: DOCTOR_SKIP_DETAILS.wifiChecksDisabled,
     });
   } else {
     checks.push(await checkWifiConsole(options));
@@ -146,23 +152,24 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorReport> {
   };
   const ready = !requiredFailed && computerReady && projectReadyToBuild && robotReadyToDeploy;
 
+  const summaries = summaryLines();
   let summaryLine: string;
   if (ready) {
-    summaryLine = "Ready to deploy (computer, project, and robot checks passed).";
+    summaryLine = summaries.ready;
   } else if (requiredFailed) {
-    summaryLine = "Environment checks failed (required items missing).";
+    summaryLine = summaries.requiredFailed;
   } else {
     const parts: string[] = [];
     if (!computerReady) {
-      parts.push("computer not ready");
+      parts.push("computer setup needs attention");
     }
     if (!projectReadyToBuild) {
-      parts.push("project not ready to build");
+      parts.push("FTC project setup needs attention");
     }
     if (!robotReadyToDeploy) {
-      parts.push("robot not ready to deploy");
+      parts.push("robot connection needs attention (often OK at home without the hub plugged in)");
     }
-    summaryLine = `Not ready to deploy: ${parts.join("; ")}.`;
+    summaryLine = `${summaries.notReadyPrefix} ${parts.join("; ")}.`;
   }
 
   const checksWithCategory = checks.map((check) => ({
@@ -207,7 +214,7 @@ function checkOs(platform: NodeJS.Platform): DoctorCheck {
   if (isSupportedPlatform(platform)) {
     return {
       id: "os",
-      label: "Supported operating system",
+      label: DOCTOR_CHECK_LABELS.os,
       status: "pass",
       required: true,
       detail: platform,
@@ -215,7 +222,7 @@ function checkOs(platform: NodeJS.Platform): DoctorCheck {
   }
   return {
     id: "os",
-    label: "Supported operating system",
+    label: DOCTOR_CHECK_LABELS.os,
     status: "fail",
     required: true,
     detail: platform,
@@ -231,7 +238,7 @@ function checkNode(version: string): DoctorCheck {
   if (major >= 20) {
     return {
       id: "node",
-      label: "Supported Node.js version",
+      label: DOCTOR_CHECK_LABELS.node,
       status: "pass",
       required: true,
       detail: `v${version}`,
@@ -239,7 +246,7 @@ function checkNode(version: string): DoctorCheck {
   }
   return {
     id: "node",
-    label: "Supported Node.js version",
+    label: DOCTOR_CHECK_LABELS.node,
     status: "fail",
     required: true,
     detail: `v${version}`,
@@ -283,14 +290,13 @@ function jdkInstallSuggestedActions(platform: NodeJS.Platform): string[] {
 }
 
 async function checkJava(runner: ProcessRunner, platform: NodeJS.Platform): Promise<DoctorCheck> {
-  const label = "Supported JDK version";
   const java = await discoverJava(runner);
   const versionLine = java.versionText?.split(/\r?\n/)[0];
 
   if (!java.found) {
     return {
       id: "java",
-      label,
+      label: DOCTOR_CHECK_LABELS.java,
       status: "fail",
       required: true,
       friendlyError: interpretError({ text: "java not found", codeHint: "INCOMPATIBLE_JAVA" }),
@@ -300,7 +306,7 @@ async function checkJava(runner: ProcessRunner, platform: NodeJS.Platform): Prom
   if (java.majorVersion === undefined) {
     return {
       id: "java",
-      label,
+      label: DOCTOR_CHECK_LABELS.java,
       status: "warn",
       required: true,
       detail: versionLine,
@@ -317,7 +323,7 @@ async function checkJava(runner: ProcessRunner, platform: NodeJS.Platform): Prom
   if (java.majorVersion !== REQUIRED_JDK_MAJOR) {
     return {
       id: "java",
-      label,
+      label: DOCTOR_CHECK_LABELS.java,
       status: "fail",
       required: true,
       detail: versionLine,
@@ -333,7 +339,7 @@ async function checkJava(runner: ProcessRunner, platform: NodeJS.Platform): Prom
 
   return {
     id: "java",
-    label,
+    label: DOCTOR_CHECK_LABELS.java,
     status: "pass",
     required: true,
     detail: versionLine,
@@ -345,7 +351,7 @@ async function checkAndroidSdk(): Promise<DoctorCheck> {
   if (!sdk) {
     return {
       id: "android-sdk",
-      label: "Android SDK found",
+      label: DOCTOR_CHECK_LABELS.androidSdk,
       status: "fail",
       required: true,
       friendlyError: interpretError({
@@ -356,7 +362,7 @@ async function checkAndroidSdk(): Promise<DoctorCheck> {
   }
   return {
     id: "android-sdk",
-    label: "Android SDK found",
+    label: DOCTOR_CHECK_LABELS.androidSdk,
     status: "pass",
     required: true,
     detail: sdk,
@@ -376,7 +382,7 @@ async function checkFtcSdkVersion(options: DoctorOptions): Promise<DoctorCheck> 
     if (!report.local.version) {
       return {
         id: "ftc-sdk-version",
-        label: "FTC SDK version freshness",
+        label: DOCTOR_CHECK_LABELS.ftcSdkVersion,
         status: "skip",
         required: false,
         detail: report.message,
@@ -387,7 +393,7 @@ async function checkFtcSdkVersion(options: DoctorOptions): Promise<DoctorCheck> 
     if (report.freshness === "behind") {
       return {
         id: "ftc-sdk-version",
-        label: "FTC SDK version freshness",
+        label: DOCTOR_CHECK_LABELS.ftcSdkVersion,
         status: "warn",
         required: false,
         detail: report.message,
@@ -397,7 +403,7 @@ async function checkFtcSdkVersion(options: DoctorOptions): Promise<DoctorCheck> 
     if (report.freshness === "unknown" && report.error) {
       return {
         id: "ftc-sdk-version",
-        label: "FTC SDK version freshness",
+        label: DOCTOR_CHECK_LABELS.ftcSdkVersion,
         status: "skip",
         required: false,
         detail: report.message,
@@ -407,7 +413,7 @@ async function checkFtcSdkVersion(options: DoctorOptions): Promise<DoctorCheck> 
 
     return {
       id: "ftc-sdk-version",
-      label: "FTC SDK version freshness",
+      label: DOCTOR_CHECK_LABELS.ftcSdkVersion,
       status: "pass",
       required: false,
       detail: report.message,
@@ -431,7 +437,7 @@ async function checkWifiConsole(options: DoctorOptions): Promise<DoctorCheck> {
     if (report.console.reachable) {
       return {
         id: "wifi-console",
-        label: "Robot Controller Console reachable",
+        label: DOCTOR_CHECK_LABELS.wifiConsole,
         status: "pass",
         required: false,
         detail: report.console.message,
@@ -440,7 +446,7 @@ async function checkWifiConsole(options: DoctorOptions): Promise<DoctorCheck> {
     if (report.wifiAdbDevices.length > 0) {
       return {
         id: "wifi-console",
-        label: "Robot Controller Console reachable",
+        label: DOCTOR_CHECK_LABELS.wifiConsole,
         status: "warn",
         required: false,
         detail: report.console.message,
@@ -452,10 +458,10 @@ async function checkWifiConsole(options: DoctorOptions): Promise<DoctorCheck> {
     }
     return {
       id: "wifi-console",
-      label: "Robot Controller Console reachable",
+      label: DOCTOR_CHECK_LABELS.wifiConsole,
       status: "skip",
       required: false,
-      detail: report.console.message,
+      detail: wifiConsoleSkipDetail(report.console.message),
     };
   } finally {
     clearTimeout(timer);
@@ -474,18 +480,19 @@ async function checkWifiRobotInterface(options: DoctorOptions): Promise<DoctorCh
     if (report.console.reachable || report.wifiAdbDevices.length > 0) {
       return {
         id: "wifi-robot-interface",
-        label: "Robot network interface selected",
+        label: DOCTOR_CHECK_LABELS.wifiRobotInterface,
         status: "warn",
         required: false,
-        detail: "No robot NIC selected. Run `ftc wifi use-interface` for dual-NIC setups.",
+        detail:
+          "No robot Wi‑Fi adapter chosen yet. At the shop with two Wi‑Fi cards, run `ftc wifi use-interface`.",
       };
     }
     return {
       id: "wifi-robot-interface",
-      label: "Robot network interface selected",
+      label: DOCTOR_CHECK_LABELS.wifiRobotInterface,
       status: "skip",
       required: false,
-      detail: "No robot NIC selected (optional until using dual-NIC Wi-Fi).",
+      detail: `${DOCTOR_SKIP_DETAILS.wifiNicAtHome}No robot Wi‑Fi adapter is configured yet.`,
     };
   }
 
@@ -500,7 +507,7 @@ async function checkWifiRobotInterface(options: DoctorOptions): Promise<DoctorCh
       if (!byIndex) {
         return {
           id: "wifi-robot-interface",
-          label: "Robot network interface selected",
+          label: DOCTOR_CHECK_LABELS.wifiRobotInterface,
           status: "warn",
           required: false,
           detail: `Saved interface ${selected.name} is not present. Re-run \`ftc wifi use-interface\`.`,
@@ -509,7 +516,7 @@ async function checkWifiRobotInterface(options: DoctorOptions): Promise<DoctorCh
     } else if (!hit) {
       return {
         id: "wifi-robot-interface",
-        label: "Robot network interface selected",
+        label: DOCTOR_CHECK_LABELS.wifiRobotInterface,
         status: "warn",
         required: false,
         detail: `Saved interface ${selected.name} is not present. Re-run \`ftc wifi use-interface\`.`,
@@ -517,7 +524,7 @@ async function checkWifiRobotInterface(options: DoctorOptions): Promise<DoctorCh
     }
     return {
       id: "wifi-robot-interface",
-      label: "Robot network interface selected",
+      label: DOCTOR_CHECK_LABELS.wifiRobotInterface,
       status: "pass",
       required: false,
       detail: `${selected.name}${selected.index !== undefined ? ` (#${selected.index})` : ""}`,
@@ -525,7 +532,7 @@ async function checkWifiRobotInterface(options: DoctorOptions): Promise<DoctorCh
   } catch {
     return {
       id: "wifi-robot-interface",
-      label: "Robot network interface selected",
+      label: DOCTOR_CHECK_LABELS.wifiRobotInterface,
       status: "warn",
       required: false,
       detail: `${selected.name} (could not re-list interfaces to verify)`,
@@ -538,7 +545,7 @@ async function checkAdb(runner: ProcessRunner): Promise<DoctorCheck> {
   if (!adb.found || !adb.adbPath) {
     return {
       id: "adb",
-      label: "adb found",
+      label: DOCTOR_CHECK_LABELS.adb,
       status: "fail",
       required: true,
       friendlyError: interpretError({ text: "adb not found", codeHint: "ADB_NOT_FOUND" }),
@@ -546,7 +553,7 @@ async function checkAdb(runner: ProcessRunner): Promise<DoctorCheck> {
   }
   return {
     id: "adb",
-    label: "adb found",
+    label: DOCTOR_CHECK_LABELS.adb,
     status: "pass",
     required: true,
     detail: adb.versionText?.split(/\r?\n/)[0] ?? adb.adbPath,
@@ -559,7 +566,7 @@ async function checkProject(adapter: ProjectAdapter, cwd: string): Promise<Docto
     if (!detected) {
       return {
         id: "ftc-project",
-        label: "FTC project detected",
+        label: DOCTOR_CHECK_LABELS.ftcProject,
         status: "fail",
         required: true,
         detail: cwd,
@@ -569,7 +576,7 @@ async function checkProject(adapter: ProjectAdapter, cwd: string): Promise<Docto
     const info = await adapter.inspect(cwd);
     return {
       id: "ftc-project",
-      label: "FTC project detected",
+      label: DOCTOR_CHECK_LABELS.ftcProject,
       status: "pass",
       required: true,
       detail: `${info.kind}; module ${info.moduleName}`,
@@ -577,7 +584,7 @@ async function checkProject(adapter: ProjectAdapter, cwd: string): Promise<Docto
   } catch (error) {
     return {
       id: "ftc-project",
-      label: "FTC project detected",
+      label: DOCTOR_CHECK_LABELS.ftcProject,
       status: "fail",
       required: true,
       friendlyError: interpretError({
@@ -596,7 +603,7 @@ async function checkWrapper(
   if (!projectOk) {
     return {
       id: "gradle-wrapper",
-      label: "Gradle Wrapper found",
+      label: DOCTOR_CHECK_LABELS.gradleWrapper,
       status: "fail",
       required: true,
       friendlyError: projectNotDetectedWrapperError(),
@@ -606,7 +613,7 @@ async function checkWrapper(
   if (!wrapper.found) {
     return {
       id: "gradle-wrapper",
-      label: "Gradle Wrapper found",
+      label: DOCTOR_CHECK_LABELS.gradleWrapper,
       status: "fail",
       required: true,
       friendlyError: interpretError({
@@ -618,7 +625,7 @@ async function checkWrapper(
   if (platform !== "win32" && wrapper.executableOnUnix === false) {
     return {
       id: "gradle-wrapper",
-      label: "Gradle Wrapper found",
+      label: DOCTOR_CHECK_LABELS.gradleWrapper,
       status: "fail",
       required: true,
       detail: wrapper.wrapperPath,
@@ -630,7 +637,7 @@ async function checkWrapper(
   }
   return {
     id: "gradle-wrapper",
-    label: "Gradle Wrapper found",
+    label: DOCTOR_CHECK_LABELS.gradleWrapper,
     status: "pass",
     required: true,
     detail: wrapper.wrapperPath,
@@ -643,7 +650,7 @@ async function checkDevices(provider: DeviceProvider): Promise<DoctorCheck> {
     if (devices.length === 0) {
       return {
         id: "devices",
-        label: "REV Control Hub connected and authorized",
+        label: DOCTOR_CHECK_LABELS.devicesHub,
         status: "fail",
         required: false,
         friendlyError: interpretError({ text: "no devices", codeHint: "NO_DEVICES" }),
@@ -654,7 +661,7 @@ async function checkDevices(provider: DeviceProvider): Promise<DoctorCheck> {
       if (devices.some((d) => d.state === "unauthorized")) {
         return {
           id: "devices",
-          label: "REV Control Hub connected and authorized",
+          label: DOCTOR_CHECK_LABELS.devicesHub,
           status: "fail",
           required: false,
           friendlyError: interpretError({ text: "unauthorized", codeHint: "DEVICE_UNAUTHORIZED" }),
@@ -662,7 +669,7 @@ async function checkDevices(provider: DeviceProvider): Promise<DoctorCheck> {
       }
       return {
         id: "devices",
-        label: "REV Control Hub connected and authorized",
+        label: DOCTOR_CHECK_LABELS.devicesHub,
         status: "fail",
         required: false,
         friendlyError: interpretError({ text: "offline", codeHint: "DEVICE_OFFLINE" }),
@@ -671,9 +678,7 @@ async function checkDevices(provider: DeviceProvider): Promise<DoctorCheck> {
     const probableHub = usable.find((d) => d.controlHubLikelihood === "probable");
     return {
       id: "devices",
-      label: probableHub
-        ? "REV Control Hub connected and authorized"
-        : "Android device connected and authorized",
+      label: probableHub ? DOCTOR_CHECK_LABELS.devicesHub : DOCTOR_CHECK_LABELS.devicesAndroid,
       status: "pass",
       required: false,
       detail: probableHub
@@ -683,7 +688,7 @@ async function checkDevices(provider: DeviceProvider): Promise<DoctorCheck> {
   } catch (error) {
     return {
       id: "devices",
-      label: "Connected Android devices",
+      label: DOCTOR_CHECK_LABELS.devicesGeneric,
       status: "fail",
       required: false,
       friendlyError: interpretError(error instanceof Error ? error.message : String(error)),
@@ -697,7 +702,7 @@ async function checkGradleInit(options: DoctorOptions): Promise<DoctorCheck> {
     if (!project.gradleWrapperPath) {
       return {
         id: "gradle-init",
-        label: "Gradle can initialize",
+        label: DOCTOR_CHECK_LABELS.gradleInit,
         status: "fail",
         required: false,
         friendlyError: interpretError({
@@ -717,7 +722,7 @@ async function checkGradleInit(options: DoctorOptions): Promise<DoctorCheck> {
     if (result.exitCode === 0) {
       return {
         id: "gradle-init",
-        label: "Gradle can initialize",
+        label: DOCTOR_CHECK_LABELS.gradleInit,
         status: "pass",
         required: false,
         detail: result.stdout.split(/\r?\n/).find((line) => /Gradle/i.test(line)),
@@ -725,16 +730,17 @@ async function checkGradleInit(options: DoctorOptions): Promise<DoctorCheck> {
     }
     return {
       id: "gradle-init",
-      label: "Gradle can initialize",
+      label: DOCTOR_CHECK_LABELS.gradleInit,
       status: "warn",
       required: false,
-      detail: "Gradle --version returned a nonzero exit code.",
+      detail:
+        "Gradle did not report its version successfully (gradlew --version failed). Check JDK and project setup.",
       friendlyError: interpretError(`${result.stdout}\n${result.stderr}`),
     };
   } catch (error) {
     return {
       id: "gradle-init",
-      label: "Gradle can initialize",
+      label: DOCTOR_CHECK_LABELS.gradleInit,
       status: "warn",
       required: false,
       friendlyError: interpretError(error instanceof Error ? error.message : String(error)),

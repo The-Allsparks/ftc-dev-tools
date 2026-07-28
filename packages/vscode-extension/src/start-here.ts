@@ -36,11 +36,17 @@ function loadCompleted(context: vscode.ExtensionContext): StartHereStepId[] {
   return normalizeStartHereProgress(context.globalState.get(START_HERE_PROGRESS_KEY));
 }
 
+const startHereProgressEmitter = new vscode.EventEmitter<void>();
+
+/** Fired when Start Here progress is saved (sidebar checklist refresh). */
+export const onStartHereProgressChanged = startHereProgressEmitter.event;
+
 async function saveCompleted(
   context: vscode.ExtensionContext,
   completed: StartHereStepId[],
 ): Promise<void> {
   await context.globalState.update(START_HERE_PROGRESS_KEY, serializeStartHereProgress(completed));
+  startHereProgressEmitter.fire();
 }
 
 function markComplete(completed: StartHereStepId[], id: StartHereStepId): StartHereStepId[] {

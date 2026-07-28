@@ -43,8 +43,7 @@ export interface BuildFtcProjectSetupPlansInput {
 }
 
 export type BuildFtcProjectSetupPlansResult =
-  | { ok: true; plans: FtcProjectSetupPlan[] }
-  | { ok: false; invalidPath: string; error: string };
+  { ok: true; plans: FtcProjectSetupPlan[] } | { ok: false; invalidPath: string; error: string };
 
 function parseExistingOrEmpty(
   filePath: string,

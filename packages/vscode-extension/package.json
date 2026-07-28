@@ -258,6 +258,25 @@
         }
       ]
     },
+    "taskDefinitions": [
+      {
+        "type": "ftc-dev-tools",
+        "required": [
+          "action"
+        ],
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "build",
+              "deploy",
+              "buildAndDeploy"
+            ],
+            "description": "FTC Dev Tools command to run (same as Command Palette entries)."
+          }
+        }
+      }
+    ],
     "configuration": {
       "title": "FTC Dev Tools",
       "properties": {

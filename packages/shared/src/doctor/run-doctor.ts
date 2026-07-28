@@ -32,6 +32,7 @@ import {
 } from "./doctor-copy.js";
 import { buildDoctorSections, categoryForCheckId } from "./doctor-sections.js";
 import { notAnFtcProjectRootError, projectNotDetectedWrapperError } from "./wrong-folder-errors.js";
+import { discoverNearbyFtcProjectRoots } from "../project/discover-ftc-root.js";
 
 export interface DoctorOptions {
   cwd: string;
@@ -62,7 +63,12 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorReport> {
   const projectCheck = await checkProject(options.projectAdapter, options.cwd);
   checks.push(projectCheck);
 
-  const wrapperCheck = await checkWrapper(options.cwd, platform, projectCheck.status === "pass");
+  const wrapperCheck = await checkWrapper(
+    options.cwd,
+    platform,
+    projectCheck.status === "pass",
+    projectCheck.suggestedProjectRoots,
+  );
   checks.push(wrapperCheck);
 
   if (options.deviceProvider) {
@@ -564,13 +570,18 @@ async function checkProject(adapter: ProjectAdapter, cwd: string): Promise<Docto
   try {
     const detected = await adapter.detect(cwd);
     if (!detected) {
+      const suggestedProjectRoots = await discoverNearbyFtcProjectRoots(cwd, { adapter });
       return {
         id: "ftc-project",
         label: DOCTOR_CHECK_LABELS.ftcProject,
         status: "fail",
         required: true,
         detail: cwd,
-        friendlyError: notAnFtcProjectRootError(`Working directory: ${cwd}`),
+        suggestedProjectRoots: suggestedProjectRoots.length ? suggestedProjectRoots : undefined,
+        friendlyError: notAnFtcProjectRootError(
+          `Working directory: ${cwd}`,
+          suggestedProjectRoots.length ? suggestedProjectRoots : undefined,
+        ),
       };
     }
     const info = await adapter.inspect(cwd);
@@ -599,6 +610,7 @@ async function checkWrapper(
   cwd: string,
   platform: NodeJS.Platform,
   projectOk: boolean,
+  suggestedProjectRoots?: string[],
 ): Promise<DoctorCheck> {
   if (!projectOk) {
     return {
@@ -606,7 +618,8 @@ async function checkWrapper(
       label: DOCTOR_CHECK_LABELS.gradleWrapper,
       status: "fail",
       required: true,
-      friendlyError: projectNotDetectedWrapperError(),
+      suggestedProjectRoots,
+      friendlyError: projectNotDetectedWrapperError(suggestedProjectRoots),
     };
   }
   const wrapper = await findGradleWrapper(cwd, platform);

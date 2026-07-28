@@ -218,6 +218,14 @@
         "title": "FTC: Select Project Root"
       },
       {
+        "command": "ftc.openSuggestedProjectRoot",
+        "title": "FTC: Open Correct Project Root"
+      },
+      {
+        "command": "ftc.addSuggestedProjectRootToWorkspace",
+        "title": "FTC: Add Project Root to Workspace"
+      },
+      {
         "command": "ftc.installCli",
         "title": "FTC: Install FTC CLI"
       },
@@ -293,6 +301,11 @@
           "type": "string",
           "default": "",
           "description": "Network interface name used for Control Hub / robot Wi-Fi traffic in dual-NIC setups."
+        },
+        "ftc.projectRoot": {
+          "type": "string",
+          "default": "",
+          "description": "Optional override for the FTC Android Studio project root (folder with settings.gradle and TeamCode). Aligns with the FTC_PROJECT_ROOT environment variable used by the MCP server when set."
         }
       }
     }

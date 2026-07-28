@@ -60,6 +60,8 @@ Add a local stdio server (paths absolute on your machine):
 
 Most tools accept an optional `projectRoot` argument. If omitted, the server uses `FTC_PROJECT_ROOT`, then the process cwd.
 
+In VS Code or Cursor, the workspace setting **`ftc.projectRoot`** overrides the folder used for extension commands and should match the same path you set in `FTC_PROJECT_ROOT` when using MCP against that project.
+
 **Do not** redirect application logs to stdout — MCP uses stdout for JSON-RPC. Shared logging already goes to stderr.
 
 ## Tools

@@ -13,14 +13,15 @@ import {
   runDoctor,
   parseJsonStrict,
   mergeExtensionsJson,
-  mergeFtcWorkspaceSettings,
   formatJsonFile,
   backupFileBeforeWrite,
   listSetupBackups,
   restoreSetupBackup,
   FTC_PROJECT_RECOMMENDED_EXTENSIONS,
-  buildFtcProjectTasksDocument,
   discoverFtcCliOnPath,
+  buildFtcProjectSetupPlans,
+  refreshSetupPlanJsonContent,
+  buildSetUpComputerDoctorOptions,
 } from "@ftc-dev-tools/shared";
 
 async function readExistingJsonFile(
@@ -96,10 +97,7 @@ export async function setUpThisComputerCommand(
   output.show(true);
 
   const report = await runDoctor({
-    cwd,
-    runner,
-    projectAdapter: adapter,
-    checkWifi: false,
+    ...buildSetUpComputerDoctorOptions(cwd, runner, adapter),
   });
 
   for (const section of buildDoctorSections(report)) {
@@ -179,79 +177,28 @@ export async function setUpThisFtcProjectCommand(
     return;
   }
 
-  const extensionsPath = path.join(root, ".vscode", "extensions.json");
-  const settingsPath = path.join(root, ".vscode", "settings.json");
+  const readIfExists = (filePath: string): string | null =>
+    fs.existsSync(filePath) ? fs.readFileSync(filePath, "utf8") : null;
 
-  for (const checkPath of [extensionsPath, settingsPath]) {
-    if (!fs.existsSync(checkPath)) {
-      continue;
-    }
-    const parsed = parseJsonStrict(fs.readFileSync(checkPath, "utf8"));
-    if (!parsed.ok) {
-      refuseInvalidJson(output, checkPath, parsed.error);
-      return;
-    }
-  }
-
-  const plans: Array<{ path: string; content: string; description: string; skip?: boolean }> = [];
-
-  const configPath = path.join(root, ".ftc-dev.json");
-  if (!fs.existsSync(configPath)) {
-    plans.push({
-      path: configPath,
-      description: "Create .ftc-dev.json (no device serials)",
-      content: `${JSON.stringify(
-        {
-          $schema:
-            "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/packages/shared/schemas/ftc-dev.schema.json",
-          module: "TeamCode",
-          deployment: {
-            preferredConnection: "any",
-          },
-          logs: {
-            defaultFilter: "teamcode",
-          },
-        },
-        null,
-        2,
-      )}\n`,
-    });
-  }
-
-  const extParsed = await readExistingJsonFile(extensionsPath);
-  plans.push({
-    path: extensionsPath,
-    description: "Add/merge .vscode/extensions.json recommendations",
-    content: formatJsonFile(mergeExtensionsJson(extParsed.ok ? extParsed.value : {})),
-  });
-
-  const settingsParsed = await readExistingJsonFile(settingsPath);
-  plans.push({
-    path: settingsPath,
-    description: "Add safe shared workspace settings (no device serials)",
-    content: formatJsonFile(
-      mergeFtcWorkspaceSettings(settingsParsed.ok ? settingsParsed.value : {}),
-    ),
-  });
-
-  const tasksPath = path.join(root, ".vscode", "tasks.json");
   const cliDiscovery = await discoverFtcCliOnPath(new NodeProcessRunner());
   const tasksMode = cliDiscovery.found ? "cli" : "extension";
-  if (!fs.existsSync(tasksPath)) {
-    plans.push({
-      path: tasksPath,
-      description: cliDiscovery.found
-        ? "Create FTC build/deploy tasks (ftc CLI on PATH)"
-        : "Create FTC build/deploy tasks (FTC Dev Tools extension commands)",
-      content: formatJsonFile(buildFtcProjectTasksDocument(tasksMode)),
-    });
-  } else {
-    const tasksParsed = parseJsonStrict(fs.readFileSync(tasksPath, "utf8"));
-    if (!tasksParsed.ok) {
-      refuseInvalidJson(output, tasksPath, tasksParsed.error);
-      return;
-    }
+
+  const planResult = buildFtcProjectSetupPlans({
+    projectRoot: root,
+    tasksMode,
+    cliOnPath: cliDiscovery.found,
+    ftcDevJson: readIfExists(path.join(root, ".ftc-dev.json")),
+    extensionsJson: readIfExists(path.join(root, ".vscode", "extensions.json")),
+    settingsJson: readIfExists(path.join(root, ".vscode", "settings.json")),
+    tasksJson: readIfExists(path.join(root, ".vscode", "tasks.json")),
+  });
+
+  if (!planResult.ok) {
+    refuseInvalidJson(output, planResult.invalidPath, planResult.error);
+    return;
   }
+
+  const plans = planResult.plans;
 
   output.clear();
   output.appendLine("FTC: Set Up This FTC Project — preview (nothing written yet)");
@@ -274,21 +221,16 @@ export async function setUpThisFtcProjectCommand(
   }
 
   for (const plan of plans) {
-    if (plan.path.endsWith("extensions.json")) {
+    if (plan.path.endsWith("extensions.json") || plan.path.endsWith("settings.json")) {
       const parsed = await readExistingJsonFile(plan.path);
       if (!parsed.ok) {
         refuseInvalidJson(output, plan.path, parsed.error);
         return;
       }
-      plan.content = formatJsonFile(mergeExtensionsJson(parsed.value));
-    }
-    if (plan.path.endsWith("settings.json")) {
-      const parsed = await readExistingJsonFile(plan.path);
-      if (!parsed.ok) {
-        refuseInvalidJson(output, plan.path, parsed.error);
-        return;
+      const refreshed = refreshSetupPlanJsonContent(plan.path, parsed.value);
+      if (refreshed !== undefined) {
+        plan.content = refreshed;
       }
-      plan.content = formatJsonFile(mergeFtcWorkspaceSettings(parsed.value));
     }
 
     await backupFileBeforeWrite(root, plan.path);

@@ -33,14 +33,11 @@ export const DOCTOR_SKIP_DETAILS = {
     "Skipped — normal when coding at home without the robot plugged in. This environment cannot list USB devices.",
   gradleInitBlocked:
     "Skipped until this folder passes FTC project and Gradle Wrapper checks. Fix those first, then run doctor again.",
-  ftcSdkDisabled:
-    "Skipped because this run turned off the online FTC SDK check (optional).",
-  ftcSdkNoProject:
-    "Skipped because no FTC project was detected in this folder.",
+  ftcSdkDisabled: "Skipped because this run turned off the online FTC SDK check (optional).",
+  ftcSdkNoProject: "Skipped because no FTC project was detected in this folder.",
   wifiChecksDisabled:
     "Skipped because this run turned off Wi‑Fi and Control Hub network checks (optional).",
-  wifiConsoleAtHome:
-    "Skipped — normal at home when the Control Hub is off or not on your Wi‑Fi. ",
+  wifiConsoleAtHome: "Skipped — normal at home when the Control Hub is off or not on your Wi‑Fi. ",
   wifiNicAtHome:
     "Skipped — normal unless your laptop has two Wi‑Fi adapters (dual‑NIC) at the shop. ",
 } as const;
@@ -51,8 +48,7 @@ export function wifiConsoleSkipDetail(technicalMessage: string): string {
 
 export function summaryLines() {
   return {
-    ready:
-      "Ready — your computer, project, and robot checks look good for deploying code.",
+    ready: "Ready — your computer, project, and robot checks look good for deploying code.",
     requiredFailed:
       "Not ready — fix the required items marked ✗ above (usually JDK, Android SDK, or adb).",
     notReadyPrefix: "Not ready yet:",

@@ -607,9 +607,7 @@ async function checkDevices(provider: DeviceProvider): Promise<DoctorCheck> {
     const probableHub = usable.find((d) => d.controlHubLikelihood === "probable");
     return {
       id: "devices",
-      label: probableHub
-        ? DOCTOR_CHECK_LABELS.devicesHub
-        : DOCTOR_CHECK_LABELS.devicesAndroid,
+      label: probableHub ? DOCTOR_CHECK_LABELS.devicesHub : DOCTOR_CHECK_LABELS.devicesAndroid,
       status: "pass",
       required: false,
       detail: probableHub

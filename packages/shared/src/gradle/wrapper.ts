@@ -22,7 +22,7 @@ export async function findGradleWrapper(
     const stat = await fs.stat(wrapperPath);
     wrapperExists = stat.isFile();
   } catch {
-    wrapperExists = false;
+    /* missing wrapper */
   }
 
   let propertiesExists = false;
@@ -30,7 +30,7 @@ export async function findGradleWrapper(
     const stat = await fs.stat(propertiesPath);
     propertiesExists = stat.isFile();
   } catch {
-    propertiesExists = false;
+    /* missing properties */
   }
 
   if (!wrapperExists) {

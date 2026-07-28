@@ -57,7 +57,7 @@ export function parseOpModeFromSource(
   const tele = text.match(/@TeleOp\s*(?:\(([^)]*)\))?/);
   const auto = text.match(/@Autonomous\s*(?:\(([^)]*)\))?/);
   let kind: OpModeKind | undefined;
-  let attrs = "";
+  let attrs: string;
   if (tele) {
     kind = "teleop";
     attrs = tele[1] ?? "";

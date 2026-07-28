@@ -25,7 +25,7 @@ export async function getWifiStatus(options: GetWifiStatusOptions): Promise<Wifi
     signal: options.signal,
   });
 
-  let interfaces: NetworkInterfaceInfo[] = [];
+  let interfaces: NetworkInterfaceInfo[];
   try {
     interfaces = await listNetworkInterfaces({ runner: options.runner, platform });
   } catch {
@@ -35,7 +35,7 @@ export async function getWifiStatus(options: GetWifiStatusOptions): Promise<Wifi
   const { preference } = await loadWifiPreference(options.preferencePath);
   const selectedInterface = preference.robotNetworkInterface;
 
-  let robotRoutePresent = false;
+  let robotRoutePresent: boolean;
   try {
     robotRoutePresent = await isRobotRoutePresent(
       options.runner,

@@ -17,8 +17,15 @@ export interface DoctorCheck {
   friendlyError?: FriendlyError;
 }
 
+export interface DoctorReadiness {
+  computerReady: boolean;
+  projectReadyToBuild: boolean;
+  robotReadyToDeploy: boolean;
+}
+
 export interface DoctorReport {
   ready: boolean;
+  readiness: DoctorReadiness;
   checks: DoctorCheck[];
   summaryLine: string;
   generatedAt: string;

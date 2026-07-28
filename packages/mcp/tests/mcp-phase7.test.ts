@@ -108,13 +108,17 @@ describe("mcp phase 7 tools", () => {
     );
     expect(preview.success).toBe(true);
     expect(preview.dryRun).toBe(true);
+    const confirmation = preview.confirmation as { planId: string; planHash: string };
+    expect(confirmation.planId).toBeTruthy();
+    expect(confirmation.planHash).toBeTruthy();
 
     const created = parsePayload(
       await toolOpModeCreate({
         projectRoot: root,
         className: "Phase7Tele",
         type: "teleop",
-        yes: true,
+        confirmPlanId: confirmation.planId,
+        confirmPlanHash: confirmation.planHash,
       }),
     );
     expect(created.success).toBe(true);

@@ -1,13 +1,41 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as vscode from "vscode";
-import { NodeProcessRunner, OfficialFtcProjectAdapter, runDoctor } from "@ftc-dev-tools/shared";
+import {
+  NodeProcessRunner,
+  OfficialFtcProjectAdapter,
+  runDoctor,
+  parseJsonStrict,
+  mergeExtensionsJson,
+  mergeFtcWorkspaceSettings,
+  formatJsonFile,
+  backupFileBeforeWrite,
+  listSetupBackups,
+  restoreSetupBackup,
+  FTC_PROJECT_RECOMMENDED_EXTENSIONS,
+} from "@ftc-dev-tools/shared";
 
-const FTC_PROJECT_RECOMMENDED_EXTENSIONS = [
-  "vscjava.vscode-java-pack",
-  "vscjava.vscode-java-test",
-  "redhat.vscode-xml",
-];
+async function readExistingJsonFile(
+  filePath: string,
+): Promise<{ ok: true; value: unknown } | { ok: false; error: string }> {
+  if (!fs.existsSync(filePath)) {
+    return { ok: true, value: {} };
+  }
+  const raw = fs.readFileSync(filePath, "utf8");
+  return parseJsonStrict(raw);
+}
+
+function refuseInvalidJson(
+  output: vscode.OutputChannel,
+  filePath: string,
+  error: string,
+): void {
+  vscode.window.showErrorMessage(
+    `Refusing to change ${path.basename(filePath)}: file is not valid JSON (${error}). Fix it manually or restore a backup.`,
+  );
+  output.appendLine(`Invalid JSON at ${filePath}: ${error}`);
+  output.show(true);
+}
 
 export async function configureRecommendedExtensionsCommand(
   getWorkspaceRoot: () => string | undefined,
@@ -21,18 +49,12 @@ export async function configureRecommendedExtensionsCommand(
 
   const vscodeDir = path.join(root, ".vscode");
   const target = path.join(vscodeDir, "extensions.json");
-  let existing: { recommendations?: string[] } = {};
-  if (fs.existsSync(target)) {
-    try {
-      existing = JSON.parse(fs.readFileSync(target, "utf8")) as { recommendations?: string[] };
-    } catch {
-      existing = {};
-    }
+  const parsed = await readExistingJsonFile(target);
+  if (!parsed.ok) {
+    refuseInvalidJson(output, target, parsed.error);
+    return;
   }
-  const merged = [
-    ...new Set([...(existing.recommendations ?? []), ...FTC_PROJECT_RECOMMENDED_EXTENSIONS]),
-  ].sort();
-  const next = `${JSON.stringify({ recommendations: merged }, null, 2)}\n`;
+  const next = formatJsonFile(mergeExtensionsJson(parsed.value));
 
   output.clear();
   output.appendLine("FTC: Configure Recommended Extensions — preview");
@@ -41,7 +63,7 @@ export async function configureRecommendedExtensionsCommand(
   output.show(true);
 
   const confirm = await vscode.window.showWarningMessage(
-    `Write recommended extensions to ${path.relative(root, target) || target}?`,
+    `Write recommended extensions to ${path.relative(root, target) || target}? A backup is created when the file already exists.`,
     { modal: true },
     "Write",
     "Cancel",
@@ -50,15 +72,19 @@ export async function configureRecommendedExtensionsCommand(
     return;
   }
 
+  await backupFileBeforeWrite(root, target);
   fs.mkdirSync(vscodeDir, { recursive: true });
   fs.writeFileSync(target, next, "utf8");
   vscode.window.showInformationMessage("Wrote .vscode/extensions.json with FTC recommendations.");
 }
 
-export async function setUpThisComputerCommand(output: vscode.OutputChannel): Promise<void> {
+export async function setUpThisComputerCommand(
+  getWorkspaceRoot: () => string | undefined,
+  output: vscode.OutputChannel,
+): Promise<void> {
   const runner = new NodeProcessRunner();
   const adapter = new OfficialFtcProjectAdapter();
-  const cwd = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? process.cwd();
+  const cwd = getWorkspaceRoot() ?? process.cwd();
 
   output.clear();
   output.appendLine("FTC: Set Up This Computer");
@@ -106,7 +132,21 @@ export async function setUpThisFtcProjectCommand(
     return;
   }
 
-  const plans: Array<{ path: string; content: string; description: string }> = [];
+  const extensionsPath = path.join(root, ".vscode", "extensions.json");
+  const settingsPath = path.join(root, ".vscode", "settings.json");
+
+  for (const checkPath of [extensionsPath, settingsPath]) {
+    if (!fs.existsSync(checkPath)) {
+      continue;
+    }
+    const parsed = parseJsonStrict(fs.readFileSync(checkPath, "utf8"));
+    if (!parsed.ok) {
+      refuseInvalidJson(output, checkPath, parsed.error);
+      return;
+    }
+  }
+
+  const plans: Array<{ path: string; content: string; description: string; skip?: boolean }> = [];
 
   const configPath = path.join(root, ".ftc-dev.json");
   if (!fs.existsSync(configPath)) {
@@ -131,37 +171,20 @@ export async function setUpThisFtcProjectCommand(
     });
   }
 
-  const extensionsPath = path.join(root, ".vscode", "extensions.json");
+  const extParsed = await readExistingJsonFile(extensionsPath);
   plans.push({
     path: extensionsPath,
     description: "Add/merge .vscode/extensions.json recommendations",
-    content: `${JSON.stringify({ recommendations: FTC_PROJECT_RECOMMENDED_EXTENSIONS }, null, 2)}\n`,
+    content: formatJsonFile(mergeExtensionsJson(extParsed.ok ? extParsed.value : {})),
   });
 
-  const settingsPath = path.join(root, ".vscode", "settings.json");
-  let settings: Record<string, unknown> = {};
-  if (fs.existsSync(settingsPath)) {
-    try {
-      settings = JSON.parse(fs.readFileSync(settingsPath, "utf8")) as Record<string, unknown>;
-    } catch {
-      settings = {};
-    }
-  }
-  const nextSettings: Record<string, unknown> = {
-    ...settings,
-    "java.configuration.updateBuildConfiguration":
-      settings["java.configuration.updateBuildConfiguration"] ?? "automatic",
-    "files.exclude": {
-      ...((settings["files.exclude"] as Record<string, unknown> | undefined) ?? {}),
-      "**/.gradle": true,
-      "**/build": true,
-    },
-  };
-  delete nextSettings["ftc.preferredDeviceSerial"];
+  const settingsParsed = await readExistingJsonFile(settingsPath);
   plans.push({
     path: settingsPath,
     description: "Add safe shared workspace settings (no device serials)",
-    content: `${JSON.stringify(nextSettings, null, 2)}\n`,
+    content: formatJsonFile(
+      mergeFtcWorkspaceSettings(settingsParsed.ok ? settingsParsed.value : {}),
+    ),
   });
 
   const tasksPath = path.join(root, ".vscode", "tasks.json");
@@ -186,6 +209,12 @@ export async function setUpThisFtcProjectCommand(
         2,
       )}\n`,
     });
+  } else {
+    const tasksParsed = parseJsonStrict(fs.readFileSync(tasksPath, "utf8"));
+    if (!tasksParsed.ok) {
+      refuseInvalidJson(output, tasksPath, tasksParsed.error);
+      return;
+    }
   }
 
   output.clear();
@@ -199,7 +228,7 @@ export async function setUpThisFtcProjectCommand(
   output.show(true);
 
   const confirm = await vscode.window.showWarningMessage(
-    `Write ${plans.length} project setup file change(s)? Review the FTC Dev Tools output preview first.`,
+    `Write ${plans.length} project setup file change(s)? Existing JSON files are backed up under .ftc-dev-tools/backups/setup/.`,
     { modal: true },
     "Write",
     "Cancel",
@@ -209,30 +238,79 @@ export async function setUpThisFtcProjectCommand(
   }
 
   for (const plan of plans) {
-    fs.mkdirSync(path.dirname(plan.path), { recursive: true });
-    if (plan.path.endsWith("extensions.json") && fs.existsSync(plan.path)) {
-      let existing: { recommendations?: string[] } = {};
-      try {
-        existing = JSON.parse(fs.readFileSync(plan.path, "utf8")) as {
-          recommendations?: string[];
-        };
-      } catch {
-        existing = {};
+    if (plan.path.endsWith("extensions.json")) {
+      const parsed = await readExistingJsonFile(plan.path);
+      if (!parsed.ok) {
+        refuseInvalidJson(output, plan.path, parsed.error);
+        return;
       }
-      const merged = [
-        ...new Set([...(existing.recommendations ?? []), ...FTC_PROJECT_RECOMMENDED_EXTENSIONS]),
-      ].sort();
-      fs.writeFileSync(
-        plan.path,
-        `${JSON.stringify({ recommendations: merged }, null, 2)}\n`,
-        "utf8",
-      );
-    } else {
-      fs.writeFileSync(plan.path, plan.content, "utf8");
+      plan.content = formatJsonFile(mergeExtensionsJson(parsed.value));
     }
+    if (plan.path.endsWith("settings.json")) {
+      const parsed = await readExistingJsonFile(plan.path);
+      if (!parsed.ok) {
+        refuseInvalidJson(output, plan.path, parsed.error);
+        return;
+      }
+      plan.content = formatJsonFile(mergeFtcWorkspaceSettings(parsed.value));
+    }
+
+    await backupFileBeforeWrite(root, plan.path);
+    fs.mkdirSync(path.dirname(plan.path), { recursive: true });
+    fs.writeFileSync(plan.path, plan.content, "utf8");
   }
 
   vscode.window.showInformationMessage(
     "FTC project setup files written. Prefer Java Extension Pack for editing.",
   );
 }
+
+export async function restoreProjectSetupCommand(
+  getWorkspaceRoot: () => string | undefined,
+  output: vscode.OutputChannel,
+): Promise<void> {
+  const root = getWorkspaceRoot();
+  if (!root) {
+    vscode.window.showErrorMessage("Open an FTC project folder first.");
+    return;
+  }
+
+  const backups = await listSetupBackups(root);
+  if (backups.length === 0) {
+    vscode.window.showInformationMessage("No project setup backups found.");
+    return;
+  }
+
+  const pick = await vscode.window.showQuickPick(
+    backups.map((b) => ({
+      label: b.id,
+      description: `${b.files.length} file(s) — ${b.createdAt}`,
+      backup: b,
+    })),
+    { placeHolder: "Select a setup backup to restore" },
+  );
+  if (!pick) {
+    return;
+  }
+
+  const confirm = await vscode.window.showWarningMessage(
+    `Restore ${pick.backup.files.length} file(s) from backup ${pick.label}? This overwrites current files.`,
+    { modal: true },
+    "Restore",
+    "Cancel",
+  );
+  if (confirm !== "Restore") {
+    return;
+  }
+
+  const result = await restoreSetupBackup(root, pick.label);
+  output.clear();
+  output.appendLine(result.message);
+  for (const p of result.restoredPaths) {
+    output.appendLine(`  ${p}`);
+  }
+  output.show(true);
+  vscode.window.showInformationMessage(result.message);
+}
+
+export { FTC_PROJECT_RECOMMENDED_EXTENSIONS };

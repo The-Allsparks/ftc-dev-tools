@@ -145,6 +145,31 @@ describe("planSdkUpdate / applySdkUpdate", () => {
     expect(result.backupDirectory).toBeTruthy();
   });
 
+  it("replaces SDK directories exactly (removes stale files)", async () => {
+    const project = await makeTemp("ftc-sdk-proj-");
+    const upstream = await makeTemp("ftc-sdk-up-");
+    await writeProject(project, "11.1.0");
+    await writeUpstream(upstream, "11.2.0");
+    await fs.writeFile(
+      path.join(project, "FtcRobotController", "stale-only-local.txt"),
+      "remove-me\n",
+    );
+
+    const runner = new FakeRunner();
+    const result = await applySdkUpdate({
+      projectRoot: project,
+      runner,
+      yes: true,
+      sourceRoot: upstream,
+      targetTag: "v11.2",
+    });
+
+    expect(result.success).toBe(true);
+    await expect(
+      fs.access(path.join(project, "FtcRobotController", "stale-only-local.txt")),
+    ).rejects.toThrow();
+  });
+
   it("refuses dirty tree without --force", async () => {
     const project = await makeTemp("ftc-sdk-proj-");
     const upstream = await makeTemp("ftc-sdk-up-");

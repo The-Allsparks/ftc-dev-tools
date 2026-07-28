@@ -13,6 +13,8 @@ import { parseLogcatLine } from "../logcat/parse.js";
 import { inferConnectionType, inferControlHubLikelihood } from "./device-heuristics.js";
 
 export class AdbDeviceProvider implements DeviceProvider {
+  private readonly propertyCache = new Map<string, Record<string, string>>();
+
   constructor(
     private readonly runner: ProcessRunner,
     private readonly adbPath: string,
@@ -150,23 +152,44 @@ export class AdbDeviceProvider implements DeviceProvider {
   }
 
   private async readProperties(serial: string, keys: string[]): Promise<Record<string, string>> {
+    const all = await this.readAllProperties(serial);
     const props: Record<string, string> = {};
     for (const key of keys) {
-      try {
-        const result = await this.runner.run(
-          { command: this.adbPath, args: ["-s", serial, "shell", "getprop", key] },
-          { timeoutMs: 10_000 },
-        );
-        if (result.exitCode === 0) {
-          const value = result.stdout.trim();
-          if (value) {
-            props[key] = value;
-          }
-        }
-      } catch {
-        // ignore individual property failures
+      const value = all[key];
+      if (value) {
+        props[key] = value;
       }
     }
+    return props;
+  }
+
+  private async readAllProperties(serial: string): Promise<Record<string, string>> {
+    const cached = this.propertyCache.get(serial);
+    if (cached) {
+      return cached;
+    }
+    const props: Record<string, string> = {};
+    try {
+      const result = await this.runner.run(
+        { command: this.adbPath, args: ["-s", serial, "shell", "getprop"] },
+        { timeoutMs: 15_000 },
+      );
+      if (result.exitCode === 0) {
+        for (const line of result.stdout.split(/\r?\n/)) {
+          const match = line.match(/^\[([^\]]+)\]:\s*\[(.*)\]\s*$/);
+          if (match) {
+            const key = match[1]!;
+            const value = match[2]!;
+            if (value) {
+              props[key] = value;
+            }
+          }
+        }
+      }
+    } catch {
+      // fall through — return partial/empty
+    }
+    this.propertyCache.set(serial, props);
     return props;
   }
 }

@@ -55,9 +55,15 @@ import { FtcRobotTreeProvider } from "./views/robot-tree.js";
 import { StatusController } from "./status-controller.js";
 import {
   configureRecommendedExtensionsCommand,
+  restoreProjectSetupCommand,
   setUpThisComputerCommand,
   setUpThisFtcProjectCommand,
 } from "./setup-commands.js";
+import {
+  getWorkspaceRoot,
+  initWorkspaceRoot,
+  selectFtcProjectRootCommand,
+} from "./workspace-root.js";
 
 let output: vscode.OutputChannel;
 let status: StatusController;
@@ -74,6 +80,7 @@ const WIFI_STATUS_TTL_MS = 60_000;
 export function activate(context: vscode.ExtensionContext): void {
   output = vscode.window.createOutputChannel("FTC Dev Tools");
   status = new StatusController();
+  initWorkspaceRoot(context);
   tree = new FtcRobotTreeProvider(
     () => getWorkspaceRoot(),
     () => selectedSerial,
@@ -84,7 +91,6 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     output,
     status,
-    vscode.window.registerTreeDataProvider("ftc.robotView", tree),
     {
       dispose: () => {
         logStreamController?.abort();
@@ -92,6 +98,44 @@ export function activate(context: vscode.ExtensionContext): void {
       },
     },
   );
+
+  const robotView = vscode.window.createTreeView("ftc.robotView", {
+    treeDataProvider: tree,
+  });
+  context.subscriptions.push(robotView);
+
+  let pollInterval: ReturnType<typeof setInterval> | undefined;
+  const startPolling = (): void => {
+    if (pollInterval) {
+      return;
+    }
+    pollInterval = setInterval(() => {
+      void refreshStatus();
+    }, 15_000);
+  };
+  const stopPolling = (): void => {
+    if (pollInterval) {
+      clearInterval(pollInterval);
+      pollInterval = undefined;
+    }
+  };
+  context.subscriptions.push({
+    dispose: () => stopPolling(),
+  });
+  context.subscriptions.push(
+    robotView.onDidChangeVisibility((event) => {
+      if (event.visible) {
+        void refreshStatus();
+        startPolling();
+      } else {
+        stopPolling();
+      }
+    }),
+  );
+  if (robotView.visible) {
+    void refreshStatus();
+    startPolling();
+  }
 
   const register = (command: string, handler: () => Promise<void>): void => {
     context.subscriptions.push(
@@ -148,8 +192,10 @@ export function activate(context: vscode.ExtensionContext): void {
   register("ftc.configureRecommendedExtensions", () =>
     configureRecommendedExtensionsCommand(getWorkspaceRoot, output),
   );
-  register("ftc.setUpComputer", () => setUpThisComputerCommand(output));
+  register("ftc.setUpComputer", () => setUpThisComputerCommand(getWorkspaceRoot, output));
   register("ftc.setUpProject", () => setUpThisFtcProjectCommand(getWorkspaceRoot, output));
+  register("ftc.restoreProjectSetup", () => restoreProjectSetupCommand(getWorkspaceRoot, output));
+  register("ftc.selectProjectRoot", () => selectFtcProjectRootCommand(context));
   register("ftc.openTechnicalOutput", async () => {
     output.show(true);
   });
@@ -157,20 +203,10 @@ export function activate(context: vscode.ExtensionContext): void {
     await refreshStatus();
     tree.refresh();
   });
-
-  void refreshStatus();
-  const interval = setInterval(() => {
-    void refreshStatus();
-  }, 15_000);
-  context.subscriptions.push({ dispose: () => clearInterval(interval) });
 }
 
 export function deactivate(): void {
   // disposables handled by context
-}
-
-function getWorkspaceRoot(): string | undefined {
-  return vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
 }
 
 async function createDeviceProvider(): Promise<DeviceProvider> {
@@ -712,6 +748,16 @@ async function wifiJoinCommand(): Promise<void> {
     vscode.window.showWarningMessage("Join cancelled — password required.");
     return;
   }
+  const rememberChoice = await vscode.window.showQuickPick(
+    [
+      { label: "Do not save password on this computer", remember: false },
+      { label: "Remember password (machine-local obfuscated store)", remember: true },
+    ],
+    { placeHolder: "Password storage", ignoreFocusOut: true },
+  );
+  if (!rememberChoice) {
+    return;
+  }
   const confirm = await vscode.window.showWarningMessage(
     `Join Wi-Fi "${ssid}" on the selected robot network interface?`,
     { modal: true },
@@ -727,7 +773,7 @@ async function wifiJoinCommand(): Promise<void> {
     ssid,
     password,
     yes: true,
-    remember: true,
+    remember: rememberChoice.remember,
   });
   output.appendLine(result.message);
   if (!result.success && result.error) {

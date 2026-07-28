@@ -220,7 +220,13 @@ if (!skipPackage) {
     if (vsix.length === 0) {
       fail("VSIX missing after package:extension");
     } else {
-      const vsixPath = path.join(extArtifacts, vsix[0]);
+      const expectedVsix = `ftc-dev-tools-${version}.vsix`;
+      if (!vsix.includes(expectedVsix)) {
+        fail(
+          `VSIX filename must be ${expectedVsix} (found: ${vsix.join(", ")}). Update packages/vscode-extension/scripts/package-vsix.mjs or version.`,
+        );
+      }
+      const vsixPath = path.join(extArtifacts, expectedVsix);
       let listing = "";
       try {
         if (process.platform === "win32") {
@@ -237,7 +243,7 @@ if (!skipPackage) {
         fail(`Unable to list VSIX contents for readme check: ${vsixPath}`);
       }
       if (!/readme\.md/i.test(listing)) {
-        fail(`VSIX must include readme.md (checked ${vsix[0]})`);
+        fail(`VSIX must include readme.md (checked ${expectedVsix})`);
       }
     }
   }

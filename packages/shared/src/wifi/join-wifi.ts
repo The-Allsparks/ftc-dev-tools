@@ -12,7 +12,7 @@ export interface JoinWifiOptions {
   ssid: string;
   password?: string;
   interfaceName?: string;
-  /** Persist password in machine-local encrypted store. Default true when password provided. */
+  /** Persist password in machine-local obfuscated store. Default false — opt in with --remember. */
   remember?: boolean;
   passwordEnvVar?: string;
   preferencePath?: string;
@@ -121,7 +121,7 @@ export async function joinRobotWifi(options: JoinWifiOptions): Promise<WifiJoinR
       await joinLinux(options.runner, ssid, password, interfaceName);
     }
 
-    if (options.remember !== false) {
+    if (options.remember === true) {
       await storeWifiPassword(ssid, password, {
         secretsPath: options.secretsPath,
         preferencePath: options.preferencePath,

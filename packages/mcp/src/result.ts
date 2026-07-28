@@ -13,12 +13,12 @@ export function jsonResult(data: unknown, isError = false): CallToolResult {
   };
 }
 
-export function confirmationRequired(action: string): CallToolResult {
+export function confirmationRequired(_action: string): CallToolResult {
   return jsonResult(
     {
       success: false,
       code: "CONFIRMATION_REQUIRED",
-      message: `Refused: set yes=true to ${action}, or dryRun=true to preview when supported.`,
+      message: `Refused: run dryRun=true to preview, then apply with confirmPlanId and confirmPlanHash from that response.`,
     },
     true,
   );

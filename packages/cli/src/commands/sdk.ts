@@ -1,5 +1,10 @@
 import type { Command } from "commander";
-import { applySdkUpdate, checkSdkStatus, listSdkBackups, restoreSdkBackup } from "@ftc-dev-tools/shared";
+import {
+  applySdkUpdate,
+  checkSdkStatus,
+  listSdkBackups,
+  restoreSdkBackup,
+} from "@ftc-dev-tools/shared";
 import { createCliContext, printFriendlyError } from "../context.js";
 
 export function registerSdkCommand(program: Command): void {

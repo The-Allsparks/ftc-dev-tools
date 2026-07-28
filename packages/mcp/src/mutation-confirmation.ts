@@ -60,7 +60,10 @@ export function consumeMutationConfirmation(options: {
 }): { ok: true } | { ok: false; message: string } {
   const stored = plans.get(options.planId);
   if (!stored) {
-    return { ok: false, message: "Unknown or expired confirmation plan. Run dryRun preview again." };
+    return {
+      ok: false,
+      message: "Unknown or expired confirmation plan. Run dryRun preview again.",
+    };
   }
   plans.delete(options.planId);
 

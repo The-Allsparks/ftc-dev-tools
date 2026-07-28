@@ -100,10 +100,11 @@ export async function toolBuild(
 }
 
 export async function toolDeploy(
-  args: ProjectRootArgs & ConfirmArgs & {
-    device?: string;
-    verbose?: boolean;
-  },
+  args: ProjectRootArgs &
+    ConfirmArgs & {
+      device?: string;
+      verbose?: boolean;
+    },
 ): Promise<CallToolResult> {
   const ctx = ctxFrom(args, args.verbose === true);
   const payload = {
@@ -161,10 +162,11 @@ export async function toolSdkCheck(
 }
 
 export async function toolSdkUpdate(
-  args: ProjectRootArgs & ConfirmArgs & {
-    force?: boolean;
-    version?: string;
-  },
+  args: ProjectRootArgs &
+    ConfirmArgs & {
+      force?: boolean;
+      version?: string;
+    },
 ): Promise<CallToolResult> {
   const ctx = ctxFrom(args);
   const payload = { force: args.force === true, version: args.version };

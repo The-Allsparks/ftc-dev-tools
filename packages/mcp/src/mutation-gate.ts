@@ -14,8 +14,7 @@ export interface MutationConfirmArgs {
 }
 
 export type MutationGateResult =
-  | { allowed: true; dryRun: boolean }
-  | { allowed: false; result: CallToolResult };
+  { allowed: true; dryRun: boolean } | { allowed: false; result: CallToolResult };
 
 export function gateMutation(
   args: MutationConfirmArgs,

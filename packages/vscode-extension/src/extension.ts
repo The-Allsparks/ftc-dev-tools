@@ -88,16 +88,12 @@ export function activate(context: vscode.ExtensionContext): void {
     () => cachedWifiStatus,
   );
 
-  context.subscriptions.push(
-    output,
-    status,
-    {
-      dispose: () => {
-        logStreamController?.abort();
-        logStreamController = undefined;
-      },
+  context.subscriptions.push(output, status, {
+    dispose: () => {
+      logStreamController?.abort();
+      logStreamController = undefined;
     },
-  );
+  });
 
   const robotView = vscode.window.createTreeView("ftc.robotView", {
     treeDataProvider: tree,

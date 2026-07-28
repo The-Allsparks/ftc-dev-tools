@@ -25,11 +25,7 @@ async function readExistingJsonFile(
   return parseJsonStrict(raw);
 }
 
-function refuseInvalidJson(
-  output: vscode.OutputChannel,
-  filePath: string,
-  error: string,
-): void {
+function refuseInvalidJson(output: vscode.OutputChannel, filePath: string, error: string): void {
   vscode.window.showErrorMessage(
     `Refusing to change ${path.basename(filePath)}: file is not valid JSON (${error}). Fix it manually or restore a backup.`,
   );

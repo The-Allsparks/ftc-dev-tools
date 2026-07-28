@@ -18,9 +18,7 @@ export function initWorkspaceRoot(context: vscode.ExtensionContext): void {
   );
 }
 
-export async function selectFtcProjectRootCommand(
-  context: vscode.ExtensionContext,
-): Promise<void> {
+export async function selectFtcProjectRootCommand(context: vscode.ExtensionContext): Promise<void> {
   const candidates = await findFtcProjectRoots();
   if (candidates.length === 0) {
     vscode.window.showWarningMessage("No FTC project roots found in this workspace.");

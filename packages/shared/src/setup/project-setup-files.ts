@@ -7,9 +7,7 @@ export const FTC_PROJECT_RECOMMENDED_EXTENSIONS = [
   "redhat.vscode-xml",
 ] as const;
 
-export type ParseJsonResult =
-  | { ok: true; value: unknown }
-  | { ok: false; error: string };
+export type ParseJsonResult = { ok: true; value: unknown } | { ok: false; error: string };
 
 export function parseJsonStrict(text: string): ParseJsonResult {
   try {
@@ -25,12 +23,8 @@ export function mergeExtensionsJson(existing: unknown): Record<string, unknown> 
     existing !== null && typeof existing === "object" && !Array.isArray(existing)
       ? { ...(existing as Record<string, unknown>) }
       : {};
-  const current = Array.isArray(obj.recommendations)
-    ? (obj.recommendations as string[])
-    : [];
-  obj.recommendations = [
-    ...new Set([...current, ...FTC_PROJECT_RECOMMENDED_EXTENSIONS]),
-  ].sort();
+  const current = Array.isArray(obj.recommendations) ? (obj.recommendations as string[]) : [];
+  obj.recommendations = [...new Set([...current, ...FTC_PROJECT_RECOMMENDED_EXTENSIONS])].sort();
   return obj;
 }
 

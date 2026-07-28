@@ -70,7 +70,9 @@ const confirmShape = {
   yes: z
     .boolean()
     .optional()
-    .describe("Not accepted alone for MCP mutations; use dryRun then confirmPlanId/confirmPlanHash"),
+    .describe(
+      "Not accepted alone for MCP mutations; use dryRun then confirmPlanId/confirmPlanHash",
+    ),
 };
 
 /**

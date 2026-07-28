@@ -131,8 +131,7 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorReport> {
     projectReadyToBuild,
     robotReadyToDeploy,
   };
-  const ready =
-    !requiredFailed && computerReady && projectReadyToBuild && robotReadyToDeploy;
+  const ready = !requiredFailed && computerReady && projectReadyToBuild && robotReadyToDeploy;
 
   let summaryLine: string;
   if (ready) {

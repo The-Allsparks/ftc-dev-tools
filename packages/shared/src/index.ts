@@ -17,7 +17,13 @@ export type {
   ControlHubLikelihood,
 } from "./types/device.js";
 export type { FtcProjectInfo, ProjectAdapter, BuildResult, DeployResult } from "./types/project.js";
-export type { FriendlyError, DoctorCheck, DoctorReadiness, DoctorReport, CheckStatus } from "./types/errors.js";
+export type {
+  FriendlyError,
+  DoctorCheck,
+  DoctorReadiness,
+  DoctorReport,
+  CheckStatus,
+} from "./types/errors.js";
 export type {
   FtcDevConfig,
   ConfigLoadResult,
@@ -117,10 +123,7 @@ export {
   isGitWorkingTreeDirty,
 } from "./sdk/sync-sdk-update.js";
 export type { PlanSdkUpdateOptions, ApplySdkUpdateOptions } from "./sdk/sync-sdk-update.js";
-export {
-  listSdkBackups,
-  restoreSdkBackup,
-} from "./sdk/sdk-backup-restore.js";
+export { listSdkBackups, restoreSdkBackup } from "./sdk/sdk-backup-restore.js";
 export type { SdkBackupInfo, RestoreSdkBackupResult } from "./sdk/sdk-backup-restore.js";
 
 export {

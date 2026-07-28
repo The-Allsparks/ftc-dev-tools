@@ -2,10 +2,13 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as vscode from "vscode";
 import {
+  INSTALL_DEPS_CONTRIBUTOR_COMMANDS,
+  INSTALL_WITHOUT_ANDROID_STUDIO_DOCS_URL,
   NodeProcessRunner,
   OfficialFtcProjectAdapter,
-  runDoctor,
+  buildInstallDepsCommand,
   listCliConsumerInstallCommands,
+  runDoctor,
 } from "@ftc-dev-tools/shared";
 
 const FTC_PROJECT_RECOMMENDED_EXTENSIONS = [
@@ -88,17 +91,55 @@ export async function setUpThisComputerCommand(output: vscode.OutputChannel): Pr
   output.appendLine("Required: JDK for your FTC season, Android platform-tools (adb).");
   output.appendLine("Optional: Android Studio, dual-NIC Wi-Fi tooling, Control Hub OS helpers.");
   output.appendLine("Trusted install paths (re-run this command after each step):");
-  output.appendLine("- Windows: npm run install-deps:windows");
-  output.appendLine("- macOS: npm run install-deps:macos");
-  output.appendLine("- Linux: npm run install-deps:linux");
-  output.appendLine("- Docs: docs/install-without-android-studio.md");
+  output.appendLine("");
+  output.appendLine("Extension / VSIX install (no ftc-dev-tools repo clone):");
+  output.appendLine(
+    "Run the command for your OS in PowerShell or a terminal. Each downloads the installer script",
+  );
+  output.appendLine(
+    "and scripts/android-cmdline-tools.json into the same folder (required by the script).",
+  );
+  output.appendLine(`Guide: ${INSTALL_WITHOUT_ANDROID_STUDIO_DOCS_URL}`);
+  output.appendLine("");
+  output.appendLine("Windows (PowerShell):");
+  output.appendLine(buildInstallDepsCommand("windows"));
+  output.appendLine("");
+  output.appendLine("macOS (bash):");
+  output.appendLine(buildInstallDepsCommand("macos"));
+  output.appendLine("");
+  output.appendLine("Linux (bash):");
+  output.appendLine(buildInstallDepsCommand("linux"));
+  output.appendLine("");
+  output.appendLine("Contributors with a cloned ftc-dev-tools repo (from repo root):");
+  output.appendLine(`- Windows: ${INSTALL_DEPS_CONTRIBUTOR_COMMANDS.windows}`);
+  output.appendLine(`- macOS: ${INSTALL_DEPS_CONTRIBUTOR_COMMANDS.macos}`);
+  output.appendLine(`- Linux: ${INSTALL_DEPS_CONTRIBUTOR_COMMANDS.linux}`);
 
   const missing = report.checks.filter((c) => c.status === "fail" || c.status === "warn");
   const summary =
     missing.length === 0
       ? "Readiness: no failing/warning doctor checks in this workspace context."
       : `Readiness: ${missing.length} check(s) need attention (see FTC Dev Tools output).`;
-  vscode.window.showInformationMessage(summary);
+
+  const copyAction = await vscode.window.showInformationMessage(
+    summary,
+    "Copy Windows install command",
+    "Copy macOS install command",
+    "Copy Linux install command",
+    "Open install guide",
+  );
+  if (copyAction === "Copy Windows install command") {
+    await vscode.env.clipboard.writeText(buildInstallDepsCommand("windows"));
+    vscode.window.showInformationMessage("Copied Windows install command to clipboard.");
+  } else if (copyAction === "Copy macOS install command") {
+    await vscode.env.clipboard.writeText(buildInstallDepsCommand("macos"));
+    vscode.window.showInformationMessage("Copied macOS install command to clipboard.");
+  } else if (copyAction === "Copy Linux install command") {
+    await vscode.env.clipboard.writeText(buildInstallDepsCommand("linux"));
+    vscode.window.showInformationMessage("Copied Linux install command to clipboard.");
+  } else if (copyAction === "Open install guide") {
+    await vscode.env.openExternal(vscode.Uri.parse(INSTALL_WITHOUT_ANDROID_STUDIO_DOCS_URL));
+  }
 }
 
 export async function setUpThisFtcProjectCommand(

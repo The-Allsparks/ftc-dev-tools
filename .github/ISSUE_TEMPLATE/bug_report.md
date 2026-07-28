@@ -40,3 +40,7 @@ Paste `ftc doctor --json` and relevant verbose output.
 ## Project layout notes
 
 If this involves project detection, list top-level files/folders (for example `settings.gradle`, `TeamCode`, `FtcRobotController`).
+
+## Labels (maintainers)
+
+Keep the default `bug` label. Add **priority** and **surface** labels when triaging per [docs/issue-labels.md](../../docs/issue-labels.md).

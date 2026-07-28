@@ -51,6 +51,73 @@ export function formatJsonFile(value: unknown): string {
   return `${JSON.stringify(value, null, 2)}\n`;
 }
 
+export type FtcProjectTasksMode = "cli" | "extension";
+
+const FTC_TASK_PRESENTATION = {
+  reveal: "always",
+  panel: "shared",
+  focus: false,
+} as const;
+
+const FTC_TASK_OPTIONS = {
+  cwd: "${workspaceFolder}",
+} as const;
+
+function ftcShellTask(
+  label: string,
+  args: string[],
+  group?: { kind: "build"; isDefault?: boolean },
+): Record<string, unknown> {
+  return {
+    label,
+    type: "shell",
+    command: "ftc",
+    args,
+    options: FTC_TASK_OPTIONS,
+    presentation: FTC_TASK_PRESENTATION,
+    problemMatcher: [],
+    ...(group ? { group } : {}),
+  };
+}
+
+function ftcExtensionTask(
+  label: string,
+  action: "build" | "deploy" | "buildAndDeploy",
+  group?: { kind: "build"; isDefault?: boolean },
+): Record<string, unknown> {
+  return {
+    label,
+    type: "ftc-dev-tools",
+    action,
+    presentation: FTC_TASK_PRESENTATION,
+    problemMatcher: [],
+    ...(group ? { group } : {}),
+  };
+}
+
+/** Default `.vscode/tasks.json` content for FTC project setup (Run Task menu). */
+export function buildFtcProjectTasksDocument(mode: FtcProjectTasksMode): Record<string, unknown> {
+  const buildGroup = { kind: "build" as const, isDefault: true };
+  if (mode === "cli") {
+    return {
+      version: "2.0.0",
+      tasks: [
+        ftcShellTask("FTC: Build Robot Code", ["build"], buildGroup),
+        ftcShellTask("FTC: Deploy to Robot", ["deploy"]),
+        ftcShellTask("FTC: Build and Deploy", ["deploy"]),
+      ],
+    };
+  }
+  return {
+    version: "2.0.0",
+    tasks: [
+      ftcExtensionTask("FTC: Build Robot Code", "build", buildGroup),
+      ftcExtensionTask("FTC: Deploy to Robot", "deploy"),
+      ftcExtensionTask("FTC: Build and Deploy", "buildAndDeploy"),
+    ],
+  };
+}
+
 export interface SetupBackupInfo {
   id: string;
   createdAt: string;

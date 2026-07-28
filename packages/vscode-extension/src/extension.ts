@@ -67,6 +67,7 @@ import {
   initWorkspaceRoot,
   selectFtcProjectRootCommand,
 } from "./workspace-root.js";
+import { registerFtcTaskProvider } from "./ftc-task-provider.js";
 
 let output: vscode.OutputChannel;
 let status: StatusController;
@@ -135,6 +136,8 @@ export function activate(context: vscode.ExtensionContext): void {
     void refreshStatus();
     startPolling();
   }
+
+  registerFtcTaskProvider(context);
 
   const register = (command: string, handler: () => Promise<void>): void => {
     context.subscriptions.push(

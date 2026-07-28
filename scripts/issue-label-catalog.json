@@ -1,0 +1,519 @@
+{
+  "version": 1,
+  "issues": {
+    "Correct repository URLs and extension metadata": [
+      "bug",
+      "release",
+      "vscode",
+      "shared-core",
+      "priority: P0"
+    ],
+    "Add release validation command": ["enhancement", "release", "testing", "cli", "priority: P1"],
+    "Verify Marketplace publisher and Open VSX strategy": [
+      "documentation",
+      "release",
+      "vscode",
+      "priority: P1"
+    ],
+    "Create Android Studio / FTC for VS Code parity audit": [
+      "documentation",
+      "architecture",
+      "developer-experience",
+      "priority: P2"
+    ],
+    "Add FTC Java snippets": ["enhancement", "snippets", "vscode", "priority: P2"],
+    "Add SDK sample browser / import workflow": [
+      "enhancement",
+      "integration",
+      "vscode",
+      "cli",
+      "developer-experience",
+      "priority: P2"
+    ],
+    "Add guided computer setup": [
+      "enhancement",
+      "student-ux",
+      "vscode",
+      "cli",
+      "developer-experience",
+      "priority: P1"
+    ],
+    "Add guided FTC project setup": [
+      "enhancement",
+      "student-ux",
+      "vscode",
+      "configuration",
+      "workspace",
+      "priority: P1"
+    ],
+    "Improve package-aware Logcat filtering": [
+      "enhancement",
+      "shared-core",
+      "vscode",
+      "reliability",
+      "priority: P1"
+    ],
+    "Add clickable TeamCode stack traces": ["enhancement", "vscode", "student-ux", "priority: P2"],
+    "Add redacted diagnostic bundles": [
+      "enhancement",
+      "shared-core",
+      "vscode",
+      "cli",
+      "security",
+      "student-ux",
+      "priority: P1"
+    ],
+    "Add FTC unit-test starter workflow": [
+      "enhancement",
+      "testing",
+      "documentation",
+      "developer-experience",
+      "priority: P2"
+    ],
+    "Build physical deployment test matrix": [
+      "enhancement",
+      "hardware-validation",
+      "testing",
+      "release",
+      "priority: P1"
+    ],
+    "Investigate VS Code Java debugger attachment through JDWP": [
+      "enhancement",
+      "vscode",
+      "hardware-validation",
+      "reliability",
+      "priority: P2"
+    ],
+    "Harden SDK migration and rollback": [
+      "enhancement",
+      "shared-core",
+      "cli",
+      "reliability",
+      "security",
+      "priority: P1"
+    ],
+    "Compare code hardware names with robot configuration": [
+      "enhancement",
+      "shared-core",
+      "vscode",
+      "cli",
+      "priority: P2"
+    ],
+    "Validate Control Hub OS update safety": [
+      "enhancement",
+      "shared-core",
+      "cli",
+      "hardware-validation",
+      "security",
+      "reliability",
+      "priority: P1"
+    ],
+    "Investigate FTC Dashboard interoperability": [
+      "enhancement",
+      "integration",
+      "ftc-dashboard",
+      "priority: P2"
+    ],
+    "Multi-version SDK update fixtures and sdk plan/verify/rollback CLI": [
+      "enhancement",
+      "shared-core",
+      "cli",
+      "testing",
+      "reliability",
+      "priority: P1"
+    ],
+    "Extension package README missing from VSIX": ["bug", "release", "vscode", "priority: P1"],
+    "Install-deps guidance for VSIX-only users (no dev repo clone)": [
+      "documentation",
+      "release",
+      "developer-experience",
+      "priority: P1"
+    ],
+    "Consumer install: ftc CLI without git clone and npm link": [
+      "enhancement",
+      "release",
+      "cli",
+      "developer-experience",
+      "priority: P0"
+    ],
+    "Doctor: split machine readiness vs project readiness": [
+      "enhancement",
+      "shared-core",
+      "cli",
+      "vscode",
+      "student-ux",
+      "priority: P1"
+    ],
+    "Doctor: warn or fail on unsupported JDK major version (e.g. Java 11 vs 17)": [
+      "enhancement",
+      "shared-core",
+      "cli",
+      "student-ux",
+      "priority: P1"
+    ],
+    "Rookie onboarding wizard (FTC: Start Here)": [
+      "enhancement",
+      "vscode",
+      "student-ux",
+      "developer-experience",
+      "priority: P1"
+    ],
+    "Actionable doctor UI with Fix next actions": [
+      "enhancement",
+      "vscode",
+      "student-ux",
+      "ui",
+      "priority: P1"
+    ],
+    "Run trusted install-deps from extension with explicit consent": [
+      "enhancement",
+      "vscode",
+      "security",
+      "developer-experience",
+      "priority: P1"
+    ],
+    "Guided flow to obtain or open official FTC project": [
+      "enhancement",
+      "vscode",
+      "student-ux",
+      "workspace",
+      "priority: P1"
+    ],
+    "FTC Robot sidebar Getting started section": [
+      "enhancement",
+      "vscode",
+      "ui",
+      "student-ux",
+      "priority: P1"
+    ],
+    "VS Code walkthroughs for first-time FTC Dev Tools setup": [
+      "enhancement",
+      "vscode",
+      "student-ux",
+      "developer-experience",
+      "priority: P1"
+    ],
+    "Pedagogical copy pass for doctor and setup output": [
+      "enhancement",
+      "student-ux",
+      "cli",
+      "vscode",
+      "priority: P2"
+    ],
+    "Replace placeholder FTC tasks.json with real build/deploy tasks": [
+      "enhancement",
+      "vscode",
+      "priority: P1"
+    ],
+    "First-run milestone checklist (zero to competition-ready)": [
+      "enhancement",
+      "student-ux",
+      "vscode",
+      "competition",
+      "priority: P1"
+    ],
+    "Guided Connect My Robot flow (USB first)": [
+      "enhancement",
+      "vscode",
+      "student-ux",
+      "discovery",
+      "networking",
+      "priority: P1"
+    ],
+    "First OpMode journey (create, deploy, Driver Station)": [
+      "enhancement",
+      "vscode",
+      "cli",
+      "student-ux",
+      "priority: P1"
+    ],
+    "Wrong-folder and monorepo FTC project detection": [
+      "enhancement",
+      "shared-core",
+      "workspace",
+      "vscode",
+      "priority: P1"
+    ],
+    "Add automated tests for extension setup commands": [
+      "enhancement",
+      "vscode",
+      "testing",
+      "priority: P1"
+    ],
+    "Follow-up: close gaps in guided computer and project setup (0.1)": [
+      "enhancement",
+      "student-ux",
+      "vscode",
+      "documentation",
+      "priority: P2"
+    ],
+    "Epic: Zero-to-first-deploy rookie journey": [
+      "epic",
+      "student-ux",
+      "developer-experience",
+      "vscode",
+      "cli",
+      "priority: P0"
+    ],
+    "[EPIC] FTC Vision Lab — IDE-integrated camera development, testing, and diagnostics": [
+      "epic",
+      "vision",
+      "architecture",
+      "priority: P2"
+    ],
+    "VISION-01: Define the FTC Vision provider architecture": [
+      "vision",
+      "architecture",
+      "shared-core",
+      "priority: P2"
+    ],
+    "VISION-02: Add vision configuration and workspace discovery": [
+      "vision",
+      "configuration",
+      "workspace",
+      "priority: P2"
+    ],
+    "VISION-03: Implement vision endpoint and service discovery": [
+      "vision",
+      "discovery",
+      "networking",
+      "priority: P2"
+    ],
+    "VISION-04: Implement the Limelight provider": [
+      "vision",
+      "limelight",
+      "provider",
+      "priority: P2"
+    ],
+    "VISION-05: Add Limelight pipeline-as-code": [
+      "vision",
+      "limelight",
+      "pipeline-as-code",
+      "priority: P2"
+    ],
+    "VISION-06: Implement FTC Dashboard interoperability": [
+      "vision",
+      "ftc-dashboard",
+      "integration",
+      "priority: P2"
+    ],
+    "VISION-07: Design the robot-side diagnostic bridge": [
+      "vision",
+      "robot-bridge",
+      "security",
+      "priority: P2"
+    ],
+    "VISION-08: Implement VisionPortal integration": [
+      "vision",
+      "visionportal",
+      "camera-controls",
+      "priority: P2"
+    ],
+    "VISION-09: Implement EasyOpenCV integration": [
+      "vision",
+      "integration",
+      "easyopencv",
+      "priority: P2"
+    ],
+    "VISION-10: Build the FTC Vision Lab IDE panel": [
+      "vision",
+      "vscode",
+      "webview",
+      "ui",
+      "priority: P2"
+    ],
+    "VISION-11: Add live overlays and structured result inspection": [
+      "vision",
+      "ui",
+      "overlays",
+      "telemetry",
+      "priority: P2"
+    ],
+    "VISION-12: Add vision code generators, snippets, and source navigation": [
+      "vision",
+      "codegen",
+      "snippets",
+      "priority: P2"
+    ],
+    "VISION-13: Implement capture, session recording, and offline replay": [
+      "vision",
+      "recording",
+      "replay",
+      "datasets",
+      "priority: P2"
+    ],
+    "VISION-14: Add vision diagnostics and student-friendly errors": [
+      "vision",
+      "diagnostics",
+      "student-ux",
+      "priority: P2"
+    ],
+    "VISION-15: Add FTC Vision CLI commands": ["vision", "cli", "priority: P2"],
+    "VISION-16: Add FTC Vision MCP tools": ["vision", "mcp", "priority: P2"],
+    "VISION-17: Add automated testing and physical hardware validation": [
+      "vision",
+      "testing",
+      "hardware-validation",
+      "priority: P2"
+    ],
+    "VISION-18: Add documentation, onboarding, and release support": [
+      "vision",
+      "documentation",
+      "release",
+      "developer-experience",
+      "priority: P2"
+    ],
+    "Safely merge and preserve VS Code JSONC configuration": [
+      "enhancement",
+      "shared-core",
+      "vscode",
+      "configuration",
+      "priority: P1"
+    ],
+    "Store Control Hub Wi-Fi credentials using OS credential services": [
+      "enhancement",
+      "shared-core",
+      "security",
+      "cli",
+      "priority: P0"
+    ],
+    "Stage, verify, and atomically apply FTC SDK updates": [
+      "enhancement",
+      "shared-core",
+      "cli",
+      "reliability",
+      "priority: P0"
+    ],
+    "Replace MCP yes flags with plan/apply authorization": [
+      "enhancement",
+      "mcp",
+      "security",
+      "priority: P0"
+    ],
+    "Add project and device operation locking": [
+      "enhancement",
+      "shared-core",
+      "reliability",
+      "cli",
+      "priority: P1"
+    ],
+    "Support multi-root workspaces and explicit active-project selection": [
+      "enhancement",
+      "shared-core",
+      "workspace",
+      "vscode",
+      "priority: P1"
+    ],
+    "Add competition-day stability and offline mode": [
+      "enhancement",
+      "vscode",
+      "cli",
+      "reliability",
+      "competition",
+      "priority: P1"
+    ],
+    "Publish and test an FTC tooling compatibility matrix": [
+      "documentation",
+      "testing",
+      "hardware-validation",
+      "priority: P1"
+    ],
+    "Provide actionable recovery for common FTC deployment failures": [
+      "enhancement",
+      "vscode",
+      "student-ux",
+      "cli",
+      "reliability",
+      "priority: P1"
+    ],
+    "Add FTC project and robot configuration snapshots": [
+      "enhancement",
+      "shared-core",
+      "cli",
+      "reliability",
+      "priority: P1"
+    ],
+    "Add VS Code extension integration and lifecycle tests": [
+      "enhancement",
+      "vscode",
+      "testing",
+      "priority: P1"
+    ],
+    "Make Logcat streaming lifecycle-safe and actionable": [
+      "enhancement",
+      "shared-core",
+      "vscode",
+      "testing",
+      "priority: P1"
+    ],
+    "Define precise computer, project, device, deploy, and competition readiness": [
+      "enhancement",
+      "shared-core",
+      "vscode",
+      "student-ux",
+      "cli",
+      "priority: P1"
+    ],
+    "Create reusable compatibility tests for shared service providers": [
+      "enhancement",
+      "shared-core",
+      "testing",
+      "priority: P1"
+    ],
+    "Create a reproducible and verified release pipeline": [
+      "enhancement",
+      "security",
+      "testing",
+      "release",
+      "priority: P1"
+    ],
+    "Support stable, preview, pinning, and rollback release channels": [
+      "enhancement",
+      "release",
+      "developer-experience",
+      "priority: P1"
+    ],
+    "Document trademark, redistribution, licensing, and privacy boundaries": [
+      "documentation",
+      "security",
+      "release",
+      "priority: P1"
+    ],
+    "Add non-secret team configuration and environment policy": [
+      "documentation",
+      "shared-core",
+      "configuration",
+      "priority: P1"
+    ],
+    "Detect drift from the team's known-good FTC environment": [
+      "enhancement",
+      "shared-core",
+      "configuration",
+      "competition",
+      "priority: P1"
+    ],
+    "Add a no-hardware practice and validation mode": [
+      "enhancement",
+      "student-ux",
+      "cli",
+      "developer-experience",
+      "priority: P2"
+    ],
+    "Reduce VS Code device polling and ADB contention": [
+      "enhancement",
+      "vscode",
+      "reliability",
+      "priority: P2"
+    ],
+    "Backlog: Integrate existing FTC simulators through pluggable adapters": [
+      "enhancement",
+      "architecture",
+      "shared-core",
+      "integration",
+      "vscode",
+      "cli",
+      "priority: P2",
+      "developer-experience"
+    ]
+  }
+}

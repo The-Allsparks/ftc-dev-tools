@@ -16,6 +16,8 @@ Lines marked `-` (skip) are **not failures**. Many robot and Wi‑Fi checks are 
 
 See [project principles](project-principles.md) — messages should stay understandable to students while still showing technical details when needed (`ftc doctor --verbose`).
 
+The **Supported JDK version** check requires JDK 17 (matching current FTC seasons and the `install-deps` scripts). Other Java versions fail with install guidance; see [install-without-android-studio.md](install-without-android-studio.md).
+
 ## CLI
 
 ```bash

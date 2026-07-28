@@ -34,3 +34,7 @@ Prefer filing against current integrated surfaces or planned work when relevant:
 See [docs/feature-maturity.md](../../docs/feature-maturity.md) and [docs/parity-audit.md](../../docs/parity-audit.md).
 
 Team-specific robot code, strategy, credentials, and private operations belong outside this repository. See [docs/team-use.md](../../docs/team-use.md).
+
+## Labels (maintainers)
+
+After filing, add roadmap labels per [docs/issue-labels.md](../../docs/issue-labels.md): one **priority** (`priority: P0`–`P2`), at least one **surface** (`shared-core`, `vscode`, `cli`, `mcp`, or `vision`), and any cross-cutting tags (`student-ux`, `testing`, etc.). Update [scripts/issue-label-catalog.json](../../scripts/issue-label-catalog.json) for new tracking issues.

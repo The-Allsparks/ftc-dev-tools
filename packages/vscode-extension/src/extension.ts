@@ -72,6 +72,7 @@ import {
 import { registerFtcTaskProvider } from "./ftc-task-provider.js";
 import { showDoctorResultsUi } from "./doctor-ui.js";
 import { runInstallDepsWithConsent, type RunInstallDepsArgs } from "./install-deps-consent.js";
+import { startHereCommand } from "./start-here.js";
 
 let output: vscode.OutputChannel;
 let status: StatusController;
@@ -225,6 +226,7 @@ export function activate(context: vscode.ExtensionContext): void {
     await refreshStatus();
     tree.refresh();
   });
+  register("ftc.startHere", () => startHereCommand(context));
 }
 
 export function deactivate(): void {

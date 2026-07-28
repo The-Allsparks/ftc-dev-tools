@@ -26,6 +26,7 @@
   ],
   "icon": "media/icon.png",
   "activationEvents": [
+    "onCommand:ftc.startHere",
     "workspaceContains:settings.gradle",
     "workspaceContains:settings.gradle.kts",
     "workspaceContains:.ftc-dev.json"
@@ -33,6 +34,11 @@
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
+      {
+        "command": "ftc.startHere",
+        "title": "FTC: Start Here",
+        "category": "FTC"
+      },
       {
         "command": "ftc.runDoctor",
         "title": "FTC: Run Environment Check"

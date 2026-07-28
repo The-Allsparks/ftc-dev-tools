@@ -9,7 +9,13 @@ import { getWifiStatus } from "../wifi/status.js";
 import { loadWifiPreference } from "../wifi/interface-preference.js";
 import { listNetworkInterfaces, findInterfaceByNameOrIndex } from "../wifi/list-interfaces.js";
 import type { DeviceProvider } from "../types/device.js";
-import type { DoctorCheck, DoctorReadiness, DoctorReport, DoctorReportSection, DoctorReportSections } from "../types/errors.js";
+import type {
+  DoctorCheck,
+  DoctorReadiness,
+  DoctorReport,
+  DoctorReportSection,
+  DoctorReportSections,
+} from "../types/errors.js";
 import type { ProcessRunner } from "../types/process.js";
 import type { ProjectAdapter } from "../types/project.js";
 import { interpretError } from "../errors/interpret.js";

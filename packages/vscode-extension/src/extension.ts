@@ -240,9 +240,7 @@ async function runDoctorCommand(): Promise<void> {
     output.appendLine("");
     output.appendLine(section.title);
     for (const check of section.checks) {
-      output.appendLine(
-        `  ${formatDoctorCheckLine(check)} [${check.status}]`,
-      );
+      output.appendLine(`  ${formatDoctorCheckLine(check)} [${check.status}]`);
       if (check.friendlyError && (check.status === "fail" || check.status === "warn")) {
         output.appendLine(`    ${check.friendlyError.summary}`);
       }

@@ -21,12 +21,12 @@ Stable JSON is emitted with `--json` and returned by the MCP `doctor` tool.
 
 Top-level fields:
 
-| Field | Meaning |
-| ----- | ------- |
-| `ready` | Overall pass (required checks + readiness flags) |
-| `readiness` | `computerReady`, `projectReadyToBuild`, `robotReadyToDeploy` |
-| `checks` | Flat list (backward compatible) |
-| `sections` | `machine`, `project`, optional `robot` / `other` with nested checks and `ready` per section |
+| Field       | Meaning                                                                                     |
+| ----------- | ------------------------------------------------------------------------------------------- |
+| `ready`     | Overall pass (required checks + readiness flags)                                            |
+| `readiness` | `computerReady`, `projectReadyToBuild`, `robotReadyToDeploy`                                |
+| `checks`    | Flat list (backward compatible)                                                             |
+| `sections`  | `machine`, `project`, optional `robot` / `other` with nested checks and `ready` per section |
 
 Each check includes optional `category` matching its section id.
 

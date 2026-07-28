@@ -66,20 +66,20 @@ Most tools accept an optional `projectRoot` argument. If omitted, the server use
 
 ### Read-only
 
-| Tool                                              | Mirrors                       |
-| ------------------------------------------------- | ----------------------------- |
-| `doctor`                                          | `ftc doctor --json`           |
+| Tool     | Mirrors             |
+| -------- | ------------------- |
+| `doctor` | `ftc doctor --json` |
 
 Doctor JSON includes `sections` (machine / project / robot / optional) — see [doctor.md](doctor.md).
-| `devices`                                         | `ftc devices --json`          |
-| `sdk_check`                                       | `ftc sdk check --json`        |
-| `wifi_status`                                     | `ftc wifi status --json`      |
-| `hub_status`                                      | `ftc hub status --json`       |
-| `hub_update_check`                                | `ftc hub update check --json` |
-| `pedro_status`                                    | `ftc pedro status --json`     |
-| `opmode_list`                                     | `ftc opmode list --json`      |
-| `config_list` / `config_show` / `config_validate` | `ftc config …`                |
-| `hwmap_show`                                      | `ftc hwmap show --json`       |
+| `devices` | `ftc devices --json` |
+| `sdk_check` | `ftc sdk check --json` |
+| `wifi_status` | `ftc wifi status --json` |
+| `hub_status` | `ftc hub status --json` |
+| `hub_update_check` | `ftc hub update check --json` |
+| `pedro_status` | `ftc pedro status --json` |
+| `opmode_list` | `ftc opmode list --json` |
+| `config_list` / `config_show` / `config_validate` | `ftc config …` |
+| `hwmap_show` | `ftc hwmap show --json` |
 
 ### Confirmed mutations
 

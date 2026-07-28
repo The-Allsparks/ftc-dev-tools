@@ -5,15 +5,7 @@
   "description": "Machine-readable output from `ftc doctor --json` and the MCP `doctor` tool.",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "ready",
-    "readiness",
-    "checks",
-    "sections",
-    "summaryLine",
-    "generatedAt",
-    "version"
-  ],
+  "required": ["ready", "readiness", "checks", "sections", "summaryLine", "generatedAt", "version"],
   "properties": {
     "ready": {
       "type": "boolean",

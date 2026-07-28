@@ -128,7 +128,10 @@ export {
   DOCTOR_SECTION_TITLES,
 } from "./doctor/doctor-sections.js";
 export type { DoctorSectionId } from "./doctor/doctor-sections.js";
-export { notAnFtcProjectRootError, projectNotDetectedWrapperError } from "./doctor/wrong-folder-errors.js";
+export {
+  notAnFtcProjectRootError,
+  projectNotDetectedWrapperError,
+} from "./doctor/wrong-folder-errors.js";
 export { buildProject, cleanProject } from "./services/build.js";
 export type { BuildServiceOptions, BuildServiceOutcome } from "./services/build.js";
 export { deployProject } from "./services/deploy.js";

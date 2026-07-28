@@ -26,12 +26,7 @@ describe("doctor sections", () => {
   });
 
   it("partitions checks into section buckets", () => {
-    const checks = [
-      check("os"),
-      check("ftc-project"),
-      check("devices"),
-      check("ftc-sdk-version"),
-    ];
+    const checks = [check("os"), check("ftc-project"), check("devices"), check("ftc-sdk-version")];
     const parts = partitionChecksBySection(checks);
     expect(parts.machine.map((c) => c.id)).toEqual(["os"]);
     expect(parts.project.map((c) => c.id)).toEqual(["ftc-project"]);

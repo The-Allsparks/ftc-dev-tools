@@ -1,4 +1,9 @@
-import type { DoctorCheck, DoctorReadiness, DoctorReport, DoctorReportSection } from "../types/errors.js";
+import type {
+  DoctorCheck,
+  DoctorReadiness,
+  DoctorReport,
+  DoctorReportSection,
+} from "../types/errors.js";
 
 /** Section ids for doctor output (foundation for future category expansion). */
 export type DoctorSectionId = "machine" | "project" | "robot" | "other";
@@ -51,7 +56,11 @@ export function partitionChecksBySection(
   return sections;
 }
 
-function sectionIsReady(id: DoctorSectionId, checks: DoctorCheck[], readiness: DoctorReadiness): boolean {
+function sectionIsReady(
+  id: DoctorSectionId,
+  checks: DoctorCheck[],
+  readiness: DoctorReadiness,
+): boolean {
   if (id === "machine") {
     return readiness.computerReady;
   }

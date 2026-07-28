@@ -39,3 +39,14 @@ If the working directory is not an FTC project root, project checks fail with gu
 ## MCP
 
 The `doctor` tool mirrors `ftc doctor --json`. See [mcp.md](mcp.md).
+
+## VS Code / Cursor extension
+
+**FTC: Run Environment Check** (`ftc.runDoctor`) still writes the full sectioned report to the **FTC Dev Tools** output channel.
+
+After each run:
+
+- **Fail or warn checks** open a quick pick listing each issue with a plain-language summary (from `friendlyError` when present). Choosing a row opens a message with **Fix** actions tied to that check (for example **Run install-deps script**, **Select FTC project root**, **Show connected devices**). Actions run existing extension commands, open documented URLs, or start an integrated terminal with the install-deps one-liner from [install-without-android-studio.md](install-without-android-studio.md).
+- **Full success** shows an information message suggesting the next wizard step (typically **Build robot code**, or **Set up this FTC project** / **Show connected devices** when only part of the pipeline was in scope).
+
+Mapping logic lives in `@ftc-dev-tools/shared` (`doctor-fix-actions`) so CLI/MCP consumers can reuse the same action ids later.

@@ -31,6 +31,16 @@ npm run release:check
 
 Marketplace and Open VSX auto-publish remain **disabled**. See [branding-and-publishing.md](branding-and-publishing.md).
 
+## Documentation site (GitHub Pages)
+
+User-facing guides under `docs/` are published with [VitePress](https://vitepress.dev/) when changes land on `main`:
+
+- Workflow: [`.github/workflows/pages.yml`](../.github/workflows/pages.yml)
+- Public URL: <https://the-allsparks.github.io/ftc-dev-tools/>
+- Local preview: `npm run docs:dev` (build: `npm run docs:build`)
+
+Repository **Settings → Pages** must use **GitHub Actions** as the source (not a legacy branch deploy).
+
 ## Checklist before tagging
 
 1. CI green on Windows, macOS, Linux

@@ -19,6 +19,8 @@ import {
   listSetupBackups,
   restoreSetupBackup,
   FTC_PROJECT_RECOMMENDED_EXTENSIONS,
+  buildFtcProjectTasksDocument,
+  discoverFtcCliOnPath,
 } from "@ftc-dev-tools/shared";
 
 async function readExistingJsonFile(
@@ -230,26 +232,15 @@ export async function setUpThisFtcProjectCommand(
   });
 
   const tasksPath = path.join(root, ".vscode", "tasks.json");
+  const cliDiscovery = await discoverFtcCliOnPath(new NodeProcessRunner());
+  const tasksMode = cliDiscovery.found ? "cli" : "extension";
   if (!fs.existsSync(tasksPath)) {
     plans.push({
       path: tasksPath,
-      description: "Create FTC helper tasks file",
-      content: `${JSON.stringify(
-        {
-          version: "2.0.0",
-          tasks: [
-            {
-              label: "FTC: Remind — use Command Palette Build",
-              type: "shell",
-              command:
-                "echo Use Command Palette: FTC Build Robot Code (or ftc build in a terminal)",
-              problemMatcher: [],
-            },
-          ],
-        },
-        null,
-        2,
-      )}\n`,
+      description: cliDiscovery.found
+        ? "Create FTC build/deploy tasks (ftc CLI on PATH)"
+        : "Create FTC build/deploy tasks (FTC Dev Tools extension commands)",
+      content: formatJsonFile(buildFtcProjectTasksDocument(tasksMode)),
     });
   } else {
     const tasksParsed = parseJsonStrict(fs.readFileSync(tasksPath, "utf8"));
@@ -303,7 +294,7 @@ export async function setUpThisFtcProjectCommand(
   }
 
   vscode.window.showInformationMessage(
-    "FTC project setup files written. Prefer Java Extension Pack for editing.",
+    "FTC project setup files written. Install the Java Extension Pack (recommended in extensions.json) for editing.",
   );
 }
 

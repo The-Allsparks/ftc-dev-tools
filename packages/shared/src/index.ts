@@ -94,6 +94,8 @@ export {
 } from "./paths/os-paths.js";
 
 export { discoverAdb, discoverAndroidSdk } from "./discovery/adb-discovery.js";
+export { discoverFtcCliOnPath } from "./discovery/ftc-cli-discovery.js";
+export type { FtcCliDiscoveryResult } from "./discovery/ftc-cli-discovery.js";
 export type { AdbDiscoveryResult } from "./discovery/adb-discovery.js";
 export { discoverJava, parseJavaMajorVersion } from "./discovery/java-discovery.js";
 export type { JavaDiscoveryResult } from "./discovery/java-discovery.js";
@@ -181,11 +183,12 @@ export {
   mergeExtensionsJson,
   mergeFtcWorkspaceSettings,
   formatJsonFile,
+  buildFtcProjectTasksDocument,
   backupFileBeforeWrite,
   listSetupBackups,
   restoreSetupBackup,
 } from "./setup/project-setup-files.js";
-export type { SetupBackupInfo, ParseJsonResult } from "./setup/project-setup-files.js";
+export type { SetupBackupInfo, ParseJsonResult, FtcProjectTasksMode } from "./setup/project-setup-files.js";
 
 export type {
   InterfaceState,

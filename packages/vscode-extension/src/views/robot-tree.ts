@@ -7,7 +7,12 @@ import {
   loadProjectConfig,
   selectDeploymentDevice,
 } from "@ftc-dev-tools/shared";
-import type { SdkStatusReport, WifiStatusReport } from "@ftc-dev-tools/shared";
+import {
+  type SdkStatusReport,
+  type StartHereStepId,
+  type WifiStatusReport,
+} from "@ftc-dev-tools/shared";
+import { buildGettingStartedTreeNodes } from "./getting-started-nodes.js";
 
 type RobotNode = {
   id: string;
@@ -27,6 +32,7 @@ export class FtcRobotTreeProvider implements vscode.TreeDataProvider<RobotNode> 
     private readonly getSelectedSerial: () => string | undefined,
     private readonly getSdkStatus: () => SdkStatusReport | undefined,
     private readonly getWifiStatus: () => WifiStatusReport | undefined,
+    private readonly getStartHereCompleted: () => readonly StartHereStepId[],
   ) {}
 
   refresh(): void {
@@ -131,12 +137,27 @@ export class FtcRobotTreeProvider implements vscode.TreeDataProvider<RobotNode> 
       deviceTitle = "adb unavailable";
     }
 
+    const startHereCompleted = this.getStartHereCompleted();
+    const gettingStartedChildren = buildGettingStartedTreeNodes(startHereCompleted).map((node) => ({
+      id: node.id,
+      label: node.label,
+      description: node.description,
+      collapsible: false as const,
+      command: { command: node.commandId, title: node.commandTitle },
+    }));
+
     return [
       {
         id: "header",
         label: "FTC ROBOT",
         collapsible: true,
         children: [
+          {
+            id: "getting-started",
+            label: "Getting started",
+            collapsible: true,
+            children: gettingStartedChildren,
+          },
           {
             id: "project",
             label: "Project",

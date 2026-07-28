@@ -45,6 +45,8 @@ import {
   setHubWifiSettings,
   setRobotNetworkInterface,
   formatLogEntry,
+  START_HERE_PROGRESS_KEY,
+  normalizeStartHereProgress,
 } from "@ftc-dev-tools/shared";
 import type {
   AndroidDevice,
@@ -72,7 +74,7 @@ import {
 import { registerFtcTaskProvider } from "./ftc-task-provider.js";
 import { showDoctorResultsUi } from "./doctor-ui.js";
 import { runInstallDepsWithConsent, type RunInstallDepsArgs } from "./install-deps-consent.js";
-import { startHereCommand } from "./start-here.js";
+import { onStartHereProgressChanged, startHereCommand } from "./start-here.js";
 
 let output: vscode.OutputChannel;
 let status: StatusController;
@@ -95,6 +97,13 @@ export function activate(context: vscode.ExtensionContext): void {
     () => selectedSerial,
     () => cachedSdkStatus,
     () => cachedWifiStatus,
+    () => normalizeStartHereProgress(context.globalState.get(START_HERE_PROGRESS_KEY)),
+  );
+
+  context.subscriptions.push(
+    onStartHereProgressChanged(() => {
+      tree.refresh();
+    }),
   );
 
   context.subscriptions.push(output, status, {

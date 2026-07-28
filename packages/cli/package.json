@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@ftc-dev-tools/shared": "0.1.0",
-    "commander": "^13.1.0"
+    "commander": "^15.0.0"
   },
   "engines": {
     "node": ">=20"

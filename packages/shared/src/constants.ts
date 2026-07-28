@@ -11,3 +11,6 @@ export const DEFAULT_MODULE_NAME = "TeamCode";
 export const DEFAULT_ROBOT_CONTROLLER_APPLICATION_ID = "com.qualcomm.ftcrobotcontroller";
 
 export const CONFIG_FILE_NAME = ".ftc-dev.json";
+
+/** JDK major version targeted by FTC seasons and install-deps scripts. */
+export const REQUIRED_JDK_MAJOR = 17;

@@ -1,4 +1,9 @@
-import { PACKAGE_VERSION } from "../constants.js";
+import { PACKAGE_VERSION, REQUIRED_JDK_MAJOR } from "../constants.js";
+import {
+  INSTALL_WITHOUT_ANDROID_STUDIO_DOCS_URL,
+  buildInstallDepsCommand,
+  type InstallDepsOs,
+} from "../install-deps-urls.js";
 import { discoverAdb, discoverAndroidSdk } from "../discovery/adb-discovery.js";
 import { discoverJava } from "../discovery/java-discovery.js";
 import { findGradleWrapper } from "../gradle/wrapper.js";
@@ -44,7 +49,7 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorReport> {
 
   checks.push(checkOs(platform));
   checks.push(checkNode(nodeVersion));
-  checks.push(await checkJava(options.runner));
+  checks.push(await checkJava(options.runner, platform));
   checks.push(await checkAndroidSdk());
   checks.push(await checkAdb(options.runner));
 
@@ -248,23 +253,90 @@ function checkNode(version: string): DoctorCheck {
   };
 }
 
-async function checkJava(runner: ProcessRunner): Promise<DoctorCheck> {
+function installDepsOsForPlatform(platform: NodeJS.Platform): InstallDepsOs | undefined {
+  if (platform === "win32") {
+    return "windows";
+  }
+  if (platform === "darwin") {
+    return "macos";
+  }
+  if (platform === "linux") {
+    return "linux";
+  }
+  return undefined;
+}
+
+function jdkInstallSuggestedActions(platform: NodeJS.Platform): string[] {
+  const actions: string[] = [];
+  const os = installDepsOsForPlatform(platform);
+  if (os) {
+    actions.push(
+      `Run the install-deps one-liner for your OS (installs JDK ${REQUIRED_JDK_MAJOR}): ${buildInstallDepsCommand(os)}`,
+    );
+  }
+  actions.push(
+    `See ${INSTALL_WITHOUT_ANDROID_STUDIO_DOCS_URL} for manual setup.`,
+    `Set JAVA_HOME to JDK ${REQUIRED_JDK_MAJOR} and reopen your terminal.`,
+    "Run `ftc doctor` again to confirm.",
+  );
+  return actions;
+}
+
+async function checkJava(runner: ProcessRunner, platform: NodeJS.Platform): Promise<DoctorCheck> {
+  const label = "Supported JDK version";
   const java = await discoverJava(runner);
+  const versionLine = java.versionText?.split(/\r?\n/)[0];
+
   if (!java.found) {
     return {
       id: "java",
-      label: "Java found",
+      label,
       status: "fail",
       required: true,
       friendlyError: interpretError({ text: "java not found", codeHint: "INCOMPATIBLE_JAVA" }),
     };
   }
+
+  if (java.majorVersion === undefined) {
+    return {
+      id: "java",
+      label,
+      status: "warn",
+      required: true,
+      detail: versionLine,
+      friendlyError: {
+        code: "INCOMPATIBLE_JAVA",
+        title: "Could not verify Java version",
+        summary: `FTC Dev Tools expects JDK ${REQUIRED_JDK_MAJOR}. Could not parse \`java -version\` output.`,
+        suggestedActions: jdkInstallSuggestedActions(platform),
+        technicalDetails: java.versionText,
+      },
+    };
+  }
+
+  if (java.majorVersion !== REQUIRED_JDK_MAJOR) {
+    return {
+      id: "java",
+      label,
+      status: "fail",
+      required: true,
+      detail: versionLine,
+      friendlyError: {
+        code: "INCOMPATIBLE_JAVA",
+        title: "Java version not supported for FTC",
+        summary: `Found Java ${java.majorVersion}, but current FTC seasons and install-deps scripts target JDK ${REQUIRED_JDK_MAJOR}.`,
+        suggestedActions: jdkInstallSuggestedActions(platform),
+        technicalDetails: java.versionText,
+      },
+    };
+  }
+
   return {
     id: "java",
-    label: "Java found",
+    label,
     status: "pass",
     required: true,
-    detail: java.versionText?.split(/\r?\n/)[0],
+    detail: versionLine,
   };
 }
 

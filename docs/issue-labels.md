@@ -20,25 +20,25 @@ Epics must include **`epic`**.
 
 ## Priority meanings
 
-| Label | Use when |
-| --- | --- |
+| Label          | Use when                                                                                        |
+| -------------- | ----------------------------------------------------------------------------------------------- |
 | `priority: P0` | Release-blocking, security-critical path, or umbrella epic for the next rookie/deploy milestone |
-| `priority: P1` | Important for 1.0 quality, onboarding, deploy reliability, or validated hardware work |
-| `priority: P2` | Valuable later work, investigations, vision backlog, or polish |
+| `priority: P1` | Important for 1.0 quality, onboarding, deploy reliability, or validated hardware work           |
+| `priority: P2` | Valuable later work, investigations, vision backlog, or polish                                  |
 
 ## Cross-cutting labels (optional, add when relevant)
 
-| Label | Meaning |
-| --- | --- |
-| `student-ux` | Copy, wizards, errors aimed at students |
-| `developer-experience` | Mentor/contributor workflows |
-| `reliability` | Concurrency, recovery, lifecycle, locking |
-| `security` | Credentials, consent, redaction, trust |
-| `testing` | Automated tests |
-| `hardware-validation` | Physical Control Hub / phone matrix |
-| `release` | Packaging, channels, metadata, install |
-| `competition` | Competition-day / offline readiness |
-| `integration` | Third-party tools (Dashboard, simulators, etc.) |
+| Label                  | Meaning                                         |
+| ---------------------- | ----------------------------------------------- |
+| `student-ux`           | Copy, wizards, errors aimed at students         |
+| `developer-experience` | Mentor/contributor workflows                    |
+| `reliability`          | Concurrency, recovery, lifecycle, locking       |
+| `security`             | Credentials, consent, redaction, trust          |
+| `testing`              | Automated tests                                 |
+| `hardware-validation`  | Physical Control Hub / phone matrix             |
+| `release`              | Packaging, channels, metadata, install          |
+| `competition`          | Competition-day / offline readiness             |
+| `integration`          | Third-party tools (Dashboard, simulators, etc.) |
 
 ## Vision Lab
 

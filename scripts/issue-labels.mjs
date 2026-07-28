@@ -111,7 +111,9 @@ function validateIssue(issue, catalog) {
       problems.push("no type label (bug, enhancement, documentation, epic, …)");
     }
     if (hasPriority(issue.labels) && !hasSurfaceOrEpic(issue.labels)) {
-      problems.push("priority set but no surface/epic label (shared-core, vscode, cli, mcp, vision, …)");
+      problems.push(
+        "priority set but no surface/epic label (shared-core, vscode, cli, mcp, vision, …)",
+      );
     }
   }
 
@@ -125,11 +127,9 @@ function applyLabels(repo, number, labels, dryRun) {
     console.log(`Would add to #${number}: ${joined}`);
     return;
   }
-  execFileSync(
-    "gh",
-    ["issue", "edit", String(number), "--repo", repo, "--add-label", joined],
-    { stdio: "inherit" },
-  );
+  execFileSync("gh", ["issue", "edit", String(number), "--repo", repo, "--add-label", joined], {
+    stdio: "inherit",
+  });
 }
 
 function main() {

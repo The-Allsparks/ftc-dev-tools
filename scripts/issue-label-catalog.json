@@ -8,13 +8,7 @@
       "shared-core",
       "priority: P0"
     ],
-    "Add release validation command": [
-      "enhancement",
-      "release",
-      "testing",
-      "cli",
-      "priority: P1"
-    ],
+    "Add release validation command": ["enhancement", "release", "testing", "cli", "priority: P1"],
     "Verify Marketplace publisher and Open VSX strategy": [
       "documentation",
       "release",
@@ -27,12 +21,7 @@
       "developer-experience",
       "priority: P2"
     ],
-    "Add FTC Java snippets": [
-      "enhancement",
-      "snippets",
-      "vscode",
-      "priority: P2"
-    ],
+    "Add FTC Java snippets": ["enhancement", "snippets", "vscode", "priority: P2"],
     "Add SDK sample browser / import workflow": [
       "enhancement",
       "integration",
@@ -64,12 +53,7 @@
       "reliability",
       "priority: P1"
     ],
-    "Add clickable TeamCode stack traces": [
-      "enhancement",
-      "vscode",
-      "student-ux",
-      "priority: P2"
-    ],
+    "Add clickable TeamCode stack traces": ["enhancement", "vscode", "student-ux", "priority: P2"],
     "Add redacted diagnostic bundles": [
       "enhancement",
       "shared-core",
@@ -138,12 +122,7 @@
       "reliability",
       "priority: P1"
     ],
-    "Extension package README missing from VSIX": [
-      "bug",
-      "release",
-      "vscode",
-      "priority: P1"
-    ],
+    "Extension package README missing from VSIX": ["bug", "release", "vscode", "priority: P1"],
     "Install-deps guidance for VSIX-only users (no dev repo clone)": [
       "documentation",
       "release",
@@ -369,16 +348,8 @@
       "student-ux",
       "priority: P2"
     ],
-    "VISION-15: Add FTC Vision CLI commands": [
-      "vision",
-      "cli",
-      "priority: P2"
-    ],
-    "VISION-16: Add FTC Vision MCP tools": [
-      "vision",
-      "mcp",
-      "priority: P2"
-    ],
+    "VISION-15: Add FTC Vision CLI commands": ["vision", "cli", "priority: P2"],
+    "VISION-16: Add FTC Vision MCP tools": ["vision", "mcp", "priority: P2"],
     "VISION-17: Add automated testing and physical hardware validation": [
       "vision",
       "testing",

@@ -454,3 +454,17 @@ export { codegenHardwareMapOpMode } from "./hwmap/codegen.js";
 export type { CodegenHardwareMapOptions } from "./hwmap/codegen.js";
 export { renderHwMapOpModeSource } from "./hwmap/templates.js";
 export type { HwMapOpModeTemplateInput } from "./hwmap/templates.js";
+
+export {
+  START_HERE_PROGRESS_KEY,
+  START_HERE_STEP_IDS,
+  START_HERE_STEPS,
+  getStartHereStep,
+  isStartHereStepId,
+  normalizeStartHereProgress,
+  serializeStartHereProgress,
+  isStartHereStepComplete,
+  getNextStartHereStep,
+  countStartHereCompleted,
+} from "./onboarding/start-here-steps.js";
+export type { StartHereStepId, StartHereStep } from "./onboarding/start-here-steps.js";

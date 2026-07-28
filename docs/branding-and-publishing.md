@@ -51,7 +51,7 @@ Changing the publisher after a public release creates a **new** Marketplace exte
 | Secrets (eventual)        | `VSCE_PAT` or equivalent                               | `OVSX_PAT` or equivalent                             |
 | Auto-publish in this repo | **Disabled**                                           | **Disabled**                                         |
 
-Publish to both only after publisher/namespace ownership is confirmed and a human release checklist is followed. GitHub Releases (VSIX + CLI archives) remain the supported distribution path for `0.1.0`.
+Publish to both only after publisher/namespace ownership is confirmed and a human release checklist is followed. GitHub Releases (VSIX + CLI archives) remain the supported distribution path for `0.1.0`. Consumer install steps: [cli-install.md](cli-install.md).
 
 ## Release secrets (eventually required)
 

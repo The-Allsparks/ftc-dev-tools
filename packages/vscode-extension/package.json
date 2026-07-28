@@ -207,6 +207,10 @@
         "title": "FTC: Set Up This FTC Project"
       },
       {
+        "command": "ftc.installCli",
+        "title": "FTC: Install FTC CLI"
+      },
+      {
         "command": "ftc.openTechnicalOutput",
         "title": "FTC: Open Technical Output"
       },

@@ -7,6 +7,7 @@ import {
   NodeProcessRunner,
   OfficialFtcProjectAdapter,
   buildInstallDepsCommand,
+  listCliConsumerInstallCommands,
   runDoctor,
 } from "@ftc-dev-tools/shared";
 
@@ -280,4 +281,54 @@ export async function setUpThisFtcProjectCommand(
   vscode.window.showInformationMessage(
     "FTC project setup files written. Prefer Java Extension Pack for editing.",
   );
+}
+
+export async function installFtcCliCommand(output: vscode.OutputChannel): Promise<void> {
+  const options = listCliConsumerInstallCommands();
+
+  output.clear();
+  output.appendLine("FTC: Install FTC CLI — preview");
+  output.appendLine("");
+  output.appendLine("The extension does not install the CLI automatically.");
+  output.appendLine("Pick an option below after reviewing these commands.");
+  output.appendLine("");
+  for (const option of options) {
+    output.appendLine(`## ${option.label}`);
+    if (option.notes) {
+      output.appendLine(option.notes);
+    }
+    output.appendLine(option.command);
+    output.appendLine("");
+  }
+  output.appendLine("Docs: docs/cli-install.md");
+  output.show(true);
+
+  const primary = options[0]?.command;
+  if (!primary) {
+    vscode.window.showErrorMessage("No install commands are configured.");
+    return;
+  }
+
+  const choice = await vscode.window.showWarningMessage(
+    "Install the ftc CLI globally? You must run the command yourself in a terminal.",
+    { modal: true },
+    "Copy install command",
+    "Open terminal with command",
+    "Cancel",
+  );
+
+  if (choice === "Copy install command") {
+    await vscode.env.clipboard.writeText(primary);
+    vscode.window.showInformationMessage("Copied GitHub Release install command to clipboard.");
+    return;
+  }
+
+  if (choice === "Open terminal with command") {
+    const term = vscode.window.createTerminal({ name: "FTC CLI install" });
+    term.show();
+    term.sendText(primary, true);
+    vscode.window.showInformationMessage(
+      "Sent install command to terminal — review and press Enter to run.",
+    );
+  }
 }

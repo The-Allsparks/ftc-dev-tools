@@ -217,10 +217,12 @@ if (!skipPackage) {
       const cliTarballs = fs
         .readdirSync(cliArtifacts)
         .filter((f) => f.endsWith(".tar.gz") && f.startsWith("ftc-cli-"));
-      if (cliTarballs.length === 0) {
+      const preferredTarball = cliTarballs.find((f) => f === `ftc-cli-${version}.tar.gz`);
+      const tarballName = preferredTarball ?? cliTarballs.sort().at(-1);
+      if (!tarballName) {
         fail("CLI .tar.gz artifact missing after package:cli");
       } else {
-        const tarball = path.join(cliArtifacts, cliTarballs[0]);
+        const tarball = path.join(cliArtifacts, tarballName);
         try {
           const listing = execFileSync("tar", ["-tzf", tarball], { encoding: "utf8" });
           if (

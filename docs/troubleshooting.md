@@ -7,6 +7,8 @@ ftc doctor
 ftc doctor --json
 ```
 
+Doctor output is split into **machine** vs **project** sections so tool problems are not confused with opening the wrong folder. JSON shape is documented in [doctor.md](doctor.md).
+
 ## Common problems
 
 ### Not an FTC project

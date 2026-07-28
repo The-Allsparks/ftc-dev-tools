@@ -98,6 +98,9 @@ describe("CLI-facing shared flows", () => {
       generatedAt: expect.any(String),
     });
     expect(Array.isArray(report.checks)).toBe(true);
+    expect(report.sections.machine.ready).toEqual(expect.any(Boolean));
+    expect(report.sections.project.ready).toEqual(expect.any(Boolean));
+    expect(report.sections.machine.checks.every((c) => c.category === "machine")).toBe(true);
     expect(
       report.checks.some((check) => check.id === "ftc-project" && check.status === "pass"),
     ).toBe(true);

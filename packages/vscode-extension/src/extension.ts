@@ -38,6 +38,8 @@ import {
   showHardwareMap,
   codegenHardwareMapOpMode,
   runDoctor,
+  buildDoctorSections,
+  formatDoctorCheckLine,
   selectDeploymentDevice,
   setAdapterAdminState,
   setHubWifiSettings,
@@ -234,11 +236,17 @@ async function runDoctorCommand(): Promise<void> {
   });
   output.clear();
   output.appendLine("FTC Development Check");
-  for (const check of report.checks) {
-    output.appendLine(
-      `${check.status.toUpperCase()}: ${check.label}${check.detail ? ` (${check.detail})` : ""}`,
-    );
+  for (const section of buildDoctorSections(report)) {
+    output.appendLine("");
+    output.appendLine(section.title);
+    for (const check of section.checks) {
+      output.appendLine(`  ${formatDoctorCheckLine(check)} [${check.status}]`);
+      if (check.friendlyError && (check.status === "fail" || check.status === "warn")) {
+        output.appendLine(`    ${check.friendlyError.summary}`);
+      }
+    }
   }
+  output.appendLine("");
   output.appendLine(report.summaryLine);
   output.show(true);
   if (!report.ready) {

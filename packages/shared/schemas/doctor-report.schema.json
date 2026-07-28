@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/packages/shared/schemas/doctor-report.schema.json",
+  "title": "FTC Dev Tools doctor report",
+  "description": "Machine-readable output from `ftc doctor --json` and the MCP `doctor` tool.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ready", "readiness", "checks", "sections", "summaryLine", "generatedAt", "version"],
+  "properties": {
+    "ready": {
+      "type": "boolean",
+      "description": "True when all required checks pass and machine, project, and robot readiness flags are satisfied."
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["computerReady", "projectReadyToBuild", "robotReadyToDeploy"],
+      "properties": {
+        "computerReady": {
+          "type": "boolean",
+          "description": "Machine checks (OS, Node, Java, Android SDK, adb) have no fail/warn."
+        },
+        "projectReadyToBuild": {
+          "type": "boolean",
+          "description": "Project checks (FTC layout, Gradle wrapper, Gradle init) have no fail/warn."
+        },
+        "robotReadyToDeploy": {
+          "type": "boolean",
+          "description": "Robot device check has no fail/warn."
+        }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "description": "Flat list of all checks in run order (backward compatible).",
+      "items": { "$ref": "#/$defs/doctorCheck" }
+    },
+    "sections": {
+      "type": "object",
+      "description": "Checks grouped by readiness area with section-level ready flags.",
+      "additionalProperties": false,
+      "required": ["machine", "project"],
+      "properties": {
+        "machine": { "$ref": "#/$defs/doctorSection" },
+        "project": { "$ref": "#/$defs/doctorSection" },
+        "robot": { "$ref": "#/$defs/doctorSection" },
+        "other": { "$ref": "#/$defs/doctorSection" }
+      }
+    },
+    "summaryLine": { "type": "string" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "version": { "type": "string" }
+  },
+  "$defs": {
+    "checkStatus": {
+      "type": "string",
+      "enum": ["pass", "warn", "fail", "skip"]
+    },
+    "doctorCheckCategory": {
+      "type": "string",
+      "enum": ["machine", "project", "robot", "other"]
+    },
+    "friendlyError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "title", "summary", "suggestedActions"],
+      "properties": {
+        "code": { "type": "string" },
+        "title": { "type": "string" },
+        "summary": { "type": "string" },
+        "suggestedActions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "technicalDetails": { "type": "string" }
+      }
+    },
+    "doctorCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "status", "required"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "status": { "$ref": "#/$defs/checkStatus" },
+        "required": { "type": "boolean" },
+        "detail": { "type": "string" },
+        "friendlyError": { "$ref": "#/$defs/friendlyError" },
+        "category": { "$ref": "#/$defs/doctorCheckCategory" }
+      }
+    },
+    "doctorSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "ready", "checks"],
+      "properties": {
+        "id": { "$ref": "#/$defs/doctorCheckCategory" },
+        "title": { "type": "string" },
+        "ready": { "type": "boolean" },
+        "checks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/doctorCheck" }
+        }
+      }
+    }
+  }
+}

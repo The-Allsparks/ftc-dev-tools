@@ -4,6 +4,8 @@ export interface FriendlyError {
   summary: string;
   suggestedActions: string[];
   technicalDetails?: string;
+  /** Nearby FTC project roots found when the opened folder is wrong (#43). */
+  suggestedProjectRoots?: string[];
 }
 
 export type CheckStatus = "pass" | "warn" | "fail" | "skip";
@@ -18,6 +20,8 @@ export interface DoctorCheck {
   required: boolean;
   detail?: string;
   friendlyError?: FriendlyError;
+  /** Nearby FTC roots when project detection failed in a subfolder (#43). */
+  suggestedProjectRoots?: string[];
   /** Populated on reports from `runDoctor` for agents and structured consumers. */
   category?: DoctorCheckCategory;
 }

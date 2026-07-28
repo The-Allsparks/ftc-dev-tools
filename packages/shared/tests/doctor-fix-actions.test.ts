@@ -52,6 +52,25 @@ describe("buildDoctorCheckUiItem", () => {
     expect(item?.primaryAction?.command).toBe("ftc.selectProjectRoot");
   });
 
+  it("prefers open suggested root when one nearby root is known", () => {
+    const item = buildDoctorCheckUiItem({
+      id: "ftc-project",
+      label: "FTC project",
+      status: "fail",
+      required: true,
+      suggestedProjectRoots: ["C:\\Teams\\FtcSdk"],
+      friendlyError: {
+        code: "UNSUPPORTED_PROJECT_LAYOUT",
+        title: "Not in an FTC project folder",
+        summary: "Nearby root found",
+        suggestedActions: [],
+        suggestedProjectRoots: ["C:\\Teams\\FtcSdk"],
+      },
+    });
+    expect(item?.primaryAction?.command).toBe("ftc.openSuggestedProjectRoot");
+    expect(item?.primaryAction?.commandArgs).toEqual(["C:\\Teams\\FtcSdk"]);
+  });
+
   it("maps device warnings to show devices", () => {
     const item = buildDoctorCheckUiItem(
       check("devices", "warn", {

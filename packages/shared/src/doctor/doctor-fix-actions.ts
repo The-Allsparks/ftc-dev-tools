@@ -11,6 +11,8 @@ export interface DoctorFixAction {
   label: string;
   kind: DoctorFixActionKind;
   command?: string;
+  /** Arguments passed to `vscode.commands.executeCommand` for vscode-command actions. */
+  commandArgs?: unknown[];
   url?: string;
   terminalCommand?: string;
 }
@@ -26,8 +28,13 @@ export interface DoctorCheckUiItem {
   secondaryActions: DoctorFixAction[];
 }
 
-function vscodeCommand(id: string, label: string, command: string): DoctorFixAction {
-  return { id, label, kind: "vscode-command", command };
+function vscodeCommand(
+  id: string,
+  label: string,
+  command: string,
+  commandArgs?: unknown[],
+): DoctorFixAction {
+  return { id, label, kind: "vscode-command", command, commandArgs };
 }
 
 function openUrl(id: string, label: string, url: string): DoctorFixAction {
@@ -75,6 +82,8 @@ export function buildDoctorCheckUiItem(
   }
 
   const code = check.friendlyError?.code;
+  const suggestedRoots =
+    check.suggestedProjectRoots ?? check.friendlyError?.suggestedProjectRoots ?? [];
   const summary =
     check.friendlyError?.summary ??
     check.detail ??
@@ -108,11 +117,43 @@ export function buildDoctorCheckUiItem(
     check.id === "ftc-project" ||
     (check.id === "gradle-wrapper" && code === "UNSUPPORTED_PROJECT_LAYOUT")
   ) {
-    primary = vscodeCommand(
-      "select-project-root",
-      "Select FTC project root",
-      "ftc.selectProjectRoot",
-    );
+    if (suggestedRoots.length === 1) {
+      primary = vscodeCommand(
+        "open-suggested-root",
+        "Open correct FTC folder",
+        "ftc.openSuggestedProjectRoot",
+        [suggestedRoots[0]],
+      );
+      secondary.push(
+        vscodeCommand(
+          "add-suggested-root",
+          "Add FTC project root to workspace",
+          "ftc.addSuggestedProjectRootToWorkspace",
+          [suggestedRoots[0]],
+        ),
+      );
+    } else if (suggestedRoots.length > 1) {
+      primary = vscodeCommand(
+        "open-suggested-root",
+        "Open correct FTC folder",
+        "ftc.openSuggestedProjectRoot",
+        [suggestedRoots],
+      );
+      secondary.push(
+        vscodeCommand(
+          "add-suggested-root",
+          "Add FTC project root to workspace",
+          "ftc.addSuggestedProjectRootToWorkspace",
+          [suggestedRoots],
+        ),
+      );
+    } else {
+      primary = vscodeCommand(
+        "select-project-root",
+        "Select FTC project root",
+        "ftc.selectProjectRoot",
+      );
+    }
     secondary.push(INSTALL_GUIDE);
   } else if (code === "GRADLE_WRAPPER_MISSING" || check.id === "gradle-wrapper") {
     primary = vscodeCommand(

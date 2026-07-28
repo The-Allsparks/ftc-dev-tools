@@ -72,7 +72,12 @@
           "type": "array",
           "items": { "type": "string" }
         },
-        "technicalDetails": { "type": "string" }
+        "technicalDetails": { "type": "string" },
+        "suggestedProjectRoots": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Nearby official FTC project roots when the opened folder is wrong (#43)."
+        }
       }
     },
     "doctorCheck": {
@@ -86,6 +91,10 @@
         "required": { "type": "boolean" },
         "detail": { "type": "string" },
         "friendlyError": { "$ref": "#/$defs/friendlyError" },
+        "suggestedProjectRoots": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
         "category": { "$ref": "#/$defs/doctorCheckCategory" }
       }
     },

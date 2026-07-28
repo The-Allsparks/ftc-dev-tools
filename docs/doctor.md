@@ -48,7 +48,14 @@ Each check includes optional `category` matching its section id.
 
 ## Wrong folder
 
-If the working directory is not an FTC project root, project checks fail with guidance to open the folder that contains `settings.gradle`, `gradlew` (or `gradlew.bat`), and `TeamCode`. See [troubleshooting.md](troubleshooting.md).
+If the working directory is not an FTC project root, project checks fail with guidance to open the folder that contains `settings.gradle`, `gradlew` (or `gradlew.bat`), and `TeamCode`. Doctor searches **parent and sibling folders** for an official layout and, when found, includes `suggestedProjectRoots` in JSON output and doctor Fix actions (**Open correct FTC folder** / **Add FTC project root to workspace**).
+
+Override the root explicitly when needed:
+
+- **VS Code / Cursor:** `ftc.projectRoot` in workspace or user settings (same folder as `settings.gradle`).
+- **MCP / CLI cwd:** `FTC_PROJECT_ROOT` environment variable — see [mcp.md](mcp.md).
+
+See [troubleshooting.md](troubleshooting.md).
 
 ## MCP
 

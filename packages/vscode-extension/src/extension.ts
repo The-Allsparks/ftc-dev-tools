@@ -66,6 +66,8 @@ import {
   getWorkspaceRoot,
   initWorkspaceRoot,
   selectFtcProjectRootCommand,
+  openSuggestedProjectRootCommand,
+  addSuggestedProjectRootToWorkspaceCommand,
 } from "./workspace-root.js";
 import { registerFtcTaskProvider } from "./ftc-task-provider.js";
 import { showDoctorResultsUi } from "./doctor-ui.js";
@@ -209,6 +211,12 @@ export function activate(context: vscode.ExtensionContext): void {
   register("ftc.setUpProject", () => setUpThisFtcProjectCommand(getWorkspaceRoot, output));
   register("ftc.restoreProjectSetup", () => restoreProjectSetupCommand(getWorkspaceRoot, output));
   register("ftc.selectProjectRoot", () => selectFtcProjectRootCommand(context));
+  register("ftc.openSuggestedProjectRoot", (rootsArg?: string | string[]) =>
+    openSuggestedProjectRootCommand(context, rootsArg),
+  );
+  register("ftc.addSuggestedProjectRootToWorkspace", (rootsArg?: string | string[]) =>
+    addSuggestedProjectRootToWorkspaceCommand(rootsArg),
+  );
   register("ftc.installCli", () => installFtcCliCommand(output));
   register("ftc.openTechnicalOutput", async () => {
     output.show(true);

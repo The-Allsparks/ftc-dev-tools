@@ -11,7 +11,11 @@ export async function executeDoctorFixAction(
   switch (action.kind) {
     case "vscode-command":
       if (action.command) {
-        await vscode.commands.executeCommand(action.command);
+        if (action.commandArgs?.length) {
+          await vscode.commands.executeCommand(action.command, ...action.commandArgs);
+        } else {
+          await vscode.commands.executeCommand(action.command);
+        }
       }
       break;
     case "open-url":

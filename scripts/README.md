@@ -38,3 +38,10 @@ bash scripts/install-deps-linux.sh
 
 Pinned download URLs/checksums: `android-cmdline-tools.json`  
 Guide: [`docs/install-without-android-studio.md`](../docs/install-without-android-studio.md)
+
+## GitHub issue labels
+
+- Policy: [`docs/issue-labels.md`](../docs/issue-labels.md)
+- Catalog: `issue-label-catalog.json`
+- Validate: `npm run check:issue-labels`
+- Apply missing labels: `node scripts/issue-labels.mjs apply --dry-run`

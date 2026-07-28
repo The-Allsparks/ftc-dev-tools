@@ -1,0 +1,33 @@
+name: Issue label policy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/issue-label-catalog.json
+      - scripts/issue-labels.mjs
+      - docs/issue-labels.md
+  pull_request:
+    paths:
+      - scripts/issue-label-catalog.json
+      - scripts/issue-labels.mjs
+      - docs/issue-labels.md
+  workflow_dispatch:
+  schedule:
+    - cron: "0 16 * * 1"
+
+permissions:
+  issues: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate issue labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/issue-labels.mjs validate

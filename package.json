@@ -34,6 +34,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "check:identity": "node scripts/check-project-identity.mjs",
+    "check:issue-labels": "node scripts/issue-labels.mjs validate",
     "release:check": "node scripts/release-check.mjs",
     "package:cli": "npm run package --workspace @ftc-dev-tools/cli",
     "package:extension": "npm run package --workspace ftc-dev-tools",

@@ -1,9 +1,6 @@
 import * as vscode from "vscode";
 import path from "node:path";
-import {
-  OfficialFtcProjectAdapter,
-  discoverNearbyFtcProjectRoots,
-} from "@ftc-dev-tools/shared";
+import { OfficialFtcProjectAdapter, discoverNearbyFtcProjectRoots } from "@ftc-dev-tools/shared";
 
 const STORAGE_KEY = "ftc.selectedProjectRoot";
 
@@ -149,7 +146,11 @@ function readConfiguredProjectRoot(): string | undefined {
     return undefined;
   }
   const folders = vscode.workspace.workspaceFolders;
-  const absolute = path.isAbsolute(raw) ? raw : folders?.[0] ? path.join(folders[0].uri.fsPath, raw) : raw;
+  const absolute = path.isAbsolute(raw)
+    ? raw
+    : folders?.[0]
+      ? path.join(folders[0].uri.fsPath, raw)
+      : raw;
   return path.resolve(absolute);
 }
 

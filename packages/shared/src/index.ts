@@ -109,9 +109,7 @@ export {
   OfficialFtcProjectAdapter,
   readApplicationId,
 } from "./adapters/official-ftc-project-adapter.js";
-export {
-  discoverNearbyFtcProjectRoots,
-} from "./project/discover-ftc-root.js";
+export { discoverNearbyFtcProjectRoots } from "./project/discover-ftc-root.js";
 export type { DiscoverFtcProjectRootsOptions } from "./project/discover-ftc-root.js";
 export { AdbDeviceProvider, parseAdbDevicesOutput } from "./devices/adb-device-provider.js";
 export { MockDeviceProvider } from "./devices/mock-device-provider.js";

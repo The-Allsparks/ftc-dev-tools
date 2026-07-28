@@ -33,6 +33,25 @@ export {
   CONFIG_FILE_NAME,
 } from "./constants.js";
 
+export {
+  FTC_DEV_TOOLS_GITHUB_OWNER,
+  FTC_DEV_TOOLS_GITHUB_REPO,
+  FTC_DEV_TOOLS_RELEASES_PAGE_URL,
+  NPM_PACKAGE_CLI,
+  NPM_PACKAGE_MCP,
+  NPM_INSTALL_CLI_COMMAND,
+  NPM_INSTALL_MCP_COMMAND,
+  releaseTagForVersion,
+  cliReleaseTarballBasename,
+  cliGitHubReleaseTarballUrl,
+  buildCliInstallFromGitHubRelease,
+  buildCliInstallFromNpm,
+  buildMcpInstallFromNpm,
+  buildMcpRunViaNpx,
+  listCliConsumerInstallCommands,
+} from "./cli-consumer-install.js";
+export type { ConsumerInstallMethod, ConsumerInstallCommand } from "./cli-consumer-install.js";
+
 export { ConsoleLogger } from "./logger.js";
 export type { Logger, LogLevel } from "./logger.js";
 

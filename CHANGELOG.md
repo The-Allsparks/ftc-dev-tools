@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Release validation (`npm run release:check`), project identity CI checks, branding/publishing docs
 - Feature maturity matrix and Android Studio / FTC for VS Code parity audit documents
 - Versioned FTC Java snippets and guided computer/project setup commands (preview-before-write)
+- Consumer CLI install docs, GitHub Release tarball packaging (bundled shared), and **FTC: Install FTC CLI** extension command
 - Debugger and telemetry technical spike documents (no hardware support claimed yet)
 
 ### Changed

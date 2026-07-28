@@ -213,6 +213,31 @@ if (!skipPackage) {
     const extArtifacts = path.join(root, "packages/vscode-extension/artifacts");
     if (!fs.existsSync(cliArtifacts) || fs.readdirSync(cliArtifacts).length === 0) {
       fail("CLI package artifacts missing after package:cli");
+    } else {
+      const cliTarballs = fs
+        .readdirSync(cliArtifacts)
+        .filter((f) => f.endsWith(".tar.gz") && f.startsWith("ftc-cli-"));
+      if (cliTarballs.length === 0) {
+        fail("CLI .tar.gz artifact missing after package:cli");
+      } else {
+        const tarball = path.join(cliArtifacts, cliTarballs[0]);
+        try {
+          const listing = execFileSync("tar", ["-tzf", tarball], { encoding: "utf8" });
+          if (
+            !listing.includes("node_modules/@ftc-dev-tools/shared/dist/index.js") &&
+            !listing.includes("./node_modules/@ftc-dev-tools/shared/dist/index.js")
+          ) {
+            fail(
+              "CLI tarball must vendor @ftc-dev-tools/shared for offline global install (node_modules/@ftc-dev-tools/shared/dist/index.js)",
+            );
+          }
+          if (!listing.includes("package.json")) {
+            fail("CLI tarball must include package.json at archive root");
+          }
+        } catch (err) {
+          fail(`Unable to inspect CLI tarball (is tar available?): ${err.message ?? err}`);
+        }
+      }
     }
     const vsix = fs.existsSync(extArtifacts)
       ? fs.readdirSync(extArtifacts).filter((f) => f.endsWith(".vsix"))

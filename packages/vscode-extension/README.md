@@ -10,10 +10,10 @@ Created by **[The Allsparks](https://www.theallsparks.org)** for our team and th
 
 - Command Palette actions: environment check, build, deploy, logs, SDK check, Wi‑Fi/hub helpers, OpModes, robot config, and more
 - **FTC Robot** sidebar and status bar for common workflows
-- Guided setup commands: **FTC: Set Up This Computer**, **FTC: Set Up This FTC Project**, **FTC: Configure Recommended Extensions**
+- Guided setup commands: **FTC: Set Up This Computer**, **FTC: Set Up This FTC Project**, **FTC: Configure Recommended Extensions**, **FTC: Install FTC CLI**
 - Java snippets for TeleOp and Autonomous stubs
 
-Most features call the shared **`ftc` CLI** under the hood. Install the CLI separately if commands fail with “command not found” (see [Installation](https://github.com/The-Allsparks/ftc-dev-tools/blob/main/README.md#installation) in the repository README).
+Most features call the shared **`ftc` CLI** under the hood. Install the CLI separately if commands fail with “command not found” — use **FTC: Install FTC CLI** or [cli-install.md](https://github.com/The-Allsparks/ftc-dev-tools/blob/main/docs/cli-install.md).
 
 ## Before you start
 

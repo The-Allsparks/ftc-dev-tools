@@ -4,6 +4,23 @@ Thin **stdio MCP** surface over `@ftc-dev-tools/shared` for Cursor (and other MC
 
 Package: `@ftc-dev-tools/mcp` (`ftc-mcp`)
 
+## Consumer install
+
+When `@ftc-dev-tools/mcp` is on npm:
+
+```bash
+npm install -g @ftc-dev-tools/mcp
+ftc-mcp
+```
+
+Or without a global install:
+
+```bash
+npx -y @ftc-dev-tools/mcp
+```
+
+npm auto-publish is disabled until maintainers configure `NPM_TOKEN`. Until then, use **build from this repo** (below) or watch [cli-install.md](cli-install.md) for release-based options aligned with the CLI.
+
 ## Install / run from this repo
 
 ```bash

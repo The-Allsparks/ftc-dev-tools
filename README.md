@@ -41,7 +41,7 @@ Physical REV Control Hub compatibility has **not** been claimed as validated in 
 - `ftc-mcp` — stdio MCP server for Cursor agents; see [docs/mcp.md](docs/mcp.md)
 - Optional `.ftc-dev.json` configuration + JSON Schema
 - VS Code/Cursor extension commands, FTC view, status bar, output channel, and Java snippets
-- Guided setup commands: **FTC: Set Up This Computer**, **FTC: Set Up This FTC Project**, **FTC: Configure Recommended Extensions**
+- Guided setup commands: **FTC: Set Up This Computer**, **FTC: Set Up This FTC Project**, **FTC: Configure Recommended Extensions**, **FTC: Install FTC CLI**
 - Cancellable robot log streaming in the extension (`FTC: Stop Robot Logs`)
 - Unit/integration-style tests with `MockDeviceProvider`
 - GitHub Actions CI on Windows, macOS, and Linux
@@ -135,7 +135,24 @@ Android Studio itself is **optional**. Install JDK + `adb`/SDK tools without it:
 
 Details: [docs/install-without-android-studio.md](docs/install-without-android-studio.md) and [scripts/README.md](scripts/README.md).
 
-### From source
+### Consumer install (`ftc` CLI)
+
+Students and teams should **not** need to clone this repository to use `ftc`.
+
+1. Install JDK + `adb` (table above).
+2. Install the CLI globally from a [GitHub Release](https://github.com/The-Allsparks/ftc-dev-tools/releases) tarball (after the first `v*` tag):
+
+```bash
+npm install -g "https://github.com/The-Allsparks/ftc-dev-tools/releases/download/v0.1.0/ftc-cli-0.1.0.tar.gz"
+```
+
+3. In your FTC project folder: `ftc doctor`
+
+Full guide: [docs/cli-install.md](docs/cli-install.md). When `@ftc-dev-tools/cli` is published to npm, `npm install -g @ftc-dev-tools/cli` will work as well.
+
+The **VS Code/Cursor extension** does not include the CLI. Install the VSIX separately (below) and the CLI using the steps above (or **FTC: Install FTC CLI** in the extension).
+
+### From source (contributors)
 
 ```bash
 git clone https://github.com/The-Allsparks/ftc-dev-tools.git

@@ -15,6 +15,7 @@ packages/cli/ftc-*.zip
 packages/cli/ftc-*.tar.gz
 packages/cli/artifacts/*.tar.gz
 packages/cli/artifacts/*.sha256
+packages/cli/artifacts/staging/
 packages/vscode-extension/artifacts/
 *.tsbuildinfo
 .idea/

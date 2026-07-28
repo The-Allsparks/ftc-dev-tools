@@ -4,7 +4,7 @@ Versioning starts at `0.1.0`.
 
 ## What a release produces
 
-- CLI package archive under `packages/cli/artifacts/`
+- CLI package archive under `packages/cli/artifacts/` (`ftc-cli-<version>.tar.gz`, with vendored `@ftc-dev-tools/shared` for offline `npm install -g`)
 - VSIX under `packages/vscode-extension/artifacts/`
 - SHA-256 checksums
 - Release notes generated from commits/changelog

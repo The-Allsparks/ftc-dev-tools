@@ -55,6 +55,7 @@ import { FtcRobotTreeProvider } from "./views/robot-tree.js";
 import { StatusController } from "./status-controller.js";
 import {
   configureRecommendedExtensionsCommand,
+  installFtcCliCommand,
   setUpThisComputerCommand,
   setUpThisFtcProjectCommand,
 } from "./setup-commands.js";
@@ -150,6 +151,7 @@ export function activate(context: vscode.ExtensionContext): void {
   );
   register("ftc.setUpComputer", () => setUpThisComputerCommand(output));
   register("ftc.setUpProject", () => setUpThisFtcProjectCommand(getWorkspaceRoot, output));
+  register("ftc.installCli", () => installFtcCliCommand(output));
   register("ftc.openTechnicalOutput", async () => {
     output.show(true);
   });

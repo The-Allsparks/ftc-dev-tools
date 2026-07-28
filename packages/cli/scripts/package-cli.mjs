@@ -8,31 +8,44 @@ import { createReadStream } from "node:fs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const packageRoot = path.resolve(__dirname, "..");
+const sharedRoot = path.resolve(packageRoot, "..", "shared");
 const distDir = path.join(packageRoot, "dist");
 const outDir = path.join(packageRoot, "artifacts");
 
-await fs.mkdir(outDir, { recursive: true });
-const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-const archiveName = `ftc-cli-0.1.0-${stamp}.tar.gz`;
+const cliPkg = JSON.parse(await fs.readFile(path.join(packageRoot, "package.json"), "utf8"));
+const version = cliPkg.version;
+const archiveName = `ftc-cli-${version}.tar.gz`;
 const archivePath = path.join(outDir, archiveName);
 
-// Minimal portable archive of dist + package.json for release artifacts.
-const staging = path.join(outDir, "staging");
-await fs.rm(staging, { recursive: true, force: true });
-await fs.mkdir(path.join(staging, "ftc-cli"), { recursive: true });
-await fs.cp(distDir, path.join(staging, "ftc-cli", "dist"), { recursive: true });
-await fs.copyFile(
-  path.join(packageRoot, "package.json"),
-  path.join(staging, "ftc-cli", "package.json"),
-);
+await fs.mkdir(outDir, { recursive: true });
 
-// Create a simple tar-like payload via gzip of a file list manifest + files is complex;
-// for 0.1.0 we zip using PowerShell-compatible approach: write a gzip of a concatenated file map.
-// Prefer Node's built-in approach with a directory walk into a .tgz using `tar` if available.
+// Portable npm package: dist + package.json + vendored @ftc-dev-tools/shared for offline global install.
+const staging = path.join(outDir, "staging");
+const pkgRoot = path.join(staging, "pkg");
+await fs.rm(staging, { recursive: true, force: true });
+await fs.mkdir(pkgRoot, { recursive: true });
+
+await fs.cp(distDir, path.join(pkgRoot, "dist"), { recursive: true });
+await fs.copyFile(path.join(packageRoot, "package.json"), path.join(pkgRoot, "package.json"));
+
+const sharedStaging = path.join(pkgRoot, "node_modules", "@ftc-dev-tools", "shared");
+await fs.mkdir(sharedStaging, { recursive: true });
+await fs.cp(path.join(sharedRoot, "dist"), path.join(sharedStaging, "dist"), { recursive: true });
+await fs.cp(path.join(sharedRoot, "schemas"), path.join(sharedStaging, "schemas"), {
+  recursive: true,
+});
+await fs.copyFile(path.join(sharedRoot, "package.json"), path.join(sharedStaging, "package.json"));
+
+const sharedIndex = path.join(sharedStaging, "dist", "index.js");
+if (!(await fs.stat(sharedIndex).catch(() => null))) {
+  console.error("Missing built shared package. Run npm run build from the repo root first.");
+  process.exit(1);
+}
+
 async function trySystemTar() {
   const { spawn } = await import("node:child_process");
   await new Promise((resolve, reject) => {
-    const child = spawn("tar", ["-czf", archivePath, "-C", staging, "ftc-cli"], {
+    const child = spawn("tar", ["-czf", archivePath, "-C", pkgRoot, "."], {
       stdio: "inherit",
       shell: false,
     });
@@ -46,7 +59,6 @@ async function trySystemTar() {
 try {
   await trySystemTar();
 } catch {
-  // Fallback: gzip a JSON manifest of file contents (still useful as an artifact)
   const files = [];
   async function walk(dir, prefix = "") {
     for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
@@ -59,7 +71,7 @@ try {
       }
     }
   }
-  await walk(path.join(staging, "ftc-cli"), "ftc-cli");
+  await walk(pkgRoot, "");
   const fallbackPath = archivePath.replace(/\.tar\.gz$/, ".json.gz");
   const gzip = createGzip();
   const output = createWriteStream(fallbackPath);
@@ -77,3 +89,4 @@ const digest = hash.digest("hex");
 await fs.writeFile(checksumPath, `${digest}  ${path.basename(archivePath)}\n`, "utf8");
 console.log(`Created ${archivePath}`);
 console.log(`Checksum ${checksumPath}`);
+console.log("Staged vendored dependency: node_modules/@ftc-dev-tools/shared");

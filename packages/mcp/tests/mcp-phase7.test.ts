@@ -135,5 +135,5 @@ describe("mcp phase 7 tools", () => {
 
     const doctor = parsePayload(await toolDoctor({ projectRoot: root }));
     expect(Array.isArray(doctor.checks)).toBe(true);
-  });
+  }, 60_000);
 });

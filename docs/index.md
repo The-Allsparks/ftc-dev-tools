@@ -37,14 +37,14 @@ features:
 
 ## Start here
 
-| Goal | Guide |
-| ---- | ----- |
-| First-time setup | [Getting started](./getting-started.md) |
+| Goal                                     | Guide                                                                 |
+| ---------------------------------------- | --------------------------------------------------------------------- |
+| First-time setup                         | [Getting started](./getting-started.md)                               |
 | Install JDK + SDK without Android Studio | [Install without Android Studio](./install-without-android-studio.md) |
-| Install the `ftc` CLI | [CLI install](./cli-install.md) |
-| Windows-specific tips | [Windows setup](./windows-setup.md) |
-| Something failed | [Troubleshooting](./troubleshooting.md) |
-| Environment checklist | [`ftc doctor`](./doctor.md) |
+| Install the `ftc` CLI                    | [CLI install](./cli-install.md)                                       |
+| Windows-specific tips                    | [Windows setup](./windows-setup.md)                                   |
+| Something failed                         | [Troubleshooting](./troubleshooting.md)                               |
+| Environment checklist                    | [`ftc doctor`](./doctor.md)                                           |
 
 ## Community
 

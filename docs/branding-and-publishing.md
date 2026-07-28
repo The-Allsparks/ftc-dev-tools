@@ -22,14 +22,14 @@ Do **not** invent a `ftc-dev-tools` GitHub organization URL. The product brand a
 
 The [GitHub Pages](https://the-allsparks.github.io/ftc-dev-tools/) docs use the same palette and fonts as [theallsparks.org](https://www.theallsparks.org):
 
-| Token | Value | Use |
-| ----- | ----- | --- |
-| Accent yellow | `#FDD835` | Links, buttons, nav accent bar |
-| Ink | `#212121` / `#1F1F1F` | Nav bar, dark hero |
-| Body text | `#212121` on `#FFFFFF` / `#F4F4F4` surfaces | Content |
-| Muted | `#707070`, `#CCCCCC` | Secondary text, borders |
-| Display font | Oswald 600–700 | Titles, nav title |
-| Body font | Open Sans 400–700 | Paragraphs, UI |
+| Token         | Value                                       | Use                            |
+| ------------- | ------------------------------------------- | ------------------------------ |
+| Accent yellow | `#FDD835`                                   | Links, buttons, nav accent bar |
+| Ink           | `#212121` / `#1F1F1F`                       | Nav bar, dark hero             |
+| Body text     | `#212121` on `#FFFFFF` / `#F4F4F4` surfaces | Content                        |
+| Muted         | `#707070`, `#CCCCCC`                        | Secondary text, borders        |
+| Display font  | Oswald 600–700                              | Titles, nav title              |
+| Body font     | Open Sans 400–700                           | Paragraphs, UI                 |
 
 Theme CSS: [`docs/.vitepress/theme/allsparks.css`](.vitepress/theme/allsparks.css).
 

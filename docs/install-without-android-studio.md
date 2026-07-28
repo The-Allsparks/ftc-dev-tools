@@ -11,7 +11,43 @@ You need:
 
 This repository includes installer scripts that download Google’s official command-line tools (not Android Studio).
 
-## Windows (recommended first)
+## Extension / VSIX install (no repo clone)
+
+If you installed **FTC Dev Tools from a VSIX** and do **not** have the `ftc-dev-tools` GitHub repo on disk, use these commands. Each one downloads the installer script **and** [`android-cmdline-tools.json`](https://github.com/The-Allsparks/ftc-dev-tools/blob/main/scripts/android-cmdline-tools.json) into the same folder (the script reads the manifest from its directory).
+
+The commands below match **FTC: Set Up This Computer** in the extension (use **Copy … install command** there).
+
+### Windows (PowerShell)
+
+```powershell
+$dir = Join-Path $env:TEMP "ftc-dev-tools-install-deps"; New-Item -ItemType Directory -Force -Path $dir | Out-Null; Invoke-WebRequest -Uri "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/scripts/install-deps-windows.ps1" -OutFile (Join-Path $dir "install-deps-windows.ps1"); Invoke-WebRequest -Uri "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/scripts/android-cmdline-tools.json" -OutFile (Join-Path $dir "android-cmdline-tools.json"); powershell -ExecutionPolicy Bypass -File (Join-Path $dir "install-deps-windows.ps1")
+```
+
+### macOS (bash)
+
+```bash
+dir="$(mktemp -d)" && curl -fsSL -o "$dir/install-deps-macos.sh" "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/scripts/install-deps-macos.sh" && curl -fsSL -o "$dir/android-cmdline-tools.json" "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/scripts/android-cmdline-tools.json" && bash "$dir/install-deps-macos.sh"
+```
+
+### Linux (bash)
+
+```bash
+dir="$(mktemp -d)" && curl -fsSL -o "$dir/install-deps-linux.sh" "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/scripts/install-deps-linux.sh" && curl -fsSL -o "$dir/android-cmdline-tools.json" "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/scripts/android-cmdline-tools.json" && bash "$dir/install-deps-linux.sh"
+```
+
+After install, close and reopen your terminal and editor, then run **FTC: Run Environment Check** or `ftc doctor`.
+
+## Cloned repository (contributors)
+
+If you cloned [ftc-dev-tools](https://github.com/The-Allsparks/ftc-dev-tools), run installers from the **repo root**:
+
+```text
+npm run install-deps:windows   # Windows
+npm run install-deps:macos     # macOS
+npm run install-deps:linux     # Linux
+```
+
+### Windows
 
 In PowerShell from the repo root:
 

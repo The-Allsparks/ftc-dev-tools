@@ -27,8 +27,9 @@ Install guides (no Android Studio required):
 
 | OS            | Documentation                                                                                                                     |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Windows       | [Install without Android Studio](https://github.com/The-Allsparks/ftc-dev-tools/blob/main/docs/install-without-android-studio.md) |
-| macOS / Linux | Same doc + repo `scripts/install-deps-*.sh`                                                                                       |
+| All platforms | [Install without Android Studio](https://github.com/The-Allsparks/ftc-dev-tools/blob/main/docs/install-without-android-studio.md) — includes **VSIX-only** copy-paste commands (no repo clone) |
+
+Use **FTC: Set Up This Computer** for the same install commands with **Copy … install command** actions. Contributors who cloned ftc-dev-tools can use `npm run install-deps:*` from the repo root (see the doc).
 
 3. Run **FTC: Run Environment Check** (or `ftc doctor` in a terminal) and fix anything marked failed.
 

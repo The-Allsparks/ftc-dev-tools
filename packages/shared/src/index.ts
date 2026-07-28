@@ -33,6 +33,18 @@ export {
   CONFIG_FILE_NAME,
 } from "./constants.js";
 
+export {
+  FTC_DEV_TOOLS_GITHUB_RAW_BASE,
+  INSTALL_WITHOUT_ANDROID_STUDIO_DOCS_URL,
+  INSTALL_DEPS_ANDROID_CMDLINE_TOOLS_JSON_RAW_URL,
+  INSTALL_DEPS_WINDOWS_PS1_RAW_URL,
+  INSTALL_DEPS_MACOS_SH_RAW_URL,
+  INSTALL_DEPS_LINUX_SH_RAW_URL,
+  INSTALL_DEPS_CONTRIBUTOR_COMMANDS,
+  buildInstallDepsCommand,
+} from "./install-deps-urls.js";
+export type { InstallDepsOs } from "./install-deps-urls.js";
+
 export { ConsoleLogger } from "./logger.js";
 export type { Logger, LogLevel } from "./logger.js";
 

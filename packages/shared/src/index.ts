@@ -40,6 +40,24 @@ export {
 } from "./constants.js";
 
 export {
+  FTC_DEV_TOOLS_GITHUB_OWNER,
+  FTC_DEV_TOOLS_GITHUB_REPO,
+  FTC_DEV_TOOLS_RELEASES_PAGE_URL,
+  NPM_PACKAGE_CLI,
+  NPM_PACKAGE_MCP,
+  NPM_INSTALL_CLI_COMMAND,
+  NPM_INSTALL_MCP_COMMAND,
+  releaseTagForVersion,
+  cliReleaseTarballBasename,
+  cliGitHubReleaseTarballUrl,
+  buildCliInstallFromGitHubRelease,
+  buildCliInstallFromNpm,
+  buildMcpInstallFromNpm,
+  buildMcpRunViaNpx,
+  listCliConsumerInstallCommands,
+} from "./cli-consumer-install.js";
+export type { ConsumerInstallMethod, ConsumerInstallCommand } from "./cli-consumer-install.js";
+export {
   FTC_DEV_TOOLS_GITHUB_RAW_BASE,
   INSTALL_WITHOUT_ANDROID_STUDIO_DOCS_URL,
   INSTALL_DEPS_ANDROID_CMDLINE_TOOLS_JSON_RAW_URL,

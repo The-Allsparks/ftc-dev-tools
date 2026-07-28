@@ -18,7 +18,21 @@ Android Studio is optional. To install the JDK + SDK tools without it:
 
 Full guide: [install-without-android-studio.md](install-without-android-studio.md).
 
-## Install FTC Dev Tools from source
+## Install the `ftc` CLI (recommended)
+
+You do **not** need to clone the FTC Dev Tools repo to use `ftc`.
+
+After a [GitHub Release](https://github.com/The-Allsparks/ftc-dev-tools/releases) is published:
+
+```bash
+npm install -g "https://github.com/The-Allsparks/ftc-dev-tools/releases/download/v0.1.0/ftc-cli-0.1.0.tar.gz"
+```
+
+Then open your FTC project folder and run `ftc doctor`.
+
+Details, npm (future), and MCP: [cli-install.md](cli-install.md).
+
+## Install from source (contributors only)
 
 ```bash
 git clone https://github.com/The-Allsparks/ftc-dev-tools.git

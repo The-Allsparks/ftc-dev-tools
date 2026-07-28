@@ -214,6 +214,10 @@
         "title": "FTC: Select Project Root"
       },
       {
+        "command": "ftc.installCli",
+        "title": "FTC: Install FTC CLI"
+      },
+      {
         "command": "ftc.openTechnicalOutput",
         "title": "FTC: Open Technical Output"
       },

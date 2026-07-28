@@ -41,7 +41,10 @@
     "doctor": "npm run build --workspace @ftc-dev-tools/shared && npm run build --workspace @ftc-dev-tools/cli && node packages/cli/dist/bin.js doctor",
     "install-deps:windows": "powershell -ExecutionPolicy Bypass -File ./scripts/install-deps-windows.ps1",
     "install-deps:macos": "bash ./scripts/install-deps-macos.sh",
-    "install-deps:linux": "bash ./scripts/install-deps-linux.sh"
+    "install-deps:linux": "bash ./scripts/install-deps-linux.sh",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
@@ -51,6 +54,7 @@
     "prettier": "^3.5.3",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.26.1",
+    "vitepress": "^1.6.3",
     "vitest": "^3.0.8"
   }
 }

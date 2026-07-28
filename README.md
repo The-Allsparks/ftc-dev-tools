@@ -2,6 +2,8 @@
 
 Community tools that make building, deploying, diagnosing, and managing FIRST Tech Challenge Android robot projects simpler from VS Code, Cursor, or a terminal.
 
+**Documentation:** [the-allsparks.github.io/ftc-dev-tools](https://the-allsparks.github.io/ftc-dev-tools/) (also in [`docs/`](docs/))
+
 ## Built by The Allsparks
 
 FTC Dev Tools is created and maintained by **The Allsparks**, a FIRST Tech Challenge team based in Las Vegas, Nevada.
@@ -44,7 +46,7 @@ Physical REV Control Hub compatibility has **not** been claimed as validated in 
 - Guided setup commands: **FTC: Set Up This Computer**, **FTC: Set Up This FTC Project**, **FTC: Configure Recommended Extensions**, **FTC: Install FTC CLI**
 - Cancellable robot log streaming in the extension (`FTC: Stop Robot Logs`)
 - Unit/integration-style tests with `MockDeviceProvider`
-- GitHub Actions CI on Windows, macOS, and Linux
+- GitHub Actions CI on Windows, macOS, and Linux; Dependabot version updates; CodeQL analysis; pull request dependency review; [documentation site](https://the-allsparks.github.io/ftc-dev-tools/) on GitHub Pages
 
 Maturity for each area (mock-tested through hardware-validated) is tracked in [docs/feature-maturity.md](docs/feature-maturity.md). Parity analysis vs Android Studio and FTC for VS Code: [docs/parity-audit.md](docs/parity-audit.md).
 

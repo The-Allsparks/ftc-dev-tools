@@ -34,6 +34,9 @@ jobs:
         run: npm run typecheck
       - name: Test
         run: npm test
+      - name: Build documentation site
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 22
+        run: npm run docs:build
       - name: Build packages
         run: npm run build
       - name: Package CLI

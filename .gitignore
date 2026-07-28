@@ -23,3 +23,5 @@ packages/vscode-extension/artifacts/
 !.vscode/extensions.json
 !.vscode/settings.json.example
 .ftc-dev-tools/
+docs/.vitepress/dist
+docs/.vitepress/cache

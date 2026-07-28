@@ -125,19 +125,15 @@ describe("mcp phase 7 tools", () => {
     expect(names).toContain("Phase7Tele");
   });
 
-  it(
-    "reports pedro status and doctor without crashing on fixture",
-    async () => {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), "ftc-mcp-"));
-      tempDirs.push(root);
-      await writeOfficialProject(root);
+  it("reports pedro status and doctor without crashing on fixture", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "ftc-mcp-"));
+    tempDirs.push(root);
+    await writeOfficialProject(root);
 
-      const pedro = parsePayload(await toolPedroStatus({ projectRoot: root }));
-      expect(pedro.message).toBeTruthy();
+    const pedro = parsePayload(await toolPedroStatus({ projectRoot: root }));
+    expect(pedro.message).toBeTruthy();
 
-      const doctor = parsePayload(await toolDoctor({ projectRoot: root }));
-      expect(Array.isArray(doctor.checks)).toBe(true);
-    },
-    60_000,
-  );
+    const doctor = parsePayload(await toolDoctor({ projectRoot: root }));
+    expect(Array.isArray(doctor.checks)).toBe(true);
+  }, 60_000);
 });

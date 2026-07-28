@@ -168,7 +168,7 @@ export async function listSetupBackups(projectRoot: string): Promise<SetupBackup
     if (!stat?.isDirectory()) {
       continue;
     }
-    let manifest: { createdAt?: string; files?: string[] } = {};
+    let manifest: { createdAt?: string; files?: string[] };
     try {
       manifest = JSON.parse(await fs.readFile(path.join(dir, "manifest.json"), "utf8")) as {
         createdAt?: string;

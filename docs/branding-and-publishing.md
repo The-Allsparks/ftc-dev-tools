@@ -31,7 +31,7 @@ The [GitHub Pages](https://the-allsparks.github.io/ftc-dev-tools/) docs use the 
 | Display font | Oswald 600–700 | Titles, nav title |
 | Body font | Open Sans 400–700 | Paragraphs, UI |
 
-Theme CSS: [`docs/.vitepress/theme/allsparks.css`](../.vitepress/theme/allsparks.css).
+Theme CSS: [`docs/.vitepress/theme/allsparks.css`](.vitepress/theme/allsparks.css).
 
 ## Publisher ID vs display name
 

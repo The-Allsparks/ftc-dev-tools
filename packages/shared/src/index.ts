@@ -210,6 +210,19 @@ export type {
   FtcProjectTasksMode,
 } from "./setup/project-setup-files.js";
 
+export {
+  buildDefaultFtcDevJsonDocument,
+  buildFtcProjectSetupPlans,
+  refreshSetupPlanJsonContent,
+} from "./setup/project-setup-plan.js";
+export type {
+  FtcProjectSetupPlan,
+  BuildFtcProjectSetupPlansInput,
+  BuildFtcProjectSetupPlansResult,
+} from "./setup/project-setup-plan.js";
+
+export { buildSetUpComputerDoctorOptions } from "./setup/setup-computer-doctor.js";
+
 export type {
   InterfaceState,
   NetworkInterfaceInfo,

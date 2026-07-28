@@ -1,13 +1,6 @@
 import * as vscode from "vscode";
-import type {
-  DoctorCheckUiItem,
-  DoctorFixAction,
-  DoctorReport,
-} from "@ftc-dev-tools/shared";
-import {
-  listActionableDoctorChecks,
-  resolveDoctorSuccessNextStep,
-} from "@ftc-dev-tools/shared";
+import type { DoctorCheckUiItem, DoctorFixAction, DoctorReport } from "@ftc-dev-tools/shared";
+import { listActionableDoctorChecks, resolveDoctorSuccessNextStep } from "@ftc-dev-tools/shared";
 
 type QuickPickDoctorItem = vscode.QuickPickItem & { uiItem: DoctorCheckUiItem };
 

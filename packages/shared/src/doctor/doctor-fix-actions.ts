@@ -99,9 +99,17 @@ export function buildDoctorCheckUiItem(
   let primary: DoctorFixAction | undefined;
 
   const machineInstallIds = new Set(["java", "android-sdk", "adb"]);
-  if (machineInstallIds.has(check.id) || code === "INCOMPATIBLE_JAVA" || code === "ANDROID_SDK_NOT_FOUND" || code === "ADB_NOT_FOUND") {
+  if (
+    machineInstallIds.has(check.id) ||
+    code === "INCOMPATIBLE_JAVA" ||
+    code === "ANDROID_SDK_NOT_FOUND" ||
+    code === "ADB_NOT_FOUND"
+  ) {
     primary = installDepsPrimary(platform) ?? INSTALL_GUIDE;
-    secondary.push(INSTALL_GUIDE, vscodeCommand("set-up-computer", "Set up this computer", "ftc.setUpComputer"));
+    secondary.push(
+      INSTALL_GUIDE,
+      vscodeCommand("set-up-computer", "Set up this computer", "ftc.setUpComputer"),
+    );
     if (primary.id !== "install-deps") {
       secondary.unshift(primary);
     }
@@ -115,13 +123,19 @@ export function buildDoctorCheckUiItem(
     check.id === "ftc-project" ||
     (check.id === "gradle-wrapper" && code === "UNSUPPORTED_PROJECT_LAYOUT")
   ) {
-    primary = vscodeCommand("select-project-root", "Select FTC project root", "ftc.selectProjectRoot");
+    primary = vscodeCommand(
+      "select-project-root",
+      "Select FTC project root",
+      "ftc.selectProjectRoot",
+    );
     secondary.push(INSTALL_GUIDE);
   } else if (code === "GRADLE_WRAPPER_MISSING" || check.id === "gradle-wrapper") {
-    primary = vscodeCommand("select-project-root", "Select FTC project root", "ftc.selectProjectRoot");
-    secondary.push(
-      vscodeCommand("set-up-project", "Set up this FTC project", "ftc.setUpProject"),
+    primary = vscodeCommand(
+      "select-project-root",
+      "Select FTC project root",
+      "ftc.selectProjectRoot",
     );
+    secondary.push(vscodeCommand("set-up-project", "Set up this FTC project", "ftc.setUpProject"));
   } else if (code === "GRADLE_PERMISSION_DENIED") {
     primary = terminal("chmod-gradlew", "Fix gradlew permissions", "chmod +x gradlew");
     secondary.push(RUN_DOCTOR_AGAIN);
@@ -136,14 +150,20 @@ export function buildDoctorCheckUiItem(
     code === "MULTIPLE_DEVICES"
   ) {
     primary = vscodeCommand("show-devices", "Show connected devices", "ftc.showDevices");
-    secondary.push(
-      vscodeCommand("select-device", "Select deployment device", "ftc.selectDevice"),
-    );
-  } else if (check.id === "ftc-sdk-version" || code === "SDK_VERSION_MISMATCH" || code === "SDK_DEPS_MISSING") {
+    secondary.push(vscodeCommand("select-device", "Select deployment device", "ftc.selectDevice"));
+  } else if (
+    check.id === "ftc-sdk-version" ||
+    code === "SDK_VERSION_MISMATCH" ||
+    code === "SDK_DEPS_MISSING"
+  ) {
     primary = vscodeCommand("check-sdk", "Check FTC SDK version", "ftc.checkSdk");
     secondary.push(vscodeCommand("update-sdk", "Update FTC SDK", "ftc.updateSdk"));
   } else if (check.id === "wifi-console" || code === "WIFI_CONSOLE_UNREACHABLE") {
-    primary = vscodeCommand("wifi-open-console", "Open Robot Controller Console", "ftc.wifiOpenConsole");
+    primary = vscodeCommand(
+      "wifi-open-console",
+      "Open Robot Controller Console",
+      "ftc.wifiOpenConsole",
+    );
     secondary.push(
       vscodeCommand("wifi-connect", "Connect Wi-Fi ADB", "ftc.wifiConnect"),
       vscodeCommand("wifi-join", "Join robot Wi-Fi", "ftc.wifiJoin"),
@@ -156,13 +176,23 @@ export function buildDoctorCheckUiItem(
     );
     secondary.push(vscodeCommand("wifi-status", "Wi-Fi status", "ftc.wifiStatus"));
   } else if (code === "UNSUPPORTED_PROJECT_LAYOUT") {
-    primary = vscodeCommand("select-project-root", "Select FTC project root", "ftc.selectProjectRoot");
+    primary = vscodeCommand(
+      "select-project-root",
+      "Select FTC project root",
+      "ftc.selectProjectRoot",
+    );
   }
 
   if (!primary) {
     primary = vscodeCommand("set-up-computer", "Set up this computer", "ftc.setUpComputer");
     if (check.friendlyError) {
-      secondary.push(openUrl("open-install-guide-fallback", "Open install guide", INSTALL_WITHOUT_ANDROID_STUDIO_DOCS_URL));
+      secondary.push(
+        openUrl(
+          "open-install-guide-fallback",
+          "Open install guide",
+          INSTALL_WITHOUT_ANDROID_STUDIO_DOCS_URL,
+        ),
+      );
     }
   }
 
@@ -170,8 +200,7 @@ export function buildDoctorCheckUiItem(
 
   const dedupedSecondary = secondary.filter(
     (action, index, list) =>
-      action.id !== primary?.id &&
-      list.findIndex((other) => other.id === action.id) === index,
+      action.id !== primary?.id && list.findIndex((other) => other.id === action.id) === index,
   );
 
   return {

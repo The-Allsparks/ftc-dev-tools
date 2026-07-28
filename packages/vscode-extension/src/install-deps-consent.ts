@@ -13,9 +13,7 @@ export interface RunInstallDepsArgs extends BuildInstallDepsOptions {
   skipOptionsPick?: boolean;
 }
 
-type SkipPick =
-  | { kind: "full" }
-  | { kind: "custom"; skipJdk: boolean; skipSdk: boolean };
+type SkipPick = { kind: "full" } | { kind: "custom"; skipJdk: boolean; skipSdk: boolean };
 
 async function pickInstallDepsScope(args: RunInstallDepsArgs): Promise<SkipPick | undefined> {
   if (args.skipOptionsPick || args.skipJdk !== undefined || args.skipSdk !== undefined) {
@@ -69,9 +67,7 @@ export async function runInstallDepsWithConsent(
 ): Promise<void> {
   const os = installDepsOsForPlatform(process.platform);
   if (!os) {
-    vscode.window.showErrorMessage(
-      "Install-deps is only supported on Windows, macOS, and Linux.",
-    );
+    vscode.window.showErrorMessage("Install-deps is only supported on Windows, macOS, and Linux.");
     return;
   }
 

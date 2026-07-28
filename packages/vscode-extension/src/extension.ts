@@ -198,16 +198,13 @@ export function activate(context: vscode.ExtensionContext): void {
   );
   register("ftc.setUpComputer", () => setUpThisComputerCommand(getWorkspaceRoot, output));
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "ftc.runInstallDeps",
-      async (args?: RunInstallDepsArgs) => {
-        try {
-          await runInstallDepsWithConsent(output, args ?? {});
-        } catch (error) {
-          await showFriendlyError(interpretFromUnknown(error));
-        }
-      },
-    ),
+    vscode.commands.registerCommand("ftc.runInstallDeps", async (args?: RunInstallDepsArgs) => {
+      try {
+        await runInstallDepsWithConsent(output, args ?? {});
+      } catch (error) {
+        await showFriendlyError(interpretFromUnknown(error));
+      }
+    }),
   );
   register("ftc.setUpProject", () => setUpThisFtcProjectCommand(getWorkspaceRoot, output));
   register("ftc.restoreProjectSetup", () => restoreProjectSetupCommand(getWorkspaceRoot, output));

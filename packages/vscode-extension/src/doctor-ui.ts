@@ -20,11 +20,15 @@ export async function executeDoctorFixAction(
       }
       break;
     case "terminal":
+      if (action.id === "install-deps") {
+        await vscode.commands.executeCommand("ftc.runInstallDeps", { source: "doctor" });
+        break;
+      }
       if (action.terminalCommand) {
+        output.appendLine(`Opened terminal with: ${action.terminalCommand}`);
         const terminal = vscode.window.createTerminal("FTC Dev Tools");
         terminal.show();
         terminal.sendText(action.terminalCommand, true);
-        output.appendLine(`Opened terminal with: ${action.terminalCommand}`);
       }
       break;
     case "reload-window":

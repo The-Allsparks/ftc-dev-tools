@@ -1,7 +1,6 @@
 import {
   INSTALL_WITHOUT_ANDROID_STUDIO_DOCS_URL,
-  buildInstallDepsCommand,
-  type InstallDepsOs,
+  installDepsOsForPlatform,
 } from "../install-deps-urls.js";
 import type { DoctorCheck, DoctorReport } from "../types/errors.js";
 
@@ -27,19 +26,6 @@ export interface DoctorCheckUiItem {
   secondaryActions: DoctorFixAction[];
 }
 
-function installDepsOsForPlatform(platform: NodeJS.Platform): InstallDepsOs | undefined {
-  if (platform === "win32") {
-    return "windows";
-  }
-  if (platform === "darwin") {
-    return "macos";
-  }
-  if (platform === "linux") {
-    return "linux";
-  }
-  return undefined;
-}
-
 function vscodeCommand(id: string, label: string, command: string): DoctorFixAction {
   return { id, label, kind: "vscode-command", command };
 }
@@ -61,11 +47,10 @@ function reloadWindowAction(): DoctorFixAction {
 }
 
 function installDepsPrimary(platform: NodeJS.Platform): DoctorFixAction | undefined {
-  const os = installDepsOsForPlatform(platform);
-  if (!os) {
+  if (!installDepsOsForPlatform(platform)) {
     return undefined;
   }
-  return terminal("install-deps", "Run install-deps script", buildInstallDepsCommand(os));
+  return vscodeCommand("install-deps", "Run install-deps script", "ftc.runInstallDeps");
 }
 
 const INSTALL_GUIDE = openUrl(

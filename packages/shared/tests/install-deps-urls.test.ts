@@ -6,6 +6,7 @@ import {
   INSTALL_DEPS_WINDOWS_PS1_RAW_URL,
   INSTALL_WITHOUT_ANDROID_STUDIO_DOCS_URL,
   buildInstallDepsCommand,
+  describeInstallDepsConsentMessage,
 } from "../src/install-deps-urls.js";
 
 describe("install-deps-urls", () => {
@@ -38,5 +39,19 @@ describe("install-deps-urls", () => {
     const linux = buildInstallDepsCommand("linux");
     expect(linux).toContain(INSTALL_DEPS_LINUX_SH_RAW_URL);
     expect(linux).toContain("android-cmdline-tools.json");
+  });
+
+  it("buildInstallDepsCommand supports skip flags per OS", () => {
+    expect(buildInstallDepsCommand("windows", { skipJdk: true })).toContain("-SkipJdk");
+    expect(buildInstallDepsCommand("windows", { skipSdk: true })).toContain("-SkipSdk");
+    expect(buildInstallDepsCommand("macos", { skipJdk: true })).toContain("SKIP_JDK=1");
+    expect(buildInstallDepsCommand("linux", { skipSdk: true })).toContain("SKIP_SDK=1");
+  });
+
+  it("describeInstallDepsConsentMessage lists JDK, SDK, and environment changes", () => {
+    const msg = describeInstallDepsConsentMessage("windows");
+    expect(msg).toMatch(/JDK/);
+    expect(msg).toMatch(/platform-tools|adb/i);
+    expect(msg).toMatch(/PATH|ANDROID_HOME/);
   });
 });

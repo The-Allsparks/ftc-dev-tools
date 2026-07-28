@@ -69,6 +69,7 @@ import {
 } from "./workspace-root.js";
 import { registerFtcTaskProvider } from "./ftc-task-provider.js";
 import { showDoctorResultsUi } from "./doctor-ui.js";
+import { runInstallDepsWithConsent, type RunInstallDepsArgs } from "./install-deps-consent.js";
 
 let output: vscode.OutputChannel;
 let status: StatusController;
@@ -196,6 +197,18 @@ export function activate(context: vscode.ExtensionContext): void {
     configureRecommendedExtensionsCommand(getWorkspaceRoot, output),
   );
   register("ftc.setUpComputer", () => setUpThisComputerCommand(getWorkspaceRoot, output));
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "ftc.runInstallDeps",
+      async (args?: RunInstallDepsArgs) => {
+        try {
+          await runInstallDepsWithConsent(output, args ?? {});
+        } catch (error) {
+          await showFriendlyError(interpretFromUnknown(error));
+        }
+      },
+    ),
+  );
   register("ftc.setUpProject", () => setUpThisFtcProjectCommand(getWorkspaceRoot, output));
   register("ftc.restoreProjectSetup", () => restoreProjectSetupCommand(getWorkspaceRoot, output));
   register("ftc.selectProjectRoot", () => selectFtcProjectRootCommand(context));

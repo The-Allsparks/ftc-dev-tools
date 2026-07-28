@@ -147,12 +147,15 @@ export async function setUpThisComputerCommand(
 
   const copyAction = await vscode.window.showInformationMessage(
     summary,
+    "Run trusted installer…",
     "Copy Windows install command",
     "Copy macOS install command",
     "Copy Linux install command",
     "Open install guide",
   );
-  if (copyAction === "Copy Windows install command") {
+  if (copyAction === "Run trusted installer…") {
+    await vscode.commands.executeCommand("ftc.runInstallDeps", { source: "set-up-computer" });
+  } else if (copyAction === "Copy Windows install command") {
     await vscode.env.clipboard.writeText(buildInstallDepsCommand("windows"));
     vscode.window.showInformationMessage("Copied Windows install command to clipboard.");
   } else if (copyAction === "Copy macOS install command") {

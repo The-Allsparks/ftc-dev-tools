@@ -16,9 +16,9 @@ export const DOCTOR_SECTION_ORDER: readonly DoctorSectionId[] = [
 ] as const;
 
 export const DOCTOR_SECTION_TITLES: Record<DoctorSectionId, string> = {
-  machine: "Machine readiness",
-  project: "Project readiness",
-  robot: "Robot readiness",
+  machine: "Computer setup",
+  project: "FTC project setup",
+  robot: "Robot connection",
   other: "Optional checks",
 };
 

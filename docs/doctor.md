@@ -1,6 +1,20 @@
 # Environment doctor (`ftc doctor`)
 
-The doctor command checks **machine readiness** (JDK, Android SDK, adb, Node) separately from **project readiness** (official FTC layout, Gradle wrapper, Gradle init). Optional **robot** and **other** sections cover devices, Wi-Fi, and SDK freshness.
+The doctor command checks **computer setup** (JDK, Android SDK, adb, Node) separately from **FTC project setup** (official layout, Gradle Wrapper, Gradle init). Optional **robot connection** and **other** sections cover devices, Wi‑Fi, and SDK freshness.
+
+## Skip and robot checks
+
+Lines marked `-` (skip) are **not failures**. Many robot and Wi‑Fi checks are skipped when you code at home without the Control Hub plugged in or on your network — that is normal.
+
+| Term | Meaning |
+| ---- | ------- |
+| **JDK / Java** | Compiles your FTC robot code |
+| **Android SDK** | Libraries and tools to build Android apps |
+| **adb** | Android Debug Bridge — sends builds to the hub over USB or Wi‑Fi |
+| **Gradle Wrapper** | The project's `gradlew` / `gradlew.bat` build script |
+| **FTC SDK** | FIRST's robot programming libraries your project depends on |
+
+See [project principles](project-principles.md) — messages should stay understandable to students while still showing technical details when needed (`ftc doctor --verbose`).
 
 ## CLI
 
@@ -10,7 +24,7 @@ ftc doctor --json
 ftc doctor --verbose
 ```
 
-Human output prints section headers (`Machine readiness`, `Project readiness`, …) so a missing JDK does not look like a broken FTC project when you opened the wrong folder.
+Human output prints section headers (`Computer setup`, `FTC project setup`, …) so a missing JDK does not look like a broken FTC project when you opened the wrong folder.
 
 ## JSON schema
 

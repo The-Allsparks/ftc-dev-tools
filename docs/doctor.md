@@ -6,13 +6,13 @@ The doctor command checks **computer setup** (JDK, Android SDK, adb, Node) separ
 
 Lines marked `-` (skip) are **not failures**. Many robot and Wi‑Fi checks are skipped when you code at home without the Control Hub plugged in or on your network — that is normal.
 
-| Term | Meaning |
-| ---- | ------- |
-| **JDK / Java** | Compiles your FTC robot code |
-| **Android SDK** | Libraries and tools to build Android apps |
-| **adb** | Android Debug Bridge — sends builds to the hub over USB or Wi‑Fi |
-| **Gradle Wrapper** | The project's `gradlew` / `gradlew.bat` build script |
-| **FTC SDK** | FIRST's robot programming libraries your project depends on |
+| Term               | Meaning                                                          |
+| ------------------ | ---------------------------------------------------------------- |
+| **JDK / Java**     | Compiles your FTC robot code                                     |
+| **Android SDK**    | Libraries and tools to build Android apps                        |
+| **adb**            | Android Debug Bridge — sends builds to the hub over USB or Wi‑Fi |
+| **Gradle Wrapper** | The project's `gradlew` / `gradlew.bat` build script             |
+| **FTC SDK**        | FIRST's robot programming libraries your project depends on      |
 
 See [project principles](project-principles.md) — messages should stay understandable to students while still showing technical details when needed (`ftc doctor --verbose`).
 

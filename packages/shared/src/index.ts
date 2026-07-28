@@ -188,7 +188,11 @@ export {
   listSetupBackups,
   restoreSetupBackup,
 } from "./setup/project-setup-files.js";
-export type { SetupBackupInfo, ParseJsonResult, FtcProjectTasksMode } from "./setup/project-setup-files.js";
+export type {
+  SetupBackupInfo,
+  ParseJsonResult,
+  FtcProjectTasksMode,
+} from "./setup/project-setup-files.js";
 
 export type {
   InterfaceState,

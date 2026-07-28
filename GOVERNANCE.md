@@ -49,6 +49,8 @@ Larger decisions should be documented when they affect:
 
 Maintainers should seek community input for substantial changes, but final responsibility for project direction remains with the project maintainers.
 
+GitHub **issue labels** (priority, surface, vision sub-areas) are documented in [docs/issue-labels.md](docs/issue-labels.md) and enforced in CI via `scripts/issue-label-catalog.json`.
+
 ## Maintainer expectations
 
 Maintainers are expected to:

@@ -1,0 +1,26 @@
+---
+description: Apply consistent GitHub issue labels using the repo catalog and taxonomy
+alwaysApply: false
+---
+
+# GitHub issue labels
+
+When creating or editing issues on **The-Allsparks/ftc-dev-tools**, follow [docs/issue-labels.md](../../docs/issue-labels.md).
+
+## Quick rules
+
+- Add **one** of `priority: P0`, `priority: P1`, `priority: P2` to every roadmap issue.
+- Add **at least one surface**: `shared-core`, `vscode`, `cli`, `mcp`, or `vision` (or `documentation` / `architecture` for docs/design-only work).
+- Epics: include `epic`.
+- Vision work: include `vision` plus the relevant sub-label (`limelight`, `webview`, etc.).
+
+## Catalog
+
+Canonical label sets per issue title: `scripts/issue-label-catalog.json`.
+
+After adding or retitling an issue:
+
+1. Update the catalog with the full label list (mirror similarly titled issues from #48+).
+2. Run `npm run check:issue-labels` or `node scripts/issue-labels.mjs apply --dry-run`.
+
+Do not invent new label names without adding them to `.github/labels.yml` first.

@@ -4,6 +4,14 @@
  * Idempotent: skips when an open issue with the same title already exists.
  */
 import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const labelCatalog = JSON.parse(
+  readFileSync(join(__dirname, "issue-label-catalog.json"), "utf8"),
+).issues;
 
 const REPO = "The-Allsparks/ftc-dev-tools";
 
@@ -441,6 +449,7 @@ for (const issue of issues) {
   if (!milestone) {
     throw new Error(`Missing milestone ${issue.milestone}`);
   }
+  const labels = labelCatalog[issue.title] ?? issue.labels ?? [];
   const args = [
     "issue",
     "create",
@@ -453,6 +462,9 @@ for (const issue of issues) {
     "--body",
     body(issue.sections),
   ];
+  for (const label of labels) {
+    args.push("--label", label);
+  }
   const url = gh(args).trim();
   created.push(url);
   console.log(`Created ${url}`);

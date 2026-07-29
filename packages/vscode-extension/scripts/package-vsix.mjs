@@ -18,7 +18,11 @@ const spawnOptions = {
   env: process.env,
   ...(process.platform === "win32" ? { shell: true } : {}),
 };
-const result = spawnSync("npx", ["vsce", "package", "--no-dependencies", "-o", outFileArg], spawnOptions);
+const result = spawnSync(
+  "npx",
+  ["vsce", "package", "--no-dependencies", "-o", outFileArg],
+  spawnOptions,
+);
 if (result.status !== 0) {
   process.exit(result.status ?? 1);
 }

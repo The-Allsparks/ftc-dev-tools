@@ -2,14 +2,12 @@
 /**
  * When a pull request merges, close linked open issues that pass close-guard rules.
  *
- * Reads the pull_request payload from GITHUB_EVENT_PATH (Actions) or env overrides.
+ * In Actions, set PR_NUMBER, PR_MERGED, PR_TITLE, and PR_BODY from the workflow (not the event file).
  */
-import fs from "node:fs";
 import {
   buildCloseBlockers,
   isEpicIssue,
   issueMayClose,
-  mergeLinkedIssues,
   parseClosingIssueNumbers,
 } from "./issue-close-guard-logic.mjs";
 
@@ -28,16 +26,16 @@ if (!owner || !repo) {
 }
 
 function loadPullRequest() {
-  const eventPath = process.env.GITHUB_EVENT_PATH?.trim();
-  if (eventPath && fs.existsSync(eventPath)) {
-    const event = JSON.parse(fs.readFileSync(eventPath, "utf8"));
-    if (event.pull_request) return event.pull_request;
-  }
   const number = Number.parseInt(process.env.PR_NUMBER ?? "", 10);
   if (!Number.isFinite(number)) {
-    throw new Error("No pull_request in event and PR_NUMBER not set");
+    throw new Error("PR_NUMBER is required");
   }
-  return { number, merged: true, body: process.env.PR_BODY ?? "", title: process.env.PR_TITLE ?? "" };
+  return {
+    number,
+    merged: process.env.PR_MERGED === "true",
+    title: String(process.env.PR_TITLE ?? ""),
+    body: String(process.env.PR_BODY ?? ""),
+  };
 }
 
 async function githubRest(path, init) {
@@ -50,26 +48,10 @@ async function githubRest(path, init) {
     },
   });
   if (!res.ok) {
-    throw new Error(`REST ${path} failed: ${res.status} ${await res.text()}`);
+    const detail = await res.text();
+    throw new Error(`REST ${path} failed: ${res.status} ${detail.slice(0, 500)}`);
   }
   return res.json();
-}
-
-async function githubGraphql(query, variables) {
-  const res = await fetch("https://api.github.com/graphql", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ query, variables }),
-  });
-  const body = await res.json();
-  if (!res.ok || body.errors?.length) {
-    const msg = body.errors?.map((e) => e.message).join("; ") ?? res.statusText;
-    throw new Error(`GraphQL failed: ${msg}`);
-  }
-  return body.data;
 }
 
 async function fetchIssue(issueNumber) {
@@ -94,27 +76,6 @@ async function fetchLinkedPullRequestsForIssue(issueNumber) {
   return pulls;
 }
 
-async function fetchLinkedChildIssues(issueNumber) {
-  const query = `
-    query IssueChildren($owner: String!, $repo: String!, $number: Int!) {
-      repository(owner: $owner, name: $repo) {
-        issue(number: $number) {
-          subIssues(first: 100) {
-            nodes { number title state }
-          }
-          trackedIssues(first: 100) {
-            nodes { number title state }
-          }
-        }
-      }
-    }
-  `;
-  const data = await githubGraphql(query, { owner, repo, number: issueNumber });
-  const issue = data.repository?.issue;
-  if (!issue) return [];
-  return mergeLinkedIssues(issue.subIssues?.nodes ?? [], issue.trackedIssues?.nodes ?? []);
-}
-
 async function fetchIssuesLinkedToPullRequest(prNumber) {
   const q = encodeURIComponent(`repo:${owner}/${repo} is:issue linked:pr-${prNumber} state:open`);
   const search = await githubRest(`/search/issues?q=${q}&per_page=100`);
@@ -131,7 +92,7 @@ async function closeIssueWithComment(issueNumber, prNumber) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ state: "closed", state_reason: "completed" }),
   });
-  const body = [
+  const comment = [
     `Closed automatically because linked pull request #${prNumber} was merged.`,
     "",
     "If this was premature, reopen the issue or adjust PR/issue links.",
@@ -139,7 +100,7 @@ async function closeIssueWithComment(issueNumber, prNumber) {
   await githubRest(`/repos/${owner}/${repo}/issues/${issueNumber}/comments`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ body }),
+    body: JSON.stringify({ body: comment }),
   });
 }
 
@@ -151,13 +112,15 @@ async function main() {
   }
 
   const prNumber = pullRequest.number;
-  const text = `${pullRequest.title ?? ""}\n${pullRequest.body ?? ""}`;
+  const text = `${pullRequest.title}\n${pullRequest.body}`;
   const candidates = new Set([
     ...parseClosingIssueNumbers(text, { owner, repo }),
     ...(await fetchIssuesLinkedToPullRequest(prNumber)),
   ]);
 
-  console.log(`pr-merge-close-issues: PR #${prNumber} merged; candidates: ${[...candidates].join(", ") || "(none)"}`);
+  console.log(
+    `pr-merge-close-issues: PR #${prNumber} merged; candidates: ${[...candidates].join(", ") || "(none)"}`,
+  );
 
   for (const issueNumber of candidates) {
     if (issueNumber === prNumber) continue;

@@ -5,9 +5,10 @@ This guide is for FTC students, coaches, and mentors who want to build and deplo
 ## In VS Code or Cursor (recommended)
 
 1. Open your FTC project folder (or use **FTC: Get or Open FTC Project**).
-2. Run **FTC: Start Here** from the Command Palette — opens a checklist doc, panel checklist, and walks you step by step.
-3. On **Prepare this computer**, use **Check & install what's missing** — the environment check decides whether you need JDK, Android SDK/adb, or both, then runs the trusted installer after you confirm.
-4. Re-run **FTC: Run Environment Check** after installs and reload the window if PATH changed.
+2. After installing the extension, open **Walkthrough: Get started with FTC Dev Tools** from the Welcome / Getting Started experience (same steps as below).
+3. Run **FTC: Start Here** from the Command Palette — opens a checklist doc, panel checklist, and walks you step by step.
+4. On **Prepare this computer**, use **Check & install what's missing** — the environment check decides whether you need JDK, Android SDK/adb, or both, then runs the trusted installer after you confirm.
+5. Re-run **FTC: Run Environment Check** after installs and reload the window if PATH changed.
 
 Contributors with a cloned `ftc-dev-tools` repo use local install scripts automatically (no re-download from GitHub).
 

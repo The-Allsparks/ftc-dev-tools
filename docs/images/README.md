@@ -1,6 +1,6 @@
-# Extension screenshots (placeholders)
+## Extension screenshots (placeholders)
 
-Replace these placeholders with real captures before marketing the extension widely.
+Replace these placeholders with real captures before marketing the extension widely. The built-in **Get started with FTC Dev Tools** walkthrough uses `packages/vscode-extension/media/ftc.svg` until sidebar screenshots are added here.
 
 ## FTC Robot view
 

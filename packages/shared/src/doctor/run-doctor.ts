@@ -31,6 +31,10 @@ import {
   wifiConsoleSkipDetail,
 } from "./doctor-copy.js";
 import { buildDoctorSections, categoryForCheckId } from "./doctor-sections.js";
+import {
+  buildReadinessSnapshotFromDoctor,
+  formatDeployReadySummary,
+} from "../readiness/readiness-model.js";
 import { notAnFtcProjectRootError, projectNotDetectedWrapperError } from "./wrong-folder-errors.js";
 import { discoverNearbyFtcProjectRoots } from "../project/discover-ftc-root.js";
 
@@ -158,32 +162,32 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorReport> {
     projectReadyToBuild,
     robotReadyToDeploy,
   };
-  const ready = !requiredFailed && computerReady && projectReadyToBuild && robotReadyToDeploy;
-
-  const summaries = summaryLines();
-  let summaryLine: string;
-  if (ready) {
-    summaryLine = summaries.ready;
-  } else if (requiredFailed) {
-    summaryLine = summaries.requiredFailed;
-  } else {
-    const parts: string[] = [];
-    if (!computerReady) {
-      parts.push("computer setup needs attention");
-    }
-    if (!projectReadyToBuild) {
-      parts.push("FTC project setup needs attention");
-    }
-    if (!robotReadyToDeploy) {
-      parts.push("robot connection needs attention (often OK at home without the hub plugged in)");
-    }
-    summaryLine = `${summaries.notReadyPrefix} ${parts.join("; ")}.`;
-  }
 
   const checksWithCategory = checks.map((check) => ({
     ...check,
     category: categoryForCheckId(check.id),
   }));
+
+  const readinessSnapshot = buildReadinessSnapshotFromDoctor({
+    checks: checksWithCategory,
+    readiness,
+  });
+
+  readiness.robotReadyToDeploy =
+    readinessSnapshot.categories.find((c) => c.id === "device")?.level === "pass";
+
+  const ready = !requiredFailed && readinessSnapshot.deployReady;
+
+  const summaries = summaryLines();
+  let summaryLine: string;
+  if (ready) {
+    summaryLine = formatDeployReadySummary(readinessSnapshot);
+  } else if (requiredFailed) {
+    summaryLine = summaries.requiredFailed;
+  } else {
+    const deploy = readinessSnapshot.categories.find((c) => c.id === "deploy");
+    summaryLine = deploy?.summary ?? summaries.notReadyPrefix;
+  }
 
   const sectionList = buildDoctorSections({
     checks: checksWithCategory,
@@ -194,6 +198,7 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorReport> {
   return {
     ready,
     readiness,
+    readinessSnapshot,
     checks: checksWithCategory,
     sections,
     summaryLine,

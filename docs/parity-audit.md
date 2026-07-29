@@ -51,21 +51,21 @@ FTC Dev Tools already exceeds FTC for VS Code on doctor, multi-device refusal, S
 
 ## Environment and setup
 
-| Capability                   | FTC Dev Tools               | FTC for VS Code           | Android Studio FTC workflow | External VS Code extension | Gap     | Recommended action       |
-| ---------------------------- | --------------------------- | ------------------------- | --------------------------- | -------------------------- | ------- | ------------------------ |
-| JDK discovery                | Doctor                      | Assumed                   | Bundled/Studio              | Java pack                  | Low     | `Native` + `Integration` |
-| JDK compatibility check      | Doctor                      | Assumed                   | Studio                      | Java pack                  | Low     | `Native`                 |
-| Android SDK / platform-tools | Doctor + install scripts    | Required in README        | Studio SDK manager          | —                          | Low     | `Native` + docs          |
-| Gradle Wrapper validation    | Detection                   | Assumed                   | Yes                         | —                          | Low     | `Native`                 |
-| SDK package installation     | Guided scripts (non-silent) | Manual                    | SDK Manager                 | —                          | Medium  | Setup wizard             |
-| Env var setup                | Docs + scripts              | Manual                    | Studio                      | —                          | Medium  | Setup wizard             |
-| Windows / macOS / Linux      | Docs + CI                   | Not clearly matrixed      | Yes                         | —                          | Medium  | Keep OS docs + CI        |
-| Paths with spaces            | Careful spawn               | Unknown                   | Usually OK                  | —                          | Medium  | Test matrix              |
-| Permission repair            | Docs                        | No                        | Partial                     | —                          | Medium  | Docs                     |
-| New-student onboarding       | Docs + setup commands       | Minimal requirements list | Studio tutorials            | —                          | Closing | Guided setup             |
-| Reproducible team setup      | `.ftc-dev.json` + docs      | No                        | Checklists                  | —                          | Medium  | Project setup command    |
-| Dev container                | No                          | No                        | No                          | Dev Containers             | Low     | `Future optional`        |
-| Portable/offline install     | Partial scripts             | No                        | Offline SDK possible        | —                          | Medium  | Docs                     |
+| Capability                   | FTC Dev Tools                                          | FTC for VS Code           | Android Studio FTC workflow | External VS Code extension | Gap    | Recommended action                                                                   |
+| ---------------------------- | ------------------------------------------------------ | ------------------------- | --------------------------- | -------------------------- | ------ | ------------------------------------------------------------------------------------ |
+| JDK discovery                | Doctor                                                 | Assumed                   | Bundled/Studio              | Java pack                  | Low    | `Native` + `Integration`                                                             |
+| JDK compatibility check      | Doctor                                                 | Assumed                   | Studio                      | Java pack                  | Low    | `Native`                                                                             |
+| Android SDK / platform-tools | Doctor + install scripts                               | Required in README        | Studio SDK manager          | —                          | Low    | `Native` + docs                                                                      |
+| Gradle Wrapper validation    | Detection                                              | Assumed                   | Yes                         | —                          | Low    | `Native`                                                                             |
+| SDK package installation     | Guided scripts (non-silent)                            | Manual                    | SDK Manager                 | —                          | Medium | Setup wizard                                                                         |
+| Env var setup                | Docs + scripts                                         | Manual                    | Studio                      | —                          | Medium | Setup wizard                                                                         |
+| Windows / macOS / Linux      | Docs + CI                                              | Not clearly matrixed      | Yes                         | —                          | Medium | Keep OS docs + CI                                                                    |
+| Paths with spaces            | Careful spawn                                          | Unknown                   | Usually OK                  | —                          | Medium | Test matrix                                                                          |
+| Permission repair            | Docs                                                   | No                        | Partial                     | —                          | Medium | Docs                                                                                 |
+| New-student onboarding       | Start Here, walkthrough, milestones, VSIX install docs | Minimal requirements list | Studio tutorials            | —                          | Low    | `Native` — 0.2 delivered; see [onboarding-0.2-closure.md](onboarding-0.2-closure.md) |
+| Reproducible team setup      | `.ftc-dev.json` + docs                                 | No                        | Checklists                  | —                          | Medium | Project setup command                                                                |
+| Dev container                | No                                                     | No                        | No                          | Dev Containers             | Low    | `Future optional`                                                                    |
+| Portable/offline install     | Partial scripts                                        | No                        | Offline SDK possible        | —                          | Medium | Docs                                                                                 |
 
 ## Java and Kotlin editing
 

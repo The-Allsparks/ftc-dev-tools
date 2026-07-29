@@ -16,6 +16,7 @@ import {
   type BuildInstallDepsOptions,
   type MachineInstallNeeds,
 } from "@ftc-dev-tools/shared";
+import { ftcToolProcessEnv } from "./ftc-tool-env.js";
 import { cacheMachineInstallNeeds, getCachedMachineInstallNeeds } from "./machine-install-cache.js";
 import { maybeOfferStartHereMachineComplete } from "./start-here.js";
 
@@ -36,6 +37,7 @@ async function loadMachineInstallNeeds(
   const adapter = new OfficialFtcProjectAdapter();
   const report = await runDoctor({
     ...buildSetUpComputerDoctorOptions(cwd, runner, adapter),
+    env: ftcToolProcessEnv(),
   });
   const needs = analyzeMachineInstallNeeds(report.checks);
   cacheMachineInstallNeeds(cwd, needs);

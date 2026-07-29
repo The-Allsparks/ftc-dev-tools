@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import {
   buildInstallDepsCommand,
@@ -7,26 +8,40 @@ import {
 } from "../install-deps-urls.js";
 
 export function findFtcDevToolsRepoRoot(startDir: string): string | undefined {
-  let dir = path.resolve(startDir);
-  for (let depth = 0; depth < 10; depth++) {
-    const marker = path.join(dir, "scripts", "install-deps-windows.ps1");
-    const pkgPath = path.join(dir, "package.json");
-    if (fs.existsSync(marker) && fs.existsSync(pkgPath)) {
-      try {
-        const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8")) as { name?: string };
-        if (pkg.name === "ftc-dev-tools") {
-          return dir;
+  const tryRoot = (dir: string): string | undefined => {
+    let current = path.resolve(dir);
+    for (let depth = 0; depth < 10; depth++) {
+      const marker = path.join(current, "scripts", "install-deps-windows.ps1");
+      const pkgPath = path.join(current, "package.json");
+      if (fs.existsSync(marker) && fs.existsSync(pkgPath)) {
+        try {
+          const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8")) as { name?: string };
+          if (pkg.name === "ftc-dev-tools") {
+            return current;
+          }
+        } catch {
+          // ignore
         }
-      } catch {
-        // ignore
       }
+      const parent = path.dirname(current);
+      if (parent === current) {
+        break;
+      }
+      current = parent;
     }
-    const parent = path.dirname(dir);
-    if (parent === dir) {
-      break;
-    }
-    dir = parent;
+    return undefined;
+  };
+
+  const fromStart = tryRoot(startDir);
+  if (fromStart) {
+    return fromStart;
   }
+
+  const wellKnown = path.join(os.homedir(), "Documents", "The Allsparks", "ftc-dev-tools");
+  if (wellKnown !== path.resolve(startDir)) {
+    return tryRoot(wellKnown);
+  }
+
   return undefined;
 }
 

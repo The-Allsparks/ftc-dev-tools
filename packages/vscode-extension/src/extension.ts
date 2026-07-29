@@ -75,6 +75,7 @@ import {
 } from "./workspace-root.js";
 import { registerFtcTaskProvider } from "./ftc-task-provider.js";
 import { showDoctorResultsUi } from "./doctor-ui.js";
+import { ftcToolProcessEnv } from "./ftc-tool-env.js";
 import { runInstallDepsWithConsent, type RunInstallDepsArgs } from "./install-deps-consent.js";
 import {
   onStartHereProgressChanged,
@@ -121,15 +122,6 @@ async function markMilestone(id: MilestoneStepId): Promise<void> {
   await milestoneStore.mark(id);
   tree.refresh();
   setBarState(lastBarState);
-}
-
-function ftcToolProcessEnv(): NodeJS.ProcessEnv {
-  const env = { ...process.env };
-  const javaHome = vscode.workspace.getConfiguration("ftc").get<string>("javaHome")?.trim();
-  if (javaHome) {
-    env.FTC_JAVA_HOME = javaHome;
-  }
-  return env;
 }
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -353,6 +345,7 @@ async function runDoctorCommand(): Promise<void> {
     runner,
     projectAdapter: adapter,
     deviceProvider: devices,
+    env: ftcToolProcessEnv(),
   });
   output.clear();
   output.appendLine("FTC Development Check");

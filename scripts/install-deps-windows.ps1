@@ -131,9 +131,13 @@ function Find-InstalledJdkHome([int]$Major) {
     "C:\Program Files\Microsoft\jdk-${Major}*"
   )
   foreach ($pattern in $patterns) {
-    $match = Get-Item $pattern -ErrorAction SilentlyContinue | Sort-Object FullName -Descending | Select-Object -First 1
-    if ($match) {
-      return $match.FullName
+    $candidates = @(Get-Item $pattern -ErrorAction SilentlyContinue | Sort-Object FullName -Descending)
+    foreach ($match in $candidates) {
+      $javaExe = Join-Path $match.FullName "bin\java.exe"
+      $detected = Get-JavaMajorFromExe $javaExe
+      if ($null -ne $detected -and $detected -ge $Major) {
+        return $match.FullName
+      }
     }
   }
   if ($env:JAVA_HOME) {

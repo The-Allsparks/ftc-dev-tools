@@ -37,12 +37,13 @@ Stable JSON is emitted with `--json` and returned by the MCP `doctor` tool.
 
 Top-level fields:
 
-| Field       | Meaning                                                                                     |
-| ----------- | ------------------------------------------------------------------------------------------- |
-| `ready`     | Overall pass (required checks + readiness flags)                                            |
-| `readiness` | `computerReady`, `projectReadyToBuild`, `robotReadyToDeploy`                                |
-| `checks`    | Flat list (backward compatible)                                                             |
-| `sections`  | `machine`, `project`, optional `robot` / `other` with nested checks and `ready` per section |
+| Field               | Meaning                                                                                                         |
+| ------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `ready`             | **Deploy ready** — computer, project, and an authorized device (not merely machine checks)                      |
+| `readiness`         | `computerReady`, `projectReadyToBuild`, `robotReadyToDeploy` (legacy booleans)                                  |
+| `readinessSnapshot` | Five categories (#82): computer, project, device, deploy, competition with `unknown` / `pass` / `warn` / `fail` |
+| `checks`            | Flat list (backward compatible)                                                                                 |
+| `sections`          | `machine`, `project`, optional `robot` / `other` with nested checks and `ready` per section                     |
 
 Each check includes optional `category` matching its section id.
 

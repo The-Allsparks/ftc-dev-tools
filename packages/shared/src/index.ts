@@ -532,6 +532,14 @@ export {
 } from "./onboarding/milestone-checklist.js";
 export type { MilestoneStepId, MilestoneStep } from "./onboarding/milestone-checklist.js";
 export {
+  buildReadinessSnapshotFromDoctor,
+  formatDeployReadySummary,
+  type ReadinessCategoryId,
+  type ReadinessCategoryState,
+  type ReadinessLevel,
+  type ReadinessSnapshot,
+} from "./readiness/readiness-model.js";
+export {
   ROOKIE_JOURNEY_COMMAND_IDS,
   ONBOARDING_0_2_CHILD_ISSUES,
   ONBOARDING_0_1_SETUP_CLOSURE_ISSUES,

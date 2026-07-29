@@ -1,3 +1,5 @@
+import type { ReadinessSnapshot } from "../readiness/readiness-model.js";
+
 export interface FriendlyError {
   code: string;
   title: string;
@@ -49,6 +51,8 @@ export interface DoctorReadiness {
 export interface DoctorReport {
   ready: boolean;
   readiness: DoctorReadiness;
+  /** Five-category readiness model (#82) for doctor, CLI JSON, and extension UI. */
+  readinessSnapshot?: ReadinessSnapshot;
   checks: DoctorCheck[];
   /** Checks grouped by section with section-level ready flags aligned with `readiness`. */
   sections: DoctorReportSections;

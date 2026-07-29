@@ -59,27 +59,41 @@ async function fetchIssue(issueNumber) {
 }
 
 async function fetchLinkedPullRequestsForIssue(issueNumber) {
-  const q = encodeURIComponent(`repo:${owner}/${repo} is:pr linked:issue-${issueNumber}`);
-  const search = await githubRest(`/search/issues?q=${q}&per_page=100`);
-  const items = search.items ?? [];
-  const pulls = [];
-  for (const item of items) {
-    if (!item.pull_request) continue;
-    const pr = await githubRest(`/repos/${owner}/${repo}/pulls/${item.number}`);
-    pulls.push({
-      number: pr.number,
-      title: pr.title,
-      merged: Boolean(pr.merged),
-      state: pr.state?.toUpperCase() ?? "UNKNOWN",
-    });
+  try {
+    const q = encodeURIComponent(`repo:${owner}/${repo} is:pr linked:issue-${issueNumber}`);
+    const search = await githubRest(`/search/issues?q=${q}&per_page=100`);
+    const items = search.items ?? [];
+    const pulls = [];
+    for (const item of items) {
+      if (!item.pull_request) continue;
+      const pr = await githubRest(`/repos/${owner}/${repo}/pulls/${item.number}`);
+      pulls.push({
+        number: pr.number,
+        title: pr.title,
+        merged: Boolean(pr.merged),
+        state: pr.state?.toUpperCase() ?? "UNKNOWN",
+      });
+    }
+    return pulls;
+  } catch (err) {
+    console.warn(
+      `pr-merge-close-issues: GitHub linked-PR search unavailable for issue #${issueNumber} (${err instanceof Error ? err.message : err})`,
+    );
+    return [];
   }
-  return pulls;
 }
 
 async function fetchIssuesLinkedToPullRequest(prNumber) {
-  const q = encodeURIComponent(`repo:${owner}/${repo} is:issue linked:pr-${prNumber} state:open`);
-  const search = await githubRest(`/search/issues?q=${q}&per_page=100`);
-  return (search.items ?? []).map((item) => item.number);
+  try {
+    const q = encodeURIComponent(`repo:${owner}/${repo} is:issue linked:pr-${prNumber} state:open`);
+    const search = await githubRest(`/search/issues?q=${q}&per_page=100`);
+    return (search.items ?? []).map((item) => item.number);
+  } catch (err) {
+    console.warn(
+      `pr-merge-close-issues: GitHub linked-issue search unavailable for PR #${prNumber}; using PR body keywords only (${err instanceof Error ? err.message : err})`,
+    );
+    return [];
+  }
 }
 
 function labelNamesFromIssue(issue) {

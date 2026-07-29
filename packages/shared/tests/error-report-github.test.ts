@@ -90,7 +90,12 @@ describe("error-report-github", () => {
         jsonResponse({
           items: [
             { number: 99, title, state: "open", html_url: "https://github.com/o/r/issues/99" },
-            { number: 1, title: "other", state: "open", html_url: "https://github.com/o/r/issues/1" },
+            {
+              number: 1,
+              title: "other",
+              state: "open",
+              html_url: "https://github.com/o/r/issues/1",
+            },
           ],
         }),
     ]);
@@ -123,7 +128,9 @@ describe("error-report-github", () => {
     const fetchImpl = mockFetchSequence([
       () =>
         jsonResponse({
-          items: [{ number: 50, title, state: "open", html_url: "https://github.com/o/r/issues/50" }],
+          items: [
+            { number: 50, title, state: "open", html_url: "https://github.com/o/r/issues/50" },
+          ],
         }),
       () =>
         jsonResponse({
@@ -145,9 +152,8 @@ describe("github-report-token", () => {
     const os = await import("node:os");
     const path = await import("node:path");
     const fs = await import("node:fs/promises");
-    const { storeGitHubReportToken, loadGitHubReportToken, clearGitHubReportToken } = await import(
-      "../src/feedback/github-report-token.js"
-    );
+    const { storeGitHubReportToken, loadGitHubReportToken, clearGitHubReportToken } =
+      await import("../src/feedback/github-report-token.js");
     const dir = await fs.mkdtemp(path.join(os.tmpdir(), "ftc-gh-token-"));
     const tokenPath = path.join(dir, "github-report-token.enc");
     await storeGitHubReportToken("ghp_testtoken123", { tokenPath });

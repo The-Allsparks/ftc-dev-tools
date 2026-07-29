@@ -19,78 +19,81 @@ export function registerDoctorCommand(program: Command): void {
       "Print JSON for install-deps scope (computer checks only; use with --json or alone)",
     )
     .option("--report", "File a GitHub error report when doctor is not ready")
-    .action(async (options: {
-      json?: boolean;
-      verbose?: boolean;
-      installPlan?: boolean;
-      report?: boolean;
-    }) => {
-      const ctx = createCliContext(process.cwd(), options.verbose === true);
-      let deviceProvider;
-      try {
-        deviceProvider = await ctx.createDeviceProvider();
-      } catch {
-        deviceProvider = undefined;
-      }
+    .action(
+      async (options: {
+        json?: boolean;
+        verbose?: boolean;
+        installPlan?: boolean;
+        report?: boolean;
+      }) => {
+        const ctx = createCliContext(process.cwd(), options.verbose === true);
+        let deviceProvider;
+        try {
+          deviceProvider = await ctx.createDeviceProvider();
+        } catch {
+          deviceProvider = undefined;
+        }
 
-      const doctorOpts = options.installPlan
-        ? {
-            ...buildSetUpComputerDoctorOptions(ctx.cwd, ctx.runner, ctx.adapter),
+        const doctorOpts = options.installPlan
+          ? {
+              ...buildSetUpComputerDoctorOptions(ctx.cwd, ctx.runner, ctx.adapter),
+            }
+          : {
+              cwd: ctx.cwd,
+              runner: ctx.runner,
+              projectAdapter: ctx.adapter,
+              deviceProvider,
+            };
+
+        const report = await runDoctor(doctorOpts);
+
+        if (options.installPlan && !options.json) {
+          const plan = buildDoctorInstallPlan(report.checks);
+          console.log(JSON.stringify(plan, null, 2));
+          process.exitCode = plan.needs.machineDepsSatisfied ? 0 : 1;
+          return;
+        }
+
+        if (options.json) {
+          const payload = options.installPlan
+            ? { ...report, installPlan: buildDoctorInstallPlan(report.checks) }
+            : report;
+          console.log(JSON.stringify(payload, null, 2));
+        } else {
+          console.log("FTC Development Check\n");
+          const sections = buildDoctorSections(report);
+          for (const section of sections) {
+            console.log(`${section.title}`);
+            console.log(`${"─".repeat(section.title.length)}`);
+            for (const check of section.checks) {
+              console.log(formatDoctorCheckLine(check));
+              if ((check.status === "fail" || check.status === "warn") && check.friendlyError) {
+                await printFriendlyError(check.friendlyError, options.verbose === true);
+              }
+            }
+            console.log("");
           }
-        : {
-            cwd: ctx.cwd,
-            runner: ctx.runner,
-            projectAdapter: ctx.adapter,
-            deviceProvider,
-          };
-
-      const report = await runDoctor(doctorOpts);
-
-      if (options.installPlan && !options.json) {
-        const plan = buildDoctorInstallPlan(report.checks);
-        console.log(JSON.stringify(plan, null, 2));
-        process.exitCode = plan.needs.machineDepsSatisfied ? 0 : 1;
-        return;
-      }
-
-      if (options.json) {
-        const payload = options.installPlan
-          ? { ...report, installPlan: buildDoctorInstallPlan(report.checks) }
-          : report;
-        console.log(JSON.stringify(payload, null, 2));
-      } else {
-        console.log("FTC Development Check\n");
-        const sections = buildDoctorSections(report);
-        for (const section of sections) {
-          console.log(`${section.title}`);
-          console.log(`${"─".repeat(section.title.length)}`);
-          for (const check of section.checks) {
-            console.log(formatDoctorCheckLine(check));
-            if ((check.status === "fail" || check.status === "warn") && check.friendlyError) {
-              await printFriendlyError(check.friendlyError, options.verbose === true);
+          console.log(report.summaryLine);
+          if (!report.ready && options.report) {
+            const failed = report.checks.find(
+              (check) =>
+                (check.status === "fail" || check.status === "warn") && check.friendlyError,
+            );
+            if (failed?.friendlyError) {
+              await printFriendlyError(failed.friendlyError, options.verbose === true, {
+                commandAttempted: "ftc.doctor",
+                forceReport: true,
+              });
             }
           }
-          console.log("");
-        }
-        console.log(report.summaryLine);
-        if (!report.ready && options.report) {
-          const failed = report.checks.find(
-            (check) => (check.status === "fail" || check.status === "warn") && check.friendlyError,
-          );
-          if (failed?.friendlyError) {
-            await printFriendlyError(failed.friendlyError, options.verbose === true, {
-              commandAttempted: "ftc.doctor",
-              forceReport: true,
-            });
+          if (options.installPlan) {
+            console.log("");
+            console.log("Install plan:");
+            console.log(JSON.stringify(buildDoctorInstallPlan(report.checks), null, 2));
           }
         }
-        if (options.installPlan) {
-          console.log("");
-          console.log("Install plan:");
-          console.log(JSON.stringify(buildDoctorInstallPlan(report.checks), null, 2));
-        }
-      }
 
-      process.exitCode = report.ready ? 0 : 1;
-    });
+        process.exitCode = report.ready ? 0 : 1;
+      },
+    );
 }

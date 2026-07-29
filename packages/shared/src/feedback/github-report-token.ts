@@ -76,9 +76,7 @@ export async function loadGitHubReportToken(
   }
 }
 
-export async function clearGitHubReportToken(
-  options: { tokenPath?: string } = {},
-): Promise<void> {
+export async function clearGitHubReportToken(options: { tokenPath?: string } = {}): Promise<void> {
   const filePath = options.tokenPath ?? githubReportTokenPath();
   try {
     await fs.unlink(filePath);

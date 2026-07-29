@@ -49,9 +49,5 @@ export async function printFriendlyError(
   showTechnical: boolean,
   report?: CliErrorReportContext,
 ): Promise<void> {
-  await printFriendlyErrorWithOptionalReport(
-    error,
-    showTechnical,
-    report,
-  );
+  await printFriendlyErrorWithOptionalReport(error, showTechnical, report);
 }

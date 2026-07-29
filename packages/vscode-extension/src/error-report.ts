@@ -98,9 +98,7 @@ export async function submitErrorReportForFriendlyError(input: {
     );
   } catch (error) {
     const friendly = interpretFromUnknown(error);
-    vscode.window.showErrorMessage(
-      `Could not submit error report: ${friendly.summary}`,
-    );
+    vscode.window.showErrorMessage(`Could not submit error report: ${friendly.summary}`);
     return { action: "skipped", reason: friendly.code };
   }
 }
@@ -186,9 +184,7 @@ export async function offerErrorReportActions(input: {
           : "Created new error report issue.";
       const open = await vscode.window.showInformationMessage(label, "Open issue");
       if (open === "Open issue") {
-        await vscode.env.openExternal(
-          vscode.Uri.parse(result.commentUrl ?? result.issueUrl),
-        );
+        await vscode.env.openExternal(vscode.Uri.parse(result.commentUrl ?? result.issueUrl));
       }
     }
   }

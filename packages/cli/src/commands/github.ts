@@ -28,14 +28,22 @@ async function fetchGitHubLogin(token: string): Promise<string | undefined> {
 }
 
 export function registerGitHubCommand(program: Command): void {
-  const github = program.command("github").description("Link GitHub to file error reports to FTC Dev Tools");
+  const github = program
+    .command("github")
+    .description("Link GitHub to file error reports to FTC Dev Tools");
 
   github
     .command("link")
-    .description("Store a GitHub token for automated error reports (or use GITHUB_TOKEN / GH_TOKEN)")
-    .option("--token <pat>", "Personal access token with public_repo scope (avoid shell history when possible)")
+    .description(
+      "Store a GitHub token for automated error reports (or use GITHUB_TOKEN / GH_TOKEN)",
+    )
+    .option(
+      "--token <pat>",
+      "Personal access token with public_repo scope (avoid shell history when possible)",
+    )
     .action(async (options: { token?: string }) => {
-      let token = options.token?.trim() || process.env.GITHUB_TOKEN?.trim() || process.env.GH_TOKEN?.trim();
+      let token =
+        options.token?.trim() || process.env.GITHUB_TOKEN?.trim() || process.env.GH_TOKEN?.trim();
       if (!token) {
         const rl = readline.createInterface({ input, output });
         token = (await rl.question("GitHub personal access token (public_repo): ")).trim();
@@ -48,13 +56,17 @@ export function registerGitHubCommand(program: Command): void {
       }
       const login = await fetchGitHubLogin(token);
       if (!login) {
-        console.error("Token could not access GitHub API. Check scopes (public_repo) and try again.");
+        console.error(
+          "Token could not access GitHub API. Check scopes (public_repo) and try again.",
+        );
         process.exitCode = 1;
         return;
       }
       await storeGitHubReportToken(token);
       console.log(`Linked GitHub for error reports as @${login}.`);
-      console.log("Set FTC_AUTO_ERROR_REPORT=1 to report on failures, or pass --report on supported commands.");
+      console.log(
+        "Set FTC_AUTO_ERROR_REPORT=1 to report on failures, or pass --report on supported commands.",
+      );
     });
 
   github

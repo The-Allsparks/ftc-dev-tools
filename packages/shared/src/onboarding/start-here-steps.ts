@@ -56,8 +56,8 @@ export const START_HERE_STEPS: readonly StartHereStep[] = [
     id: "connect-robot",
     title: "Connect the robot",
     description:
-      "Plug in USB or use Wi-Fi adb, then confirm the Control Hub or phone appears and pick which device to deploy to.",
-    commandIds: ["ftc.showDevices", "ftc.selectDevice", "ftc.wifiConnect"],
+      "Plug in USB, authorize debugging on the robot, then pick which device to deploy to. Use Wi-Fi only when you are ready for advanced setup.",
+    commandIds: ["ftc.connectRobotUsb", "ftc.showDevices", "ftc.selectDevice"],
     allowManualComplete: true,
   },
   {

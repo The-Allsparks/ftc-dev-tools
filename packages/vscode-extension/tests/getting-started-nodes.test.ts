@@ -4,7 +4,7 @@ import { buildGettingStartedTreeNodes } from "../src/views/getting-started-nodes
 describe("buildGettingStartedTreeNodes", () => {
   it("lists Start Here first", () => {
     const nodes = buildGettingStartedTreeNodes([]);
-    expect(nodes).toHaveLength(5);
+    expect(nodes).toHaveLength(6);
     expect(nodes[0]?.commandId).toBe("ftc.startHere");
     expect(nodes[0]?.description).toBe("0/7 steps — guided checklist + doc");
   });
@@ -24,6 +24,7 @@ describe("buildGettingStartedTreeNodes", () => {
       "ftc.setUpComputer",
       "ftc.obtainProject",
       "ftc.setUpProject",
+      "ftc.connectRobotUsb",
     ]);
   });
 });

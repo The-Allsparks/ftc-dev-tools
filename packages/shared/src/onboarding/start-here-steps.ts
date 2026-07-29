@@ -49,7 +49,7 @@ export const START_HERE_STEPS: readonly StartHereStep[] = [
     title: "Open your FTC project",
     description:
       "Open the Android Studio project folder (the one with settings.gradle and TeamCode), pick the correct project root if needed, and apply team-friendly VS Code settings for that repo.",
-    commandIds: ["ftc.selectProjectRoot", "ftc.setUpProject"],
+    commandIds: ["ftc.obtainProject", "ftc.selectProjectRoot", "ftc.setUpProject"],
     allowManualComplete: true,
   },
   {

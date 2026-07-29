@@ -18,6 +18,7 @@ const FTC_COMMAND_TITLES: Record<string, string> = {
   "ftc.installCli": "FTC: Install FTC CLI",
   "ftc.runDoctor": "FTC: Run Environment Check",
   "ftc.selectProjectRoot": "FTC: Select Project Root",
+  "ftc.obtainProject": "FTC: Get or Open FTC Project",
   "ftc.setUpProject": "FTC: Set Up This FTC Project",
   "ftc.showDevices": "FTC: Show Devices",
   "ftc.selectDevice": "FTC: Select Deployment Device",

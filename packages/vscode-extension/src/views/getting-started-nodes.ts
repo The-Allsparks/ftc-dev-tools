@@ -37,6 +37,15 @@ export function buildGettingStartedTreeNodes(
       commandTitle: "Set Up This Computer",
     },
     {
+      id: "getting-started-obtain-project",
+      label: checklistLabel("Get or open FTC project", projectDone),
+      description: projectDone
+        ? "Marked complete in Start Here"
+        : "Clone team repo or official SDK",
+      commandId: "ftc.obtainProject",
+      commandTitle: "Get or Open FTC Project",
+    },
+    {
       id: "getting-started-setup-project",
       label: checklistLabel("Set Up This FTC Project", projectDone),
       description: projectDone ? "Marked complete in Start Here" : "Tasks, settings, project root",

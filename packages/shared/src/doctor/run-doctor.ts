@@ -37,6 +37,8 @@ import {
 } from "../readiness/readiness-model.js";
 import { notAnFtcProjectRootError, projectNotDetectedWrapperError } from "./wrong-folder-errors.js";
 import { discoverNearbyFtcProjectRoots } from "../project/discover-ftc-root.js";
+import type { MilestoneStepId } from "../onboarding/milestone-checklist.js";
+import type { LastSuccessfulBuildSnapshot } from "../readiness/build-snapshot.js";
 
 export interface DoctorOptions {
   cwd: string;
@@ -53,6 +55,10 @@ export interface DoctorOptions {
   checkWifi?: boolean;
   /** Env for Java discovery (FTC_JAVA_HOME / JAVA_HOME). Default `process.env`. */
   env?: NodeJS.ProcessEnv;
+  /** Workspace competition checklist progress for readiness snapshot (#82). */
+  milestoneCompleted?: readonly MilestoneStepId[];
+  /** Last successful build in this workspace for competition readiness (#82). */
+  lastSuccessfulBuild?: LastSuccessfulBuildSnapshot;
 }
 
 export async function runDoctor(options: DoctorOptions): Promise<DoctorReport> {
@@ -168,10 +174,16 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorReport> {
     category: categoryForCheckId(check.id),
   }));
 
-  const readinessSnapshot = buildReadinessSnapshotFromDoctor({
-    checks: checksWithCategory,
-    readiness,
-  });
+  const readinessSnapshot = buildReadinessSnapshotFromDoctor(
+    {
+      checks: checksWithCategory,
+      readiness,
+    },
+    {
+      milestoneCompleted: options.milestoneCompleted,
+      lastSuccessfulBuild: options.lastSuccessfulBuild,
+    },
+  );
 
   readiness.robotReadyToDeploy =
     readinessSnapshot.categories.find((c) => c.id === "device")?.level === "pass";

@@ -61,4 +61,40 @@ describe("readiness model (#82)", () => {
     expect(snapshot.categories.find((c) => c.id === "device")?.level).toBe("fail");
     expect(snapshot.deployReady).toBe(false);
   });
+
+  it("requires build snapshot for competition ready", () => {
+    const checks: DoctorCheck[] = [
+      { id: "adb", label: "adb", status: "pass", required: true },
+      { id: "ftc-project", label: "Project", status: "pass", required: true },
+      { id: "devices", label: "Devices", status: "pass", required: false },
+    ];
+    const allMilestones = [
+      "doctor-ok",
+      "device-authorized",
+      "build-ok",
+      "deploy-ok",
+      "opmode-on-driver-station",
+      "teamcode-logs",
+    ] as const;
+    const withoutBuild = buildReadinessSnapshotFromDoctor(
+      {
+        checks,
+        readiness: { computerReady: true, projectReadyToBuild: true, robotReadyToDeploy: true },
+      },
+      { milestoneCompleted: [...allMilestones] },
+    );
+    expect(withoutBuild.competitionReady).toBe(false);
+
+    const withBuild = buildReadinessSnapshotFromDoctor(
+      {
+        checks,
+        readiness: { computerReady: true, projectReadyToBuild: true, robotReadyToDeploy: true },
+      },
+      {
+        milestoneCompleted: [...allMilestones],
+        lastSuccessfulBuild: { completedAt: "2026-07-29T00:00:00.000Z", apkPath: "/tmp/app.apk" },
+      },
+    );
+    expect(withBuild.competitionReady).toBe(true);
+  });
 });

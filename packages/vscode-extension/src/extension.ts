@@ -45,6 +45,7 @@ import {
   setHubWifiSettings,
   setRobotNetworkInterface,
   formatLogEntry,
+  formatReadinessOverviewLines,
   START_HERE_PROGRESS_KEY,
   normalizeStartHereProgress,
   DEVICE_CONNECTIONS_DOC_URL,
@@ -91,6 +92,7 @@ import {
   milestoneSummaryTooltip,
   onMilestoneProgressChanged,
 } from "./milestone-progress.js";
+import { BuildSnapshotStore } from "./build-snapshot-store.js";
 import {
   initErrorReporting,
   linkGitHubForErrorReportsCommand,
@@ -111,6 +113,7 @@ const SDK_STATUS_TTL_MS = 60_000;
 const WIFI_STATUS_TTL_MS = 60_000;
 let activeCommandAttempted: string | undefined;
 let milestoneStore: MilestoneProgressStore;
+let buildSnapshotStore: BuildSnapshotStore;
 let lastBarState: StatusState = "no-device";
 
 function setBarState(state: StatusState): void {
@@ -134,6 +137,7 @@ export function activate(context: vscode.ExtensionContext): void {
   status = new StatusController();
   initWorkspaceRoot(context);
   milestoneStore = new MilestoneProgressStore(context);
+  buildSnapshotStore = new BuildSnapshotStore(context);
   tree = new FtcRobotTreeProvider(
     () => getWorkspaceRoot(),
     () => selectedSerial,
@@ -346,6 +350,8 @@ async function runDoctorCommand(): Promise<void> {
     projectAdapter: adapter,
     deviceProvider: devices,
     env: ftcToolProcessEnv(),
+    milestoneCompleted: milestoneStore.load(),
+    lastSuccessfulBuild: buildSnapshotStore.load(),
   });
   output.clear();
   output.appendLine("FTC Development Check");
@@ -361,6 +367,13 @@ async function runDoctorCommand(): Promise<void> {
   }
   output.appendLine("");
   output.appendLine(report.summaryLine);
+  if (report.readinessSnapshot) {
+    output.appendLine("");
+    output.appendLine("Readiness:");
+    for (const line of formatReadinessOverviewLines(report.readinessSnapshot)) {
+      output.appendLine(`  ${line}`);
+    }
+  }
   output.show(true);
   if (!report.ready) {
     setBarState("build-failed");
@@ -412,6 +425,7 @@ async function buildCommand(): Promise<void> {
         return;
       }
       vscode.window.showInformationMessage(`Build succeeded: ${outcome.result.apkPath}`);
+      await buildSnapshotStore.save(outcome.result.apkPath);
       await markMilestone("build-ok");
       await refreshStatus();
     },

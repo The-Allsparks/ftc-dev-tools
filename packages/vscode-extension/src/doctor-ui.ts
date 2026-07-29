@@ -1,8 +1,48 @@
 import * as vscode from "vscode";
-import type { DoctorCheckUiItem, DoctorFixAction, DoctorReport } from "@ftc-dev-tools/shared";
-import { listActionableDoctorChecks, resolveDoctorSuccessNextStep } from "@ftc-dev-tools/shared";
+import type {
+  DoctorCheckUiItem,
+  DoctorFixAction,
+  DoctorReport,
+  ReadinessCategoryState,
+} from "@ftc-dev-tools/shared";
+import {
+  listActionableDoctorChecks,
+  readinessLevelLabel,
+  resolveDoctorSuccessNextStep,
+} from "@ftc-dev-tools/shared";
 
 type QuickPickDoctorItem = vscode.QuickPickItem & { uiItem: DoctorCheckUiItem };
+type QuickPickReadinessItem = vscode.QuickPickItem & { category: ReadinessCategoryState };
+
+function readinessIcon(level: ReadinessCategoryState["level"]): string {
+  switch (level) {
+    case "pass":
+      return "$(check)";
+    case "warn":
+      return "$(warning)";
+    case "fail":
+      return "$(error)";
+    default:
+      return "$(circle-outline)";
+  }
+}
+
+async function showReadinessBreakdown(report: DoctorReport): Promise<void> {
+  const snapshot = report.readinessSnapshot;
+  if (!snapshot) {
+    return;
+  }
+  const items: QuickPickReadinessItem[] = snapshot.categories.map((category) => ({
+    label: `${readinessIcon(category.level)} ${category.title}`,
+    description: readinessLevelLabel(category.level),
+    detail: category.summary,
+    category,
+  }));
+  await vscode.window.showQuickPick(items, {
+    title: "Readiness breakdown",
+    placeHolder: report.summaryLine,
+  });
+}
 
 export async function executeDoctorFixAction(
   action: DoctorFixAction,
@@ -94,6 +134,10 @@ export async function showDoctorResultsUi(
   report: DoctorReport,
   output: vscode.OutputChannel,
 ): Promise<void> {
+  if (report.readinessSnapshot) {
+    await showReadinessBreakdown(report);
+  }
+
   const actionable = listActionableDoctorChecks(report);
   if (actionable.length === 0) {
     const next = resolveDoctorSuccessNextStep(report);

@@ -16,6 +16,7 @@ import {
   type StartHereMachineScan,
 } from "@ftc-dev-tools/shared";
 import { cacheMachineInstallNeeds } from "./machine-install-cache.js";
+import { ftcToolProcessEnv } from "./ftc-tool-env.js";
 
 function extensionsConfigured(root: string | undefined): boolean {
   if (!root) {
@@ -42,6 +43,7 @@ export async function scanMachineForStartHere(
 
   const report = await runDoctor({
     ...buildSetUpComputerDoctorOptions(cwd, runner, adapter),
+    env: ftcToolProcessEnv(),
   });
 
   const installNeeds = analyzeMachineInstallNeeds(report.checks);

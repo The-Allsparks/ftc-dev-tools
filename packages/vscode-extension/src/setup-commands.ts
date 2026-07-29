@@ -25,6 +25,7 @@ import {
   buildSetUpComputerDoctorOptions,
   analyzeMachineInstallNeeds,
 } from "@ftc-dev-tools/shared";
+import { ftcToolProcessEnv } from "./ftc-tool-env.js";
 import { cacheMachineInstallNeeds } from "./machine-install-cache.js";
 
 async function readExistingJsonFile(
@@ -101,6 +102,7 @@ export async function setUpThisComputerCommand(
 
   const report = await runDoctor({
     ...buildSetUpComputerDoctorOptions(cwd, runner, adapter),
+    env: ftcToolProcessEnv(),
   });
 
   for (const section of buildDoctorSections(report)) {

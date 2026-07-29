@@ -151,6 +151,15 @@
       "student-ux",
       "priority: P1"
     ],
+    "[bug] Windows install-deps treats any java on PATH as sufficient; sdkmanager requires JDK 17+": [
+      "bug",
+      "shared-core",
+      "vscode",
+      "cli",
+      "student-ux",
+      "documentation",
+      "priority: P1"
+    ],
     "Rookie onboarding wizard (FTC: Start Here)": [
       "enhancement",
       "vscode",

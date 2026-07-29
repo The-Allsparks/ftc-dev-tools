@@ -72,44 +72,165 @@ function Add-UserPathEntry([string]$Entry) {
   }
 }
 
-function Install-Jdk {
-  Write-Step "Installing JDK 17 (Eclipse Temurin via winget)"
-  if (Get-Command java -ErrorAction SilentlyContinue) {
-    Write-Host "java already on PATH:"
-    & java -version 2>&1 | ForEach-Object { Write-Host $_ }
-    Write-Host "Skipping JDK install. Use -SkipJdk intentionally next time if this is fine."
+function Invoke-JavaVersionOutput {
+  $prev = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    return @(& java -version 2>&1 | ForEach-Object { $_.ToString() })
+  }
+  finally {
+    $ErrorActionPreference = $prev
+  }
+}
+
+function Get-JavaMajorVersion {
+  if (-not (Get-Command java -ErrorAction SilentlyContinue)) {
+    return $null
+  }
+  $text = (Invoke-JavaVersionOutput) -join "`n"
+  if ($text -match 'version "(\d+)') {
+    return [int]$Matches[1]
+  }
+  if ($text -match 'version "1\.(\d+)') {
+    return [int]$Matches[1]
+  }
+  return $null
+}
+
+function Write-JavaVersion {
+  foreach ($line in Invoke-JavaVersionOutput) {
+    Write-Host $line
+  }
+}
+
+function Get-JavaMajorFromExe([string]$JavaExe) {
+  if (-not (Test-Path -LiteralPath $JavaExe)) {
+    return $null
+  }
+  $prev = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    $text = (& $JavaExe -version 2>&1 | ForEach-Object { $_.ToString() }) -join "`n"
+  }
+  finally {
+    $ErrorActionPreference = $prev
+  }
+  if ($text -match 'version "(\d+)') {
+    return [int]$Matches[1]
+  }
+  if ($text -match 'version "1\.(\d+)') {
+    return [int]$Matches[1]
+  }
+  return $null
+}
+
+function Find-InstalledJdkHome([int]$Major) {
+  $patterns = @(
+    "C:\Program Files\Eclipse Adoptium\jdk-${Major}*",
+    "C:\Program Files\Java\jdk-${Major}*",
+    "C:\Program Files\Microsoft\jdk-${Major}*"
+  )
+  foreach ($pattern in $patterns) {
+    $match = Get-Item $pattern -ErrorAction SilentlyContinue | Sort-Object FullName -Descending | Select-Object -First 1
+    if ($match) {
+      return $match.FullName
+    }
+  }
+  if ($env:JAVA_HOME) {
+    $javaExe = Join-Path $env:JAVA_HOME "bin\java.exe"
+    $jhMajor = Get-JavaMajorFromExe $javaExe
+    if ($null -ne $jhMajor -and $jhMajor -ge $Major) {
+      return $env:JAVA_HOME
+    }
+  }
+  return $null
+}
+
+function Use-JdkAtHome([string]$JavaHome) {
+  Set-UserEnv "JAVA_HOME" $JavaHome
+  $bin = Join-Path $JavaHome "bin"
+  Add-UserPathEntry $bin
+  $env:JAVA_HOME = $JavaHome
+  $env:Path = "$bin;$env:Path"
+  Write-Host "JAVA_HOME set to $JavaHome (prepended to PATH for this session)"
+}
+
+function Get-RequiredJdkMajor([object]$Manifest) {
+  if ($null -ne $Manifest.recommendedJdkMajor) {
+    return [int]$Manifest.recommendedJdkMajor
+  }
+  return 17
+}
+
+function Throw-JavaTooOldForSdk([int]$PathMajor, [int]$RequiredMajor) {
+  $hint = "Install Eclipse Temurin ${RequiredMajor}: winget install --id EclipseAdoptium.Temurin.${RequiredMajor}.JDK"
+  if ($PathMajor -gt 0) {
+    throw "Java ${PathMajor} is on PATH, but Android sdkmanager requires JDK ${RequiredMajor} or higher. Older JDK builds (for example Java 11) cannot install platform-tools (adb). ${hint}. Or re-run this script without -SkipJdk to install JDK ${RequiredMajor} automatically."
+  }
+  throw "Java was not found on PATH. Android sdkmanager requires JDK ${RequiredMajor} or higher. ${hint}. Or re-run without -SkipJdk."
+}
+
+function Ensure-JavaForSdkTools {
+  param([int]$RequiredMajor)
+
+  $pathMajor = Get-JavaMajorVersion
+  if ($null -ne $pathMajor -and $pathMajor -ge $RequiredMajor) {
     return
   }
 
-  Assert-Command winget
-  & winget install --id EclipseAdoptium.Temurin.17.JDK --accept-package-agreements --accept-source-agreements --disable-interactivity
-  if ($LASTEXITCODE -ne 0) {
-    throw "winget failed to install Eclipse Temurin JDK 17. Install a JDK manually, then re-run with -SkipJdk."
+  $javaHome = Find-InstalledJdkHome -Major $RequiredMajor
+  if ($javaHome) {
+    Write-Host "Selecting JDK ${RequiredMajor} at ${javaHome} (java on PATH is $(if ($null -ne $pathMajor) { $pathMajor } else { 'missing' }))."
+    Use-JdkAtHome $javaHome
+    $verify = Get-JavaMajorVersion
+    if ($null -eq $verify -or $verify -lt $RequiredMajor) {
+      Throw-JavaTooOldForSdk -PathMajor $(if ($null -ne $verify) { $verify } else { 0 }) -RequiredMajor $RequiredMajor
+    }
+    return
   }
 
-  # Refresh PATH for this session from Machine+User
+  Throw-JavaTooOldForSdk -PathMajor $(if ($null -ne $pathMajor) { $pathMajor } else { 0 }) -RequiredMajor $RequiredMajor
+}
+
+function Install-Jdk {
+  param([int]$RequiredMajor)
+
+  Write-Step "Installing JDK ${RequiredMajor} (Eclipse Temurin via winget)"
+  $pathMajor = Get-JavaMajorVersion
+  if ($null -ne $pathMajor) {
+    Write-Host "java on PATH (major version ${pathMajor}):"
+    Write-JavaVersion
+  }
+
+  if ($null -ne $pathMajor -and $pathMajor -ge $RequiredMajor) {
+    Write-Host "JDK ${RequiredMajor}+ already on PATH; skipping JDK install. Use -SkipJdk next time if intentional."
+    $existingHome = Find-InstalledJdkHome -Major $RequiredMajor
+    if ($existingHome) {
+      Use-JdkAtHome $existingHome
+    }
+    return
+  }
+
+  if ($null -ne $pathMajor -and $pathMajor -lt $RequiredMajor) {
+    Write-Host "Java ${pathMajor} is below ${RequiredMajor} (required for Android sdkmanager). Installing JDK ${RequiredMajor}…"
+  }
+
+  Assert-Command winget
+  & winget install --id "EclipseAdoptium.Temurin.${RequiredMajor}.JDK" --accept-package-agreements --accept-source-agreements --disable-interactivity
+  if ($LASTEXITCODE -ne 0) {
+    throw "winget failed to install Eclipse Temurin JDK ${RequiredMajor}. Install a JDK manually, then re-run with -SkipJdk only if java -version reports ${RequiredMajor}+."
+  }
+
   $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
 
-  $candidateHomes = @(
-    "C:\Program Files\Eclipse Adoptium\jdk-17*",
-    "C:\Program Files\Java\jdk-17*",
-    "C:\Program Files\Microsoft\jdk-17*"
-  )
-  $javaHome = $null
-  foreach ($pattern in $candidateHomes) {
-    $match = Get-Item $pattern -ErrorAction SilentlyContinue | Sort-Object FullName -Descending | Select-Object -First 1
-    if ($match) {
-      $javaHome = $match.FullName
-      break
-    }
-  }
+  $javaHome = Find-InstalledJdkHome -Major $RequiredMajor
   if ($javaHome) {
-    Set-UserEnv "JAVA_HOME" $javaHome
-    Add-UserPathEntry (Join-Path $javaHome "bin")
-    Write-Host "JAVA_HOME set to $javaHome"
+    Use-JdkAtHome $javaHome
   } else {
-    Write-Warning "JDK installed, but JAVA_HOME could not be auto-detected. Set JAVA_HOME manually after reopening the terminal."
+    Write-Warning "JDK installed, but JAVA_HOME could not be auto-detected. Set JAVA_HOME to JDK ${RequiredMajor} manually, then re-run."
   }
+
+  Ensure-JavaForSdkTools -RequiredMajor $RequiredMajor
 }
 
 function Get-FileSha256([string]$Path) {
@@ -159,8 +280,46 @@ function Expand-ZipArchive {
   Expand-Archive -Path $ZipPath -DestinationPath $DestDir -Force
 }
 
+function Invoke-SdkManager {
+  param(
+    [Parameter(Mandatory = $true)][string]$SdkManager,
+    [Parameter(Mandatory = $true)][string]$SdkRoot,
+    [Parameter(Mandatory = $true)][int]$RequiredJdkMajor,
+    [Parameter(Mandatory = $true)][string[]]$Arguments,
+    [string]$StandardInput
+  )
+
+  $prev = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    if ($StandardInput) {
+      $lines = $StandardInput | & $SdkManager --sdk_root=$SdkRoot @Arguments 2>&1 | ForEach-Object { $_.ToString() }
+    } else {
+      $lines = & $SdkManager --sdk_root=$SdkRoot @Arguments 2>&1 | ForEach-Object { $_.ToString() }
+    }
+  }
+  finally {
+    $ErrorActionPreference = $prev
+  }
+  $lines | ForEach-Object { Write-Host $_ }
+  $combined = $lines -join "`n"
+  if ($LASTEXITCODE -ne 0) {
+    if ($combined -match "Java version (\d+) or higher is required") {
+      $requiredFromTool = [int]$Matches[1]
+      Throw-JavaTooOldForSdk -PathMajor $(Get-JavaMajorVersion) -RequiredMajor $requiredFromTool
+    }
+    return $false
+  }
+  return $true
+}
+
 function Install-AndroidSdk {
-  param([object]$Manifest)
+  param(
+    [object]$Manifest,
+    [int]$RequiredJdkMajor
+  )
+
+  Ensure-JavaForSdkTools -RequiredMajor $RequiredJdkMajor
 
   Write-Step "Installing Android SDK command-line tools into $SdkRoot"
   $pkg = $Manifest.packages.windows
@@ -214,22 +373,26 @@ function Install-AndroidSdk {
 
     Write-Step "Accepting Android SDK licenses"
     $licenses = "y`n" * 50
-    $licenses | & $sdkmanager --sdk_root=$SdkRoot --licenses | Out-Host
+    $null = Invoke-SdkManager -SdkManager $sdkmanager -SdkRoot $SdkRoot -RequiredJdkMajor $RequiredJdkMajor -StandardInput $licenses -Arguments @("--licenses")
 
     Write-Step "Installing SDK packages"
     $packages = @($Manifest.sdkPackages)
-    & $sdkmanager --sdk_root=$SdkRoot --install @packages
-    if ($LASTEXITCODE -ne 0) {
+    $ok = Invoke-SdkManager -SdkManager $sdkmanager -SdkRoot $SdkRoot -RequiredJdkMajor $RequiredJdkMajor -Arguments (@("--install") + $packages)
+    if (-not $ok) {
       Write-Warning "Full package set failed. Installing platform-tools only…"
-      & $sdkmanager --sdk_root=$SdkRoot --install "platform-tools"
-      if ($LASTEXITCODE -ne 0) {
-        throw "sdkmanager failed to install platform-tools"
+      $ok = Invoke-SdkManager -SdkManager $sdkmanager -SdkRoot $SdkRoot -RequiredJdkMajor $RequiredJdkMajor -Arguments @("--install", "platform-tools")
+      if (-not $ok) {
+        throw "sdkmanager failed to install platform-tools. Ensure JDK ${RequiredJdkMajor}+ is active (java -version)."
       }
     }
 
     $adb = Join-Path $SdkRoot "platform-tools\adb.exe"
     if (-not (Test-Path $adb)) {
-      throw "adb.exe was not installed under platform-tools"
+      $activeMajor = Get-JavaMajorVersion
+      if ($null -ne $activeMajor -and $activeMajor -lt $RequiredJdkMajor) {
+        Throw-JavaTooOldForSdk -PathMajor $activeMajor -RequiredMajor $RequiredJdkMajor
+      }
+      throw "adb.exe was not installed under platform-tools. sdkmanager may have failed; run java -version and confirm JDK ${RequiredJdkMajor}+."
     }
     Write-Host "adb installed: $adb"
     & $adb version
@@ -245,15 +408,19 @@ Write-Host "This installs JDK + Android command-line SDK components."
 Write-Host "Android Studio is NOT required and will NOT be installed."
 
 $manifest = Get-Manifest
+$requiredJdkMajor = Get-RequiredJdkMajor $manifest
 
 if (-not $SkipJdk) {
-  Install-Jdk
+  Install-Jdk -RequiredMajor $requiredJdkMajor
 } else {
   Write-Step "Skipping JDK (-SkipJdk)"
+  if (-not $SkipSdk) {
+    Ensure-JavaForSdkTools -RequiredMajor $requiredJdkMajor
+  }
 }
 
 if (-not $SkipSdk) {
-  Install-AndroidSdk -Manifest $manifest
+  Install-AndroidSdk -Manifest $manifest -RequiredJdkMajor $requiredJdkMajor
 } else {
   Write-Step "Skipping Android SDK (-SkipSdk)"
 }

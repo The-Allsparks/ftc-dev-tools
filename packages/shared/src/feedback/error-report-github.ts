@@ -8,6 +8,7 @@ import {
   ERROR_REPORT_REPO_OWNER,
   ERROR_REPORT_TITLE_PREFIX,
 } from "./error-report-types.js";
+import { sanitizeErrorReportInput } from "./error-report-sanitize.js";
 
 const MAX_TECHNICAL_CHARS = 8_000;
 const DEFAULT_LABELS = ["bug"];
@@ -152,10 +153,6 @@ interface GitHubIssueSearchItem {
   html_url: string;
 }
 
-interface GitHubIssueSearchResponse {
-  items?: GitHubIssueSearchItem[];
-}
-
 interface GitHubIssueCreateResponse {
   number: number;
   html_url: string;
@@ -174,24 +171,47 @@ function githubHeaders(token: string): Record<string, string> {
   };
 }
 
+async function listOpenRepoIssues(options: {
+  token: string;
+  fetchImpl?: FetchLike;
+}): Promise<GitHubIssueSearchItem[]> {
+  const fetchImpl = options.fetchImpl ?? (globalThis.fetch as FetchLike);
+  const repoBase = `https://api.github.com/repos/${ERROR_REPORT_REPO_OWNER}/${ERROR_REPORT_REPO_NAME}`;
+  const collected: GitHubIssueSearchItem[] = [];
+
+  for (let page = 1; page <= 10; page += 1) {
+    const url = `${repoBase}/issues?state=open&per_page=100&page=${page}`;
+    const response = await fetchImpl(url, { headers: githubHeaders(options.token) });
+    if (!response.ok) {
+      const body = await response.text();
+      throw Object.assign(new Error(`GitHub issue list failed (${response.status})`), {
+        code: "GITHUB_ERROR_REPORT_FAILED",
+        status: response.status,
+        body,
+      });
+    }
+    const batch = (await response.json()) as Array<
+      GitHubIssueSearchItem & { pull_request?: unknown }
+    >;
+    for (const item of batch) {
+      if (!item.pull_request) {
+        collected.push(item);
+      }
+    }
+    if (batch.length < 100) {
+      break;
+    }
+  }
+
+  return collected;
+}
+
 export async function findOpenErrorReportIssueByTitle(
   title: string,
   options: { token: string; fetchImpl?: FetchLike },
 ): Promise<GitHubIssueSearchItem | undefined> {
-  const fetchImpl = options.fetchImpl ?? (globalThis.fetch as FetchLike);
-  const q = `repo:${ERROR_REPORT_REPO_OWNER}/${ERROR_REPORT_REPO_NAME} is:issue is:open in:title "${title.replace(/"/g, '\\"')}"`;
-  const url = `https://api.github.com/search/issues?q=${encodeURIComponent(q)}&per_page=5`;
-  const response = await fetchImpl(url, { headers: githubHeaders(options.token) });
-  if (!response.ok) {
-    const body = await response.text();
-    throw Object.assign(new Error(`GitHub issue search failed (${response.status})`), {
-      code: "GITHUB_ERROR_REPORT_FAILED",
-      status: response.status,
-      body,
-    });
-  }
-  const data = (await response.json()) as GitHubIssueSearchResponse;
-  return data.items?.find((item) => item.title === title && item.state === "open");
+  const issues = await listOpenRepoIssues(options);
+  return issues.find((item) => item.title === title && item.state === "open");
 }
 
 export async function submitErrorReport(
@@ -199,9 +219,10 @@ export async function submitErrorReport(
   options: { token: string; fetchImpl?: FetchLike },
 ): Promise<ErrorReportSubmitResult> {
   const fetchImpl = options.fetchImpl ?? (globalThis.fetch as FetchLike);
+  const safeInput = sanitizeErrorReportInput(input);
   const title = buildErrorReportIssueTitle(
-    input.commandAttempted,
-    input.environment.productVersion,
+    safeInput.commandAttempted,
+    safeInput.environment.productVersion,
   );
   const existing = await findOpenErrorReportIssueByTitle(title, {
     token: options.token,
@@ -211,11 +232,11 @@ export async function submitErrorReport(
   const repoBase = `https://api.github.com/repos/${ERROR_REPORT_REPO_OWNER}/${ERROR_REPORT_REPO_NAME}`;
 
   if (existing) {
-    const commentBody = buildErrorOccurrenceComment(input);
+    const issueCommentMarkdown = buildErrorOccurrenceComment(safeInput);
     const response = await fetchImpl(`${repoBase}/issues/${existing.number}/comments`, {
       method: "POST",
       headers: { ...githubHeaders(options.token), "Content-Type": "application/json" },
-      body: JSON.stringify({ body: commentBody }),
+      body: JSON.stringify({ body: issueCommentMarkdown }),
     });
     if (!response.ok) {
       const body = await response.text();
@@ -234,12 +255,13 @@ export async function submitErrorReport(
     };
   }
 
+  const issueBodyMarkdown = buildInitialErrorReportBody(safeInput);
   const response = await fetchImpl(`${repoBase}/issues`, {
     method: "POST",
     headers: { ...githubHeaders(options.token), "Content-Type": "application/json" },
     body: JSON.stringify({
       title,
-      body: buildInitialErrorReportBody(input),
+      body: issueBodyMarkdown,
       labels: DEFAULT_LABELS,
     }),
   });

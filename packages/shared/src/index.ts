@@ -541,3 +541,4 @@ export {
   isAutoErrorReportEnabled,
   githubReportTokenPath,
 } from "./feedback/github-report-token.js";
+export { sanitizeErrorReportInput } from "./feedback/error-report-sanitize.js";

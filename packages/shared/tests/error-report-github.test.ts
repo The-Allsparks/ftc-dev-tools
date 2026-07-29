@@ -87,17 +87,10 @@ describe("error-report-github", () => {
     const title = buildErrorReportIssueTitle("ftc.deploy", "0.1.0");
     const fetchImpl = mockFetchSequence([
       () =>
-        jsonResponse({
-          items: [
-            { number: 99, title, state: "open", html_url: "https://github.com/o/r/issues/99" },
-            {
-              number: 1,
-              title: "other",
-              state: "open",
-              html_url: "https://github.com/o/r/issues/1",
-            },
-          ],
-        }),
+        jsonResponse([
+          { number: 99, title, state: "open", html_url: "https://github.com/o/r/issues/99" },
+          { number: 1, title: "other", state: "open", html_url: "https://github.com/o/r/issues/1" },
+        ]),
     ]);
     const found = await findOpenErrorReportIssueByTitle(title, {
       token: "test-token",
@@ -108,7 +101,7 @@ describe("error-report-github", () => {
 
   it("creates issue when none exists", async () => {
     const fetchImpl = mockFetchSequence([
-      () => jsonResponse({ items: [] }),
+      () => jsonResponse([]),
       () =>
         jsonResponse({
           number: 131,
@@ -127,11 +120,9 @@ describe("error-report-github", () => {
     const title = buildErrorReportIssueTitle(sampleInput.commandAttempted, "0.1.0");
     const fetchImpl = mockFetchSequence([
       () =>
-        jsonResponse({
-          items: [
-            { number: 50, title, state: "open", html_url: "https://github.com/o/r/issues/50" },
-          ],
-        }),
+        jsonResponse([
+          { number: 50, title, state: "open", html_url: "https://github.com/o/r/issues/50" },
+        ]),
       () =>
         jsonResponse({
           html_url: "https://github.com/o/r/issues/50#issuecomment-1",
@@ -144,6 +135,22 @@ describe("error-report-github", () => {
     expect(result.action).toBe("commented");
     expect(result.issueNumber).toBe(50);
     expect(result.commentUrl).toContain("comment");
+  });
+});
+
+describe("error-report-sanitize", () => {
+  it("strips config-file-derived lines from outbound text", async () => {
+    const { sanitizeErrorReportInput } = await import("../src/feedback/error-report-sanitize.js");
+    const sanitized = sanitizeErrorReportInput({
+      ...sampleInput,
+      error: {
+        ...sampleInput.error,
+        technicalDetails: "Read .ftc-dev.json\npreferredDeviceSerial=ABC\nGradle failed",
+      },
+    });
+    expect(sanitized.error.technicalDetails).not.toContain(".ftc-dev.json");
+    expect(sanitized.error.technicalDetails).not.toContain("preferredDeviceSerial");
+    expect(sanitized.error.technicalDetails).toContain("Gradle failed");
   });
 });
 

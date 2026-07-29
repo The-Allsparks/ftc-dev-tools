@@ -75,6 +75,7 @@ import { registerFtcTaskProvider } from "./ftc-task-provider.js";
 import { showDoctorResultsUi } from "./doctor-ui.js";
 import { runInstallDepsWithConsent, type RunInstallDepsArgs } from "./install-deps-consent.js";
 import { onStartHereProgressChanged, startHereCommand } from "./start-here.js";
+import { obtainOrOpenFtcProjectCommand } from "./obtain-project.js";
 
 let output: vscode.OutputChannel;
 let status: StatusController;
@@ -219,6 +220,7 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
   );
   register("ftc.setUpProject", () => setUpThisFtcProjectCommand(getWorkspaceRoot, output));
+  register("ftc.obtainProject", () => obtainOrOpenFtcProjectCommand(output));
   register("ftc.restoreProjectSetup", () => restoreProjectSetupCommand(getWorkspaceRoot, output));
   register("ftc.selectProjectRoot", () => selectFtcProjectRootCommand(context));
   register("ftc.openSuggestedProjectRoot", (rootsArg?: string | string[]) =>

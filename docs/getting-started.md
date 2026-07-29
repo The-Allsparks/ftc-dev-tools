@@ -8,7 +8,7 @@ This guide is for FTC students, coaches, and mentors who want to build and deplo
 2. Node.js 20 or newer
 3. A JDK version recommended for your FTC season
 4. Android SDK **platform-tools** (provides `adb`)
-5. Your team's official FTC Android Studio project
+5. Your team's official FTC Android Studio project (see **FTC: Get or Open FTC Project** in the editor, or clone [FtcRobotController](https://github.com/FIRST-Tech-Challenge/FtcRobotController) / your team repo with `git`)
 
 Android Studio is optional. To install the JDK + SDK tools without it:
 
@@ -109,7 +109,8 @@ Press Ctrl+C to stop.
 1. Package: `npm run package:extension`
 2. Install the `.vsix`
 3. Open your FTC project folder
-4. Use Command Palette commands starting with `FTC:`
+4. Run **FTC: Get or Open FTC Project** if you still need a team repo or official SDK template on disk
+5. Use Command Palette commands starting with `FTC:`
 
 ## Next reading
 

@@ -468,3 +468,10 @@ export {
   countStartHereCompleted,
 } from "./onboarding/start-here-steps.js";
 export type { StartHereStepId, StartHereStep } from "./onboarding/start-here-steps.js";
+
+export {
+  OFFICIAL_FTC_ROBOT_CONTROLLER_GIT_URL,
+  normalizeGitCloneUrl,
+  deriveCloneDirectoryName,
+  buildGitCloneCommand,
+} from "./onboarding/obtain-project.js";

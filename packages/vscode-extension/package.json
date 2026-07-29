@@ -212,6 +212,10 @@
         "title": "FTC: Run Trusted Install-Deps Installer"
       },
       {
+        "command": "ftc.obtainProject",
+        "title": "FTC: Get or Open FTC Project"
+      },
+      {
         "command": "ftc.setUpProject",
         "title": "FTC: Set Up This FTC Project"
       },

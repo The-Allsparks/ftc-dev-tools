@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { parseJavaMajorVersion } from "../src/discovery/java-discovery.js";
+import {
+  parseJavaMajorVersion,
+  suggestFtcJavaHomeSetting,
+} from "../src/discovery/java-discovery.js";
 
 describe("parseJavaMajorVersion", () => {
   it("parses quoted semver style from OpenJDK", () => {
@@ -16,5 +19,35 @@ describe("parseJavaMajorVersion", () => {
 
   it("returns undefined when no version is present", () => {
     expect(parseJavaMajorVersion("not java output")).toBeUndefined();
+  });
+});
+
+describe("suggestFtcJavaHomeSetting", () => {
+  it("suggests selected home when PATH java is older", () => {
+    expect(
+      suggestFtcJavaHomeSetting(
+        {
+          found: true,
+          majorVersion: 17,
+          selectedJavaHome: "C:\\jdk-17",
+          pathMajorVersion: 11,
+        },
+        undefined,
+      ),
+    ).toBe("C:\\jdk-17");
+  });
+
+  it("does not override an existing setting", () => {
+    expect(
+      suggestFtcJavaHomeSetting(
+        {
+          found: true,
+          majorVersion: 17,
+          selectedJavaHome: "C:\\jdk-17",
+          pathMajorVersion: 11,
+        },
+        "C:\\already-set",
+      ),
+    ).toBeUndefined();
   });
 });

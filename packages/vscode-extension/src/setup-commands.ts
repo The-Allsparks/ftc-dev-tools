@@ -27,6 +27,7 @@ import {
 } from "@ftc-dev-tools/shared";
 import { ftcToolProcessEnv } from "./ftc-tool-env.js";
 import { cacheMachineInstallNeeds } from "./machine-install-cache.js";
+import { ensureFtcJavaHomeForBuilds } from "./configure-java-home.js";
 
 async function readExistingJsonFile(
   filePath: string,
@@ -99,6 +100,8 @@ export async function setUpThisComputerCommand(
   output.appendLine("FTC: Set Up This Computer");
   output.appendLine("Running non-destructive environment detection (doctor)…");
   output.show(true);
+
+  await ensureFtcJavaHomeForBuilds(runner, output);
 
   const report = await runDoctor({
     ...buildSetUpComputerDoctorOptions(cwd, runner, adapter),

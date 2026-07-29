@@ -41,6 +41,11 @@ describe("mergeFtcWorkspaceSettings", () => {
     expect(merged).not.toHaveProperty("ftc.preferredDeviceSerial");
     expect(merged["editor.tabSize"]).toBe(4);
   });
+
+  it("strips machine-local ftc.javaHome from workspace settings", () => {
+    const merged = mergeFtcWorkspaceSettings({ "ftc.javaHome": "C:\\jdk-17" });
+    expect(merged).not.toHaveProperty("ftc.javaHome");
+  });
 });
 
 describe("setup backup helpers", () => {

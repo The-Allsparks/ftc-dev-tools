@@ -368,23 +368,18 @@ async function checkJava(
   }
 
   let detail = versionLine;
-  if (
+  const pathMismatch =
     java.selectedJavaHome &&
     java.pathMajorVersion !== undefined &&
-    java.pathMajorVersion !== java.majorVersion
-  ) {
-    detail = `${versionLine} — builds use JDK ${java.majorVersion} at ${java.selectedJavaHome} (java on PATH is ${java.pathMajorVersion}). Set JAVA_HOME or ftc.javaHome so terminals match.`;
+    java.pathMajorVersion !== java.majorVersion;
+  if (pathMismatch) {
+    detail = `${versionLine} — FTC builds use JDK ${java.majorVersion} at ${java.selectedJavaHome} (java on PATH is ${java.pathMajorVersion}). Set ftc.javaHome or JAVA_HOME so tools and terminals agree.`;
   }
 
   return {
     id: "java",
     label: DOCTOR_CHECK_LABELS.java,
-    status:
-      java.pathMajorVersion !== undefined &&
-      java.pathMajorVersion !== java.majorVersion &&
-      java.selectedJavaHome
-        ? "warn"
-        : "pass",
+    status: "pass",
     required: true,
     detail,
   };

@@ -461,8 +461,9 @@
         },
         "ftc.javaHome": {
           "type": "string",
+          "scope": "machine",
           "default": "",
-          "description": "Optional path to JDK 17 home for Gradle builds (overrides PATH). Also honored via FTC_JAVA_HOME in terminals. Example: C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.13.11-hotspot"
+          "description": "Machine-local path to JDK 17 for Gradle builds (overrides PATH). Stored in user settings; also honored via FTC_JAVA_HOME. Example: C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.13.11-hotspot"
         }
       }
     }

@@ -130,7 +130,7 @@ describe("runDoctor Java version", () => {
     expect(report.readiness.computerReady).toBe(false);
   });
 
-  it("warns when PATH java differs from selected JDK 17 home", async () => {
+  it("passes when PATH java differs but a JDK 17 home is selected for builds", async () => {
     const jdkRoot = await fs.mkdtemp(path.join(os.tmpdir(), "ftc-jdk17-"));
     tempDirs.push(jdkRoot);
     const binDir = path.join(jdkRoot, "bin");
@@ -143,9 +143,9 @@ describe("runDoctor Java version", () => {
       homeJavaStderr: 'openjdk version "17.0.9"',
     });
     const javaCheck = report.checks.find((c) => c.id === "java");
-    expect(javaCheck?.status).toBe("warn");
-    expect(javaCheck?.detail).toMatch(/builds use JDK 17/);
+    expect(javaCheck?.status).toBe("pass");
+    expect(javaCheck?.detail).toMatch(/FTC builds use JDK 17/);
     expect(javaCheck?.detail).toMatch(/PATH is 11/);
-    expect(report.readiness.computerReady).toBeTypeOf("boolean");
+    expect(report.readiness.computerReady).toBe(true);
   });
 });

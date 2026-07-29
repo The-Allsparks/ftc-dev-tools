@@ -29,5 +29,6 @@ describe("install-needs-from-doctor", () => {
       check("adb", "pass"),
     ]);
     expect(needs.machineDepsSatisfied).toBe(true);
+    expect(needs.needsJdk).toBe(false);
   });
 });

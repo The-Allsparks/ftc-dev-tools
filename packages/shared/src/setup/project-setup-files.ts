@@ -44,6 +44,7 @@ export function mergeFtcWorkspaceSettings(existing: unknown): Record<string, unk
     },
   };
   delete next["ftc.preferredDeviceSerial"];
+  delete next["ftc.javaHome"];
   return next;
 }
 

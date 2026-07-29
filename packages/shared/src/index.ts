@@ -86,6 +86,11 @@ export type {
   StartHereMachineScan,
 } from "./onboarding/start-here-markdown.js";
 export {
+  FTC_COMMAND_TITLES,
+  getFtcCommandTitle,
+  markdownCommandLink,
+} from "./onboarding/ftc-command-titles.js";
+export {
   estimateInstallDepsSetupTime,
   macPackageArchFromNode,
 } from "./setup/install-deps-download-estimate.js";

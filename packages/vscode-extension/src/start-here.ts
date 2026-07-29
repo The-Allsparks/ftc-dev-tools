@@ -3,6 +3,7 @@ import {
   START_HERE_PROGRESS_KEY,
   START_HERE_STEPS,
   countStartHereCompleted,
+  getFtcCommandTitle,
   getNextStartHereStep,
   isStartHereStepComplete,
   normalizeStartHereProgress,
@@ -17,29 +18,8 @@ import { scanMachineForStartHere } from "./start-here-machine-scan.js";
 
 export const START_HERE_PROMPTED_KEY = "ftc.startHere.prompted";
 
-const FTC_COMMAND_TITLES: Record<string, string> = {
-  "ftc.configureRecommendedExtensions": "FTC: Configure Recommended Extensions",
-  "ftc.setUpComputer": "FTC: Set Up This Computer",
-  "ftc.installCli": "FTC: Install FTC CLI",
-  "ftc.runDoctor": "FTC: Run Environment Check",
-  "ftc.selectProjectRoot": "FTC: Select Project Root",
-  "ftc.obtainProject": "FTC: Get or Open FTC Project",
-  "ftc.setUpProject": "FTC: Set Up This FTC Project",
-  "ftc.showDevices": "FTC: Show Devices",
-  "ftc.connectRobotUsb": "FTC: Connect My Robot (USB First)",
-  "ftc.firstOpModeJourney": "FTC: First OpMode Journey",
-  "ftc.opmodeCreate": "FTC: Create OpMode",
-  "ftc.configValidate": "FTC: Validate Robot Config",
-  "ftc.selectDevice": "FTC: Select Deployment Device",
-  "ftc.wifiConnect": "FTC: Connect Wi-Fi ADB",
-  "ftc.build": "FTC: Build Robot Code",
-  "ftc.deploy": "FTC: Deploy to Robot",
-  "ftc.buildAndDeploy": "FTC: Build and Deploy",
-  "ftc.viewLogs": "FTC: View Robot Logs",
-};
-
 function commandTitle(commandId: string): string {
-  return FTC_COMMAND_TITLES[commandId] ?? commandId;
+  return getFtcCommandTitle(commandId);
 }
 
 function loadCompleted(context: vscode.ExtensionContext): StartHereStepId[] {

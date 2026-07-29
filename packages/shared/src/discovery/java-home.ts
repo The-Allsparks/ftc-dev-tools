@@ -1,15 +1,20 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import pathWin32 from "node:path/win32";
 import type { ProcessRunner } from "../types/process.js";
 import { REQUIRED_JDK_MAJOR } from "../constants.js";
 import { parseJavaMajorVersion } from "./java-discovery.js";
+
+function pathForPlatform(platform: NodeJS.Platform): typeof path {
+  return platform === "win32" ? pathWin32 : path;
+}
 
 function javaExecutableName(platform: NodeJS.Platform = process.platform): string {
   return platform === "win32" ? "java.exe" : "java";
 }
 
 function javaBin(javaHome: string, platform: NodeJS.Platform = process.platform): string {
-  return path.join(javaHome, "bin", javaExecutableName(platform));
+  return pathForPlatform(platform).join(javaHome, "bin", javaExecutableName(platform));
 }
 
 async function pathExists(target: string): Promise<boolean> {
@@ -177,12 +182,13 @@ export function buildJavaEnvForHome(
   env: NodeJS.ProcessEnv = process.env,
   platform: NodeJS.Platform = process.platform,
 ): Record<string, string> {
-  const bin = path.join(javaHome, "bin");
+  const pathOs = pathForPlatform(platform);
+  const bin = pathOs.join(javaHome, "bin");
   const pathKey = platform === "win32" ? "Path" : "PATH";
   const existingPath = env[pathKey] ?? env.PATH ?? "";
   const mergedPath = existingPath.includes(bin)
     ? existingPath
-    : `${bin}${path.delimiter}${existingPath}`;
+    : `${bin}${pathOs.delimiter}${existingPath}`;
   return {
     JAVA_HOME: javaHome,
     [pathKey]: mergedPath,

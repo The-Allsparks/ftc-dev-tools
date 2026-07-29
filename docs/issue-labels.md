@@ -27,6 +27,8 @@ Automation in [`.github/workflows/epic-release-tag.yml`](../.github/workflows/ep
 
 Link child work with GitHub **sub-issues** on the epic. Link implementation PRs in the issue **Development** panel (or via `Fixes #N` / `Closes #N` in the PR description).
 
+When a linked pull request **merges**, [`.github/workflows/pr-merge-close-issues.yml`](../.github/workflows/pr-merge-close-issues.yml) tries to **close** open issues that are linked to that PR (Development link or closing keywords), as long as every linked PR for that issue is merged. **Epics are never auto-closed** — close them manually when all sub-issues are done.
+
 When an epic closes successfully, the workflow patch-bumps the version, tags `main`, and triggers [Release](releasing.md#epic-driven-releases).
 
 ## Priority meanings

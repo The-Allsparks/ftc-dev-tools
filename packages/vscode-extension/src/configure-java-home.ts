@@ -11,8 +11,7 @@ export async function ensureFtcJavaHomeForBuilds(
   runner: NodeProcessRunner,
   output?: vscode.OutputChannel,
 ): Promise<boolean> {
-  const scope = vscode.workspace.workspaceFolders?.[0];
-  const config = vscode.workspace.getConfiguration("ftc", scope?.uri);
+  const config = vscode.workspace.getConfiguration("ftc");
   const current = config.get<string>("javaHome")?.trim();
   if (current) {
     return false;
@@ -24,10 +23,8 @@ export async function ensureFtcJavaHomeForBuilds(
     return false;
   }
 
-  const target = scope
-    ? vscode.ConfigurationTarget.WorkspaceFolder
-    : vscode.ConfigurationTarget.Global;
-  await config.update("javaHome", suggested, target);
+  // JDK install path is machine-local; user settings (not workspace folder scope).
+  await config.update("javaHome", suggested, vscode.ConfigurationTarget.Global);
 
   const pathNote =
     java.pathMajorVersion !== undefined

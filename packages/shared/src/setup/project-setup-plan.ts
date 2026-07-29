@@ -40,8 +40,6 @@ export interface BuildFtcProjectSetupPlansInput {
   settingsJson: string | null;
   tasksJson: string | null;
   cliOnPath: boolean;
-  /** When set, merged into `.vscode/settings.json` as `ftc.javaHome` if not already present. */
-  detectedJavaHome?: string;
 }
 
 export type BuildFtcProjectSetupPlansResult =
@@ -117,11 +115,7 @@ export function buildFtcProjectSetupPlans(
   plans.push({
     path: settingsPath,
     description: "Add safe shared workspace settings (no device serials)",
-    content: formatJsonFile(
-      mergeFtcWorkspaceSettings(settingsParsed.value, {
-        javaHome: input.detectedJavaHome,
-      }),
-    ),
+    content: formatJsonFile(mergeFtcWorkspaceSettings(settingsParsed.value)),
   });
 
   if (input.tasksJson === null) {
@@ -141,13 +135,12 @@ export function buildFtcProjectSetupPlans(
 export function refreshSetupPlanJsonContent(
   absolutePath: string,
   existingJson: unknown,
-  options?: { javaHome?: string },
 ): string | undefined {
   if (absolutePath.endsWith("extensions.json")) {
     return formatJsonFile(mergeExtensionsJson(existingJson));
   }
   if (absolutePath.endsWith("settings.json")) {
-    return formatJsonFile(mergeFtcWorkspaceSettings(existingJson, options));
+    return formatJsonFile(mergeFtcWorkspaceSettings(existingJson));
   }
   return undefined;
 }

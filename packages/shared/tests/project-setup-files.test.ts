@@ -42,11 +42,9 @@ describe("mergeFtcWorkspaceSettings", () => {
     expect(merged["editor.tabSize"]).toBe(4);
   });
 
-  it("adds ftc.javaHome when detected and not already set", () => {
-    const merged = mergeFtcWorkspaceSettings({}, { javaHome: "C:\\jdk-17" });
-    expect(merged["ftc.javaHome"]).toBe("C:\\jdk-17");
-    const again = mergeFtcWorkspaceSettings(merged, { javaHome: "C:\\other" });
-    expect(again["ftc.javaHome"]).toBe("C:\\jdk-17");
+  it("strips machine-local ftc.javaHome from workspace settings", () => {
+    const merged = mergeFtcWorkspaceSettings({ "ftc.javaHome": "C:\\jdk-17" });
+    expect(merged).not.toHaveProperty("ftc.javaHome");
   });
 });
 

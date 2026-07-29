@@ -24,8 +24,6 @@ import {
   refreshSetupPlanJsonContent,
   buildSetUpComputerDoctorOptions,
   analyzeMachineInstallNeeds,
-  discoverJava,
-  suggestFtcJavaHomeSetting,
 } from "@ftc-dev-tools/shared";
 import { ftcToolProcessEnv } from "./ftc-tool-env.js";
 import { cacheMachineInstallNeeds } from "./machine-install-cache.js";
@@ -200,18 +198,10 @@ export async function setUpThisFtcProjectCommand(
   const cliDiscovery = await discoverFtcCliOnPath(new NodeProcessRunner());
   const tasksMode = cliDiscovery.found ? "cli" : "extension";
 
-  const javaDiscovery = await discoverJava(new NodeProcessRunner(), ftcToolProcessEnv());
-  const javaConfig = vscode.workspace.getConfiguration("ftc", vscode.Uri.file(root));
-  const detectedJavaHome = suggestFtcJavaHomeSetting(
-    javaDiscovery,
-    javaConfig.get<string>("javaHome"),
-  );
-
   const planResult = buildFtcProjectSetupPlans({
     projectRoot: root,
     tasksMode,
     cliOnPath: cliDiscovery.found,
-    detectedJavaHome,
     ftcDevJson: readIfExists(path.join(root, ".ftc-dev.json")),
     extensionsJson: readIfExists(path.join(root, ".vscode", "extensions.json")),
     settingsJson: readIfExists(path.join(root, ".vscode", "settings.json")),
@@ -252,9 +242,7 @@ export async function setUpThisFtcProjectCommand(
         refuseInvalidJson(output, plan.path, parsed.error);
         return;
       }
-      const refreshed = refreshSetupPlanJsonContent(plan.path, parsed.value, {
-        javaHome: detectedJavaHome,
-      });
+      const refreshed = refreshSetupPlanJsonContent(plan.path, parsed.value);
       if (refreshed !== undefined) {
         plan.content = refreshed;
       }

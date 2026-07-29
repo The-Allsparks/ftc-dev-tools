@@ -5,10 +5,8 @@ import {
 } from "../install-deps-urls.js";
 
 const CMDLINE_URL: Record<InstallDepsOs, string> = {
-  windows:
-    "https://dl.google.com/android/repository/commandlinetools-win-15859902_latest.zip",
-  macos:
-    "https://dl.google.com/android/repository/commandlinetools-mac_arm64-15859902_latest.zip",
+  windows: "https://dl.google.com/android/repository/commandlinetools-win-15859902_latest.zip",
+  macos: "https://dl.google.com/android/repository/commandlinetools-mac_arm64-15859902_latest.zip",
   linux: "https://dl.google.com/android/repository/commandlinetools-linux-15859902_latest.zip",
 };
 

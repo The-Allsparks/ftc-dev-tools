@@ -80,14 +80,15 @@ export {
   describeMachineInstallPlan,
 } from "./setup/install-needs-from-doctor.js";
 export type { MachineInstallNeeds } from "./setup/install-needs-from-doctor.js";
-export {
-  renderStartHereMarkdown,
-} from "./onboarding/start-here-markdown.js";
+export { renderStartHereMarkdown } from "./onboarding/start-here-markdown.js";
 export type {
   RenderStartHereMarkdownOptions,
   StartHereMachineScan,
 } from "./onboarding/start-here-markdown.js";
-export { estimateInstallDepsSetupTime, macPackageArchFromNode } from "./setup/install-deps-download-estimate.js";
+export {
+  estimateInstallDepsSetupTime,
+  macPackageArchFromNode,
+} from "./setup/install-deps-download-estimate.js";
 export type { InstallDepsTimeEstimate } from "./setup/install-deps-download-estimate.js";
 export {
   buildInstallDepsTerminalCommand,

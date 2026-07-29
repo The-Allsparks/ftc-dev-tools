@@ -1,8 +1,5 @@
 import fs from "node:fs/promises";
-import { createWriteStream } from "node:fs";
 import path from "node:path";
-import { pipeline } from "node:stream/promises";
-import { Readable } from "node:stream";
 import { interpretFromUnknown } from "../errors/interpret.js";
 import type { FetchLike } from "../sdk/types.js";
 import { assertAllowedDownloadUrl } from "./allowlist.js";
@@ -93,15 +90,16 @@ export async function downloadHubOsUpdate(
     }
 
     await fs.mkdir(path.dirname(filePath), { recursive: true });
-    const bytesWritten = await writeFetchResponseToFile(response, filePath);
+    const buffer = Buffer.from(await response.arrayBuffer());
+    await fs.writeFile(filePath, buffer);
 
     return {
       success: true,
       dryRun: false,
       release,
       filePath,
-      bytesWritten,
-      message: `Downloaded Control Hub OS ${release.version} (${bytesWritten} bytes) to ${filePath}`,
+      bytesWritten: buffer.byteLength,
+      message: `Downloaded Control Hub OS ${release.version} (${buffer.byteLength} bytes) to ${filePath}`,
     };
   } catch (error) {
     return {
@@ -111,22 +109,6 @@ export async function downloadHubOsUpdate(
       error: interpretFromUnknown(error),
     };
   }
-}
-
-async function writeFetchResponseToFile(
-  response: Awaited<ReturnType<FetchLike>>,
-  filePath: string,
-): Promise<number> {
-  const streamBody = (response as { body?: ReadableStream<Uint8Array> | null }).body;
-  if (streamBody) {
-    const nodeStream = Readable.fromWeb(streamBody as import("node:stream/web").ReadableStream);
-    await pipeline(nodeStream, createWriteStream(filePath));
-    const stat = await fs.stat(filePath);
-    return stat.size;
-  }
-  const buffer = Buffer.from(await response.arrayBuffer());
-  await fs.writeFile(filePath, buffer);
-  return buffer.byteLength;
 }
 
 async function resolveRelease(options: DownloadHubOsOptions): Promise<HubOsRelease> {

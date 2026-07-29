@@ -16,10 +16,7 @@ import {
   type BuildInstallDepsOptions,
   type MachineInstallNeeds,
 } from "@ftc-dev-tools/shared";
-import {
-  cacheMachineInstallNeeds,
-  getCachedMachineInstallNeeds,
-} from "./machine-install-cache.js";
+import { cacheMachineInstallNeeds, getCachedMachineInstallNeeds } from "./machine-install-cache.js";
 import { maybeOfferStartHereMachineComplete } from "./start-here.js";
 
 export interface RunInstallDepsArgs extends BuildInstallDepsOptions {
@@ -128,11 +125,7 @@ export async function runInstallDepsWithConsent(
   }
 
   const cwd = getWorkspaceRoot?.() ?? process.cwd();
-  const timeEstimate = await estimateInstallDepsSetupTime(
-    os,
-    options,
-    macPackageArchFromNode(),
-  );
+  const timeEstimate = await estimateInstallDepsSetupTime(os, options, macPackageArchFromNode());
   const repo = findFtcDevToolsRepoRoot(cwd);
   const repoNote = repo
     ? "Using cloned ftc-dev-tools repo scripts (no GitHub script download)."

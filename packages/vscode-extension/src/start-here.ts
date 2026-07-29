@@ -187,7 +187,14 @@ export async function startHereCommand(
         completed = [];
         machineScan = undefined;
         await saveCompleted(context, completed);
-        await refreshSurfaces(context, dock, completed, getNextStartHereStep(completed)?.id, undefined, true);
+        await refreshSurfaces(
+          context,
+          dock,
+          completed,
+          getNextStartHereStep(completed)?.id,
+          undefined,
+          true,
+        );
       }
       continue;
     }

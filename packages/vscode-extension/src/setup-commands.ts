@@ -9,6 +9,7 @@ import {
   buildDoctorSections,
   buildInstallDepsCommand,
   listCliConsumerInstallCommands,
+  fetchLatestCliGitHubRelease,
   formatDoctorCheckLine,
   runDoctor,
   parseJsonStrict,
@@ -313,11 +314,27 @@ export async function installFtcCliCommand(output: vscode.OutputChannel): Promis
     }
   }
 
-  const options = listCliConsumerInstallCommands();
+  let options = listCliConsumerInstallCommands();
+  let latestReleaseNote: string | undefined;
+  try {
+    const latest = await fetchLatestCliGitHubRelease();
+    options = listCliConsumerInstallCommands(undefined, process.platform, {
+      version: latest.version,
+      tarballUrl: latest.tarballUrl,
+    });
+    latestReleaseNote = `Resolved latest release: ${latest.tagName} (${latest.assetName})`;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    latestReleaseNote = `Could not resolve latest GitHub Release (${message}). Using bundled version fallback.`;
+  }
 
   output.clear();
   output.appendLine("FTC: Install FTC CLI — preview");
   output.appendLine("");
+  if (latestReleaseNote) {
+    output.appendLine(latestReleaseNote);
+    output.appendLine("");
+  }
   output.appendLine("The extension does not install the CLI automatically.");
   output.appendLine("Pick an option below after reviewing these commands.");
   output.appendLine("");

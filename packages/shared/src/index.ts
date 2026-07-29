@@ -58,12 +58,21 @@ export {
   cliReleaseTarballBasename,
   cliGitHubReleaseTarballUrl,
   buildCliInstallFromGitHubRelease,
+  buildCliInstallFromTarballUrl,
   buildCliInstallFromNpm,
   buildMcpInstallFromNpm,
   buildMcpRunViaNpx,
   listCliConsumerInstallCommands,
 } from "./cli-consumer-install.js";
 export type { ConsumerInstallMethod, ConsumerInstallCommand } from "./cli-consumer-install.js";
+export {
+  FTC_DEV_TOOLS_RELEASES_API,
+  fetchLatestCliGitHubRelease,
+  buildCliInstallFromLatestGitHubRelease,
+  pickCliTarballFromRelease,
+  parseCliTarballAssetName,
+} from "./cli-github-release.js";
+export type { CliGitHubReleaseTarball, CliGitHubReleaseOptions } from "./cli-github-release.js";
 export {
   FTC_DEV_TOOLS_GITHUB_RAW_BASE,
   INSTALL_WITHOUT_ANDROID_STUDIO_DOCS_URL,
@@ -130,6 +139,13 @@ export { discoverFtcCliOnPath } from "./discovery/ftc-cli-discovery.js";
 export type { FtcCliDiscoveryResult } from "./discovery/ftc-cli-discovery.js";
 export type { AdbDiscoveryResult } from "./discovery/adb-discovery.js";
 export { discoverJava, parseJavaMajorVersion } from "./discovery/java-discovery.js";
+export {
+  findJdkHomeForMajor,
+  buildJavaEnvForHome,
+  resolveJdkEnvForFtcBuild,
+  configuredJavaHomeCandidates,
+} from "./discovery/java-home.js";
+export { withFtcJdkEnv } from "./gradle/java-env.js";
 export type { JavaDiscoveryResult } from "./discovery/java-discovery.js";
 
 export { findGradleWrapper, buildGradleCommand } from "./gradle/wrapper.js";

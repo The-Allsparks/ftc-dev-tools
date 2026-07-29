@@ -1,6 +1,7 @@
 import type { Logger } from "../logger.js";
 import { interpretError, interpretFromUnknown } from "../errors/interpret.js";
 import { formatCommandForDisplay } from "../process/sanitize.js";
+import { withFtcJdkEnv } from "../gradle/java-env.js";
 import type { ProcessRunner } from "../types/process.js";
 import type { BuildResult, ProjectAdapter } from "../types/project.js";
 import type { FriendlyError } from "../types/errors.js";
@@ -12,6 +13,8 @@ export interface BuildServiceOptions {
   cwd: string;
   verbose?: boolean;
   signal?: AbortSignal;
+  /** Overrides process env when resolving JDK 17 for Gradle (e.g. `FTC_JAVA_HOME` from settings). */
+  env?: NodeJS.ProcessEnv;
 }
 
 export interface BuildServiceOutcome {
@@ -23,7 +26,14 @@ export async function buildProject(options: BuildServiceOptions): Promise<BuildS
   const started = Date.now();
   try {
     const project = await options.adapter.inspect(options.cwd);
-    const command = await options.adapter.getBuildCommand(project);
+    const command = await withFtcJdkEnv(
+      await options.adapter.getBuildCommand(project),
+      options.runner,
+      options.env ?? process.env,
+    );
+    if (command.env?.JAVA_HOME) {
+      options.logger.info(`Using JAVA_HOME=${command.env.JAVA_HOME} for Gradle`);
+    }
     options.logger.info(`Running ${formatCommandForDisplay(command)}`);
 
     const commandResult = await options.runner.run(command, {
@@ -75,7 +85,14 @@ export async function cleanProject(options: BuildServiceOptions): Promise<BuildS
   const started = Date.now();
   try {
     const project = await options.adapter.inspect(options.cwd);
-    const command = await options.adapter.getCleanCommand(project);
+    const command = await withFtcJdkEnv(
+      await options.adapter.getCleanCommand(project),
+      options.runner,
+      options.env ?? process.env,
+    );
+    if (command.env?.JAVA_HOME) {
+      options.logger.info(`Using JAVA_HOME=${command.env.JAVA_HOME} for Gradle`);
+    }
     options.logger.info(`Running ${formatCommandForDisplay(command)}`);
     const commandResult = await options.runner.run(command, {
       timeoutMs: 30 * 60_000,

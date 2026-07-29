@@ -14,6 +14,7 @@ import { registerOpModeCommand } from "./commands/opmode.js";
 import { registerPedroCommand } from "./commands/pedro.js";
 import { registerWifiCommand } from "./commands/wifi.js";
 import { registerSetupCommand } from "./commands/setup.js";
+import { registerInstallCliCommand } from "./commands/install-cli.js";
 
 import { registerGitHubCommand } from "./commands/github.js";
 
@@ -33,6 +34,7 @@ export async function runCli(argv: string[]): Promise<void> {
   registerSdkCommand(program);
   registerWifiCommand(program);
   registerSetupCommand(program);
+  registerInstallCliCommand(program);
   registerHubCommand(program);
   registerPedroCommand(program);
   registerOpModeCommand(program);

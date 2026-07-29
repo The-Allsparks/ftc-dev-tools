@@ -34,11 +34,10 @@ Full guide: [install-without-android-studio.md](install-without-android-studio.m
 
 You do **not** need to clone the FTC Dev Tools repo to use `ftc`.
 
-After a [GitHub Release](https://github.com/The-Allsparks/ftc-dev-tools/releases) is published:
+After a [GitHub Release](https://github.com/The-Allsparks/ftc-dev-tools/releases) is published, install the CLI using the **latest** tarball:
 
-```bash
-npm install -g "https://github.com/The-Allsparks/ftc-dev-tools/releases/download/v0.1.0/ftc-cli-0.1.0.tar.gz"
-```
+- **Editor:** **FTC: Install FTC CLI** (resolves the newest release automatically), or
+- **Terminal:** `node scripts/latest-cli-install.mjs` from this repo (prints the `npm install -g "…"` line), or see [cli-install.md](cli-install.md).
 
 On Windows PowerShell, use `npm.cmd` instead of `npm` if you see an execution-policy error — see [cli-install.md](cli-install.md).
 

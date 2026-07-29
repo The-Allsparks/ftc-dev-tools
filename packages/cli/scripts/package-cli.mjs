@@ -26,7 +26,16 @@ await fs.rm(staging, { recursive: true, force: true });
 await fs.mkdir(pkgRoot, { recursive: true });
 
 await fs.cp(distDir, path.join(pkgRoot, "dist"), { recursive: true });
-await fs.copyFile(path.join(packageRoot, "package.json"), path.join(pkgRoot, "package.json"));
+
+const stagedPkg = {
+  ...cliPkg,
+  bundledDependencies: ["@ftc-dev-tools/shared"],
+};
+await fs.writeFile(
+  path.join(pkgRoot, "package.json"),
+  `${JSON.stringify(stagedPkg, null, 2)}\n`,
+  "utf8",
+);
 
 const sharedStaging = path.join(pkgRoot, "node_modules", "@ftc-dev-tools", "shared");
 await fs.mkdir(sharedStaging, { recursive: true });
@@ -41,6 +50,27 @@ if (!(await fs.stat(sharedIndex).catch(() => null))) {
   console.error("Missing built shared package. Run npm run build from the repo root first.");
   process.exit(1);
 }
+
+async function installStagedDependencies() {
+  const { spawnSync } = await import("node:child_process");
+  const npm = process.platform === "win32" ? "npm.cmd" : "npm";
+  const result = spawnSync(
+    npm,
+    ["install", "--omit=dev", "--ignore-scripts", "--no-audit", "--no-fund"],
+    {
+      cwd: pkgRoot,
+      encoding: "utf8",
+      shell: process.platform === "win32",
+    },
+  );
+  if (result.status !== 0) {
+    console.error(result.stdout ?? "");
+    console.error(result.stderr ?? "");
+    throw new Error("npm install in staged CLI package failed");
+  }
+}
+
+await installStagedDependencies();
 
 async function trySystemTar() {
   const { spawn } = await import("node:child_process");
@@ -89,4 +119,4 @@ const digest = hash.digest("hex");
 await fs.writeFile(checksumPath, `${digest}  ${path.basename(archivePath)}\n`, "utf8");
 console.log(`Created ${archivePath}`);
 console.log(`Checksum ${checksumPath}`);
-console.log("Staged vendored dependency: node_modules/@ftc-dev-tools/shared");
+console.log("Staged vendored dependency: node_modules/@ftc-dev-tools/shared (+ production deps)");

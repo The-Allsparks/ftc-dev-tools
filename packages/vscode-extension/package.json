@@ -458,6 +458,11 @@
           "type": "boolean",
           "default": false,
           "description": "When GitHub is linked, automatically file or update error report issues on command failures (same title dedupes to comments)."
+        },
+        "ftc.javaHome": {
+          "type": "string",
+          "default": "",
+          "description": "Optional path to JDK 17 home for Gradle builds (overrides PATH). Also honored via FTC_JAVA_HOME in terminals. Example: C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.13.11-hotspot"
         }
       }
     }

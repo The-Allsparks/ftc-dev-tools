@@ -33,7 +33,9 @@ export function deriveCloneDirectoryName(cloneUrl: string): string {
 
 export function buildGitCloneCommand(cloneUrl: string, targetDirName: string): string {
   const url = normalizeGitCloneUrl(cloneUrl) ?? cloneUrl.trim();
-  const dir = targetDirName.replace(/"/g, '\\"');
-  const quotedUrl = url.includes(" ") ? `"${url.replace(/"/g, '\\"')}"` : url;
+  const dir = targetDirName.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  const quotedUrl = url.includes(" ")
+    ? `"${url.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`
+    : url;
   return `git clone ${quotedUrl} "${dir}"`;
 }

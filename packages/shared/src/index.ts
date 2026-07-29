@@ -493,6 +493,10 @@ export {
   countStartHereCompleted,
 } from "./onboarding/start-here-steps.js";
 export type { StartHereStepId, StartHereStep } from "./onboarding/start-here-steps.js";
+export {
+  DRIVER_STATION_INIT_START_LINES,
+  formatDriverStationInitStartMessage,
+} from "./onboarding/first-opmode-journey.js";
 
 export {
   OFFICIAL_FTC_ROBOT_CONTROLLER_GIT_URL,

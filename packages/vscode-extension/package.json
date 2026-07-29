@@ -48,6 +48,10 @@
         "title": "FTC: Connect My Robot (USB First)"
       },
       {
+        "command": "ftc.firstOpModeJourney",
+        "title": "FTC: First OpMode Journey"
+      },
+      {
         "command": "ftc.showDevices",
         "title": "FTC: Show Devices"
       },

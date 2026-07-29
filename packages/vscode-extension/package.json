@@ -21,6 +21,9 @@
   "engines": {
     "vscode": "^1.85.0"
   },
+  "extensionDependencies": [
+    "vscode.github-authentication"
+  ],
   "categories": [
     "Other"
   ],
@@ -248,6 +251,14 @@
         "title": "FTC: Install FTC CLI"
       },
       {
+        "command": "ftc.linkGitHubForReports",
+        "title": "FTC: Link GitHub for Error Reports"
+      },
+      {
+        "command": "ftc.unlinkGitHubForReports",
+        "title": "FTC: Unlink GitHub Error Reports"
+      },
+      {
         "command": "ftc.openTechnicalOutput",
         "title": "FTC: Open Technical Output"
       },
@@ -430,6 +441,11 @@
           "type": "string",
           "default": "",
           "description": "Optional override for the FTC Android Studio project root (folder with settings.gradle and TeamCode). Aligns with the FTC_PROJECT_ROOT environment variable used by the MCP server when set."
+        },
+        "ftc.autoReportErrors": {
+          "type": "boolean",
+          "default": false,
+          "description": "When GitHub is linked, automatically file or update error report issues on command failures (same title dedupes to comments)."
         }
       }
     }

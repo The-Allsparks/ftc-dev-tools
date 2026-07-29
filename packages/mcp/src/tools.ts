@@ -24,6 +24,7 @@ import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { createMcpContext, tryCreateDeviceProvider } from "./context.js";
 import { runGatedMutation } from "./mutation-gate.js";
 import { jsonResult } from "./result.js";
+import { maybeReportMcpToolError } from "./error-report.js";
 
 export interface ProjectRootArgs {
   projectRoot?: string;
@@ -89,6 +90,19 @@ export async function toolBuild(
         cwd: ctx.projectRoot,
         verbose: args.verbose === true,
       });
+      if (!outcome.result.success && outcome.friendlyError) {
+        const errorReport = await maybeReportMcpToolError({
+          toolName: "build",
+          error: outcome.friendlyError,
+        });
+        return {
+          success: outcome.result.success,
+          dryRun: false,
+          result: outcome.result,
+          error: outcome.friendlyError,
+          errorReport,
+        };
+      }
       return {
         success: outcome.result.success,
         dryRun: false,
@@ -130,6 +144,20 @@ export async function toolDeploy(
           dryRun,
           verbose: args.verbose === true,
         });
+        if (!outcome.result.success && outcome.friendlyError) {
+          const errorReport = await maybeReportMcpToolError({
+            toolName: "deploy",
+            error: outcome.friendlyError,
+            deploySteps: outcome.result.steps,
+          });
+          return {
+            success: outcome.result.success,
+            dryRun,
+            result: outcome.result,
+            error: outcome.friendlyError,
+            errorReport,
+          };
+        }
         return {
           success: outcome.result.success,
           dryRun,

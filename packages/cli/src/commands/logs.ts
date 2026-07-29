@@ -66,13 +66,13 @@ export function registerLogsCommand(program: Command): void {
           } catch (error) {
             console.error("Device connection lost while streaming logs.");
             console.error("Reconnect the device, then run `ftc devices` and `ftc logs` again.");
-            printFriendlyError(interpretFromUnknown(error), true);
+            await printFriendlyError(interpretFromUnknown(error), true);
             process.exitCode = 1;
           } finally {
             process.off("SIGINT", onSigInt);
           }
         } catch (error) {
-          printFriendlyError(interpretFromUnknown(error), true);
+          await printFriendlyError(interpretFromUnknown(error), true);
           process.exitCode = 1;
         }
       },

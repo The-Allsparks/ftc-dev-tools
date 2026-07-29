@@ -56,7 +56,7 @@ export function registerHubCommand(program: Command): void {
             console.log(`Warning:    ${warning}`);
           }
           if (report.error) {
-            printFriendlyError(report.error, options.verbose === true);
+            await printFriendlyError(report.error, options.verbose === true);
           }
         }
         process.exitCode = report.error ? 1 : 0;
@@ -111,7 +111,7 @@ export function registerHubCommand(program: Command): void {
           console.log(`Status: ${report.freshness}`);
           console.log(`\n${report.message}`);
           if (report.error) {
-            printFriendlyError(report.error, options.verbose === true);
+            await printFriendlyError(report.error, options.verbose === true);
           }
         }
         if (options.failIfBehind && report.freshness === "behind") {
@@ -154,7 +154,7 @@ export function registerHubCommand(program: Command): void {
         } else {
           console.log(result.message);
           if (result.error) {
-            printFriendlyError(result.error, options.verbose === true);
+            await printFriendlyError(result.error, options.verbose === true);
           }
         }
         process.exitCode = result.success ? 0 : 1;
@@ -225,7 +225,7 @@ export function registerHubCommand(program: Command): void {
             }
           }
           if (result.error) {
-            printFriendlyError(result.error, options.verbose === true);
+            await printFriendlyError(result.error, options.verbose === true);
           }
         }
         process.exitCode = result.success ? 0 : 1;

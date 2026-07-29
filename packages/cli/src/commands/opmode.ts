@@ -41,7 +41,7 @@ export function registerOpModeCommand(program: Command): void {
           console.log(`    ${item.relativePath}`);
         }
         if (report.error) {
-          printFriendlyError(report.error, options.verbose === true);
+          await printFriendlyError(report.error, options.verbose === true);
         }
       }
       process.exitCode = report.error ? 1 : 0;
@@ -136,7 +136,7 @@ export function registerOpModeCommand(program: Command): void {
             console.log(`Backup: ${result.backupDirectory}`);
           }
           if (result.error) {
-            printFriendlyError(result.error, options.verbose === true);
+            await printFriendlyError(result.error, options.verbose === true);
           }
         }
         process.exitCode = result.success ? 0 : 1;

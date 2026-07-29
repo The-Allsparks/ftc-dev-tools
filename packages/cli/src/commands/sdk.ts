@@ -48,9 +48,9 @@ export function registerSdkCommand(program: Command): void {
             }
           }
           if (report.error && options.verbose) {
-            printFriendlyError(report.error, true);
+            await printFriendlyError(report.error, true);
           } else if (report.error && report.freshness === "unknown") {
-            printFriendlyError(report.error, options.verbose === true);
+            await printFriendlyError(report.error, options.verbose === true);
           }
         }
 
@@ -147,7 +147,7 @@ export function registerSdkCommand(program: Command): void {
             }
           }
           if (result.error) {
-            printFriendlyError(result.error, options.verbose === true);
+            await printFriendlyError(result.error, options.verbose === true);
           }
         }
 

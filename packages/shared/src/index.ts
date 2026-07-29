@@ -509,3 +509,40 @@ export {
   deriveCloneDirectoryName,
   buildGitCloneCommand,
 } from "./onboarding/obtain-project.js";
+
+export type {
+  ErrorReportEnvironment,
+  ErrorReportInput,
+  ErrorReportSubmitResult,
+  ErrorReportSurface,
+  ErrorReportSubmitAction,
+} from "./feedback/error-report-types.js";
+export {
+  ERROR_REPORT_REPO_OWNER,
+  ERROR_REPORT_REPO_NAME,
+  ERROR_REPORT_TITLE_PREFIX,
+} from "./feedback/error-report-types.js";
+export {
+  buildErrorReportIssueTitle,
+  buildInitialErrorReportBody,
+  buildErrorOccurrenceComment,
+  findOpenErrorReportIssueByTitle,
+  submitErrorReport,
+  normalizeCommandAttempted,
+  buildCliErrorReportEnvironment,
+  buildMcpErrorReportEnvironment,
+  buildVscodeErrorReportEnvironment,
+} from "./feedback/error-report-github.js";
+export {
+  storeGitHubReportToken,
+  loadGitHubReportToken,
+  clearGitHubReportToken,
+  resolveGitHubReportToken,
+  isAutoErrorReportEnabled,
+  githubReportTokenPath,
+} from "./feedback/github-report-token.js";
+export {
+  buildOutboundGitHubErrorReport,
+  normalizeOutboundErrorCode,
+  sanitizeErrorReportInput,
+} from "./feedback/error-report-sanitize.js";

@@ -7,7 +7,8 @@ export function registerBuildCommand(program: Command): void {
     .command("build")
     .description("Build the FTC robot application using the project Gradle Wrapper")
     .option("--verbose", "Show full Gradle output")
-    .action(async (options: { verbose?: boolean }) => {
+    .option("--report", "File a GitHub error report if the build fails")
+    .action(async (options: { verbose?: boolean; report?: boolean }) => {
       const ctx = createCliContext(process.cwd(), options.verbose === true);
       const outcome = await buildProject({
         adapter: ctx.adapter,
@@ -19,7 +20,10 @@ export function registerBuildCommand(program: Command): void {
 
       if (!outcome.result.success) {
         if (outcome.friendlyError) {
-          printFriendlyError(outcome.friendlyError, options.verbose === true);
+          await printFriendlyError(outcome.friendlyError, options.verbose === true, {
+            commandAttempted: "ftc.build",
+            forceReport: options.report === true,
+          });
         }
         if (options.verbose) {
           process.stderr.write(outcome.result.stdout);

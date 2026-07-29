@@ -83,6 +83,12 @@ import { StartHereDockProvider } from "./start-here-dock.js";
 import { obtainOrOpenFtcProjectCommand } from "./obtain-project.js";
 import { connectRobotUsbFirstCommand } from "./connect-robot-usb.js";
 import { firstOpModeJourneyCommand } from "./first-opmode-journey.js";
+import {
+  initErrorReporting,
+  linkGitHubForErrorReportsCommand,
+  offerErrorReportActions,
+  unlinkGitHubForErrorReportsCommand,
+} from "./error-report.js";
 
 let output: vscode.OutputChannel;
 let status: StatusController;
@@ -95,8 +101,14 @@ let cachedWifiStatus: WifiStatusReport | undefined;
 let cachedWifiStatusAt = 0;
 const SDK_STATUS_TTL_MS = 60_000;
 const WIFI_STATUS_TTL_MS = 60_000;
+let activeCommandAttempted: string | undefined;
 
 export function activate(context: vscode.ExtensionContext): void {
+  initErrorReporting({
+    context,
+    extensionVersion: context.extension.packageJSON.version ?? "0.0.0",
+    getActiveCommandAttempted: () => activeCommandAttempted,
+  });
   output = vscode.window.createOutputChannel("FTC Dev Tools");
   status = new StatusController();
   initWorkspaceRoot(context);
@@ -169,10 +181,13 @@ export function activate(context: vscode.ExtensionContext): void {
   const register = (command: string, handler: () => Promise<void>): void => {
     context.subscriptions.push(
       vscode.commands.registerCommand(command, async () => {
+        activeCommandAttempted = command;
         try {
           await handler();
         } catch (error) {
           await showFriendlyError(interpretFromUnknown(error));
+        } finally {
+          activeCommandAttempted = undefined;
         }
       }),
     );
@@ -264,6 +279,8 @@ export function activate(context: vscode.ExtensionContext): void {
     tree.refresh();
   });
   register("ftc.startHere", () => startHereCommand(context, startHereDock, getWorkspaceRoot));
+  register("ftc.linkGitHubForReports", linkGitHubForErrorReportsCommand);
+  register("ftc.unlinkGitHubForReports", unlinkGitHubForErrorReportsCommand);
 
   void promptStartHereOnFirstOpen(context);
 }
@@ -398,7 +415,9 @@ async function deployCommand(dryRun: boolean): Promise<void> {
       if (!outcome.result.success) {
         status.setState("build-failed");
         if (outcome.friendlyError) {
-          await showFriendlyError(outcome.friendlyError);
+          await showFriendlyError(outcome.friendlyError, {
+            deploySteps: outcome.result.steps,
+          });
         }
         return;
       }
@@ -1719,7 +1738,10 @@ function appendBuildOutput(stdout: string, stderr: string): void {
   }
 }
 
-async function showFriendlyError(error: FriendlyError): Promise<void> {
+async function showFriendlyError(
+  error: FriendlyError,
+  options?: { deploySteps?: string[] },
+): Promise<void> {
   output.appendLine(`${error.title} (${error.code})`);
   output.appendLine(error.summary);
   for (const action of error.suggestedActions) {
@@ -1729,14 +1751,14 @@ async function showFriendlyError(error: FriendlyError): Promise<void> {
     output.appendLine("Technical details:");
     output.appendLine(error.technicalDetails);
   }
-  const action = await vscode.window.showErrorMessage(
-    `${error.title}: ${error.summary}`,
-    "Open Technical Output",
-    "Show Next Steps",
-  );
-  if (action === "Open Technical Output") {
-    output.show(true);
-  } else if (action === "Show Next Steps") {
-    void vscode.window.showInformationMessage(error.suggestedActions.join(" | "));
-  }
+  await offerErrorReportActions({
+    error,
+    deploySteps: options?.deploySteps,
+    onOpenTechnicalOutput: () => {
+      output.show(true);
+    },
+    onShowNextSteps: () => {
+      void vscode.window.showInformationMessage(error.suggestedActions.join(" | "));
+    },
+  });
 }

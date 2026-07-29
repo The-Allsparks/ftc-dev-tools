@@ -44,7 +44,7 @@ export function registerConfigCommand(program: Command): void {
           console.log(`    ${item.relativePath}`);
         }
         if (report.error) {
-          printFriendlyError(report.error, options.verbose === true);
+          await printFriendlyError(report.error, options.verbose === true);
         }
       }
       process.exitCode = report.error ? 1 : 0;
@@ -74,7 +74,7 @@ export function registerConfigCommand(program: Command): void {
           }
         }
         if (result.error) {
-          printFriendlyError(result.error, options.verbose === true);
+          await printFriendlyError(result.error, options.verbose === true);
         }
       }
       process.exitCode = result.success ? 0 : 1;
@@ -97,7 +97,7 @@ export function registerConfigCommand(program: Command): void {
           console.log(`  [${issue.severity}] ${issue.message}`);
         }
         if (result.error) {
-          printFriendlyError(result.error, options.verbose === true);
+          await printFriendlyError(result.error, options.verbose === true);
         }
       }
       process.exitCode = result.success ? 0 : 1;
@@ -146,7 +146,7 @@ export function registerConfigCommand(program: Command): void {
           }
           if (!preview.success) {
             if (preview.error) {
-              printFriendlyError(preview.error, options.verbose === true);
+              await printFriendlyError(preview.error, options.verbose === true);
             }
             process.exitCode = 1;
             return;
@@ -179,7 +179,7 @@ export function registerConfigCommand(program: Command): void {
             console.log(`  - ${file}`);
           }
           if (result.error) {
-            printFriendlyError(result.error, options.verbose === true);
+            await printFriendlyError(result.error, options.verbose === true);
           }
         }
         process.exitCode = result.success ? 0 : 1;

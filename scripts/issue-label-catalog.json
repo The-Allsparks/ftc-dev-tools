@@ -63,6 +63,18 @@
       "student-ux",
       "priority: P1"
     ],
+    "Auto-file GitHub issues on command and step failures when GitHub is linked": [
+      "enhancement",
+      "shared-core",
+      "vscode",
+      "cli",
+      "mcp",
+      "integration",
+      "security",
+      "student-ux",
+      "reliability",
+      "priority: P1"
+    ],
     "Add FTC unit-test starter workflow": [
       "enhancement",
       "testing",

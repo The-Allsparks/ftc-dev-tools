@@ -1,0 +1,78 @@
+name: Issue closed
+
+# Validates closure (linked PRs merged; epics need sub-issues closed), then tags a release for epics.
+
+on:
+  issues:
+    types: [closed]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: issue-closed-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  close-guard:
+    if: github.repository == 'The-Allsparks/ftc-dev-tools'
+    runs-on: ubuntu-latest
+    outputs:
+      allowed: ${{ steps.guard.outputs.allowed }}
+      is_epic: ${{ steps.guard.outputs.is_epic }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - id: guard
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ',') }}
+        run: node scripts/issue-close-guard.mjs --enforce
+
+  epic-release-tag:
+    needs: close-guard
+    if: >-
+      needs.close-guard.outputs.allowed == 'true' &&
+      needs.close-guard.outputs.is_epic == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Sync main
+        run: git pull --ff-only origin main
+
+      - name: Bump version and changelog
+        env:
+          EPIC_ISSUE: ${{ github.event.issue.number }}
+          EPIC_TITLE: ${{ github.event.issue.title }}
+        run: node scripts/bump-version.mjs
+
+      - name: Commit, tag, and push
+        env:
+          EPIC_ISSUE: ${{ github.event.issue.number }}
+        run: |
+          VERSION=$(node -p "JSON.parse(require('fs').readFileSync('package.json','utf8')).version")
+          TAG="v${VERSION}"
+          git add package.json packages/shared/package.json packages/cli/package.json packages/mcp/package.json packages/vscode-extension/package.json packages/shared/src/constants.ts CHANGELOG.md
+          git commit -m "chore(release): ${TAG} (epic #${EPIC_ISSUE})"
+          git tag "${TAG}"
+          git push origin main
+          git push origin "${TAG}"

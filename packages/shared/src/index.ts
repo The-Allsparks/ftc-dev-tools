@@ -41,6 +41,7 @@ export {
   DEFAULT_MODULE_NAME,
   DEFAULT_ROBOT_CONTROLLER_APPLICATION_ID,
   CONFIG_FILE_NAME,
+  REQUIRED_JDK_MAJOR,
 } from "./constants.js";
 
 export {

@@ -43,6 +43,44 @@ export function isEpicIssue(labelNames) {
   return labelNames.includes("epic");
 }
 
+/** GitHub closing keywords in PR descriptions (same family as native auto-close). */
+const CLOSING_KEYWORD_ISSUE_RE =
+  /\b(?:fixe?(?:s|d)?|close[sd]?|resolve[sd]?)\s*:?\s*(?:([\w.-]+)\/([\w.-]+)#|#)(\d+)\b/gi;
+
+/**
+ * @param {string | null | undefined} text
+ * @param {{ owner: string, repo: string }} repo
+ * @returns {number[]}
+ */
+export function parseClosingIssueNumbers(text, { owner, repo }) {
+  if (!text?.trim()) return [];
+  const numbers = new Set();
+  const re = new RegExp(CLOSING_KEYWORD_ISSUE_RE.source, "gi");
+  let match;
+  while ((match = re.exec(text)) !== null) {
+    const refOwner = match[1] ?? owner;
+    const refRepo = match[2] ?? repo;
+    if (
+      refOwner.toLowerCase() !== owner.toLowerCase() ||
+      refRepo.toLowerCase() !== repo.toLowerCase()
+    ) {
+      continue;
+    }
+    numbers.add(Number.parseInt(match[3], 10));
+  }
+  return [...numbers];
+}
+
+/**
+ * @param {string[]} labelNames
+ * @param {{ number: number, title?: string, state: string }[]} linkedIssues
+ * @param {{ number: number, merged: boolean, state?: string }[]} linkedPullRequests
+ */
+export function issueMayClose(labelNames, linkedIssues, linkedPullRequests) {
+  const isEpic = isEpicIssue(labelNames);
+  return buildCloseBlockers(linkedIssues, linkedPullRequests, { isEpic }).length === 0;
+}
+
 /**
  * Dedupe issue rows by number (sub-issues + tracked issues).
  * @param {{ number: number, title?: string, state: string }[]} lists

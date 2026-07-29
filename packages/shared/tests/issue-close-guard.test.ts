@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   buildCloseBlockers,
   isEpicIssue,
+  issueMayClose,
   mergeLinkedIssues,
+  parseClosingIssueNumbers,
   parseLabelNames,
 } from "../../../scripts/issue-close-guard-logic.mjs";
 
@@ -42,5 +44,17 @@ describe("issue-close-guard-logic", () => {
   it("detects epic label", () => {
     expect(isEpicIssue(parseLabelNames("enhancement, epic, priority: P1"))).toBe(true);
     expect(isEpicIssue(parseLabelNames("enhancement"))).toBe(false);
+  });
+
+  it("parses closing keywords in PR text", () => {
+    const repo = { owner: "The-Allsparks", repo: "ftc-dev-tools" };
+    expect(parseClosingIssueNumbers("Fixes #48", repo)).toEqual([48]);
+    expect(parseClosingIssueNumbers("Closes The-Allsparks/ftc-dev-tools#99", repo)).toEqual([99]);
+    expect(parseClosingIssueNumbers("see #48", repo)).toEqual([]);
+  });
+
+  it("issueMayClose respects merged linked PRs", () => {
+    expect(issueMayClose([], [], [{ number: 1, merged: true, state: "MERGED" }])).toBe(true);
+    expect(issueMayClose([], [], [{ number: 1, merged: false, state: "OPEN" }])).toBe(false);
   });
 });

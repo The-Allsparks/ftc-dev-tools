@@ -1,0 +1,30 @@
+name: PR merge close issues
+
+# Close open issues linked to a PR (Development link or Fixes/Closes keywords) when the PR merges,
+# if they pass the same rules as issue-close-guard (merged linked PRs; epics are never auto-closed).
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  issues: write
+  pull-requests: read
+
+jobs:
+  close-linked-issues:
+    if: >-
+      github.repository == 'The-Allsparks/ftc-dev-tools' &&
+      github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Close eligible linked issues
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/pr-merge-close-issues.mjs

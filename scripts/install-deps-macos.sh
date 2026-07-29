@@ -83,7 +83,7 @@ install_sdk() {
   zip_path="${tmp}/${file}"
 
   echo "Downloading ${url}"
-  curl -fsSL "${url}" -o "${zip_path}"
+  curl -fSL --retry 5 --retry-all-errors --connect-timeout 30 "${url}" -o "${zip_path}"
   actual="$(shasum -a 256 "${zip_path}" | awk '{print $1}')"
   if [[ "${actual}" != "${expected}" ]]; then
     echo "Checksum mismatch. Expected ${expected}, got ${actual}" >&2

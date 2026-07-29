@@ -2,29 +2,28 @@ import { describe, expect, it } from "vitest";
 import { buildGettingStartedTreeNodes } from "../src/views/getting-started-nodes.js";
 
 describe("buildGettingStartedTreeNodes", () => {
-  it("shows unchecked labels when no Start Here progress", () => {
+  it("lists Start Here first", () => {
     const nodes = buildGettingStartedTreeNodes([]);
     expect(nodes).toHaveLength(5);
-    expect(nodes[0]?.label).toContain("Set Up This Computer");
-    expect(nodes[0]?.label).toContain("circle-outline");
-    expect(nodes[3]?.description).toBe("0/7 steps complete");
+    expect(nodes[0]?.commandId).toBe("ftc.startHere");
+    expect(nodes[0]?.description).toBe("0/7 steps — guided checklist + doc");
   });
 
   it("marks computer and doctor rows when machine-checks is complete", () => {
     const nodes = buildGettingStartedTreeNodes(["machine-checks"]);
-    expect(nodes[0]?.label).toContain("$(check)");
-    expect(nodes[4]?.label).toContain("$(check)");
-    expect(nodes[1]?.label).toContain("circle-outline");
+    expect(nodes[0]?.label).toContain("circle-outline");
+    expect(nodes[1]?.label).toContain("$(check)");
+    expect(nodes[2]?.label).toContain("$(check)");
   });
 
   it("wires palette command IDs for each row", () => {
     const nodes = buildGettingStartedTreeNodes([]);
     expect(nodes.map((n) => n.commandId)).toEqual([
+      "ftc.startHere",
+      "ftc.runDoctor",
       "ftc.setUpComputer",
       "ftc.obtainProject",
       "ftc.setUpProject",
-      "ftc.startHere",
-      "ftc.runDoctor",
     ]);
   });
 });

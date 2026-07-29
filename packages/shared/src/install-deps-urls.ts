@@ -45,6 +45,9 @@ function unixInstallEnvPrefix(options?: BuildInstallDepsOptions): string {
   return parts.length > 0 ? `${parts.join(" ")} ` : "";
 }
 
+/** curl.exe flags for large/binary downloads (Windows 10+ includes curl). */
+const WINDOWS_CURL_DOWNLOAD = "curl.exe -fSL --retry 5 --retry-all-errors --connect-timeout 30";
+
 function windowsInstallScriptInvocation(options?: BuildInstallDepsOptions): string {
   const flags: string[] = [];
   if (options?.skipJdk) {
@@ -67,22 +70,22 @@ export function buildInstallDepsCommand(
       return [
         '$dir = Join-Path $env:TEMP "ftc-dev-tools-install-deps"',
         "New-Item -ItemType Directory -Force -Path $dir | Out-Null",
-        `Invoke-WebRequest -Uri "${INSTALL_DEPS_WINDOWS_PS1_RAW_URL}" -OutFile (Join-Path $dir "install-deps-windows.ps1")`,
-        `Invoke-WebRequest -Uri "${INSTALL_DEPS_ANDROID_CMDLINE_TOOLS_JSON_RAW_URL}" -OutFile (Join-Path $dir "android-cmdline-tools.json")`,
+        `${WINDOWS_CURL_DOWNLOAD} -o (Join-Path $dir "install-deps-windows.ps1") "${INSTALL_DEPS_WINDOWS_PS1_RAW_URL}"`,
+        `${WINDOWS_CURL_DOWNLOAD} -o (Join-Path $dir "android-cmdline-tools.json") "${INSTALL_DEPS_ANDROID_CMDLINE_TOOLS_JSON_RAW_URL}"`,
         windowsInstallScriptInvocation(options),
       ].join("; ");
     case "macos":
       return [
         'dir="$(mktemp -d)"',
-        `curl -fsSL -o "$dir/install-deps-macos.sh" "${INSTALL_DEPS_MACOS_SH_RAW_URL}"`,
-        `curl -fsSL -o "$dir/android-cmdline-tools.json" "${INSTALL_DEPS_ANDROID_CMDLINE_TOOLS_JSON_RAW_URL}"`,
+        `curl -fSL --retry 5 --retry-all-errors --connect-timeout 30 -o "$dir/install-deps-macos.sh" "${INSTALL_DEPS_MACOS_SH_RAW_URL}"`,
+        `curl -fSL --retry 5 --retry-all-errors --connect-timeout 30 -o "$dir/android-cmdline-tools.json" "${INSTALL_DEPS_ANDROID_CMDLINE_TOOLS_JSON_RAW_URL}"`,
         `${unixInstallEnvPrefix(options)}bash "$dir/install-deps-macos.sh"`,
       ].join(" && ");
     case "linux":
       return [
         'dir="$(mktemp -d)"',
-        `curl -fsSL -o "$dir/install-deps-linux.sh" "${INSTALL_DEPS_LINUX_SH_RAW_URL}"`,
-        `curl -fsSL -o "$dir/android-cmdline-tools.json" "${INSTALL_DEPS_ANDROID_CMDLINE_TOOLS_JSON_RAW_URL}"`,
+        `curl -fSL --retry 5 --retry-all-errors --connect-timeout 30 -o "$dir/install-deps-linux.sh" "${INSTALL_DEPS_LINUX_SH_RAW_URL}"`,
+        `curl -fSL --retry 5 --retry-all-errors --connect-timeout 30 -o "$dir/android-cmdline-tools.json" "${INSTALL_DEPS_ANDROID_CMDLINE_TOOLS_JSON_RAW_URL}"`,
         `${unixInstallEnvPrefix(options)}bash "$dir/install-deps-linux.sh"`,
       ].join(" && ");
   }

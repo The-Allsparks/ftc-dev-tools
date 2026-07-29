@@ -57,7 +57,9 @@ function installDepsPrimary(platform: NodeJS.Platform): DoctorFixAction | undefi
   if (!installDepsOsForPlatform(platform)) {
     return undefined;
   }
-  return vscodeCommand("install-deps", "Run install-deps script", "ftc.runInstallDeps");
+  return vscodeCommand("install-deps", "Install missing tools (from doctor)", "ftc.runInstallDeps", [
+    { source: "doctor" },
+  ]);
 }
 
 const INSTALL_GUIDE = openUrl(

@@ -31,6 +31,7 @@ describe("install-deps-urls", () => {
     expect(win).toContain(INSTALL_DEPS_WINDOWS_PS1_RAW_URL);
     expect(win).toContain(INSTALL_DEPS_ANDROID_CMDLINE_TOOLS_JSON_RAW_URL);
     expect(win).toContain("install-deps-windows.ps1");
+    expect(win).toContain("curl.exe");
 
     const mac = buildInstallDepsCommand("macos");
     expect(mac).toContain(INSTALL_DEPS_MACOS_SH_RAW_URL);

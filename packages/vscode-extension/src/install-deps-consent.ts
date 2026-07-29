@@ -1,55 +1,97 @@
 import * as vscode from "vscode";
 import {
-  buildInstallDepsCommand,
+  analyzeMachineInstallNeeds,
+  buildInstallDepsOptionsFromNeeds,
+  buildInstallDepsTerminalCommand,
+  buildSetUpComputerDoctorOptions,
   describeInstallDepsConsentMessage,
+  describeMachineInstallPlan,
+  estimateInstallDepsSetupTime,
+  findFtcDevToolsRepoRoot,
   installDepsOsForPlatform,
+  macPackageArchFromNode,
+  OfficialFtcProjectAdapter,
+  NodeProcessRunner,
+  runDoctor,
   type BuildInstallDepsOptions,
+  type MachineInstallNeeds,
 } from "@ftc-dev-tools/shared";
+import {
+  cacheMachineInstallNeeds,
+  getCachedMachineInstallNeeds,
+} from "./machine-install-cache.js";
+import { maybeOfferStartHereMachineComplete } from "./start-here.js";
 
 export interface RunInstallDepsArgs extends BuildInstallDepsOptions {
-  /** Telemetry / logging hint (e.g. doctor, set-up-computer). */
   source?: string;
-  /** When true, skip the skip-JDK/SDK quick pick (args already set). */
   skipOptionsPick?: boolean;
 }
 
-type SkipPick = { kind: "full" } | { kind: "custom"; skipJdk: boolean; skipSdk: boolean };
+async function loadMachineInstallNeeds(
+  getWorkspaceRoot?: () => string | undefined,
+): Promise<MachineInstallNeeds> {
+  const cwd = getWorkspaceRoot?.() ?? process.cwd();
+  const cached = getCachedMachineInstallNeeds(cwd);
+  if (cached) {
+    return cached;
+  }
+  const runner = new NodeProcessRunner();
+  const adapter = new OfficialFtcProjectAdapter();
+  const report = await runDoctor({
+    ...buildSetUpComputerDoctorOptions(cwd, runner, adapter),
+  });
+  const needs = analyzeMachineInstallNeeds(report.checks);
+  cacheMachineInstallNeeds(cwd, needs);
+  return needs;
+}
 
-async function pickInstallDepsScope(args: RunInstallDepsArgs): Promise<SkipPick | undefined> {
+async function resolveInstallPlan(
+  args: RunInstallDepsArgs,
+  getWorkspaceRoot?: () => string | undefined,
+): Promise<{ options: BuildInstallDepsOptions; planLine: string } | undefined> {
   if (args.skipOptionsPick || args.skipJdk !== undefined || args.skipSdk !== undefined) {
     return {
-      kind: "custom",
-      skipJdk: args.skipJdk === true,
-      skipSdk: args.skipSdk === true,
+      options: { skipJdk: args.skipJdk === true, skipSdk: args.skipSdk === true },
+      planLine: "Using install scope from command options.",
     };
   }
 
-  const choice = await vscode.window.showQuickPick(
-    [
-      {
-        label: "Install JDK and Android SDK",
-        description: "Recommended for new machines",
-        pick: { kind: "full" } as SkipPick,
-      },
-      {
-        label: "Skip JDK (Android SDK / adb only)",
-        description: "Use when Java is already installed correctly",
-        pick: { kind: "custom", skipJdk: true, skipSdk: false } satisfies SkipPick,
-      },
-      {
-        label: "Skip Android SDK (JDK only)",
-        description: "Use when adb and ANDROID_HOME are already set up",
-        pick: { kind: "custom", skipJdk: false, skipSdk: true } satisfies SkipPick,
-      },
-    ],
-    { placeHolder: "Choose what the trusted installer should install" },
+  const needs = await vscode.window.withProgress(
+    {
+      location: vscode.ProgressLocation.Notification,
+      title: "FTC: Checking what needs to be installed…",
+      cancellable: true,
+    },
+    async (_progress, token) => {
+      if (token.isCancellationRequested) {
+        return undefined;
+      }
+      return loadMachineInstallNeeds(getWorkspaceRoot);
+    },
   );
-  return choice?.pick;
+
+  if (!needs) {
+    return undefined;
+  }
+  if (needs.machineDepsSatisfied) {
+    vscode.window.showInformationMessage(
+      "Environment check: Java, Android SDK, and adb already look good. Nothing to install.",
+    );
+    return undefined;
+  }
+
+  return {
+    options: buildInstallDepsOptionsFromNeeds(needs),
+    planLine: describeMachineInstallPlan(needs),
+  };
 }
 
-async function promptPostInstallActions(): Promise<void> {
+async function promptPostInstallActions(
+  context: vscode.ExtensionContext,
+  getWorkspaceRoot?: () => string | undefined,
+): Promise<void> {
   const choice = await vscode.window.showInformationMessage(
-    "When the installer finishes, reload the window so PATH and ANDROID_HOME updates apply, then re-run the environment check.",
+    "When the installer finishes, reload the window so PATH updates apply, then re-run the environment check.",
     "Reload window",
     "Run environment check",
     "Later",
@@ -58,12 +100,15 @@ async function promptPostInstallActions(): Promise<void> {
     await vscode.commands.executeCommand("workbench.action.reloadWindow");
   } else if (choice === "Run environment check") {
     await vscode.commands.executeCommand("ftc.runDoctor");
+    await maybeOfferStartHereMachineComplete(context, getWorkspaceRoot ?? (() => undefined));
   }
 }
 
 export async function runInstallDepsWithConsent(
   output: vscode.OutputChannel,
+  context: vscode.ExtensionContext,
   args: RunInstallDepsArgs = {},
+  getWorkspaceRoot?: () => string | undefined,
 ): Promise<void> {
   const os = installDepsOsForPlatform(process.platform);
   if (!os) {
@@ -71,20 +116,37 @@ export async function runInstallDepsWithConsent(
     return;
   }
 
-  const scope = await pickInstallDepsScope(args);
-  if (!scope) {
+  const plan = await resolveInstallPlan(args, getWorkspaceRoot);
+  if (!plan) {
     return;
   }
 
-  const options: BuildInstallDepsOptions =
-    scope.kind === "full" ? {} : { skipJdk: scope.skipJdk, skipSdk: scope.skipSdk };
-
+  const { options, planLine } = plan;
   if (options.skipJdk && options.skipSdk) {
-    vscode.window.showWarningMessage("Select at least JDK or Android SDK to install.");
+    vscode.window.showWarningMessage("Nothing to install for JDK or SDK.");
     return;
   }
 
-  const consentBody = describeInstallDepsConsentMessage(os, options);
+  const cwd = getWorkspaceRoot?.() ?? process.cwd();
+  const timeEstimate = await estimateInstallDepsSetupTime(
+    os,
+    options,
+    macPackageArchFromNode(),
+  );
+  const repo = findFtcDevToolsRepoRoot(cwd);
+  const repoNote = repo
+    ? "Using cloned ftc-dev-tools repo scripts (no GitHub script download)."
+    : undefined;
+
+  const consentBody = [
+    planLine,
+    `Estimated setup time: ${timeEstimate.summaryLine}`,
+    repoNote,
+    describeInstallDepsConsentMessage(os, options),
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+
   const confirm = await vscode.window.showWarningMessage(
     consentBody,
     { modal: true },
@@ -95,19 +157,18 @@ export async function runInstallDepsWithConsent(
     return;
   }
 
-  const command = buildInstallDepsCommand(os, options);
+  const command = buildInstallDepsTerminalCommand(os, options, cwd);
   output.appendLine("");
   output.appendLine("FTC: Run install-deps (user confirmed)");
   if (args.source) {
     output.appendLine(`Source: ${args.source}`);
   }
+  output.appendLine(planLine);
+  output.appendLine(`Time estimate: ${timeEstimate.summaryLine}`);
+  if (repo) {
+    output.appendLine(`Repo: ${repo}`);
+  }
   output.appendLine(`Platform: ${os}`);
-  if (options.skipJdk) {
-    output.appendLine("Options: skip JDK");
-  }
-  if (options.skipSdk) {
-    output.appendLine("Options: skip Android SDK");
-  }
   output.appendLine("Full command:");
   output.appendLine(command);
   output.show(true);
@@ -116,5 +177,5 @@ export async function runInstallDepsWithConsent(
   terminal.show();
   terminal.sendText(command, true);
 
-  await promptPostInstallActions();
+  await promptPostInstallActions(context, getWorkspaceRoot);
 }

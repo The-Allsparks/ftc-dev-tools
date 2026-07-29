@@ -18,6 +18,17 @@ Every open tracking issue (features, epics, hardening work) should include:
 
 Epics must include **`epic`**.
 
+## Closing issues and epics
+
+Automation in [`.github/workflows/epic-release-tag.yml`](../.github/workflows/epic-release-tag.yml) enforces:
+
+1. **Any issue:** If a pull request is linked to the issue (Development sidebar / `linked:issue-N`), it must be **merged** before the issue can stay closed. Otherwise the issue is reopened with an explanatory comment.
+2. **Epics:** All **sub-issues** (and task-tracked issues) linked to the epic must be **closed** before the epic can stay closed.
+
+Link child work with GitHub **sub-issues** on the epic. Link implementation PRs in the issue **Development** panel (or via `Fixes #N` / `Closes #N` in the PR description).
+
+When an epic closes successfully, the workflow patch-bumps the version, tags `main`, and triggers [Release](releasing.md#epic-driven-releases).
+
 ## Priority meanings
 
 | Label          | Use when                                                                                        |

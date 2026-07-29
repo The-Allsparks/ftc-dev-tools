@@ -11,12 +11,21 @@ Versioning starts at `0.1.0`.
 
 Automatic publish to npm or the VS Code Marketplace is **not** enabled in 0.1.0.
 
+## Epic-driven releases
+
+When an issue labeled **`epic`** is **closed** on `The-Allsparks/ftc-dev-tools`, [`.github/workflows/epic-release-tag.yml`](../.github/workflows/epic-release-tag.yml) first validates closure (merged linked PRs, closed sub-issues), then:
+
+1. Patch-bumps the monorepo version and prepends a `CHANGELOG.md` entry (references the epic issue).
+2. Commits to `main` and pushes a new `v*` tag at that commit.
+
+Pushing the tag starts the Release workflow below. You can still tag manually without closing an epic.
+
 ## Manual / tag workflow
 
 The GitHub Actions workflow `.github/workflows/release.yml` runs on:
 
 - `workflow_dispatch`
-- version tags matching `v*`
+- version tags matching `v*` (including epic-driven tags)
 
 Local packaging:
 

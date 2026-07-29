@@ -1,5 +1,7 @@
 name: Release
 
+# Runs when a v* tag is pushed (including tags created by epic-release-tag.yml).
+
 on:
   workflow_dispatch:
   push:

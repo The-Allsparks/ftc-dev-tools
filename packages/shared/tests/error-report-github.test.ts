@@ -14,7 +14,7 @@ const sampleInput: ErrorReportInput = {
   reporterLogin: "student1",
   occurredAt: "2026-07-29T12:00:00.000Z",
   error: {
-    code: "GRADLE_FAILED",
+    code: "COMPILATION_FAILURE",
     title: "Build failed",
     summary: "Gradle exited with code 1.",
     suggestedActions: ["Open the Build output", "Run doctor"],
@@ -70,17 +70,37 @@ describe("error-report-github", () => {
     expect(buildErrorReportIssueTitle("ftc.build", "0.1.0")).toBe("[error] ftc.build 0.1.0");
   });
 
-  it("redacts secrets in initial body", () => {
+  it("redacts secrets in local rich body", () => {
     const body = buildInitialErrorReportBody(sampleInput);
-    expect(body).toContain("GRADLE_FAILED");
+    expect(body).toContain("COMPILATION_FAILURE");
     expect(body).not.toContain("secret123");
     expect(body).toContain("***");
+  });
+
+  it("outbound GitHub body uses whitelist fields only", async () => {
+    const { buildOutboundGitHubErrorReport } =
+      await import("../src/feedback/error-report-sanitize.js");
+    const outbound = buildOutboundGitHubErrorReport(
+      {
+        ...sampleInput,
+        error: {
+          ...sampleInput.error,
+          summary: "password=secret123 from .ftc-dev.json",
+          technicalDetails: "preferredDeviceSerial=ABC",
+        },
+      },
+      "initial",
+    );
+    expect(outbound.bodyMarkdown).toContain("COMPILATION_FAILURE");
+    expect(outbound.bodyMarkdown).not.toContain("secret123");
+    expect(outbound.bodyMarkdown).not.toContain(".ftc-dev.json");
+    expect(outbound.bodyMarkdown).not.toContain("preferredDeviceSerial");
   });
 
   it("builds occurrence comments", () => {
     const comment = buildErrorOccurrenceComment(sampleInput);
     expect(comment).toContain("Occurrence report");
-    expect(comment).toContain("GRADLE_FAILED");
+    expect(comment).toContain("COMPILATION_FAILURE");
   });
 
   it("finds open issue by exact title", async () => {
@@ -139,18 +159,10 @@ describe("error-report-github", () => {
 });
 
 describe("error-report-sanitize", () => {
-  it("strips config-file-derived lines from outbound text", async () => {
-    const { sanitizeErrorReportInput } = await import("../src/feedback/error-report-sanitize.js");
-    const sanitized = sanitizeErrorReportInput({
-      ...sampleInput,
-      error: {
-        ...sampleInput.error,
-        technicalDetails: "Read .ftc-dev.json\npreferredDeviceSerial=ABC\nGradle failed",
-      },
-    });
-    expect(sanitized.error.technicalDetails).not.toContain(".ftc-dev.json");
-    expect(sanitized.error.technicalDetails).not.toContain("preferredDeviceSerial");
-    expect(sanitized.error.technicalDetails).toContain("Gradle failed");
+  it("normalizes unknown error codes", async () => {
+    const { normalizeOutboundErrorCode } = await import("../src/feedback/error-report-sanitize.js");
+    expect(normalizeOutboundErrorCode("COMPILATION_FAILURE")).toBe("COMPILATION_FAILURE");
+    expect(normalizeOutboundErrorCode("NOT_A_REAL_CODE")).toBe("UNKNOWN_ERROR");
   });
 });
 

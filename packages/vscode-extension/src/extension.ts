@@ -47,16 +47,18 @@ import {
   formatLogEntry,
   START_HERE_PROGRESS_KEY,
   normalizeStartHereProgress,
+  DEVICE_CONNECTIONS_DOC_URL,
 } from "@ftc-dev-tools/shared";
 import type {
   AndroidDevice,
   DeviceProvider,
   FriendlyError,
+  MilestoneStepId,
   SdkStatusReport,
   WifiStatusReport,
 } from "@ftc-dev-tools/shared";
 import { FtcRobotTreeProvider } from "./views/robot-tree.js";
-import { StatusController } from "./status-controller.js";
+import { StatusController, type StatusState } from "./status-controller.js";
 import {
   configureRecommendedExtensionsCommand,
   installFtcCliCommand,
@@ -84,6 +86,11 @@ import { obtainOrOpenFtcProjectCommand } from "./obtain-project.js";
 import { connectRobotUsbFirstCommand } from "./connect-robot-usb.js";
 import { firstOpModeJourneyCommand } from "./first-opmode-journey.js";
 import {
+  MilestoneProgressStore,
+  milestoneSummaryTooltip,
+  onMilestoneProgressChanged,
+} from "./milestone-progress.js";
+import {
   initErrorReporting,
   linkGitHubForErrorReportsCommand,
   offerErrorReportActions,
@@ -102,6 +109,19 @@ let cachedWifiStatusAt = 0;
 const SDK_STATUS_TTL_MS = 60_000;
 const WIFI_STATUS_TTL_MS = 60_000;
 let activeCommandAttempted: string | undefined;
+let milestoneStore: MilestoneProgressStore;
+let lastBarState: StatusState = "no-device";
+
+function setBarState(state: StatusState): void {
+  lastBarState = state;
+  status.setState(state, { milestoneTooltip: milestoneSummaryTooltip(milestoneStore.load()) });
+}
+
+async function markMilestone(id: MilestoneStepId): Promise<void> {
+  await milestoneStore.mark(id);
+  tree.refresh();
+  setBarState(lastBarState);
+}
 
 export function activate(context: vscode.ExtensionContext): void {
   initErrorReporting({
@@ -112,17 +132,25 @@ export function activate(context: vscode.ExtensionContext): void {
   output = vscode.window.createOutputChannel("FTC Dev Tools");
   status = new StatusController();
   initWorkspaceRoot(context);
+  milestoneStore = new MilestoneProgressStore(context);
   tree = new FtcRobotTreeProvider(
     () => getWorkspaceRoot(),
     () => selectedSerial,
     () => cachedSdkStatus,
     () => cachedWifiStatus,
     () => normalizeStartHereProgress(context.globalState.get(START_HERE_PROGRESS_KEY)),
+    () => milestoneStore.load(),
   );
 
   context.subscriptions.push(
     onStartHereProgressChanged(() => {
       tree.refresh();
+    }),
+  );
+  context.subscriptions.push(
+    onMilestoneProgressChanged(() => {
+      tree.refresh();
+      setBarState(lastBarState);
     }),
   );
 
@@ -213,6 +241,9 @@ export function activate(context: vscode.ExtensionContext): void {
       hasWorkspaceRoot: () => getWorkspaceRoot() !== undefined,
     }),
   );
+  register("ftc.openDeviceConnectionsDoc", openDeviceConnectionsDocCommand);
+  register("ftc.markOpModeOnDriverStation", markOpModeOnDriverStationCommand);
+  register("ftc.resetCompetitionChecklist", resetCompetitionChecklistCommand);
   register("ftc.viewLogs", () => viewLogsCommand("teamcode"));
   register("ftc.viewErrorLogs", () => viewLogsCommand("errors"));
   register("ftc.stopLogs", stopLogsCommand);
@@ -330,8 +361,9 @@ async function runDoctorCommand(): Promise<void> {
   output.appendLine(report.summaryLine);
   output.show(true);
   if (!report.ready) {
-    status.setState("build-failed");
+    setBarState("build-failed");
   } else {
+    await markMilestone("doctor-ok");
     await refreshStatus();
   }
   await showDoctorResultsUi(report, output);
@@ -343,7 +375,7 @@ async function showDevicesCommand(): Promise<void> {
   output.clear();
   if (devices.length === 0) {
     output.appendLine("No Android devices found.");
-    status.setState("no-device");
+    setBarState("no-device");
   } else {
     for (const device of devices) {
       output.appendLine(formatDevice(device));
@@ -370,13 +402,14 @@ async function buildCommand(): Promise<void> {
       });
       appendBuildOutput(outcome.result.stdout, outcome.result.stderr);
       if (!outcome.result.success) {
-        status.setState("build-failed");
+        setBarState("build-failed");
         if (outcome.friendlyError) {
           await showFriendlyError(outcome.friendlyError);
         }
         return;
       }
       vscode.window.showInformationMessage(`Build succeeded: ${outcome.result.apkPath}`);
+      await markMilestone("build-ok");
       await refreshStatus();
     },
   );
@@ -384,7 +417,7 @@ async function buildCommand(): Promise<void> {
 
 async function deployCommand(dryRun: boolean): Promise<void> {
   const root = requireRoot();
-  status.setState("deploying");
+  setBarState("deploying");
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
@@ -413,7 +446,7 @@ async function deployCommand(dryRun: boolean): Promise<void> {
       }
       output.appendLine(outcome.result.message);
       if (!outcome.result.success) {
-        status.setState("build-failed");
+        setBarState("build-failed");
         if (outcome.friendlyError) {
           await showFriendlyError(outcome.friendlyError, {
             deploySteps: outcome.result.steps,
@@ -422,6 +455,10 @@ async function deployCommand(dryRun: boolean): Promise<void> {
         return;
       }
       vscode.window.showInformationMessage(outcome.result.message);
+      if (!dryRun) {
+        await markMilestone("build-ok");
+        await markMilestone("deploy-ok");
+      }
       await refreshStatus();
     },
   );
@@ -431,7 +468,7 @@ async function selectDeviceCommand(): Promise<void> {
   const provider = await createDeviceProvider();
   const devices = await provider.listDevices();
   if (devices.length === 0) {
-    status.setState("no-device");
+    setBarState("no-device");
     vscode.window.showWarningMessage("No Android devices found.");
     return;
   }
@@ -451,6 +488,9 @@ async function selectDeviceCommand(): Promise<void> {
     return;
   }
   selectedSerial = picked.device.serial;
+  if (picked.device.authorization === "authorized") {
+    await markMilestone("device-authorized");
+  }
   await vscode.workspace
     .getConfiguration("ftc")
     .update("preferredDeviceSerial", selectedSerial, vscode.ConfigurationTarget.Workspace);
@@ -485,6 +525,9 @@ async function viewLogsCommand(filter: "teamcode" | "errors"): Promise<void> {
     `Streaming ${filter} logs from ${selection.device.serial}. Run "FTC: Stop Robot Logs" to cancel.`,
   );
   output.show(true);
+  if (filter === "teamcode") {
+    await markMilestone("teamcode-logs");
+  }
 
   await vscode.window.withProgress(
     {
@@ -1681,27 +1724,59 @@ async function hwmapCodegenCommand(): Promise<void> {
   }
 }
 
+async function openDeviceConnectionsDocCommand(): Promise<void> {
+  await vscode.env.openExternal(vscode.Uri.parse(DEVICE_CONNECTIONS_DOC_URL));
+}
+
+async function markOpModeOnDriverStationCommand(): Promise<void> {
+  const confirm = await vscode.window.showInformationMessage(
+    "Mark this when Driver Station Init succeeded and your OpMode ran on the robot.",
+    "Mark complete",
+    "Cancel",
+  );
+  if (confirm === "Mark complete") {
+    await markMilestone("opmode-on-driver-station");
+    vscode.window.showInformationMessage("Competition readiness checklist updated.");
+  }
+}
+
+async function resetCompetitionChecklistCommand(): Promise<void> {
+  const confirm = await vscode.window.showWarningMessage(
+    "Reset competition readiness milestones for this workspace?",
+    "Reset",
+    "Cancel",
+  );
+  if (confirm === "Reset") {
+    await milestoneStore.reset();
+    tree.refresh();
+    setBarState(lastBarState);
+  }
+}
+
 async function refreshStatus(): Promise<void> {
   try {
     const provider = await createDeviceProvider();
     const devices = await provider.listDevices();
     const usable = devices.filter((d) => d.state === "device" && d.authorization === "authorized");
+    if (usable.length > 0) {
+      await markMilestone("device-authorized");
+    }
     if (usable.length === 0) {
       if (devices.some((d) => d.state === "unauthorized")) {
-        status.setState("unauthorized");
+        setBarState("unauthorized");
       } else {
-        status.setState("no-device");
+        setBarState("no-device");
       }
     } else if (usable.length > 1 && !selectedSerial) {
-      status.setState("multiple");
+      setBarState("multiple");
     } else {
-      status.setState("ready");
+      setBarState("ready");
     }
     await refreshSdkStatus(false);
     await refreshWifiStatus(false);
     tree.refresh();
   } catch {
-    status.setState("no-device");
+    setBarState("no-device");
     await refreshSdkStatus(false);
     await refreshWifiStatus(false);
     tree.refresh();

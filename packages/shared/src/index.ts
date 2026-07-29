@@ -502,6 +502,19 @@ export {
   DRIVER_STATION_INIT_START_LINES,
   formatDriverStationInitStartMessage,
 } from "./onboarding/first-opmode-journey.js";
+export {
+  MILESTONE_PROGRESS_KEY,
+  MILESTONE_STEP_IDS,
+  MILESTONE_STEPS,
+  DEVICE_CONNECTIONS_DOC_URL,
+  getMilestoneStep,
+  isMilestoneStepId,
+  normalizeMilestoneProgress,
+  serializeMilestoneProgress,
+  isMilestoneComplete,
+  countMilestonesCompleted,
+} from "./onboarding/milestone-checklist.js";
+export type { MilestoneStepId, MilestoneStep } from "./onboarding/milestone-checklist.js";
 
 export {
   OFFICIAL_FTC_ROBOT_CONTROLLER_GIT_URL,

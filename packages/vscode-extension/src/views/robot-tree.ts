@@ -13,6 +13,8 @@ import {
   type WifiStatusReport,
 } from "@ftc-dev-tools/shared";
 import { buildGettingStartedTreeNodes } from "./getting-started-nodes.js";
+import { buildMilestoneChecklistNodes } from "./milestone-checklist-nodes.js";
+import type { MilestoneStepId } from "@ftc-dev-tools/shared";
 
 type RobotNode = {
   id: string;
@@ -33,6 +35,7 @@ export class FtcRobotTreeProvider implements vscode.TreeDataProvider<RobotNode> 
     private readonly getSdkStatus: () => SdkStatusReport | undefined,
     private readonly getWifiStatus: () => WifiStatusReport | undefined,
     private readonly getStartHereCompleted: () => readonly StartHereStepId[],
+    private readonly getMilestoneCompleted: () => readonly MilestoneStepId[],
   ) {}
 
   refresh(): void {
@@ -146,6 +149,18 @@ export class FtcRobotTreeProvider implements vscode.TreeDataProvider<RobotNode> 
       command: { command: node.commandId, title: node.commandTitle },
     }));
 
+    const milestoneCompleted = this.getMilestoneCompleted();
+    const milestoneChildren = buildMilestoneChecklistNodes(milestoneCompleted).map((node) => ({
+      id: node.id,
+      label: node.label,
+      description: node.description,
+      collapsible: false as const,
+      command:
+        node.commandId && node.commandTitle
+          ? { command: node.commandId, title: node.commandTitle }
+          : undefined,
+    }));
+
     return [
       {
         id: "header",
@@ -157,6 +172,12 @@ export class FtcRobotTreeProvider implements vscode.TreeDataProvider<RobotNode> 
             label: "Getting started",
             collapsible: true,
             children: gettingStartedChildren,
+          },
+          {
+            id: "competition-readiness",
+            label: "Competition readiness",
+            collapsible: true,
+            children: milestoneChildren,
           },
           {
             id: "project",

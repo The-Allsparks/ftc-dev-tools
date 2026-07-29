@@ -13,7 +13,7 @@ export class StatusController implements vscode.Disposable {
     this.item.show();
   }
 
-  setState(state: StatusState): void {
+  setState(state: StatusState, options?: { milestoneTooltip?: string }): void {
     const labels: Record<StatusState, string> = {
       ready: "FTC: Ready",
       "no-device": "FTC: No Device",
@@ -24,6 +24,7 @@ export class StatusController implements vscode.Disposable {
     };
     this.item.text = labels[state];
     this.item.tooltip =
+      options?.milestoneTooltip ??
       "FTC Dev Tools — click to refresh status / open actions via Command Palette";
     this.item.command =
       state === "multiple"

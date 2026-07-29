@@ -256,6 +256,98 @@
         "title": "FTC: Refresh View"
       }
     ],
+    "walkthroughs": [
+      {
+        "id": "ftc.rookieOnboarding",
+        "title": "Get started with FTC Dev Tools",
+        "description": "Prepare your computer, open an FTC project, connect the robot, and run your first OpMode from VS Code or Cursor.",
+        "when": "!isWeb",
+        "steps": [
+          {
+            "id": "start-here",
+            "title": "Open the guided checklist",
+            "description": "Start Here tracks progress in a checklist doc and panel so you can pause and resume anytime.",
+            "media": {
+              "markdown": "Run [FTC: Start Here](command:ftc.startHere) from the Command Palette.\n\nOpen the **FTC** activity bar for the robot sidebar."
+            },
+            "completionEvents": [
+              "onCommand:ftc.startHere"
+            ]
+          },
+          {
+            "id": "prepare-computer",
+            "title": "Prepare this computer",
+            "description": "Install only what is missing: JDK, Android platform-tools, and recommended extensions — you approve each step.",
+            "media": {
+              "markdown": "Run [FTC: Set Up This Computer](command:ftc.setUpComputer), then [FTC: Run Environment Check](command:ftc.runDoctor) to confirm Java and adb."
+            },
+            "completionEvents": [
+              "onCommand:ftc.setUpComputer",
+              "onCommand:ftc.runDoctor"
+            ]
+          },
+          {
+            "id": "open-project",
+            "title": "Get or open your FTC project",
+            "description": "Open the Android Studio project folder (settings.gradle + TeamCode) or clone your team repo / the official SDK template.",
+            "media": {
+              "markdown": "Run [FTC: Get or Open FTC Project](command:ftc.obtainProject), then [FTC: Set Up This FTC Project](command:ftc.setUpProject) for tasks and settings."
+            },
+            "completionEvents": [
+              "onCommand:ftc.obtainProject",
+              "onCommand:ftc.setUpProject"
+            ]
+          },
+          {
+            "id": "connect-robot",
+            "title": "Connect the robot (USB first)",
+            "description": "Plug in USB, authorize debugging on the robot, and pick which device receives deploys.",
+            "media": {
+              "image": "media/ftc.svg",
+              "altText": "FTC Dev Tools icon — replace with robot connection screenshot when available"
+            },
+            "completionEvents": [
+              "onCommand:ftc.connectRobotUsb"
+            ]
+          },
+          {
+            "id": "first-opmode",
+            "title": "Run your first OpMode",
+            "description": "Create a simple TeleOp, deploy, and use Driver Station Init and Start.",
+            "media": {
+              "markdown": "Run [FTC: First OpMode Journey](command:ftc.firstOpModeJourney) for a narrated path, or [FTC: Create OpMode](command:ftc.opmodeCreate) on your own."
+            },
+            "completionEvents": [
+              "onCommand:ftc.firstOpModeJourney",
+              "onCommand:ftc.opmodeCreate"
+            ]
+          },
+          {
+            "id": "build-deploy",
+            "title": "Build and deploy",
+            "description": "Compile TeamCode and install the APK on the device you selected.",
+            "media": {
+              "markdown": "Run [FTC: Build and Deploy](command:ftc.buildAndDeploy), or build and deploy separately with [FTC: Build Robot Code](command:ftc.build) and [FTC: Deploy to Robot](command:ftc.deploy)."
+            },
+            "completionEvents": [
+              "onCommand:ftc.buildAndDeploy",
+              "onCommand:ftc.deploy"
+            ]
+          },
+          {
+            "id": "view-logs",
+            "title": "View robot logs",
+            "description": "Stream TeamCode logcat while testing on Driver Station to catch runtime errors early.",
+            "media": {
+              "markdown": "Run [FTC: View Robot Logs](command:ftc.viewLogs). Stop streaming with [FTC: Stop Robot Logs](command:ftc.stopLogs) when finished."
+            },
+            "completionEvents": [
+              "onCommand:ftc.viewLogs"
+            ]
+          }
+        ]
+      }
+    ],
     "snippets": [
       {
         "language": "java",

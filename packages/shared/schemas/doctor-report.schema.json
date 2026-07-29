@@ -9,7 +9,7 @@
   "properties": {
     "ready": {
       "type": "boolean",
-      "description": "True when all required checks pass and machine, project, and robot readiness flags are satisfied."
+      "description": "True when deploy could reasonably succeed (computer, project, authorized device) and required checks pass."
     },
     "readiness": {
       "type": "object",
@@ -26,7 +26,21 @@
         },
         "robotReadyToDeploy": {
           "type": "boolean",
-          "description": "Robot device check has no fail/warn."
+          "description": "True when an authorized deployment device was detected (legacy boolean)."
+        }
+      }
+    },
+    "readinessSnapshot": {
+      "type": "object",
+      "description": "Five-category readiness model (#82).",
+      "additionalProperties": false,
+      "required": ["categories", "deployReady", "competitionReady"],
+      "properties": {
+        "deployReady": { "type": "boolean" },
+        "competitionReady": { "type": "boolean" },
+        "categories": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/readinessCategory" }
         }
       }
     },
@@ -110,6 +124,27 @@
           "type": "array",
           "items": { "$ref": "#/$defs/doctorCheck" }
         }
+      }
+    },
+    "readinessLevel": {
+      "type": "string",
+      "enum": ["unknown", "pass", "warn", "fail"]
+    },
+    "readinessCategoryId": {
+      "type": "string",
+      "enum": ["computer", "project", "device", "deploy", "competition"]
+    },
+    "readinessCategory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "level", "summary", "requiredForDeploy"],
+      "properties": {
+        "id": { "$ref": "#/$defs/readinessCategoryId" },
+        "title": { "type": "string" },
+        "level": { "$ref": "#/$defs/readinessLevel" },
+        "summary": { "type": "string" },
+        "requiredForDeploy": { "type": "boolean" },
+        "nextAction": { "type": "string" }
       }
     }
   }

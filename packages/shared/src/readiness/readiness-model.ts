@@ -1,6 +1,12 @@
 import type { DoctorCheck, DoctorReport } from "../types/errors.js";
 import type { MilestoneStepId } from "../onboarding/milestone-checklist.js";
 import { MILESTONE_STEP_IDS, isMilestoneComplete } from "../onboarding/milestone-checklist.js";
+import type { LastSuccessfulBuildSnapshot } from "./build-snapshot.js";
+
+export type ReadinessSnapshotOptions = {
+  milestoneCompleted?: readonly MilestoneStepId[];
+  lastSuccessfulBuild?: LastSuccessfulBuildSnapshot;
+};
 
 export type ReadinessLevel = "unknown" | "pass" | "warn" | "fail";
 
@@ -67,7 +73,7 @@ const NETWORK_IDS = new Set(["wifi-console", "wifi-robot-interface"]);
 
 export function buildReadinessSnapshotFromDoctor(
   report: Pick<DoctorReport, "checks" | "readiness">,
-  options?: { milestoneCompleted?: readonly MilestoneStepId[] },
+  options?: ReadinessSnapshotOptions,
 ): ReadinessSnapshot {
   const checks = report.checks;
   const computerLevel = levelFromChecks(checks, COMPUTER_IDS);
@@ -101,8 +107,20 @@ export function buildReadinessSnapshotFromDoctor(
   const deployReady = deployLevel === "pass";
 
   const milestoneCompleted = options?.milestoneCompleted ?? [];
-  const competitionReady =
-    MILESTONE_STEP_IDS.every((id) => isMilestoneComplete(milestoneCompleted, id)) && deployReady;
+  const hasBuildSnapshot = Boolean(options?.lastSuccessfulBuild?.completedAt);
+  const milestonesComplete = MILESTONE_STEP_IDS.every((id) =>
+    isMilestoneComplete(milestoneCompleted, id),
+  );
+  const competitionReady = deployReady && hasBuildSnapshot && milestonesComplete;
+
+  let competitionLevel: ReadinessLevel = "unknown";
+  if (competitionReady) {
+    competitionLevel = "pass";
+  } else if (milestonesComplete && deployReady && !hasBuildSnapshot) {
+    competitionLevel = "warn";
+  } else if (milestoneCompleted.length > 0 || hasBuildSnapshot) {
+    competitionLevel = "warn";
+  }
 
   const categories: ReadinessCategoryState[] = [
     {
@@ -160,10 +178,12 @@ export function buildReadinessSnapshotFromDoctor(
     {
       id: "competition",
       title: "Competition ready",
-      level: competitionReady ? "pass" : milestoneCompleted.length > 0 ? "warn" : "unknown",
+      level: competitionLevel,
       summary: competitionReady
-        ? "Competition readiness milestones are complete for this workspace."
-        : "Complete the Competition readiness checklist after a successful deploy and Driver Station test.",
+        ? "Competition readiness milestones and a successful build snapshot are recorded."
+        : hasBuildSnapshot
+          ? "Complete the Competition readiness checklist and verify deploy on hardware."
+          : "Build successfully once, then complete the Competition readiness checklist.",
       requiredForDeploy: false,
       nextAction: competitionReady
         ? undefined

@@ -30,7 +30,7 @@ describe("cli-github-release", () => {
   });
 
   it("fetchLatestCliGitHubRelease uses /releases/latest", async () => {
-    const fetchImpl = vi.fn(async (url: string) => ({
+    const fetchImpl = vi.fn(async (_url: string) => ({
       ok: true,
       status: 200,
       statusText: "OK",

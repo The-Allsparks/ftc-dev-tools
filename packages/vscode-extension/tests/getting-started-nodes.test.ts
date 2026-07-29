@@ -4,9 +4,9 @@ import { buildGettingStartedTreeNodes } from "../src/views/getting-started-nodes
 describe("buildGettingStartedTreeNodes", () => {
   it("lists Start Here first", () => {
     const nodes = buildGettingStartedTreeNodes([]);
-    expect(nodes).toHaveLength(6);
+    expect(nodes).toHaveLength(7);
     expect(nodes[0]?.commandId).toBe("ftc.startHere");
-    expect(nodes[0]?.description).toBe("0/7 steps — guided checklist + doc");
+    expect(nodes[0]?.description).toBe("0/8 steps — guided checklist + doc");
   });
 
   it("marks computer and doctor rows when machine-checks is complete", () => {
@@ -25,6 +25,7 @@ describe("buildGettingStartedTreeNodes", () => {
       "ftc.obtainProject",
       "ftc.setUpProject",
       "ftc.connectRobotUsb",
+      "ftc.firstOpModeJourney",
     ]);
   });
 });

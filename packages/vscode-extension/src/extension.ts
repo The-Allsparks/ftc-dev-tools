@@ -82,6 +82,7 @@ import {
 import { StartHereDockProvider } from "./start-here-dock.js";
 import { obtainOrOpenFtcProjectCommand } from "./obtain-project.js";
 import { connectRobotUsbFirstCommand } from "./connect-robot-usb.js";
+import { firstOpModeJourneyCommand } from "./first-opmode-journey.js";
 
 let output: vscode.OutputChannel;
 let status: StatusController;
@@ -189,6 +190,12 @@ export function activate(context: vscode.ExtensionContext): void {
       selectDevice: selectDeviceCommand,
       refreshStatus,
       getSelectedSerial: () => selectedSerial,
+    }),
+  );
+  register("ftc.firstOpModeJourney", () =>
+    firstOpModeJourneyCommand({
+      executeCommand: (commandId) => vscode.commands.executeCommand(commandId),
+      hasWorkspaceRoot: () => getWorkspaceRoot() !== undefined,
     }),
   );
   register("ftc.viewLogs", () => viewLogsCommand("teamcode"));

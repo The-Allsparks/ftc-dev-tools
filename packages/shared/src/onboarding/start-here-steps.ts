@@ -6,6 +6,7 @@ export const START_HERE_STEP_IDS = [
   "machine-checks",
   "project-folder",
   "connect-robot",
+  "first-opmode",
   "build",
   "deploy",
   "logs",
@@ -58,6 +59,20 @@ export const START_HERE_STEPS: readonly StartHereStep[] = [
     description:
       "Plug in USB, authorize debugging on the robot, then pick which device to deploy to. Use Wi-Fi only when you are ready for advanced setup.",
     commandIds: ["ftc.connectRobotUsb", "ftc.showDevices", "ftc.selectDevice"],
+    allowManualComplete: true,
+  },
+  {
+    id: "first-opmode",
+    title: "Run your first OpMode",
+    description:
+      "Create a simple TeleOp, optionally validate configuration, build and deploy, then use Driver Station Init and Start. A guided command chains the steps with plain-language hints.",
+    commandIds: [
+      "ftc.firstOpModeJourney",
+      "ftc.opmodeCreate",
+      "ftc.configValidate",
+      "ftc.buildAndDeploy",
+      "ftc.viewLogs",
+    ],
     allowManualComplete: true,
   },
   {

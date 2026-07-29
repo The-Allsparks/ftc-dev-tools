@@ -24,6 +24,7 @@ export function buildGettingStartedTreeNodes(
   const machineDone = isStartHereStepComplete(completed, "machine-checks");
   const projectDone = isStartHereStepComplete(completed, "project-folder");
   const connectDone = isStartHereStepComplete(completed, "connect-robot");
+  const firstOpModeDone = isStartHereStepComplete(completed, "first-opmode");
   const doneCount = countStartHereCompleted(completed);
   const total = START_HERE_STEPS.length;
 
@@ -69,6 +70,15 @@ export function buildGettingStartedTreeNodes(
       description: connectDone ? "Marked complete in Start Here" : "Cable, authorize, pick device",
       commandId: "ftc.connectRobotUsb",
       commandTitle: "Connect My Robot (USB First)",
+    },
+    {
+      id: "getting-started-first-opmode",
+      label: checklistLabel("First OpMode Journey", firstOpModeDone),
+      description: firstOpModeDone
+        ? "Marked complete in Start Here"
+        : "Create, deploy, Driver Station Init/Start",
+      commandId: "ftc.firstOpModeJourney",
+      commandTitle: "First OpMode Journey",
     },
   ];
 }

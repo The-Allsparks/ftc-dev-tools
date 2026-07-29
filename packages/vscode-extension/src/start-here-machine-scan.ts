@@ -17,6 +17,7 @@ import {
 } from "@ftc-dev-tools/shared";
 import { cacheMachineInstallNeeds } from "./machine-install-cache.js";
 import { ftcToolProcessEnv } from "./ftc-tool-env.js";
+import { ensureFtcJavaHomeForBuilds } from "./configure-java-home.js";
 
 function extensionsConfigured(root: string | undefined): boolean {
   if (!root) {
@@ -40,6 +41,8 @@ export async function scanMachineForStartHere(
   const runner = new NodeProcessRunner();
   const adapter = new OfficialFtcProjectAdapter();
   const cwd = getWorkspaceRoot() ?? process.cwd();
+
+  await ensureFtcJavaHomeForBuilds(runner);
 
   const report = await runDoctor({
     ...buildSetUpComputerDoctorOptions(cwd, runner, adapter),

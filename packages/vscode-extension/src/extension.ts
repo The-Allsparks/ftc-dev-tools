@@ -76,6 +76,7 @@ import {
 import { registerFtcTaskProvider } from "./ftc-task-provider.js";
 import { showDoctorResultsUi } from "./doctor-ui.js";
 import { ftcToolProcessEnv } from "./ftc-tool-env.js";
+import { ensureFtcJavaHomeForBuilds } from "./configure-java-home.js";
 import { runInstallDepsWithConsent, type RunInstallDepsArgs } from "./install-deps-consent.js";
 import {
   onStartHereProgressChanged,
@@ -340,6 +341,7 @@ async function runDoctorCommand(): Promise<void> {
   } catch {
     devices = undefined;
   }
+  await ensureFtcJavaHomeForBuilds(runner, output);
   const report = await runDoctor({
     cwd: root,
     runner,

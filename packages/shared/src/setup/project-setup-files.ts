@@ -28,7 +28,10 @@ export function mergeExtensionsJson(existing: unknown): Record<string, unknown> 
   return obj;
 }
 
-export function mergeFtcWorkspaceSettings(existing: unknown): Record<string, unknown> {
+export function mergeFtcWorkspaceSettings(
+  existing: unknown,
+  options?: { javaHome?: string },
+): Record<string, unknown> {
   const settings =
     existing !== null && typeof existing === "object" && !Array.isArray(existing)
       ? { ...(existing as Record<string, unknown>) }
@@ -43,6 +46,10 @@ export function mergeFtcWorkspaceSettings(existing: unknown): Record<string, unk
       "**/build": true,
     },
   };
+  const suggestedJavaHome = options?.javaHome?.trim();
+  if (suggestedJavaHome && !String(settings["ftc.javaHome"] ?? "").trim()) {
+    next["ftc.javaHome"] = suggestedJavaHome;
+  }
   delete next["ftc.preferredDeviceSerial"];
   return next;
 }

@@ -67,6 +67,22 @@ export async function discoverJava(
   };
 }
 
+export function suggestFtcJavaHomeSetting(
+  java: JavaDiscoveryResult,
+  currentSetting?: string,
+): string | undefined {
+  if (currentSetting?.trim()) {
+    return undefined;
+  }
+  if (java.majorVersion !== REQUIRED_JDK_MAJOR || !java.selectedJavaHome) {
+    return undefined;
+  }
+  if (java.pathMajorVersion === undefined || java.pathMajorVersion === java.majorVersion) {
+    return undefined;
+  }
+  return java.selectedJavaHome;
+}
+
 export function parseJavaMajorVersion(versionText: string): number | undefined {
   const legacyQuoted = versionText.match(/version\s+"1\.(\d+)/i);
   if (legacyQuoted) {

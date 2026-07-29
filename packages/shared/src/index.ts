@@ -138,7 +138,11 @@ export { discoverAdb, discoverAndroidSdk } from "./discovery/adb-discovery.js";
 export { discoverFtcCliOnPath } from "./discovery/ftc-cli-discovery.js";
 export type { FtcCliDiscoveryResult } from "./discovery/ftc-cli-discovery.js";
 export type { AdbDiscoveryResult } from "./discovery/adb-discovery.js";
-export { discoverJava, parseJavaMajorVersion } from "./discovery/java-discovery.js";
+export {
+  discoverJava,
+  parseJavaMajorVersion,
+  suggestFtcJavaHomeSetting,
+} from "./discovery/java-discovery.js";
 export {
   findJdkHomeForMajor,
   buildJavaEnvForHome,

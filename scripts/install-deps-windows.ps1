@@ -192,6 +192,21 @@ function Ensure-JavaForSdkTools {
   Throw-JavaTooOldForSdk -PathMajor $(if ($null -ne $pathMajor) { $pathMajor } else { 0 }) -RequiredMajor $RequiredMajor
 }
 
+function Try-UseInstalledJdk {
+  param([int]$RequiredMajor)
+
+  $javaHome = Find-InstalledJdkHome -Major $RequiredMajor
+  if (-not $javaHome) {
+    return $false
+  }
+  Use-JdkAtHome $javaHome
+  $verify = Get-JavaMajorVersion
+  if ($null -ne $verify -and $verify -ge $RequiredMajor) {
+    return $true
+  }
+  return $false
+}
+
 function Install-Jdk {
   param([int]$RequiredMajor)
 
@@ -212,23 +227,31 @@ function Install-Jdk {
   }
 
   if ($null -ne $pathMajor -and $pathMajor -lt $RequiredMajor) {
-    Write-Host "Java ${pathMajor} is below ${RequiredMajor} (required for Android sdkmanager). Installing JDK ${RequiredMajor}…"
+    Write-Host "Java ${pathMajor} is below ${RequiredMajor} (required for Android sdkmanager). Looking for JDK ${RequiredMajor} on disk…"
+    if (Try-UseInstalledJdk -RequiredMajor $RequiredMajor) {
+      Write-Host "JDK ${RequiredMajor} is installed but was not first on PATH; JAVA_HOME and user PATH updated."
+      return
+    }
+    Write-Host "Installing JDK ${RequiredMajor} via winget…"
   }
 
   Assert-Command winget
   & winget install --id "EclipseAdoptium.Temurin.${RequiredMajor}.JDK" --accept-package-agreements --accept-source-agreements --disable-interactivity
   if ($LASTEXITCODE -ne 0) {
-    throw "winget failed to install Eclipse Temurin JDK ${RequiredMajor}. Install a JDK manually, then re-run with -SkipJdk only if java -version reports ${RequiredMajor}+."
+    $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
+    if (Try-UseInstalledJdk -RequiredMajor $RequiredMajor) {
+      Write-Host "winget exited with code $LASTEXITCODE (often already installed); using JDK at `$env:JAVA_HOME."
+      return
+    }
+    throw "winget failed to install Eclipse Temurin JDK ${RequiredMajor} (exit $LASTEXITCODE) and JDK ${RequiredMajor} was not found under Program Files. Install a JDK manually, then re-run with -SkipJdk only if java -version reports ${RequiredMajor}+."
   }
 
   $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
 
-  $javaHome = Find-InstalledJdkHome -Major $RequiredMajor
-  if ($javaHome) {
-    Use-JdkAtHome $javaHome
-  } else {
-    Write-Warning "JDK installed, but JAVA_HOME could not be auto-detected. Set JAVA_HOME to JDK ${RequiredMajor} manually, then re-run."
+  if (Try-UseInstalledJdk -RequiredMajor $RequiredMajor) {
+    return
   }
+  Write-Warning "JDK install finished, but JAVA_HOME could not be auto-detected. Set JAVA_HOME to JDK ${RequiredMajor} manually, then re-run."
 
   Ensure-JavaForSdkTools -RequiredMajor $RequiredMajor
 }

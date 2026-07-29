@@ -69,7 +69,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\install-deps-windows.ps1 -Ski
 
 What it does:
 
-- Installs Eclipse Temurin JDK 17 via `winget` when Java is missing
+- Installs Eclipse Temurin JDK 17 via `winget` when Java is missing or below JDK 17 (Android sdkmanager requires JDK 17+)
 - Downloads pinned Android command-line tools (checksum verified)
 - Installs `platform-tools`, `platforms;android-34`, and `build-tools;34.0.0` when possible
 - Sets user `JAVA_HOME`, `ANDROID_HOME`, `ANDROID_SDK_ROOT`, and PATH entries

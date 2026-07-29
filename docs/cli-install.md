@@ -13,8 +13,16 @@ The VS Code/Cursor **extension** (VSIX) and the **`ftc` CLI** are separate insta
 
 After maintainers publish a [GitHub Release](https://github.com/The-Allsparks/ftc-dev-tools/releases) (tag like `v0.1.0`), install globally in one step:
 
+**macOS / Linux**
+
 ```bash
 npm install -g "https://github.com/The-Allsparks/ftc-dev-tools/releases/download/v0.1.0/ftc-cli-0.1.0.tar.gz"
+```
+
+**Windows (PowerShell or Command Prompt)** — use `npm.cmd` so PowerShell does not block `npm.ps1` when script execution is restricted:
+
+```powershell
+npm.cmd install -g "https://github.com/The-Allsparks/ftc-dev-tools/releases/download/v0.1.0/ftc-cli-0.1.0.tar.gz"
 ```
 
 Replace `0.1.0` with the version shown on the release page. This needs **network access only** — no `git clone` and no `npm link`.
@@ -40,6 +48,8 @@ Once `@ftc-dev-tools/cli` is on the public npm registry:
 npm install -g @ftc-dev-tools/cli
 ```
 
+On Windows, use `npm.cmd install -g @ftc-dev-tools/cli` instead.
+
 npm publishing is **not** automated in this repository until a maintainer configures `NPM_TOKEN`. Until then, use the GitHub Release tarball above.
 
 ## MCP server (`ftc-mcp`)
@@ -51,6 +61,8 @@ The MCP package is `@ftc-dev-tools/mcp`. Consumer install options:
 ```bash
 npm install -g @ftc-dev-tools/mcp
 ```
+
+On Windows, use `npm.cmd install -g @ftc-dev-tools/mcp` instead.
 
 **Without a global install (after npm publish):**
 
@@ -72,6 +84,7 @@ Maintainers and contributors who work on FTC Dev Tools itself should clone the r
 
 | Symptom                                      | What to try                                                                                                            |
 | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| PowerShell: `npm.ps1 cannot be loaded` / execution policy | Use `npm.cmd install -g "…"` (see Windows examples above) or run the install in **Command Prompt**. |
 | `ftc: command not found`                     | Ensure Node global bin is on your `PATH` (restart the terminal after `npm install -g`).                                |
 | `Cannot find module '@ftc-dev-tools/shared'` | Re-install from a current release tarball (older archives may not bundle shared).                                      |
 | No release yet                               | Wait for tag `v*` on GitHub or use [from source](../README.md#from-source-contributors) until the first release ships. |

@@ -13,6 +13,8 @@ npm install -g @ftc-dev-tools/mcp
 ftc-mcp
 ```
 
+On Windows, use `npm.cmd` / `npx.cmd` instead of `npm` / `npx` if PowerShell blocks script execution — see [cli-install.md](cli-install.md).
+
 Or without a global install:
 
 ```bash

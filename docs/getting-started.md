@@ -39,6 +39,8 @@ After a [GitHub Release](https://github.com/The-Allsparks/ftc-dev-tools/releases
 npm install -g "https://github.com/The-Allsparks/ftc-dev-tools/releases/download/v0.1.0/ftc-cli-0.1.0.tar.gz"
 ```
 
+On Windows PowerShell, use `npm.cmd` instead of `npm` if you see an execution-policy error — see [cli-install.md](cli-install.md).
+
 Then open your FTC project folder and run `ftc doctor`.
 
 Details, npm (future), and MCP: [cli-install.md](cli-install.md).

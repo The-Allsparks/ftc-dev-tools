@@ -123,6 +123,15 @@ async function markMilestone(id: MilestoneStepId): Promise<void> {
   setBarState(lastBarState);
 }
 
+function ftcToolProcessEnv(): NodeJS.ProcessEnv {
+  const env = { ...process.env };
+  const javaHome = vscode.workspace.getConfiguration("ftc").get<string>("javaHome")?.trim();
+  if (javaHome) {
+    env.FTC_JAVA_HOME = javaHome;
+  }
+  return env;
+}
+
 export function activate(context: vscode.ExtensionContext): void {
   initErrorReporting({
     context,
@@ -399,6 +408,7 @@ async function buildCommand(): Promise<void> {
         cwd: root,
         verbose: false,
         signal: controller.signal,
+        env: ftcToolProcessEnv(),
       });
       appendBuildOutput(outcome.result.stdout, outcome.result.stderr);
       if (!outcome.result.success) {
@@ -440,6 +450,7 @@ async function deployCommand(dryRun: boolean): Promise<void> {
         deviceSerial: preferred,
         dryRun,
         signal: controller.signal,
+        env: ftcToolProcessEnv(),
       });
       for (const step of outcome.result.steps) {
         output.appendLine(step);
@@ -595,6 +606,7 @@ async function cleanCommand(): Promise<void> {
     runner: new NodeProcessRunner(),
     logger: new ConsoleLogger("info", (line) => output.appendLine(line)),
     cwd: root,
+    env: ftcToolProcessEnv(),
   });
   if (!outcome.result.success) {
     if (outcome.friendlyError) {

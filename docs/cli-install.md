@@ -9,23 +9,41 @@ The VS Code/Cursor **extension** (VSIX) and the **`ftc` CLI** are separate insta
 - **Node.js 20+** ([nodejs.org](https://nodejs.org/))
 - JDK and `adb` for your FTC season — see [getting-started.md](getting-started.md) and [install-without-android-studio.md](install-without-android-studio.md)
 
-## Recommended: GitHub Release (0.1.0)
+## Recommended: GitHub Release (latest)
 
-After maintainers publish a [GitHub Release](https://github.com/The-Allsparks/ftc-dev-tools/releases) (tag like `v0.1.0`), install globally in one step:
+After maintainers publish a [GitHub Release](https://github.com/The-Allsparks/ftc-dev-tools/releases) (tag like `v0.1.0`), install globally in one step.
+
+**Easiest:** In VS Code or Cursor, run **FTC: Install FTC CLI** — it queries GitHub for the latest release and copies/opens the install command for you.
+
+**Terminal (auto-detect latest, Node 20+):** from any clone of this repo, or after downloading `scripts/latest-cli-install.mjs`:
+
+```bash
+node scripts/latest-cli-install.mjs
+```
+
+Run the line it prints (on Windows that will use `npm.cmd`).
+
+**If you already have `ftc` installed:**
+
+```bash
+ftc install-cli
+```
+
+**Manual (pin a specific version):** replace `VERSION` and `TAG` from the [releases page](https://github.com/The-Allsparks/ftc-dev-tools/releases):
 
 **macOS / Linux**
 
 ```bash
-npm install -g "https://github.com/The-Allsparks/ftc-dev-tools/releases/download/v0.1.0/ftc-cli-0.1.0.tar.gz"
+npm install -g "https://github.com/The-Allsparks/ftc-dev-tools/releases/download/TAG/ftc-cli-VERSION.tar.gz"
 ```
 
 **Windows (PowerShell or Command Prompt)** — use `npm.cmd` so PowerShell does not block `npm.ps1` when script execution is restricted:
 
 ```powershell
-npm.cmd install -g "https://github.com/The-Allsparks/ftc-dev-tools/releases/download/v0.1.0/ftc-cli-0.1.0.tar.gz"
+npm.cmd install -g "https://github.com/The-Allsparks/ftc-dev-tools/releases/download/TAG/ftc-cli-VERSION.tar.gz"
 ```
 
-Replace `0.1.0` with the version shown on the release page. This needs **network access only** — no `git clone` and no `npm link`.
+This needs **network access only** — no `git clone` and no `npm link`.
 
 Verify:
 
@@ -84,6 +102,7 @@ Maintainers and contributors who work on FTC Dev Tools itself should clone the r
 
 | Symptom                                                   | What to try                                                                                                            |
 | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `404` / `@ftc-dev-tools/shared` not found on npm registry  | Use a release **after v0.1.0** (tarball must declare `bundledDependencies`), or build from this repo: `npm run package:cli` then `npm.cmd install -g ".\packages\cli\artifacts\ftc-cli-0.1.0.tar.gz"`. `@ftc-dev-tools/shared` is not published to npm. |
 | PowerShell: `npm.ps1 cannot be loaded` / execution policy | Use `npm.cmd install -g "…"` (see Windows examples above) or run the install in **Command Prompt**.                    |
 | `ftc: command not found`                                  | Ensure Node global bin is on your `PATH` (restart the terminal after `npm install -g`).                                |
 | `Cannot find module '@ftc-dev-tools/shared'`              | Re-install from a current release tarball (older archives may not bundle shared).                                      |

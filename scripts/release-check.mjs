@@ -233,8 +233,22 @@ if (!skipPackage) {
               "CLI tarball must vendor @ftc-dev-tools/shared for offline global install (node_modules/@ftc-dev-tools/shared/dist/index.js)",
             );
           }
+          if (!listing.includes("node_modules/ajv/") && !listing.includes("./node_modules/ajv/")) {
+            fail(
+              "CLI tarball must include shared production deps (e.g. ajv) under node_modules for global install",
+            );
+          }
           if (!listing.includes("package.json")) {
             fail("CLI tarball must include package.json at archive root");
+          }
+          const pkgJsonLine = execFileSync("tar", ["-xOf", tarball, "./package.json"], {
+            encoding: "utf8",
+          });
+          const pkgMeta = JSON.parse(pkgJsonLine);
+          if (!Array.isArray(pkgMeta.bundledDependencies) || !pkgMeta.bundledDependencies.includes("@ftc-dev-tools/shared")) {
+            fail(
+              "CLI tarball package.json must list bundledDependencies including @ftc-dev-tools/shared so npm install -g does not hit the public registry",
+            );
           }
         } catch (err) {
           fail(`Unable to inspect CLI tarball (is tar available?): ${err.message ?? err}`);

@@ -47,6 +47,8 @@ export interface DoctorOptions {
   checkFtcSdkVersion?: boolean;
   /** When false, skip Wi-Fi console / robot-interface checks. Default true. */
   checkWifi?: boolean;
+  /** Env for Java discovery (FTC_JAVA_HOME / JAVA_HOME). Default `process.env`. */
+  env?: NodeJS.ProcessEnv;
 }
 
 export async function runDoctor(options: DoctorOptions): Promise<DoctorReport> {
@@ -56,7 +58,7 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorReport> {
 
   checks.push(checkOs(platform));
   checks.push(checkNode(nodeVersion));
-  checks.push(await checkJava(options.runner, platform));
+  checks.push(await checkJava(options.runner, platform, options.env ?? process.env));
   checks.push(await checkAndroidSdk());
   checks.push(await checkAdb(options.runner));
 
@@ -290,13 +292,18 @@ function jdkInstallSuggestedActions(platform: NodeJS.Platform): string[] {
   actions.push(
     `See ${INSTALL_WITHOUT_ANDROID_STUDIO_DOCS_URL} for manual setup.`,
     `Set JAVA_HOME to JDK ${REQUIRED_JDK_MAJOR} and reopen your terminal.`,
+    "Or set FTC_JAVA_HOME (CLI/MCP) or ftc.javaHome in VS Code/Cursor settings.",
     "Run `ftc doctor` again to confirm.",
   );
   return actions;
 }
 
-async function checkJava(runner: ProcessRunner, platform: NodeJS.Platform): Promise<DoctorCheck> {
-  const java = await discoverJava(runner);
+async function checkJava(
+  runner: ProcessRunner,
+  platform: NodeJS.Platform,
+  env: NodeJS.ProcessEnv,
+): Promise<DoctorCheck> {
+  const java = await discoverJava(runner, env);
   const versionLine = java.versionText?.split(/\r?\n/)[0];
 
   if (!java.found) {
@@ -343,12 +350,26 @@ async function checkJava(runner: ProcessRunner, platform: NodeJS.Platform): Prom
     };
   }
 
+  let detail = versionLine;
+  if (
+    java.selectedJavaHome &&
+    java.pathMajorVersion !== undefined &&
+    java.pathMajorVersion !== java.majorVersion
+  ) {
+    detail = `${versionLine} — builds use JDK ${java.majorVersion} at ${java.selectedJavaHome} (java on PATH is ${java.pathMajorVersion}). Set JAVA_HOME or ftc.javaHome so terminals match.`;
+  }
+
   return {
     id: "java",
     label: DOCTOR_CHECK_LABELS.java,
-    status: "pass",
+    status:
+      java.pathMajorVersion !== undefined &&
+      java.pathMajorVersion !== java.majorVersion &&
+      java.selectedJavaHome
+        ? "warn"
+        : "pass",
     required: true,
-    detail: versionLine,
+    detail,
   };
 }
 

@@ -48,13 +48,21 @@ export function cliGitHubReleaseTarballUrl(version: string = PACKAGE_VERSION): s
   return `https://github.com/${FTC_DEV_TOOLS_GITHUB_OWNER}/${FTC_DEV_TOOLS_GITHUB_REPO}/releases/download/${tag}/${asset}`;
 }
 
+/** One global install command from a tarball URL (e.g. latest release from GitHub API). */
+export function buildCliInstallFromTarballUrl(
+  tarballUrl: string,
+  platform: NodeJS.Platform = process.platform,
+): string {
+  return buildNpmGlobalInstallCommand(`"${tarballUrl}"`, platform);
+}
+
 /** One global install command from the latest published GitHub Release asset (Node + network; no git clone). */
 export function buildCliInstallFromGitHubRelease(
   version: string = PACKAGE_VERSION,
   platform: NodeJS.Platform = process.platform,
 ): string {
   const url = cliGitHubReleaseTarballUrl(version);
-  return buildNpmGlobalInstallCommand(`"${url}"`, platform);
+  return buildCliInstallFromTarballUrl(url, platform);
 }
 
 /** When `@ftc-dev-tools/cli` is published to npm (requires maintainer NPM_TOKEN). */
@@ -88,19 +96,27 @@ export interface ConsumerInstallCommand {
 export function listCliConsumerInstallCommands(
   version: string = PACKAGE_VERSION,
   platform: NodeJS.Platform = process.platform,
+  latestGitHubRelease?: { version: string; tarballUrl: string },
 ): ConsumerInstallCommand[] {
   const winNote =
     platform === "win32"
       ? " Uses npm.cmd so PowerShell execution policy does not block npm.ps1."
       : "";
+  const ghVersion = latestGitHubRelease?.version ?? version;
+  const ghCommand = latestGitHubRelease
+    ? buildCliInstallFromTarballUrl(latestGitHubRelease.tarballUrl, platform)
+    : buildCliInstallFromGitHubRelease(version, platform);
+  const ghNotes = latestGitHubRelease
+    ? `Uses the latest GitHub Release (v${ghVersion}). Requires Node.js 20+ and network access. No git clone.`
+    : `Requires Node.js 20+, network access, and a published release tag (for example v${version}). No git clone.`;
   return [
     {
       method: "github-release",
-      label: "GitHub Release (supported for 0.1.0)",
-      command: buildCliInstallFromGitHubRelease(version, platform),
-      notes:
-        "Requires Node.js 20+, network access, and an published release tag (for example v0.1.0). No git clone." +
-        winNote,
+      label: latestGitHubRelease
+        ? `GitHub Release (latest: v${ghVersion})`
+        : `GitHub Release (v${version})`,
+      command: ghCommand,
+      notes: ghNotes + winNote,
     },
     {
       method: "npm",

@@ -20,6 +20,8 @@ export interface DeployServiceOptions {
   signal?: AbortSignal;
   skipBuild?: boolean;
   apkPath?: string;
+  /** Passed to Gradle build step (JDK 17 resolution). */
+  env?: NodeJS.ProcessEnv;
 }
 
 export interface DeployServiceOutcome {
@@ -75,6 +77,7 @@ export async function deployProject(options: DeployServiceOptions): Promise<Depl
           cwd: options.cwd,
           verbose: options.verbose,
           signal: options.signal,
+          env: options.env,
         });
         if (!buildOutcome.result.success || !buildOutcome.result.apkPath) {
           return {

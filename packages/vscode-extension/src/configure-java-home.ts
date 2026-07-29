@@ -1,10 +1,6 @@
 import * as vscode from "vscode";
-import {
-  NodeProcessRunner,
-  discoverJava,
-  suggestFtcJavaHomeSetting,
-  REQUIRED_JDK_MAJOR,
-} from "@ftc-dev-tools/shared";
+import { discoverJava, suggestFtcJavaHomeSetting, REQUIRED_JDK_MAJOR } from "@ftc-dev-tools/shared";
+import type { NodeProcessRunner } from "@ftc-dev-tools/shared";
 
 /** When JDK 17 is installed but `java` on PATH is older, set `ftc.javaHome` so doctor, Gradle, and MCP agree. */
 export async function ensureFtcJavaHomeForBuilds(
@@ -27,9 +23,7 @@ export async function ensureFtcJavaHomeForBuilds(
   await config.update("javaHome", suggested, vscode.ConfigurationTarget.Global);
 
   const pathNote =
-    java.pathMajorVersion !== undefined
-      ? ` (java on PATH was ${java.pathMajorVersion})`
-      : "";
+    java.pathMajorVersion !== undefined ? ` (java on PATH was ${java.pathMajorVersion})` : "";
   const message = `Set ftc.javaHome to JDK ${REQUIRED_JDK_MAJOR} at ${suggested}${pathNote}.`;
   output?.appendLine(message);
   vscode.window.showInformationMessage(message);

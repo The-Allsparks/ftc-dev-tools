@@ -135,9 +135,9 @@ describe("runDoctor Java version", () => {
     tempDirs.push(jdkRoot);
     const binDir = path.join(jdkRoot, "bin");
     await fs.mkdir(binDir);
-    await fs.writeFile(path.join(binDir, "java.exe"), "");
+    await fs.writeFile(path.join(binDir, "java"), "");
 
-    const report = await runDoctorWithJava('openjdk version "11.0.22"', "win32", {
+    const report = await runDoctorWithJava('openjdk version "11.0.22"', "linux", {
       env: { FTC_JAVA_HOME: jdkRoot },
       homeJavaStderr: 'openjdk version "17.0.9"',
     });

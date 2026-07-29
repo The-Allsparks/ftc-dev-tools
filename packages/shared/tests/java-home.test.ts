@@ -1,4 +1,5 @@
 import path from "node:path";
+import pathWin32 from "node:path/win32";
 import { describe, expect, it } from "vitest";
 import { buildJavaEnvForHome, configuredJavaHomeCandidates } from "../src/discovery/java-home.js";
 
@@ -24,7 +25,7 @@ describe("buildJavaEnvForHome", () => {
     const home = "C:\\Program Files\\Eclipse Adoptium\\jdk-17";
     const env = buildJavaEnvForHome(home, { Path: "C:\\Windows\\System32" }, "win32");
     expect(env.JAVA_HOME).toBe(home);
-    expect(env.Path).toBe(`${path.join(home, "bin")};C:\\Windows\\System32`);
+    expect(env.Path).toBe(`${pathWin32.join(home, "bin")};C:\\Windows\\System32`);
   });
 
   it("does not duplicate bin when already on PATH", () => {

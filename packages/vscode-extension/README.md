@@ -37,10 +37,13 @@ Use **FTC: Set Up This Computer** for the same install commands with **Copy … 
 
 1. **Extensions: Install from VSIX…** — you already did this if you are reading this page.
 2. Open your team’s FTC codebase folder in VS Code or Cursor.
-3. Command Palette → **FTC: Run Environment Check**.
-4. Command Palette → **FTC: Show Devices** (robot connected via USB; enable USB debugging on the Control Hub / phone).
-5. Command Palette → **FTC: Build and Deploy** (or build, then deploy separately).
-6. Command Palette → **FTC: View Robot Logs** (try **FTC: View Error Logs** if something fails).
+3. Use the **Get started with FTC Dev Tools** walkthrough (Welcome) or **FTC: Start Here**.
+4. Command Palette → **FTC: Run Environment Check**.
+5. Command Palette → **FTC: Connect My Robot (USB First)** (robot connected via USB; enable USB debugging).
+6. Command Palette → **FTC: First OpMode Journey** or **FTC: Build and Deploy**.
+7. Command Palette → **FTC: View Robot Logs**; watch **Competition readiness** in the FTC sidebar.
+
+Mentor verification: [onboarding-0.2-closure.md](https://github.com/The-Allsparks/ftc-dev-tools/blob/main/docs/onboarding-0.2-closure.md).
 
 ## Command Palette cheat sheet
 

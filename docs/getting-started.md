@@ -131,6 +131,7 @@ Press Ctrl+C to stop.
 
 ## Next reading
 
+- 0.2 closure checklist (mentors): [onboarding-0.2-closure.md](onboarding-0.2-closure.md)
 - OS setup: [windows-setup.md](windows-setup.md), [macos-setup.md](macos-setup.md), [linux-setup.md](linux-setup.md)
 - Devices: [device-connections.md](device-connections.md)
 - Config: [configuration.md](configuration.md)

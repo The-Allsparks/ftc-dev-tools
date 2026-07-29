@@ -531,6 +531,11 @@ export {
   countMilestonesCompleted,
 } from "./onboarding/milestone-checklist.js";
 export type { MilestoneStepId, MilestoneStep } from "./onboarding/milestone-checklist.js";
+export {
+  ROOKIE_JOURNEY_COMMAND_IDS,
+  ONBOARDING_0_2_CHILD_ISSUES,
+  ONBOARDING_0_1_SETUP_CLOSURE_ISSUES,
+} from "./onboarding/onboarding-0.2-closure.js";
 
 export {
   OFFICIAL_FTC_ROBOT_CONTROLLER_GIT_URL,

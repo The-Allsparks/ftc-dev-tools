@@ -23,6 +23,7 @@ export function buildGettingStartedTreeNodes(
 ): GettingStartedTreeNode[] {
   const machineDone = isStartHereStepComplete(completed, "machine-checks");
   const projectDone = isStartHereStepComplete(completed, "project-folder");
+  const connectDone = isStartHereStepComplete(completed, "connect-robot");
   const doneCount = countStartHereCompleted(completed);
   const total = START_HERE_STEPS.length;
 
@@ -61,6 +62,13 @@ export function buildGettingStartedTreeNodes(
       description: projectDone ? "Marked complete in Start Here" : "Tasks, settings, project root",
       commandId: "ftc.setUpProject",
       commandTitle: "Set Up This FTC Project",
+    },
+    {
+      id: "getting-started-connect-robot",
+      label: checklistLabel("Connect My Robot (USB)", connectDone),
+      description: connectDone ? "Marked complete in Start Here" : "Cable, authorize, pick device",
+      commandId: "ftc.connectRobotUsb",
+      commandTitle: "Connect My Robot (USB First)",
     },
   ];
 }

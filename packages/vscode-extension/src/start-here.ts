@@ -26,6 +26,7 @@ const FTC_COMMAND_TITLES: Record<string, string> = {
   "ftc.obtainProject": "FTC: Get or Open FTC Project",
   "ftc.setUpProject": "FTC: Set Up This FTC Project",
   "ftc.showDevices": "FTC: Show Devices",
+  "ftc.connectRobotUsb": "FTC: Connect My Robot (USB First)",
   "ftc.selectDevice": "FTC: Select Deployment Device",
   "ftc.wifiConnect": "FTC: Connect Wi-Fi ADB",
   "ftc.build": "FTC: Build Robot Code",

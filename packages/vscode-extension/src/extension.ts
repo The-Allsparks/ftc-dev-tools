@@ -81,6 +81,7 @@ import {
 } from "./start-here.js";
 import { StartHereDockProvider } from "./start-here-dock.js";
 import { obtainOrOpenFtcProjectCommand } from "./obtain-project.js";
+import { connectRobotUsbFirstCommand } from "./connect-robot-usb.js";
 
 let output: vscode.OutputChannel;
 let status: StatusController;
@@ -182,6 +183,14 @@ export function activate(context: vscode.ExtensionContext): void {
   register("ftc.deploy", () => deployCommand(false));
   register("ftc.buildAndDeploy", () => deployCommand(false));
   register("ftc.selectDevice", selectDeviceCommand);
+  register("ftc.connectRobotUsb", () =>
+    connectRobotUsbFirstCommand({
+      showDevices: showDevicesCommand,
+      selectDevice: selectDeviceCommand,
+      refreshStatus,
+      getSelectedSerial: () => selectedSerial,
+    }),
+  );
   register("ftc.viewLogs", () => viewLogsCommand("teamcode"));
   register("ftc.viewErrorLogs", () => viewLogsCommand("errors"));
   register("ftc.stopLogs", stopLogsCommand);

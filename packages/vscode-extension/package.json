@@ -44,6 +44,10 @@
         "title": "FTC: Run Environment Check"
       },
       {
+        "command": "ftc.connectRobotUsb",
+        "title": "FTC: Connect My Robot (USB First)"
+      },
+      {
         "command": "ftc.showDevices",
         "title": "FTC: Show Devices"
       },

@@ -2,6 +2,17 @@
 
 This guide is for FTC students, coaches, and mentors who want to build and deploy robot code from VS Code, Cursor, or a terminal.
 
+## In VS Code or Cursor (recommended)
+
+1. Open your FTC project folder (or use **FTC: Get or Open FTC Project**).
+2. Run **FTC: Start Here** from the Command Palette — opens a checklist doc, panel checklist, and walks you step by step.
+3. On **Prepare this computer**, use **Check & install what's missing** — the environment check decides whether you need JDK, Android SDK/adb, or both, then runs the trusted installer after you confirm.
+4. Re-run **FTC: Run Environment Check** after installs and reload the window if PATH changed.
+
+Contributors with a cloned `ftc-dev-tools` repo use local install scripts automatically (no re-download from GitHub).
+
+Terminal-only: `ftc doctor --install-plan` prints JSON for what install-deps would install.
+
 ## What you need
 
 1. A computer on Windows, macOS, or Linux

@@ -74,6 +74,28 @@ export {
   installDepsOsForPlatform,
 } from "./install-deps-urls.js";
 export type { InstallDepsOs, BuildInstallDepsOptions } from "./install-deps-urls.js";
+export {
+  analyzeMachineInstallNeeds,
+  buildInstallDepsOptionsFromNeeds,
+  describeMachineInstallPlan,
+} from "./setup/install-needs-from-doctor.js";
+export type { MachineInstallNeeds } from "./setup/install-needs-from-doctor.js";
+export { renderStartHereMarkdown } from "./onboarding/start-here-markdown.js";
+export type {
+  RenderStartHereMarkdownOptions,
+  StartHereMachineScan,
+} from "./onboarding/start-here-markdown.js";
+export {
+  estimateInstallDepsSetupTime,
+  macPackageArchFromNode,
+} from "./setup/install-deps-download-estimate.js";
+export type { InstallDepsTimeEstimate } from "./setup/install-deps-download-estimate.js";
+export {
+  buildInstallDepsTerminalCommand,
+  findFtcDevToolsRepoRoot,
+} from "./setup/install-deps-contributor.js";
+export { buildDoctorInstallPlan } from "./setup/doctor-install-plan.js";
+export type { DoctorInstallPlan } from "./setup/doctor-install-plan.js";
 
 export { ConsoleLogger } from "./logger.js";
 export type { Logger, LogLevel } from "./logger.js";

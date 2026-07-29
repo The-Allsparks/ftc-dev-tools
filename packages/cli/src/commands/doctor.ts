@@ -1,5 +1,11 @@
 import type { Command } from "commander";
-import { buildDoctorSections, formatDoctorCheckLine, runDoctor } from "@ftc-dev-tools/shared";
+import {
+  buildDoctorInstallPlan,
+  buildDoctorSections,
+  buildSetUpComputerDoctorOptions,
+  formatDoctorCheckLine,
+  runDoctor,
+} from "@ftc-dev-tools/shared";
 import { createCliContext, printFriendlyError } from "../context.js";
 
 export function registerDoctorCommand(program: Command): void {
@@ -8,7 +14,11 @@ export function registerDoctorCommand(program: Command): void {
     .description("Check whether this computer is ready for FTC development")
     .option("--json", "Emit stable machine-readable JSON")
     .option("--verbose", "Include technical details for failures")
-    .action(async (options: { json?: boolean; verbose?: boolean }) => {
+    .option(
+      "--install-plan",
+      "Print JSON for install-deps scope (computer checks only; use with --json or alone)",
+    )
+    .action(async (options: { json?: boolean; verbose?: boolean; installPlan?: boolean }) => {
       const ctx = createCliContext(process.cwd(), options.verbose === true);
       let deviceProvider;
       try {
@@ -17,15 +27,31 @@ export function registerDoctorCommand(program: Command): void {
         deviceProvider = undefined;
       }
 
-      const report = await runDoctor({
-        cwd: ctx.cwd,
-        runner: ctx.runner,
-        projectAdapter: ctx.adapter,
-        deviceProvider,
-      });
+      const doctorOpts = options.installPlan
+        ? {
+            ...buildSetUpComputerDoctorOptions(ctx.cwd, ctx.runner, ctx.adapter),
+          }
+        : {
+            cwd: ctx.cwd,
+            runner: ctx.runner,
+            projectAdapter: ctx.adapter,
+            deviceProvider,
+          };
+
+      const report = await runDoctor(doctorOpts);
+
+      if (options.installPlan && !options.json) {
+        const plan = buildDoctorInstallPlan(report.checks);
+        console.log(JSON.stringify(plan, null, 2));
+        process.exitCode = plan.needs.machineDepsSatisfied ? 0 : 1;
+        return;
+      }
 
       if (options.json) {
-        console.log(JSON.stringify(report, null, 2));
+        const payload = options.installPlan
+          ? { ...report, installPlan: buildDoctorInstallPlan(report.checks) }
+          : report;
+        console.log(JSON.stringify(payload, null, 2));
       } else {
         console.log("FTC Development Check\n");
         const sections = buildDoctorSections(report);
@@ -41,6 +67,11 @@ export function registerDoctorCommand(program: Command): void {
           console.log("");
         }
         console.log(report.summaryLine);
+        if (options.installPlan) {
+          console.log("");
+          console.log("Install plan:");
+          console.log(JSON.stringify(buildDoctorInstallPlan(report.checks), null, 2));
+        }
       }
 
       process.exitCode = report.ready ? 0 : 1;

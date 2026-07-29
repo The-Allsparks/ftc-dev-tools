@@ -116,6 +116,49 @@ function Get-FileSha256([string]$Path) {
   return (Get-FileHash -Algorithm SHA256 -Path $Path).Hash.ToLowerInvariant()
 }
 
+# Invoke-WebRequest is often much slower on large binaries; curl.exe ships with Windows 10+.
+function Save-FileFromUrl {
+  param(
+    [Parameter(Mandatory = $true)][string]$Url,
+    [Parameter(Mandatory = $true)][string]$OutFile
+  )
+
+  $parent = Split-Path -Parent $OutFile
+  if ($parent -and -not (Test-Path $parent)) {
+    New-Item -ItemType Directory -Force -Path $parent | Out-Null
+  }
+
+  if (Get-Command curl.exe -ErrorAction SilentlyContinue) {
+    Write-Host "Downloading (curl.exe): $Url"
+    & curl.exe -fSL --retry 5 --retry-all-errors --connect-timeout 30 -o "$OutFile" "$Url"
+    if ($LASTEXITCODE -ne 0) {
+      throw "curl.exe failed downloading $Url (exit code $LASTEXITCODE)"
+    }
+    return
+  }
+
+  Write-Host "Downloading (Invoke-WebRequest): $Url"
+  Invoke-WebRequest -Uri $Url -OutFile $OutFile -UseBasicParsing
+}
+
+function Expand-ZipArchive {
+  param(
+    [Parameter(Mandatory = $true)][string]$ZipPath,
+    [Parameter(Mandatory = $true)][string]$DestDir
+  )
+
+  if (Get-Command tar.exe -ErrorAction SilentlyContinue) {
+    New-Item -ItemType Directory -Force -Path $DestDir | Out-Null
+    & tar.exe -xf $ZipPath -C $DestDir
+    if ($LASTEXITCODE -ne 0) {
+      throw "tar.exe failed extracting $ZipPath (exit code $LASTEXITCODE)"
+    }
+    return
+  }
+
+  Expand-Archive -Path $ZipPath -DestinationPath $DestDir -Force
+}
+
 function Install-AndroidSdk {
   param([object]$Manifest)
 
@@ -126,8 +169,7 @@ function Install-AndroidSdk {
   $zipPath = Join-Path $tempRoot $pkg.file
 
   try {
-    Write-Host "Downloading $($pkg.url)"
-    Invoke-WebRequest -Uri $pkg.url -OutFile $zipPath -UseBasicParsing
+    Save-FileFromUrl -Url $pkg.url -OutFile $zipPath
 
     $actual = Get-FileSha256 $zipPath
     $expected = [string]$pkg.sha256
@@ -135,7 +177,7 @@ function Install-AndroidSdk {
       throw "Checksum mismatch for $($pkg.file). Expected $expected, got $actual"
     }
 
-    Expand-Archive -Path $zipPath -DestinationPath $tempRoot -Force
+    Expand-ZipArchive -ZipPath $zipPath -DestDir $tempRoot
 
     $cmdlineSrc = Join-Path $tempRoot "cmdline-tools"
     if (-not (Test-Path $cmdlineSrc)) {

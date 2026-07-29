@@ -22,7 +22,9 @@ import {
   buildFtcProjectSetupPlans,
   refreshSetupPlanJsonContent,
   buildSetUpComputerDoctorOptions,
+  analyzeMachineInstallNeeds,
 } from "@ftc-dev-tools/shared";
+import { cacheMachineInstallNeeds } from "./machine-install-cache.js";
 
 async function readExistingJsonFile(
   filePath: string,
@@ -137,20 +139,27 @@ export async function setUpThisComputerCommand(
   output.appendLine(`- macOS: ${INSTALL_DEPS_CONTRIBUTOR_COMMANDS.macos}`);
   output.appendLine(`- Linux: ${INSTALL_DEPS_CONTRIBUTOR_COMMANDS.linux}`);
 
+  const installNeeds = analyzeMachineInstallNeeds(report.checks);
+  cacheMachineInstallNeeds(cwd, installNeeds);
+
   const missing = report.checks.filter((c) => c.status === "fail" || c.status === "warn");
   const summary =
     missing.length === 0
       ? "Readiness: no failing/warning doctor checks in this workspace context."
       : `Readiness: ${missing.length} check(s) need attention (see FTC Dev Tools output).`;
 
-  const copyAction = await vscode.window.showInformationMessage(
-    summary,
-    "Run trusted installer…",
+  const actions: string[] = [];
+  if (!installNeeds.machineDepsSatisfied) {
+    actions.push("Run trusted installer…");
+  }
+  actions.push(
     "Copy Windows install command",
     "Copy macOS install command",
     "Copy Linux install command",
     "Open install guide",
   );
+
+  const copyAction = await vscode.window.showInformationMessage(summary, ...actions);
   if (copyAction === "Run trusted installer…") {
     await vscode.commands.executeCommand("ftc.runInstallDeps", { source: "set-up-computer" });
   } else if (copyAction === "Copy Windows install command") {
@@ -292,6 +301,18 @@ export async function restoreProjectSetupCommand(
 }
 
 export async function installFtcCliCommand(output: vscode.OutputChannel): Promise<void> {
+  const discovery = await discoverFtcCliOnPath(new NodeProcessRunner());
+  if (discovery.found) {
+    const again = await vscode.window.showInformationMessage(
+      `FTC CLI is already on PATH${discovery.ftcPath ? ` (${discovery.ftcPath})` : ""}.`,
+      "Show install options",
+      "Cancel",
+    );
+    if (again !== "Show install options") {
+      return;
+    }
+  }
+
   const options = listCliConsumerInstallCommands();
 
   output.clear();

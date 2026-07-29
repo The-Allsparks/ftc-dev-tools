@@ -74,7 +74,12 @@ import {
 import { registerFtcTaskProvider } from "./ftc-task-provider.js";
 import { showDoctorResultsUi } from "./doctor-ui.js";
 import { runInstallDepsWithConsent, type RunInstallDepsArgs } from "./install-deps-consent.js";
-import { onStartHereProgressChanged, startHereCommand } from "./start-here.js";
+import {
+  onStartHereProgressChanged,
+  promptStartHereOnFirstOpen,
+  startHereCommand,
+} from "./start-here.js";
+import { StartHereDockProvider } from "./start-here-dock.js";
 import { obtainOrOpenFtcProjectCommand } from "./obtain-project.js";
 
 let output: vscode.OutputChannel;
@@ -105,6 +110,11 @@ export function activate(context: vscode.ExtensionContext): void {
     onStartHereProgressChanged(() => {
       tree.refresh();
     }),
+  );
+
+  const startHereDock = new StartHereDockProvider();
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider(StartHereDockProvider.viewType, startHereDock),
   );
 
   context.subscriptions.push(output, status, {
@@ -213,7 +223,7 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand("ftc.runInstallDeps", async (args?: RunInstallDepsArgs) => {
       try {
-        await runInstallDepsWithConsent(output, args ?? {});
+        await runInstallDepsWithConsent(output, context, args ?? {}, getWorkspaceRoot);
       } catch (error) {
         await showFriendlyError(interpretFromUnknown(error));
       }
@@ -237,7 +247,9 @@ export function activate(context: vscode.ExtensionContext): void {
     await refreshStatus();
     tree.refresh();
   });
-  register("ftc.startHere", () => startHereCommand(context));
+  register("ftc.startHere", () => startHereCommand(context, startHereDock, getWorkspaceRoot));
+
+  void promptStartHereOnFirstOpen(context);
 }
 
 export function deactivate(): void {

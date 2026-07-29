@@ -261,6 +261,13 @@
           "title": "FTC",
           "icon": "media/ftc.svg"
         }
+      ],
+      "panel": [
+        {
+          "id": "ftcStartHerePanel",
+          "title": "FTC Start Here",
+          "icon": "media/ftc.svg"
+        }
       ]
     },
     "views": {
@@ -268,6 +275,13 @@
         {
           "id": "ftc.robotView",
           "name": "FTC Robot"
+        }
+      ],
+      "ftcStartHerePanel": [
+        {
+          "type": "webview",
+          "id": "ftc.startHereDock",
+          "name": "Checklist"
         }
       ]
     },

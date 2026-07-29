@@ -89,8 +89,8 @@ export async function downloadHubOsUpdate(
       );
     }
 
-    const buffer = Buffer.from(await response.arrayBuffer());
     await fs.mkdir(path.dirname(filePath), { recursive: true });
+    const buffer = Buffer.from(await response.arrayBuffer());
     await fs.writeFile(filePath, buffer);
 
     return {

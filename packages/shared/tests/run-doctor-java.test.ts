@@ -43,9 +43,7 @@ class JavaVersionRunner implements ProcessRunner {
   async run(spec: CommandSpec): Promise<CommandResult> {
     if (spec.args[0] === "-version") {
       const isPathJava = spec.command === "java";
-      const stderr = isPathJava
-        ? this.javaStderr
-        : (this.homeJavaStderr ?? this.javaStderr);
+      const stderr = isPathJava ? this.javaStderr : (this.homeJavaStderr ?? this.javaStderr);
       return {
         exitCode: 0,
         signal: null,

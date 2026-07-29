@@ -33,7 +33,9 @@ export function registerInstallCliCommand(program: Command): void {
           );
           return;
         }
-        ctx.logger.info(`Latest release: ${resolved.release.tagName} (${resolved.release.assetName})`);
+        ctx.logger.info(
+          `Latest release: ${resolved.release.tagName} (${resolved.release.assetName})`,
+        );
         console.log(resolved.installCommand);
       } catch (error) {
         const fallback = buildCliInstallFromGitHubRelease(PACKAGE_VERSION, process.platform);

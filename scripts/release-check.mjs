@@ -245,7 +245,10 @@ if (!skipPackage) {
             encoding: "utf8",
           });
           const pkgMeta = JSON.parse(pkgJsonLine);
-          if (!Array.isArray(pkgMeta.bundledDependencies) || !pkgMeta.bundledDependencies.includes("@ftc-dev-tools/shared")) {
+          if (
+            !Array.isArray(pkgMeta.bundledDependencies) ||
+            !pkgMeta.bundledDependencies.includes("@ftc-dev-tools/shared")
+          ) {
             fail(
               "CLI tarball package.json must list bundledDependencies including @ftc-dev-tools/shared so npm install -g does not hit the public registry",
             );

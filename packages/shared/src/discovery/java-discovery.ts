@@ -37,11 +37,7 @@ export async function discoverJava(
   const selectedHome = await findJdkHomeForMajor(REQUIRED_JDK_MAJOR, runner, env, platform);
 
   if (selectedHome) {
-    const javaExe = path.join(
-      selectedHome,
-      "bin",
-      platform === "win32" ? "java.exe" : "java",
-    );
+    const javaExe = path.join(selectedHome, "bin", platform === "win32" ? "java.exe" : "java");
     const selected = await runJavaVersion(runner, javaExe);
     if (selected.majorVersion !== undefined) {
       return {

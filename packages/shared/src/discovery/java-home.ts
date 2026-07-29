@@ -42,7 +42,10 @@ async function readJavaMajorFromHome(
   }
 }
 
-async function newestMatchingDirectory(parent: string, prefix: string): Promise<string | undefined> {
+async function newestMatchingDirectory(
+  parent: string,
+  prefix: string,
+): Promise<string | undefined> {
   let entries: string[];
   try {
     entries = await fs.readdir(parent);
@@ -177,7 +180,9 @@ export function buildJavaEnvForHome(
   const bin = path.join(javaHome, "bin");
   const pathKey = platform === "win32" ? "Path" : "PATH";
   const existingPath = env[pathKey] ?? env.PATH ?? "";
-  const mergedPath = existingPath.includes(bin) ? existingPath : `${bin}${path.delimiter}${existingPath}`;
+  const mergedPath = existingPath.includes(bin)
+    ? existingPath
+    : `${bin}${path.delimiter}${existingPath}`;
   return {
     JAVA_HOME: javaHome,
     [pathKey]: mergedPath,

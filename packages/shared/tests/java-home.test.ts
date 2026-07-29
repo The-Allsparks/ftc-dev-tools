@@ -1,9 +1,6 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import {
-  buildJavaEnvForHome,
-  configuredJavaHomeCandidates,
-} from "../src/discovery/java-home.js";
+import { buildJavaEnvForHome, configuredJavaHomeCandidates } from "../src/discovery/java-home.js";
 
 describe("configuredJavaHomeCandidates", () => {
   it("prefers FTC_JAVA_HOME over JAVA_HOME and dedupes", () => {

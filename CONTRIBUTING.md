@@ -48,6 +48,15 @@ npm run typecheck
 npm run check:identity
 ```
 
+Before opening a pull request, run the same checks as GitHub Actions (after a clean install):
+
+```bash
+npm ci
+npm run ci:check
+```
+
+Use `npm run format` only when `npm run format:check` reports files that need formatting.
+
 Run the CLI locally:
 
 ```bash

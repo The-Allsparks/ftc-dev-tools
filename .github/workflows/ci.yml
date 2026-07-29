@@ -22,27 +22,8 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Project identity
-        run: npm run check:identity
-      - name: Release check (metadata)
-        run: npm run release:check -- --skip-package --allow-dirty
-      - name: Format check
-        run: npm run format:check
-      - name: Lint
-        run: npm run lint
-      - name: Typecheck
-        run: npm run typecheck
-      - name: Test
-        run: npm test
-      - name: Build documentation site
-        if: matrix.os == 'ubuntu-latest' && matrix.node == 22
-        run: npm run docs:build
-      - name: Build packages
-        run: npm run build
-      - name: Package CLI
-        run: npm run package:cli
-      - name: Package VSIX
-        run: npm run package:extension
+      - name: CI check (canonical)
+        run: npm run ci:check
       - name: Upload artifacts (Node 22 / Ubuntu)
         if: matrix.os == 'ubuntu-latest' && matrix.node == 22
         uses: actions/upload-artifact@v4

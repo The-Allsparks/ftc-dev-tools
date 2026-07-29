@@ -104,6 +104,8 @@ ftc deploy --device YOUR_SERIAL
 
 For a narrated first program (create OpMode → deploy → Driver Station), see [first-opmode-journey.md](first-opmode-journey.md) or **FTC: First OpMode Journey** in the editor.
 
+Track **Competition readiness** in the FTC sidebar (doctor → device → build → deploy → Driver Station → logs). See [device-connections.md](device-connections.md) when pairing hardware.
+
 Dry run (no device changes):
 
 ```bash

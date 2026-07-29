@@ -55,6 +55,18 @@
         "title": "FTC: First OpMode Journey"
       },
       {
+        "command": "ftc.openDeviceConnectionsDoc",
+        "title": "FTC: Open Device Connections Guide"
+      },
+      {
+        "command": "ftc.markOpModeOnDriverStation",
+        "title": "FTC: Mark OpMode on Driver Station"
+      },
+      {
+        "command": "ftc.resetCompetitionChecklist",
+        "title": "FTC: Reset Competition Readiness Checklist"
+      },
+      {
         "command": "ftc.showDevices",
         "title": "FTC: Show Devices"
       },

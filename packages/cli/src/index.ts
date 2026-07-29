@@ -15,6 +15,8 @@ import { registerPedroCommand } from "./commands/pedro.js";
 import { registerWifiCommand } from "./commands/wifi.js";
 import { registerSetupCommand } from "./commands/setup.js";
 
+import { registerGitHubCommand } from "./commands/github.js";
+
 export async function runCli(argv: string[]): Promise<void> {
   const program = new Command();
   program
@@ -36,6 +38,7 @@ export async function runCli(argv: string[]): Promise<void> {
   registerOpModeCommand(program);
   registerConfigCommand(program);
   registerHwMapCommand(program);
+  registerGitHubCommand(program);
 
   await program.parseAsync(argv);
 }

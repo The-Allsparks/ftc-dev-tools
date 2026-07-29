@@ -4,6 +4,9 @@
 - name: bug
   color: d73a4a
   description: Something isn't working
+- name: auto-report
+  color: c5def5
+  description: Filed automatically by FTC Dev Tools error reporting
 - name: documentation
   color: 0075ca
   description: Improvements or additions to documentation

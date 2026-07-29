@@ -18,7 +18,13 @@ export function registerDoctorCommand(program: Command): void {
       "--install-plan",
       "Print JSON for install-deps scope (computer checks only; use with --json or alone)",
     )
-    .action(async (options: { json?: boolean; verbose?: boolean; installPlan?: boolean }) => {
+    .option("--report", "File a GitHub error report when doctor is not ready")
+    .action(async (options: {
+      json?: boolean;
+      verbose?: boolean;
+      installPlan?: boolean;
+      report?: boolean;
+    }) => {
       const ctx = createCliContext(process.cwd(), options.verbose === true);
       let deviceProvider;
       try {
@@ -61,12 +67,23 @@ export function registerDoctorCommand(program: Command): void {
           for (const check of section.checks) {
             console.log(formatDoctorCheckLine(check));
             if ((check.status === "fail" || check.status === "warn") && check.friendlyError) {
-              printFriendlyError(check.friendlyError, options.verbose === true);
+              await printFriendlyError(check.friendlyError, options.verbose === true);
             }
           }
           console.log("");
         }
         console.log(report.summaryLine);
+        if (!report.ready && options.report) {
+          const failed = report.checks.find(
+            (check) => (check.status === "fail" || check.status === "warn") && check.friendlyError,
+          );
+          if (failed?.friendlyError) {
+            await printFriendlyError(failed.friendlyError, options.verbose === true, {
+              commandAttempted: "ftc.doctor",
+              forceReport: true,
+            });
+          }
+        }
         if (options.installPlan) {
           console.log("");
           console.log("Install plan:");

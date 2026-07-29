@@ -46,7 +46,7 @@ export function registerDevicesCommand(program: Command): void {
           "\nNote: Control Hub identification is detected/probable only, never guaranteed.",
         );
       } catch (error) {
-        printFriendlyError(interpretFromUnknown(error), true);
+        await printFriendlyError(interpretFromUnknown(error), true);
         process.exitCode = 1;
       }
     });

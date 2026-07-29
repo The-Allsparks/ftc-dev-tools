@@ -141,7 +141,7 @@ export function registerWifiCommand(program: Command): void {
           console.log(result.message);
           console.log(`Plan: ${result.plan.commandDisplay}`);
           if (result.error) {
-            printFriendlyError(result.error, options.verbose === true);
+            await printFriendlyError(result.error, options.verbose === true);
           }
         }
         process.exitCode = result.success ? 0 : 1;
@@ -168,7 +168,7 @@ export function registerWifiCommand(program: Command): void {
         } else {
           console.log(result.message);
           if (result.error) {
-            printFriendlyError(result.error, options.verbose === true);
+            await printFriendlyError(result.error, options.verbose === true);
           }
         }
         process.exitCode = result.success ? 0 : 1;
@@ -203,7 +203,7 @@ export function registerWifiCommand(program: Command): void {
             console.log(`Route: ${result.routeResult.message}`);
           }
           if (result.error) {
-            printFriendlyError(result.error, options.verbose === true);
+            await printFriendlyError(result.error, options.verbose === true);
           }
         }
         process.exitCode = result.success ? 0 : 1;
@@ -324,7 +324,7 @@ export function registerWifiCommand(program: Command): void {
         } else {
           console.log(result.message);
           if (result.error) {
-            printFriendlyError(result.error, options.verbose === true);
+            await printFriendlyError(result.error, options.verbose === true);
           }
         }
         process.exitCode = result.success ? 0 : 1;
@@ -367,7 +367,7 @@ export function registerWifiCommand(program: Command): void {
           console.log(`Channel: ${result.publicSettings.channel ?? "(unknown)"}`);
         }
         if (result.error) {
-          printFriendlyError(result.error, options.verbose === true);
+          await printFriendlyError(result.error, options.verbose === true);
         }
       }
       process.exitCode = result.success ? 0 : 1;
@@ -419,7 +419,7 @@ export function registerWifiCommand(program: Command): void {
         } else {
           console.log(result.message);
           if (result.error) {
-            printFriendlyError(result.error, options.verbose === true);
+            await printFriendlyError(result.error, options.verbose === true);
           }
         }
         process.exitCode = result.success ? 0 : 1;
@@ -465,7 +465,7 @@ export function registerWifiCommand(program: Command): void {
           dryRun: options.dryRun === true,
           yes: options.yes === true,
         });
-        printPreferResult(result, options.json === true, options.verbose === true);
+        await printPreferResult(result, options.json === true, options.verbose === true);
         process.exitCode = result.success ? 0 : 1;
       },
     );
@@ -501,7 +501,7 @@ export function registerWifiCommand(program: Command): void {
           dryRun: options.dryRun === true,
           yes: options.yes === true,
         });
-        printPreferResult(result, options.json === true, options.verbose === true);
+        await printPreferResult(result, options.json === true, options.verbose === true);
         process.exitCode = result.success ? 0 : 1;
       },
     );
@@ -567,10 +567,10 @@ function printPreferResult(
   },
   json: boolean,
   verbose: boolean,
-): void {
+): Promise<void> {
   if (json) {
     console.log(JSON.stringify(result, null, 2));
-    return;
+    return Promise.resolve();
   }
   console.log(result.message);
   if (result.planLines.length > 0) {
@@ -580,8 +580,9 @@ function printPreferResult(
     }
   }
   if (result.error) {
-    printFriendlyError(result.error, verbose);
+    return printFriendlyError(result.error, verbose);
   }
+  return Promise.resolve();
 }
 
 async function runAdapterCommand(
@@ -606,7 +607,7 @@ async function runAdapterCommand(
       console.log(`  - ${line}`);
     }
     if (result.error) {
-      printFriendlyError(result.error, options.verbose === true);
+      await printFriendlyError(result.error, options.verbose === true);
     }
   }
   process.exitCode = result.success ? 0 : 1;

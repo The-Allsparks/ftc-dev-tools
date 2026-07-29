@@ -9,7 +9,8 @@ export function registerDeployCommand(program: Command): void {
     .option("--device <serial>", "Target device serial")
     .option("--dry-run", "Print operations without changing the device")
     .option("--verbose", "Show full technical output")
-    .action(async (options: { device?: string; dryRun?: boolean; verbose?: boolean }) => {
+    .option("--report", "File a GitHub error report if deploy fails")
+    .action(async (options: { device?: string; dryRun?: boolean; verbose?: boolean; report?: boolean }) => {
       const ctx = createCliContext(process.cwd(), options.verbose === true);
       try {
         const devices = await ctx.createDeviceProvider();
@@ -32,12 +33,19 @@ export function registerDeployCommand(program: Command): void {
 
         if (!outcome.result.success) {
           if (outcome.friendlyError) {
-            printFriendlyError(outcome.friendlyError, options.verbose === true);
+            await printFriendlyError(outcome.friendlyError, options.verbose === true, {
+              commandAttempted: "ftc.deploy",
+              deploySteps: outcome.result.steps,
+              forceReport: options.report === true,
+            });
           }
           process.exitCode = 1;
         }
       } catch (error) {
-        printFriendlyError(interpretFromUnknown(error), options.verbose === true);
+        await printFriendlyError(interpretFromUnknown(error), options.verbose === true, {
+          commandAttempted: "ftc.deploy",
+          forceReport: options.report === true,
+        });
         process.exitCode = 1;
       }
     });

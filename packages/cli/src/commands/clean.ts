@@ -18,7 +18,7 @@ export function registerCleanCommand(program: Command): void {
       });
       if (!outcome.result.success) {
         if (outcome.friendlyError) {
-          printFriendlyError(outcome.friendlyError, options.verbose === true);
+          await printFriendlyError(outcome.friendlyError, options.verbose === true);
         }
         process.exitCode = 1;
         return;

@@ -45,7 +45,7 @@ export function registerHwMapCommand(program: Command): void {
           console.log(`  - ${entry.configName} → ${type} (${entry.xmlType}${port})${flag}`);
         }
         if (report.error) {
-          printFriendlyError(report.error, options.verbose === true);
+          await printFriendlyError(report.error, options.verbose === true);
         }
       }
       process.exitCode = report.success ? 0 : 1;
@@ -116,7 +116,7 @@ export function registerHwMapCommand(program: Command): void {
           }
           if (!preview.success) {
             if (preview.error) {
-              printFriendlyError(preview.error, options.verbose === true);
+              await printFriendlyError(preview.error, options.verbose === true);
             }
             process.exitCode = 1;
             return;
@@ -159,7 +159,7 @@ export function registerHwMapCommand(program: Command): void {
             console.log(result.sourcePreview);
           }
           if (result.error) {
-            printFriendlyError(result.error, options.verbose === true);
+            await printFriendlyError(result.error, options.verbose === true);
           }
         }
         process.exitCode = result.success ? 0 : 1;

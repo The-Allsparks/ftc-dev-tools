@@ -148,9 +148,11 @@ Students and teams should **not** need to clone this repository to use `ftc`.
 npm install -g "https://github.com/The-Allsparks/ftc-dev-tools/releases/download/v0.1.0/ftc-cli-0.1.0.tar.gz"
 ```
 
+On Windows, use `npm.cmd install -g "…"` (same URL) if PowerShell blocks `npm.ps1`.
+
 3. In your FTC project folder: `ftc doctor`
 
-Full guide: [docs/cli-install.md](docs/cli-install.md). When `@ftc-dev-tools/cli` is published to npm, `npm install -g @ftc-dev-tools/cli` will work as well.
+Full guide: [docs/cli-install.md](docs/cli-install.md). When `@ftc-dev-tools/cli` is published to npm, `npm install -g @ftc-dev-tools/cli` will work as well (on Windows: `npm.cmd install -g …`).
 
 The **VS Code/Cursor extension** does not include the CLI. Install the VSIX separately (below) and the CLI using the steps above (or **FTC: Install FTC CLI** in the extension).
 

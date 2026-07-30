@@ -59,9 +59,3 @@ export interface IntegrationManifest {
   /** Short student-friendly summary */
   summary: string;
 }
-
-export interface IntegrationRegistrySnapshot {
-  schemaVersion: string;
-  generatedAt: string;
-  integrations: IntegrationManifest[];
-}

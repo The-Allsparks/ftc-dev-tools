@@ -624,12 +624,22 @@ export {
 
 export type {
   IntegrationManifest,
-  IntegrationRegistrySnapshot,
   IntegrationCategory,
   IntegrationCapability,
   EcosystemClassification,
 } from "./registry/types.js";
+export type {
+  IntegrationAdapter,
+  IntegrationAdapterDescriptor,
+  IntegrationRegistryEntry,
+  IntegrationRegistrySnapshot,
+  AdapterOperation,
+  AdapterPresence,
+  AdapterDetectResult,
+  AdapterValidateResult,
+} from "./registry/adapter-types.js";
 export { INTEGRATION_MANIFEST_SCHEMA_VERSION } from "./registry/types.js";
+export { INTEGRATION_ADAPTER_SCHEMA_VERSION } from "./registry/adapter-types.js";
 export {
   listIntegrations,
   getIntegration,
@@ -638,8 +648,13 @@ export {
   listIntegrationsWithCapability,
   listShippedIntegrations,
   createIntegrationRegistrySnapshot,
+  listIntegrationAdapters,
+  getIntegrationAdapter,
+  listIntegrationRegistryEntries,
 } from "./registry/registry.js";
 export { BUILTIN_INTEGRATIONS } from "./registry/catalog.js";
+export { BUILTIN_INTEGRATION_ADAPTERS } from "./registry/adapters/index.js";
+export { PedroPathingIntegrationAdapter } from "./registry/adapters/pedro-integration-adapter.js";
 
 export type { ModuleManifest, ModuleRegistrySnapshot, ModuleLayer } from "./modules/types.js";
 export { MODULE_MANIFEST_SCHEMA_VERSION } from "./modules/types.js";

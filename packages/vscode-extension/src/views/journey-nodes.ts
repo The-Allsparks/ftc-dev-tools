@@ -8,7 +8,7 @@ import {
   type MilestoneStepId,
   type StartHereStepId,
 } from "@ftc-dev-tools/shared";
-import { actionNode, leafNode, type RobotNode } from "./robot-node-types.js";
+import { leafNode, type RobotNode } from "./robot-node-types.js";
 
 export type JourneyTreeNodeSpec = {
   id: string;

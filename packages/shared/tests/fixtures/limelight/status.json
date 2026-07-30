@@ -1,0 +1,18 @@
+{
+  "pipelineIndex": 0,
+  "pipelineType": "pipe_color",
+  "ignoreNT": 0,
+  "interfaceNeedsRefresh": 0,
+  "pipeImgCount": 2,
+  "snapshotMode": 0,
+  "hwType": 7,
+  "name": "limelight",
+  "cid": 5647,
+  "temp": 57.94,
+  "cpu": 47.21,
+  "ram": 75.23,
+  "fps": 63.55,
+  "finalYaw": 0,
+  "cameraQuat": { "w": 1, "x": 0, "y": 0, "z": 0 },
+  "finalimu": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+}

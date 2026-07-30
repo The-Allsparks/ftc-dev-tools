@@ -60,6 +60,8 @@ Discover what the project uses:
 ftc vision discover --json
 ftc vision status --json
 ftc vision devices --json   # endpoint discovery + optional network probes
+ftc vision limelight status --json
+ftc vision limelight results --json
 ```
 
 See [vision-providers.md](architecture/vision-providers.md).

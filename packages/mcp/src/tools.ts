@@ -14,6 +14,8 @@ import {
   getHubStatus,
   getWifiStatus,
   getVisionStatus,
+  getLimelightStatus,
+  getLimelightResults,
   discoverVisionWorkspace,
   discoverVisionDevices,
   interpretFromUnknown,
@@ -579,5 +581,41 @@ export async function toolVisionDevices(args: ProjectRootArgs): Promise<CallTool
     return jsonResult({
       error: interpretFromUnknown(err).summary,
     });
+  }
+}
+
+export async function toolVisionLimelightStatus(
+  args: ProjectRootArgs & { host?: string },
+): Promise<CallToolResult> {
+  try {
+    const ctx = ctxFrom(args);
+    const deviceProvider = await tryCreateDeviceProvider(ctx);
+    return jsonResult(
+      await getLimelightStatus(ctx.projectRoot, {
+        host: args.host,
+        deviceProvider,
+        runner: ctx.runner,
+      }),
+    );
+  } catch (err) {
+    return jsonResult({ error: interpretFromUnknown(err).summary }, true);
+  }
+}
+
+export async function toolVisionLimelightResults(
+  args: ProjectRootArgs & { host?: string },
+): Promise<CallToolResult> {
+  try {
+    const ctx = ctxFrom(args);
+    const deviceProvider = await tryCreateDeviceProvider(ctx);
+    return jsonResult(
+      await getLimelightResults(ctx.projectRoot, {
+        host: args.host,
+        deviceProvider,
+        runner: ctx.runner,
+      }),
+    );
+  } catch (err) {
+    return jsonResult({ error: interpretFromUnknown(err).summary }, true);
   }
 }

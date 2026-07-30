@@ -2,9 +2,13 @@ import type { Command } from "commander";
 import {
   discoverVisionDevices,
   discoverVisionWorkspace,
+  getLimelightResults,
+  getLimelightStatus,
   getVisionStatus,
+  interpretFromUnknown,
 } from "@ftc-dev-tools/shared";
 import { createCliContext } from "../context.js";
+import { printFriendlyError } from "../context.js";
 
 export function registerVisionCommand(program: Command): void {
   const vision = program
@@ -122,6 +126,100 @@ export function registerVisionCommand(program: Command): void {
       }
       for (const warning of report.warnings) {
         console.log(`Warning: ${warning}`);
+      }
+    });
+
+  const limelight = vision
+    .command("limelight")
+    .description("Limelight Vision HTTP provider (read-only status and results)");
+
+  limelight
+    .command("status")
+    .description("Read Limelight Vision device status from the HTTP API (port 5807)")
+    .option("--host <address>", "Limelight Vision hostname or IP")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(async (options: { host?: string; json?: boolean }) => {
+      const ctx = createCliContext();
+      let deviceProvider;
+      try {
+        deviceProvider = await ctx.createDeviceProvider();
+      } catch {
+        deviceProvider = undefined;
+      }
+      try {
+        const report = await getLimelightStatus(ctx.cwd, {
+          host: options.host,
+          deviceProvider,
+          runner: ctx.runner,
+        });
+        if (options.json) {
+          console.log(JSON.stringify(report, null, 2));
+          return;
+        }
+        console.log("Limelight Vision status\n");
+        console.log(report.message);
+        console.log(`Host: ${report.host} (${report.hostResolution.source})`);
+        if (report.deviceName) {
+          console.log(`Device: ${report.deviceName}`);
+        }
+        if (report.pipelineIndex !== undefined) {
+          console.log(
+            `Pipeline: ${report.pipelineIndex}${report.pipelineType ? ` (${report.pipelineType})` : ""}`,
+          );
+        }
+        if (report.fps !== undefined) {
+          console.log(`FPS: ${report.fps.toFixed(1)}`);
+        }
+        if (report.temperatureCelsius !== undefined) {
+          console.log(`CPU temp: ${report.temperatureCelsius.toFixed(1)}°C`);
+        }
+      } catch (error) {
+        await printFriendlyError(interpretFromUnknown(error), false);
+        process.exitCode = 1;
+      }
+    });
+
+  limelight
+    .command("results")
+    .description("Read normalized Limelight Vision targeting results")
+    .option("--host <address>", "Limelight Vision hostname or IP")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(async (options: { host?: string; json?: boolean }) => {
+      const ctx = createCliContext();
+      let deviceProvider;
+      try {
+        deviceProvider = await ctx.createDeviceProvider();
+      } catch {
+        deviceProvider = undefined;
+      }
+      try {
+        const report = await getLimelightResults(ctx.cwd, {
+          host: options.host,
+          deviceProvider,
+          runner: ctx.runner,
+        });
+        if (options.json) {
+          console.log(JSON.stringify(report, null, 2));
+          return;
+        }
+        console.log("Limelight Vision results\n");
+        console.log(report.message);
+        console.log(`Host: ${report.host}`);
+        console.log(`Valid target: ${report.target.valid ? "yes" : "no"}`);
+        if (report.target.tx !== undefined && report.target.ty !== undefined) {
+          console.log(
+            `Offset: tx=${report.target.tx.toFixed(2)} ty=${report.target.ty.toFixed(2)}`,
+          );
+        }
+        if (report.target.latencyTotalMs !== undefined) {
+          console.log(`Latency: ${report.target.latencyTotalMs.toFixed(1)} ms`);
+        }
+        if (report.stale) {
+          console.log("Warning: results may be stale.");
+        }
+      } catch (error) {
+        await printFriendlyError(interpretFromUnknown(error), false);
+        process.exitCode = 1;
       }
     });
 }

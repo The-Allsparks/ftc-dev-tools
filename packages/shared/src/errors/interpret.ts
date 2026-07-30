@@ -829,6 +829,32 @@ const RULES: ErrorRule[] = [
       "Or pass `--force` if you intentionally want to proceed.",
     ],
   },
+  {
+    code: "LIMELIGHT_HOST_AMBIGUOUS",
+    test: ({ text, codeHint }) =>
+      codeHint === "LIMELIGHT_HOST_AMBIGUOUS" ||
+      /Multiple Limelight Vision hosts|Pass --host to select a camera/i.test(text),
+    title: "Limelight Vision host ambiguous",
+    summary: "More than one Limelight Vision host matches discovery and none was selected.",
+    suggestedActions: [
+      "Pass `--host <address>` to choose a camera.",
+      "Set `vision.limelight.host` in `.ftc-dev.json` for a stable default.",
+      "Run `ftc vision devices --json` to review discovered endpoints.",
+    ],
+  },
+  {
+    code: "LIMELIGHT_UNREACHABLE",
+    test: ({ text, codeHint }) =>
+      codeHint === "LIMELIGHT_UNREACHABLE" ||
+      /Limelight Vision unreachable|returned non-JSON response/i.test(text),
+    title: "Limelight Vision unreachable",
+    summary: "Could not read status or results from the Limelight Vision HTTP API (port 5807).",
+    suggestedActions: [
+      "Confirm the camera is powered and on the same network as this computer.",
+      "Open the Limelight Vision web UI at http://<host>:5801 to verify connectivity.",
+      "Check team-number static IP or mDNS hostname settings if not using limelight.local.",
+    ],
+  },
 ];
 export function interpretError(input: string | ErrorContext): FriendlyError {
   const ctx: ErrorContext = typeof input === "string" ? { text: input } : input;

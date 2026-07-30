@@ -58,13 +58,20 @@ ftc providers list --json    # provider registry snapshot
 ftc vision discover --json   # scan TeamCode / Gradle for vision signals
 ftc vision status --json     # config + discovery combined
 ftc vision devices --json    # endpoint discovery + network probes
+ftc vision limelight status --json   # Limelight Vision HTTP /status
+ftc vision limelight results --json  # normalized /results targeting
 ```
 
-MCP: `modules_list`, `providers_list`, `vision_status`, `vision_discover`, `vision_devices` (read-only).
+MCP: `modules_list`, `providers_list`, `vision_status`, `vision_discover`, `vision_devices`, `vision_limelight_status`, `vision_limelight_results` (read-only).
 
-## Next steps (VISION-04+)
+## Limelight Vision provider (VISION-04)
 
-- Limelight Vision provider implementation (live frames)
+Read-only HTTP integration on port **5807** (`/status`, `/results`). Pipeline switching, snapshots, and other POST mutations remain gated for a follow-up with explicit confirmation.
+
+Host resolution order: `--host` → `vision.limelight.host` → discovered API endpoint. Multiple matches require explicit `--host`.
+
+## Next steps (VISION-05+)
+
 - Live frame acquisition for VisionPortal
 - Vision Lab IDE panel consuming `listVisionProviders()`
 

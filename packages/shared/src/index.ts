@@ -724,3 +724,26 @@ export {
   teamNumberToSubnetOctets,
   wifiSerialToHost,
 } from "./vision/endpoints/team-ip.js";
+export type {
+  LimelightDeviceStatus,
+  LimelightTargetingResults,
+  LimelightTargetSummary,
+  LimelightProviderCapabilities,
+  ResolveLimelightHostReport,
+} from "./vision/limelight/types.js";
+export { DEFAULT_LIMELIGHT_API_PORT, limelightApiBaseUrl } from "./vision/limelight/constants.js";
+export { getLimelightStatus } from "./vision/limelight/status.js";
+export type {
+  GetLimelightStatusOptions,
+  LimelightStatusReport,
+} from "./vision/limelight/status.js";
+export { getLimelightResults } from "./vision/limelight/results.js";
+export type {
+  GetLimelightResultsOptions,
+  LimelightResultsReport,
+} from "./vision/limelight/results.js";
+export {
+  resolveLimelightHost,
+  resolveLimelightHostReport,
+} from "./vision/limelight/resolve-host.js";
+export type { ResolveLimelightHostOptions } from "./vision/limelight/resolve-host.js";

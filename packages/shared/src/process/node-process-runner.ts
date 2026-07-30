@@ -8,6 +8,7 @@ import type {
   SpawnOptions,
 } from "../types/process.js";
 import { assertSafeCommandSpec } from "./sanitize.js";
+import { resolveSpawnSpec } from "./resolve-spawn-spec.js";
 
 async function* streamLines(stream: NodeJS.ReadableStream | null): AsyncIterable<string> {
   if (!stream) {
@@ -32,12 +33,13 @@ async function* streamLines(stream: NodeJS.ReadableStream | null): AsyncIterable
 export class NodeProcessRunner implements ProcessRunner {
   async run(spec: CommandSpec, options: RunOptions = {}): Promise<CommandResult> {
     assertSafeCommandSpec(spec);
+    const resolved = resolveSpawnSpec(spec);
     const started = Date.now();
     return await new Promise<CommandResult>((resolve, reject) => {
-      const child = spawn(spec.command, spec.args, {
-        cwd: spec.cwd,
-        env: { ...process.env, ...spec.env },
-        shell: false,
+      const child = spawn(resolved.command, resolved.args, {
+        cwd: resolved.cwd,
+        env: { ...process.env, ...resolved.env },
+        shell: resolved.shell,
         windowsHide: true,
         stdio: options.inheritStdio ? ["ignore", "inherit", "inherit"] : ["ignore", "pipe", "pipe"],
       });
@@ -106,11 +108,12 @@ export class NodeProcessRunner implements ProcessRunner {
 
   spawn(spec: CommandSpec, options: SpawnOptions = {}): ChildProcessHandle {
     assertSafeCommandSpec(spec);
+    const resolved = resolveSpawnSpec(spec);
     const started = Date.now();
-    const child = spawn(spec.command, spec.args, {
-      cwd: spec.cwd,
-      env: { ...process.env, ...spec.env },
-      shell: false,
+    const child = spawn(resolved.command, resolved.args, {
+      cwd: resolved.cwd,
+      env: { ...process.env, ...resolved.env },
+      shell: resolved.shell,
       windowsHide: true,
       stdio: ["ignore", "pipe", "pipe"],
     });

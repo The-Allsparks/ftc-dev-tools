@@ -22,6 +22,12 @@ function normalizeKind(value: string): VisionCodegenKind | undefined {
     "limelight",
     "dashboard-stream",
   ];
+  if (normalized === "visionportal") {
+    return "visionportal-apriltag";
+  }
+  if (normalized === "dashboard") {
+    return "dashboard-stream";
+  }
   return kinds.find((kind) => kind === normalized);
 }
 

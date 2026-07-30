@@ -11,6 +11,11 @@ import {
   getVisionPortalStatus,
   getVisionStatus,
   collectVisionDiagnostics,
+  getVisionCliCatalog,
+  buildDeferredVisionCliResult,
+  openVisionTarget,
+  formatEndpointTable,
+  VISION_CLI_EXIT,
   interpretFromUnknown,
   openFtcDashboard,
   scanLimelightArtifacts,
@@ -22,6 +27,12 @@ import {
 } from "@ftc-dev-tools/shared";
 import { createCliContext } from "../context.js";
 import { printFriendlyError } from "../context.js";
+import {
+  attachVisionCommonOptions,
+  emitDeferredVisionCommand,
+  emitVisionJson,
+  tryCreateVisionDeviceProvider,
+} from "./vision-common.js";
 
 export function registerVisionCommand(program: Command): void {
   const vision = program
@@ -118,6 +129,113 @@ export function registerVisionCommand(program: Command): void {
     });
 
   vision
+    .command("diagnose")
+    .description("Alias for `ftc vision diagnostics`")
+    .option("--json", "Emit stable machine-readable JSON")
+    .option("--no-probe", "Skip network reachability probes")
+    .option("--redact", "Redact serial numbers and IP addresses in JSON output")
+    .action(async (options: { json?: boolean; probe?: boolean; redact?: boolean }) => {
+      const ctx = createCliContext(process.cwd());
+      const deviceProvider = await tryCreateVisionDeviceProvider(() => ctx.createDeviceProvider());
+      const report = await collectVisionDiagnostics(process.cwd(), {
+        deviceProvider,
+        runner: ctx.runner,
+        probeNetwork: options.probe === false ? false : undefined,
+      });
+      if (options.json) {
+        emitVisionJson("ftc vision diagnose", report, options);
+        return;
+      }
+      console.log("Vision diagnostics\n");
+      console.log(report.message);
+      console.log(`Network probe: ${report.probeNetwork ? "yes" : "no"}`);
+      for (const diagnostic of report.diagnostics) {
+        const mark =
+          diagnostic.severity === "error" ? "✗" : diagnostic.severity === "warn" ? "!" : "·";
+        console.log(`\n${mark} [${diagnostic.code}] ${diagnostic.title}`);
+        console.log(`  ${diagnostic.summary}`);
+      }
+    });
+
+  attachVisionCommonOptions(
+    vision
+      .command("open")
+      .description("Open Limelight web UI or FTC Dashboard in the default browser"),
+  )
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(
+      async (options: {
+        json?: boolean;
+        provider?: string;
+        endpoint?: string;
+        host?: string;
+        url?: string;
+        timeout?: number;
+        redact?: boolean;
+      }) => {
+        const ctx = createCliContext(process.cwd());
+        const deviceProvider = await tryCreateVisionDeviceProvider(() =>
+          ctx.createDeviceProvider(),
+        );
+        try {
+          const result = await openVisionTarget(ctx.cwd, {
+            provider: options.provider,
+            endpoint: options.endpoint,
+            host: options.host,
+            url: options.url,
+            timeoutMs: options.timeout,
+            deviceProvider,
+            runner: ctx.runner,
+          });
+          if (options.json) {
+            emitVisionJson("ftc vision open", result, options);
+            return;
+          }
+          console.log(result.message);
+          if (!result.opened) {
+            process.exitCode = VISION_CLI_EXIT.UNREACHABLE;
+          }
+        } catch (error) {
+          await printFriendlyError(interpretFromUnknown(error), false);
+          process.exitCode = VISION_CLI_EXIT.ERROR;
+        }
+      },
+    );
+
+  vision
+    .command("capture")
+    .description("Capture a still frame (deferred — cataloged for VISION-15)")
+    .option("--json", "Emit stable machine-readable JSON")
+    .option("--redact", "Redact serial numbers and IP addresses in JSON output")
+    .action((options: { json?: boolean; redact?: boolean }) => {
+      emitDeferredVisionCommand(buildDeferredVisionCliResult("ftc vision capture"), options);
+    });
+
+  vision
+    .command("catalog")
+    .description("List vision CLI commands and deferred capabilities")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action((options: { json?: boolean }) => {
+      const catalog = getVisionCliCatalog();
+      if (options.json) {
+        console.log(JSON.stringify({ schemaVersion: "1.0.0", catalog }, null, 2));
+        return;
+      }
+      console.log("Vision CLI catalog\n");
+      for (const entry of catalog) {
+        const status = entry.available ? "available" : "deferred";
+        console.log(`${entry.command} [${status}]`);
+        console.log(`  ${entry.summary}`);
+        if (entry.equivalent) {
+          console.log(`  equivalent: ${entry.equivalent}`);
+        }
+        if (entry.deferredReason) {
+          console.log(`  deferred: ${entry.deferredReason}`);
+        }
+      }
+    });
+
+  vision
     .command("discover")
     .description("Scan TeamCode and Gradle for vision library signals")
     .option("--json", "Emit stable machine-readable JSON")
@@ -151,47 +269,174 @@ export function registerVisionCommand(program: Command): void {
     .description("Discover vision endpoints and probe local-network services")
     .option("--json", "Emit stable machine-readable JSON")
     .option("--no-probe", "Skip network reachability checks")
-    .action(async (options: { json?: boolean; probe?: boolean }) => {
+    .option("--timeout <ms>", "Network probe timeout in milliseconds", (value) =>
+      Number.parseInt(value, 10),
+    )
+    .option("--redact", "Redact serial numbers and IP addresses in JSON output")
+    .action(
+      async (options: { json?: boolean; probe?: boolean; timeout?: number; redact?: boolean }) => {
+        const ctx = createCliContext();
+        const deviceProvider = await tryCreateVisionDeviceProvider(() =>
+          ctx.createDeviceProvider(),
+        );
+
+        const report = await discoverVisionDevices(ctx.cwd, {
+          deviceProvider,
+          runner: ctx.runner,
+          probeNetwork: options.probe !== false,
+          timeoutMs: options.timeout,
+        });
+
+        if (options.json) {
+          emitVisionJson("ftc vision devices", report, options);
+          return;
+        }
+
+        console.log("Vision endpoint discovery\n");
+        console.log(report.message);
+        if (report.requiresSelection) {
+          for (const reason of report.selectionReasons) {
+            console.log(`Selection required: ${reason}`);
+          }
+          process.exitCode = VISION_CLI_EXIT.SELECTION_REQUIRED;
+        }
+        const table = formatEndpointTable(
+          report.endpoints.map((endpoint) => ({
+            kind: endpoint.kind,
+            target: endpoint.host ? `${endpoint.host}:${endpoint.port ?? ""}` : "config",
+            reachable: endpoint.probe.reachable,
+            provider: endpoint.providerId,
+          })),
+        );
+        for (const line of table) {
+          console.log(line);
+        }
+        for (const warning of report.warnings) {
+          console.log(`Warning: ${warning}`);
+        }
+      },
+    );
+
+  const pipelinesTop = vision
+    .command("pipelines")
+    .description("Limelight pipeline-as-code shortcuts (VISION-15 catalog)");
+
+  pipelinesTop
+    .command("list")
+    .description("List pipeline-as-code artifacts in the workspace")
+    .option("--json", "Emit stable machine-readable JSON")
+    .option("--redact", "Redact serial numbers and IP addresses in JSON output")
+    .action(async (options: { json?: boolean; redact?: boolean }) => {
       const ctx = createCliContext();
-      let deviceProvider;
-      try {
-        deviceProvider = await ctx.createDeviceProvider();
-      } catch {
-        deviceProvider = undefined;
+      const manifest = await scanLimelightArtifacts(ctx.cwd);
+      if (options.json) {
+        emitVisionJson("ftc vision pipelines list", manifest, options);
+        return;
       }
+      console.log("Limelight Vision pipeline artifacts\n");
+      console.log(`Directory: ${manifest.pipelineDirectory || "(not configured)"}`);
+      for (const pipeline of manifest.pipelines) {
+        console.log(
+          `  [pipeline${pipeline.slot !== undefined ? ` slot ${pipeline.slot}` : ""}] ${pipeline.relativePath}`,
+        );
+      }
+    });
 
-      const report = await discoverVisionDevices(ctx.cwd, {
-        deviceProvider,
-        runner: ctx.runner,
-        probeNetwork: options.probe !== false,
-      });
-
+  pipelinesTop
+    .command("validate")
+    .description("Validate pipeline JSON syntax and slot assignments")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(async (options: { json?: boolean }) => {
+      const ctx = createCliContext();
+      const report = await validateLimelightArtifacts(ctx.cwd);
       if (options.json) {
         console.log(JSON.stringify(report, null, 2));
         return;
       }
-
-      console.log("Vision endpoint discovery\n");
+      console.log("Limelight Vision pipeline validation\n");
       console.log(report.message);
-      if (report.requiresSelection) {
-        for (const reason of report.selectionReasons) {
-          console.log(`Selection required: ${reason}`);
-        }
+      for (const issue of report.issues) {
+        console.log(`  [${issue.severity}] ${issue.relativePath}: ${issue.message}`);
       }
-      for (const endpoint of report.endpoints) {
-        const hostLabel = endpoint.host ? `${endpoint.host}:${endpoint.port ?? ""}` : "config";
-        console.log(
-          `[${endpoint.kind}] ${hostLabel} (${endpoint.probe.reachable}) — ${endpoint.providerId}`,
-        );
-        console.log(`  sources: ${endpoint.sources.join(", ")}`);
-        for (const line of endpoint.evidence) {
-          console.log(`  ${line}`);
-        }
-      }
-      for (const warning of report.warnings) {
-        console.log(`Warning: ${warning}`);
+      if (!report.success) {
+        process.exitCode = VISION_CLI_EXIT.ERROR;
       }
     });
+
+  pipelinesTop
+    .command("compare")
+    .description("Compare workspace pipeline file with camera slot (alias for diff)")
+    .requiredOption("--slot <n>", "Pipeline slot (0-9)", (value) => Number.parseInt(value, 10))
+    .option("--host <address>", "Limelight Vision hostname or IP")
+    .option("--path <relative>", "Workspace pipeline file (default: file mapped to slot)")
+    .option("--raw", "Include full workspace and camera JSON in output")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(
+      async (options: {
+        slot: number;
+        host?: string;
+        path?: string;
+        raw?: boolean;
+        json?: boolean;
+      }) => {
+        const ctx = createCliContext();
+        const deviceProvider = await tryCreateVisionDeviceProvider(() =>
+          ctx.createDeviceProvider(),
+        );
+        try {
+          const report = await diffLimelightPipeline(ctx.cwd, {
+            slot: options.slot,
+            host: options.host,
+            workspacePath: options.path,
+            includeRaw: options.raw,
+            deviceProvider,
+            runner: ctx.runner,
+          });
+          if (options.json) {
+            console.log(JSON.stringify(report, null, 2));
+            return;
+          }
+          console.log("Limelight Vision pipeline compare\n");
+          console.log(report.message);
+          for (const line of report.humanSummary) {
+            console.log(line);
+          }
+        } catch (error) {
+          await printFriendlyError(interpretFromUnknown(error), false);
+          process.exitCode = VISION_CLI_EXIT.ERROR;
+        }
+      },
+    );
+
+  for (const deferredCommand of ["pull", "push", "activate", "reload"] as const) {
+    pipelinesTop
+      .command(deferredCommand)
+      .description(`Deferred Limelight pipeline ${deferredCommand} (VISION-05+)`)
+      .option("--json", "Emit stable machine-readable JSON")
+      .action((options: { json?: boolean }) => {
+        emitDeferredVisionCommand(
+          buildDeferredVisionCliResult(`ftc vision pipelines ${deferredCommand}`),
+          options,
+        );
+      });
+  }
+
+  const sessions = vision
+    .command("sessions")
+    .description("Vision session recording commands (deferred — see ftc replay status)");
+
+  for (const sessionCommand of ["list", "record", "inspect", "replay", "export"] as const) {
+    sessions
+      .command(sessionCommand)
+      .description(`Deferred session ${sessionCommand} (VISION-13+ / Replay epic)`)
+      .option("--json", "Emit stable machine-readable JSON")
+      .action((options: { json?: boolean }) => {
+        emitDeferredVisionCommand(
+          buildDeferredVisionCliResult(`ftc vision sessions ${sessionCommand}`),
+          options,
+        );
+      });
+  }
 
   const limelight = vision
     .command("limelight")
@@ -758,4 +1003,120 @@ export function registerVisionCommand(program: Command): void {
         process.exitCode = result.success ? 0 : 1;
       },
     );
+
+  registerVisionCodegenShortcut(codegen, "limelight", "limelight");
+  registerVisionCodegenShortcut(codegen, "easyopencv", "easyopencv");
+  registerVisionCodegenShortcut(codegen, "visionportal", "visionportal-apriltag");
+
+  codegen
+    .command("diagnostic-opmode")
+    .description("Shortcut for diagnostic bridge scaffold (VISION-07)")
+    .option("--package <name>", "Java package (default org.firstinspires.ftc.teamcode.vision)")
+    .option("--yes", "Apply scaffold (required unless --dry-run)")
+    .option("--dry-run", "Show planned files without writing")
+    .option("--force", "Overwrite existing bridge files")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(
+      async (options: {
+        package?: string;
+        yes?: boolean;
+        dryRun?: boolean;
+        force?: boolean;
+        json?: boolean;
+      }) => {
+        const ctx = createCliContext();
+        const result = await scaffoldVisionBridge({
+          projectRoot: ctx.cwd,
+          runner: ctx.runner,
+          packageName: options.package,
+          dryRun: options.dryRun === true,
+          yes: options.yes === true,
+          force: options.force === true,
+        });
+        if (options.json) {
+          emitVisionJson("ftc vision codegen diagnostic-opmode", result, options);
+        } else {
+          console.log("Vision diagnostic bridge scaffold\n");
+          console.log(result.message);
+          for (const entry of result.plan) {
+            console.log(`  [${entry.action}] ${entry.relativePath}`);
+          }
+          if (result.error) {
+            await printFriendlyError(result.error, false);
+          }
+        }
+        process.exitCode = result.success ? 0 : 1;
+      },
+    );
+}
+
+function registerVisionCodegenShortcut(codegen: Command, commandName: string, kind: string): void {
+  codegen
+    .command(commandName)
+    .description(`Shortcut for \`ftc vision codegen scaffold ${kind}\``)
+    .option("--class <name>", "Java OpMode class name (required)")
+    .option("--pipeline-class <name>", "Pipeline class name (EasyOpenCV only)")
+    .option("--package <name>", "Java package (default org.firstinspires.ftc.teamcode.vision)")
+    .option("--camera <name>", "Webcam name from robot configuration")
+    .option("--config <name>", "Robot configuration XML base name")
+    .option("--type <teleop|autonomous>", "OpMode type", "teleop")
+    .option("--style <linear|iterative>", "OpMode style", "linear")
+    .option("--group <name>", "OpMode group annotation")
+    .option("--name <name>", "OpMode display name (defaults to class name)")
+    .option("--limelight-table <name>", "Limelight NetworkTables table name", "limelight")
+    .option("--dashboard", "Include FTC Dashboard camera stream when supported")
+    .option("--dry-run", "Preview generated Java without writing files")
+    .option("--yes", "Apply codegen (required unless --dry-run)")
+    .option("--force", "Overwrite existing files / bypass dirty-tree guard")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(async (options: Record<string, unknown>) => {
+      const ctx = createCliContext();
+      const parsedKind = parseVisionCodegenKind(kind);
+      if (!parsedKind) {
+        console.error(`Unknown codegen kind: ${kind}`);
+        process.exitCode = VISION_CLI_EXIT.ERROR;
+        return;
+      }
+      const className = String(options.class ?? "").trim();
+      if (!className) {
+        console.error("--class is required.");
+        process.exitCode = VISION_CLI_EXIT.ERROR;
+        return;
+      }
+      const result = await scaffoldVisionCodegen({
+        projectRoot: ctx.cwd,
+        runner: ctx.runner,
+        kind: parsedKind,
+        className,
+        pipelineClassName: options.pipelineClass as string | undefined,
+        packageName: options.package as string | undefined,
+        cameraName: options.camera as string | undefined,
+        configName: options.config as string | undefined,
+        opModeKind: options.type as "teleop" | "autonomous" | undefined,
+        style: options.style as "linear" | "iterative" | undefined,
+        group: options.group as string | undefined,
+        name: options.name as string | undefined,
+        limelightTableName: options.limelightTable as string | undefined,
+        useDashboardStream: options.dashboard === true ? true : undefined,
+        dryRun: options.dryRun === true,
+        yes: options.yes === true,
+        force: options.force === true,
+      });
+      if (options.json) {
+        emitVisionJson(`ftc vision codegen ${commandName}`, result, {
+          json: true,
+          redact: options.redact === true,
+        });
+      } else {
+        console.log(`Vision codegen (${commandName})\n`);
+        console.log(result.message);
+        for (const entry of result.plan) {
+          console.log(`  [${entry.action}] ${entry.relativePath}`);
+        }
+        if (result.error) {
+          await printFriendlyError(result.error, false);
+        }
+      }
+      process.exitCode = result.success ? 0 : 1;
+    });
 }

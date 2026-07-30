@@ -161,7 +161,11 @@ Aggregated workspace, network, and artifact diagnostics with stable `VISION_*` c
 
 Live image heuristics, Logcat parsing, bundle export, and Vision Lab inline diagnostics remain deferred.
 
-## Next steps (VISION-15+)
+## Vision CLI (VISION-15)
+
+Command catalog, shared flags, JSON envelopes, top-level shortcuts (`open`, `diagnose`, `pipelines`, `codegen` aliases), and deferred stubs. See [vision-cli.md](./vision-cli.md).
+
+## Next steps (VISION-16+)
 
 ## Related
 

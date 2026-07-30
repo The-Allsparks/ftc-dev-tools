@@ -21,8 +21,10 @@ This ledger tracks Phase 1 workstreams for the modular architecture transition. 
 |------------|--------|--------|--------------|
 | Coordination ledger | `orchestrator/phase1` | Complete | This file, GOVERNANCE ADR pointer, VitePress sidebar |
 | Repository inventory | `orchestrator/phase1` | Complete | [repository-inventory.md](./repository-inventory.md) |
-| Backlog audit | `orchestrator/phase1` | Complete | [backlog-audit.md](./backlog-audit.md), GitHub epics, catalog updates |
+| Backlog audit | `orchestrator/phase1` | Complete | [backlog-audit.md](./backlog-audit.md), GitHub epics #142–#154, catalog updates |
 | ADR generation | `orchestrator/phase1` | Complete | [adr/](./adr/) (0000–0006) |
+
+**Draft PR:** [#155](https://github.com/The-Allsparks/ftc-dev-tools/pull/155)
 
 > Phase 1 workstreams were consolidated on branch `orchestrator/phase1` for initial delivery. Future phases should use dedicated branches per orchestrator §16.
 

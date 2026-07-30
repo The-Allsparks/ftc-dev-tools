@@ -100,8 +100,12 @@ export async function listRobotConfigs(projectRoot: string): Promise<RobotConfig
   }
 }
 
-function isMissingConfigName(nameOrPath: string | null | undefined): boolean {
-  return nameOrPath == null || nameOrPath.trim() === "";
+function trimConfigName(nameOrPath: string | null | undefined): string | undefined {
+  if (nameOrPath == null) {
+    return undefined;
+  }
+  const trimmed = nameOrPath.trim();
+  return trimmed === "" ? undefined : trimmed;
 }
 
 export async function showRobotConfig(
@@ -109,7 +113,8 @@ export async function showRobotConfig(
   nameOrPath: string | null | undefined,
 ): Promise<RobotConfigShowResult> {
   try {
-    if (isMissingConfigName(nameOrPath)) {
+    const trimmedName = trimConfigName(nameOrPath);
+    if (!trimmedName) {
       return {
         success: false,
         message: "Robot config name or path is required.",
@@ -121,13 +126,13 @@ export async function showRobotConfig(
       };
     }
 
-    const resolved = await resolveConfigPath(projectRoot, nameOrPath);
+    const resolved = await resolveConfigPath(projectRoot, trimmedName);
     if (!resolved) {
       return {
         success: false,
-        message: `Robot config not found: ${nameOrPath}`,
+        message: `Robot config not found: ${trimmedName}`,
         error: interpretFromUnknown(
-          Object.assign(new Error(`Robot config not found: ${nameOrPath}`), {
+          Object.assign(new Error(`Robot config not found: ${trimmedName}`), {
             code: "CONFIG_NOT_FOUND",
           }),
         ),
@@ -160,12 +165,12 @@ export async function resolveConfigPath(
   projectRoot: string,
   nameOrPath: string | null | undefined,
 ): Promise<RobotConfigInfo | undefined> {
-  if (isMissingConfigName(nameOrPath)) {
+  const trimmed = trimConfigName(nameOrPath);
+  if (!trimmed) {
     return undefined;
   }
 
   const root = path.resolve(projectRoot);
-  const trimmed = nameOrPath.trim();
   const asPath = path.isAbsolute(trimmed) ? trimmed : path.join(root, trimmed);
 
   const tryPaths: string[] = [];

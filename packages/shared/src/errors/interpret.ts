@@ -1,4 +1,6 @@
 import type { FriendlyError } from "../types/errors.js";
+import { VISION_DIAGNOSTIC_CODES } from "../vision/diagnostics/codes.js";
+import { FRIENDLY_BY_CODE } from "../vision/diagnostics/friendly.js";
 
 export interface ErrorContext {
   text: string;
@@ -903,6 +905,12 @@ const RULES: ErrorRule[] = [
       "Pass `--force` only if you intend to overwrite generated bridge files.",
     ],
   },
+  ...Object.values(VISION_DIAGNOSTIC_CODES).map((code) => ({
+    code,
+    test: ({ codeHint, text }: ErrorContext) =>
+      codeHint === code || new RegExp(code.replace(/_/g, "[_ ]"), "i").test(text),
+    ...FRIENDLY_BY_CODE[code],
+  })),
 ];
 export function interpretError(input: string | ErrorContext): FriendlyError {
   const ctx: ErrorContext = typeof input === "string" ? { text: input } : input;

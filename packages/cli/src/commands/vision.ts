@@ -10,6 +10,7 @@ import {
   getVisionBridgeStatus,
   getVisionPortalStatus,
   getVisionStatus,
+  collectVisionDiagnostics,
   interpretFromUnknown,
   openFtcDashboard,
   scanLimelightArtifacts,
@@ -62,6 +63,57 @@ export function registerVisionCommand(program: Command): void {
       }
       for (const error of report.configErrors) {
         console.log(`Error: ${error}`);
+      }
+    });
+
+  vision
+    .command("diagnostics")
+    .description("Aggregate vision setup diagnostics with student-friendly guidance (VISION-14)")
+    .option("--json", "Emit stable machine-readable JSON")
+    .option("--no-probe", "Skip network reachability probes")
+    .action(async (options: { json?: boolean; probe?: boolean }) => {
+      const ctx = createCliContext(process.cwd());
+      let deviceProvider;
+      try {
+        deviceProvider = await ctx.createDeviceProvider();
+      } catch {
+        deviceProvider = undefined;
+      }
+
+      const report = await collectVisionDiagnostics(process.cwd(), {
+        deviceProvider,
+        runner: ctx.runner,
+        probeNetwork: options.probe === false ? false : undefined,
+      });
+
+      if (options.json) {
+        console.log(JSON.stringify(report, null, 2));
+        return;
+      }
+
+      console.log("Vision diagnostics\n");
+      console.log(report.message);
+      console.log(`Network probe: ${report.probeNetwork ? "yes" : "no"}`);
+      if (report.diagnostics.length === 0) {
+        console.log("No issues reported.");
+        return;
+      }
+      for (const diagnostic of report.diagnostics) {
+        const mark =
+          diagnostic.severity === "error" ? "✗" : diagnostic.severity === "warn" ? "!" : "·";
+        console.log(`\n${mark} [${diagnostic.code}] ${diagnostic.title}`);
+        console.log(`  ${diagnostic.summary}`);
+        if (diagnostic.evidence.length > 0) {
+          for (const line of diagnostic.evidence) {
+            console.log(`  - ${line}`);
+          }
+        }
+        if (diagnostic.suggestedActions.length > 0) {
+          console.log("  Suggested actions:");
+          for (const action of diagnostic.suggestedActions) {
+            console.log(`    • ${action}`);
+          }
+        }
       }
     });
 

@@ -13,7 +13,7 @@ export interface FriendlyError {
 export type CheckStatus = "pass" | "warn" | "fail" | "skip";
 
 /** Doctor check grouping (machine vs project foundation; more categories in future issues). */
-export type DoctorCheckCategory = "machine" | "project" | "robot" | "other";
+export type DoctorCheckCategory = "machine" | "project" | "robot" | "vision" | "other";
 
 export interface DoctorCheck {
   id: string;
@@ -39,6 +39,7 @@ export interface DoctorReportSections {
   machine: DoctorReportSection;
   project: DoctorReportSection;
   robot?: DoctorReportSection;
+  vision?: DoctorReportSection;
   other?: DoctorReportSection;
 }
 

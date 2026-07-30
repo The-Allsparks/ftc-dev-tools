@@ -71,6 +71,12 @@ describe("friendly error interpretation", () => {
       "HWMAP_EMPTY",
       "HWMAP_ABORTED",
       "HWMAP_DIRTY_TREE",
+      "VISION_PROJECT_UNSUPPORTED",
+      "VISION_NO_LIBRARIES",
+      "VISION_ENDPOINT_AMBIGUOUS",
+      "VISION_HOST_UNREACHABLE",
+      "VISION_BRIDGE_NOT_SCAFFOLDED",
+      "VISION_PIPELINE_ARTIFACT_ERROR",
     ]) {
       expect(codes).toContain(required);
     }

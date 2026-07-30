@@ -26,6 +26,9 @@ export const DOCTOR_CHECK_LABELS = {
   ftcSdkVersion: "FTC SDK version (online check)",
   wifiConsole: "Control Hub web console reachable",
   wifiRobotInterface: "Robot Wi‑Fi network selected",
+  visionWorkspace: "Vision libraries and workspace setup",
+  visionNetwork: "Vision camera endpoints reachable",
+  visionArtifacts: "Vision pipeline artifacts and bridge",
 } as const;
 
 export const DOCTOR_SKIP_DETAILS = {
@@ -40,6 +43,9 @@ export const DOCTOR_SKIP_DETAILS = {
   wifiConsoleAtHome: "Skipped — normal at home when the Control Hub is off or not on your Wi‑Fi. ",
   wifiNicAtHome:
     "Skipped — normal unless your laptop has two Wi‑Fi adapters (dual‑NIC) at the shop. ",
+  visionNoProject: "Skipped because no FTC project was detected in this folder.",
+  visionNetworkNotProbed:
+    "Skipped — network probe requires a connected robot (adb). Plug in the Control Hub or run from the shop network.",
 } as const;
 
 export function wifiConsoleSkipDetail(technicalMessage: string): string {

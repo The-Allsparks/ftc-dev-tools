@@ -40,6 +40,7 @@ import {
   toolReplayValidateHeader,
   toolReplayValidateEvent,
   toolReplayCreateHeader,
+  toolVisionDiagnostics,
   toolVisionStatus,
   toolSdkCheck,
   toolSdkUpdate,
@@ -86,6 +87,7 @@ export const FTC_MCP_TOOL_NAMES = [
   "vision_visionportal_status",
   "vision_easyopencv_status",
   "vision_codegen",
+  "vision_diagnostics",
   "replay_status",
   "replay_validate_header",
   "replay_validate_event",
@@ -704,6 +706,24 @@ export function createFtcMcpServer(): McpServer {
       annotations: { readOnlyHint: false, openWorldHint: false },
     },
     async (args) => toolVisionCodegen(args),
+  );
+
+  server.registerTool(
+    "vision_diagnostics",
+    {
+      title: "Vision diagnostics",
+      description:
+        "Aggregate vision workspace, network, and artifact diagnostics with student-friendly codes (VISION-14).",
+      inputSchema: z.object({
+        ...projectRootShape,
+        probeNetwork: z
+          .boolean()
+          .optional()
+          .describe("Probe HTTP reachability (defaults to true when adb devices are available)"),
+      }),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolVisionDiagnostics(args),
   );
 
   server.registerTool(

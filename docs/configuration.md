@@ -74,6 +74,8 @@ ftc vision bridge scaffold --yes --json
 
 See [vision-providers.md](architecture/vision-providers.md).
 
+Full student/mentor guides: [vision-lab.md](vision-lab.md).
+
 ## Team-shared vs local editor settings
 
 | Setting                                     | Suggested location                                                        |

@@ -49,6 +49,8 @@ Hardware-affecting features must not be labeled `Stable` solely because CI is gr
 
 Update this table when physical test reports land. Do not include personal data in public reports.
 
+Vision Lab detail: [vision-lab.md](vision-lab.md) and [vision-hardware-testing.md](vision-hardware-testing.md).
+
 ## Hardware test report template (no PII)
 
 ```text

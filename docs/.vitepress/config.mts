@@ -82,6 +82,23 @@ export default defineConfig({
         ],
       },
       {
+        text: "Vision Lab",
+        collapsed: false,
+        items: [
+          { text: "Overview", link: "/vision-lab" },
+          { text: "Configuration", link: "/vision-configuration" },
+          { text: "Limelight Vision", link: "/limelight" },
+          { text: "VisionPortal", link: "/visionportal" },
+          { text: "FTC Dashboard", link: "/ftc-dashboard" },
+          { text: "EasyOpenCV", link: "/easyopencv" },
+          { text: "Diagnostics", link: "/vision-diagnostics" },
+          { text: "Sessions / replay", link: "/vision-sessions" },
+          { text: "Security & privacy", link: "/vision-security" },
+          { text: "Hardware testing", link: "/vision-hardware-testing" },
+          { text: "Architecture overview", link: "/vision-architecture" },
+        ],
+      },
+      {
         text: "Advanced tooling",
         items: [
           { text: "SDK update", link: "/sdk-update" },
@@ -109,6 +126,7 @@ export default defineConfig({
           { text: "Software ecosystem", link: "/architecture/ftc-software-ecosystem" },
           { text: "Capability matrix", link: "/architecture/library-capability-matrix" },
           { text: "Vision providers", link: "/architecture/vision-providers" },
+          { text: "Vision hardware validation", link: "/architecture/vision-hardware-validation" },
           { text: "Architecture decisions (ADRs)", link: "/architecture/adr/" },
         ],
       },

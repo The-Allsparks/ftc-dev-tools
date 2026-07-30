@@ -183,3 +183,16 @@ Interactive breakpoint debugging remains a **separate advanced capability**.
 ## Snapshot verdict (audit date)
 
 FTC Dev Tools provides a broader **implemented** FTC-specific surface than FTC for VS Code. Remaining gaps toward practical workflow parity are primarily diagnostics UX, onboarding polish, test starters, physical validation, and optional debugger/telemetry — not basic build/deploy.
+
+## Vision Lab (VISION-01–17)
+
+| Capability                            | FTC Dev Tools               | FTC for VS Code   | Android Studio FTC workflow | Gap             | Recommended action                                       |
+| ------------------------------------- | --------------------------- | ----------------- | --------------------------- | --------------- | -------------------------------------------------------- |
+| Limelight HTTP status/results         | `ftc vision limelight`      | No                | No (team tools)             | Low for tooling | `Native` — mock-tested; hardware matrix pending          |
+| VisionPortal / webcam static analysis | `ftc vision visionportal`   | No                | On-device only              | Medium          | `Native` + [visionportal.md](visionportal.md)            |
+| FTC Dashboard interop                 | `ftc vision dashboard open` | Planned dashboard | Browser / team setup        | Low             | `Integration` — see [ftc-dashboard.md](ftc-dashboard.md) |
+| Vision diagnostics                    | `ftc vision diagnostics`    | No                | Logcat only                 | Medium          | `Native`                                                 |
+| Vision Java codegen                   | `ftc vision codegen`        | Snippets only     | Samples                     | Low             | `Native` + docs                                          |
+| Live vision panel / replay            | Deferred                    | Planned           | N/A                         | High            | `Future optional`                                        |
+
+Documentation hub: [vision-lab.md](vision-lab.md).

@@ -24,6 +24,9 @@ features:
   - title: Build & deploy
     details: Gradle Wrapper builds and explicit ADB deploy — never silently picks a device when several are connected.
     link: /getting-started
+  - title: Vision Lab
+    details: Limelight, VisionPortal, EasyOpenCV, and FTC Dashboard helpers — mock-tested in CI; hardware checklists pending.
+    link: /vision-lab
   - title: Safety first
     details: No arbitrary commands from config, no silent Wi‑Fi changes, and explicit confirmation for network helpers.
     link: https://github.com/The-Allsparks/ftc-dev-tools/blob/main/README.md#safety-guarantees
@@ -40,6 +43,7 @@ features:
 | Goal                                     | Guide                                                                 |
 | ---------------------------------------- | --------------------------------------------------------------------- |
 | First-time setup                         | [Getting started](./getting-started.md)                               |
+| Vision (Limelight or webcam)             | [Vision Lab](./vision-lab.md)                                         |
 | Install JDK + SDK without Android Studio | [Install without Android Studio](./install-without-android-studio.md) |
 | Install the `ftc` CLI                    | [CLI install](./cli-install.md)                                       |
 | Windows-specific tips                    | [Windows setup](./windows-setup.md)                                   |

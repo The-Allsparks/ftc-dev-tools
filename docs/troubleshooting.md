@@ -57,3 +57,19 @@ Include:
 - Whether you used USB or Wi-Fi adb
 
 Never paste passwords or Wi-Fi credentials.
+
+## Vision Lab
+
+```bash
+ftc vision diagnostics --json --redact
+ftc vision validation status --json
+```
+
+Decision tree and provider guides: [vision-lab.md](vision-lab.md).
+
+Common vision issues:
+
+- **Multiple hosts / devices** — pass `--host`, `--device`, or `--endpoint`; tools never auto-pick
+- **Limelight unreachable** — [limelight.md](limelight.md)
+- **Webcam not in config** — [visionportal.md](visionportal.md)
+- **Dashboard won't load** — [ftc-dashboard.md](ftc-dashboard.md)

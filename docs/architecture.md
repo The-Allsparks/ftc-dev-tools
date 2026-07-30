@@ -172,13 +172,14 @@ First-class product surfaces (CLI + extension + shared; MCP subset where noted):
 - OpMode list/create
 - Robot config list/show/validate/pull
 - Hardware map show/codegen
-- MCP server (`ftc-mcp`)
+- **Vision Lab** — providers, diagnostics, validation, codegen ([vision-lab.md](vision-lab.md))
+- MCP server (`ftc-mcp`, 59 tools)
 
 Maturity levels (mock-tested through hardware-validated) live in [feature-maturity.md](feature-maturity.md). Do not call Control Hub–affecting features **Stable** until physical checklists pass.
 
 ## Still deferred / investigative
 
-- Telemetry / FTC Dashboard interoperability ([telemetry-spike.md](telemetry-spike.md))
+- Telemetry / FTC Dashboard interoperability — Vision Lab ships **interop** (status/open), not a duplicate dashboard ([telemetry-spike.md](telemetry-spike.md), [ftc-dashboard.md](ftc-dashboard.md))
 - Java debugger attach via JDWP ([debugger-spike.md](debugger-spike.md)) — safety-critical; no support claim until hardware validation
 - Richer Logcat UX, diagnostic bundles, TeamCode unit-test starters
 - Road Runner (Pedro Pathing remains the committed pathing focus)

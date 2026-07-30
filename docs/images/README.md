@@ -13,3 +13,12 @@ Replace these placeholders with real captures before marketing the extension wid
 ## Command Palette
 
 `command-palette.placeholder.png` — commands beginning with `FTC:`.
+
+## Vision Lab panel
+
+Placeholder captures pending (VISION-18 follow-up):
+
+- `vision-lab-panel.placeholder.png` — Vision Lab webview (status, inspector, deferred replay)
+- `vision-sidebar.placeholder.png` — activity bar Vision sidebar
+
+Until real screenshots land, use **FTC: Open Vision Lab** locally and see [vision-lab.md](../vision-lab.md).

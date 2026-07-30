@@ -5,6 +5,19 @@ All notable changes to FTC Dev Tools are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Vision Lab documentation** — student/mentor guides (`docs/vision-lab.md`, provider pages, configuration, security, sessions, hardware testing)
+- Vision Lab sidebar on the documentation site; sample workspace and session schema files under `docs/samples/`
+- README, MCP reference, troubleshooting, snippets, and architecture docs updated for Vision Lab (VISION-01–17)
+
+### Notes
+
+- Vision Lab capabilities remain **Mock-tested** until physical hardware checklists pass
+- Vision Lab panel screenshots still use placeholders ([docs/images/README.md](docs/images/README.md))
+
 ## [0.1.0] - 2026-07-27
 
 ### Added

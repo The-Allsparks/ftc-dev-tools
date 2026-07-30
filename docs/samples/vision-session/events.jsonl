@@ -1,0 +1,1 @@
+{"schemaVersion":"1.0.0","sessionId":"00000000-0000-4000-8000-000000000001","sequence":0,"timestampMs":1753886400000,"kind":"vision.diagnostic","sourceId":"vision:bridge","payload":{"camera":{"state":"streaming","name":"Webcam 1"}}}

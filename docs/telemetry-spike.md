@@ -1,6 +1,14 @@
 # Telemetry spike
 
-**Status:** research / design guidance. No proprietary live dashboard ships in 0.1.0.
+**Status:** research / design guidance. **FTC Dashboard interoperability ships** in Vision Lab (detect, status, open) — not a proprietary embedded dashboard.
+
+## Shipped (Vision Lab)
+
+- `ftc vision dashboard status` / `open` — see [ftc-dashboard.md](ftc-dashboard.md)
+- Gradle dependency detection for Acme Robotics Dashboard
+- Explicit URL/host resolution; no silent multi-endpoint pick
+
+Maturity: **Mock-tested** ([feature-maturity.md](feature-maturity.md)).
 
 ## Context
 
@@ -29,8 +37,8 @@ Do **not** create an incompatible proprietary telemetry ecosystem without a comp
 
 ## Candidate commands (future, optional)
 
-- `FTC: Open FTC Dashboard` — only when installed/detected
-- `FTC: Record Telemetry Session` / `FTC: Open Recorded Telemetry` — only with a clear storage format and privacy review
+- ~~`FTC: Open FTC Dashboard`~~ — shipped as CLI/extension Vision Lab open helpers
+- `FTC: Record Telemetry Session` / `FTC: Open Recorded Telemetry` — session schema foundation only; live capture deferred ([vision-sessions.md](vision-sessions.md))
 
 ## Acceptance criteria for any telemetry feature
 

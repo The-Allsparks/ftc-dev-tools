@@ -40,11 +40,15 @@ Physical REV Control Hub compatibility has **not** been claimed as validated in 
 - `ftc opmode` — list / create TeleOp & Autonomous stubs; see [docs/opmodes.md](docs/opmodes.md)
 - `ftc config` — list / show / validate / pull robot config XML; see [docs/robot-config.md](docs/robot-config.md)
 - `ftc hwmap` — show hardware map / generate OpMode stubs from config; see [docs/hwmap.md](docs/hwmap.md)
-- **Vision Lab** — Limelight, VisionPortal, EasyOpenCV, FTC Dashboard, diagnostics, validation, Java codegen; see [docs/vision-lab.md](docs/vision-lab.md)
+- **Vision Lab** — `ftc vision …` CLI, Limelight, VisionPortal, EasyOpenCV, FTC Dashboard, diagnostics, validation, Java codegen; see [docs/vision-lab.md](docs/vision-lab.md)
+- `ftc replay status|validate|create-header` — session schema validation (live capture deferred); see [docs/vision-sessions.md](docs/vision-sessions.md)
+- `ftc integrations list`, `ftc modules list`, `ftc providers list` — built-in registry introspection
+- `ftc github link|status|unlink` — optional GitHub error reports on build/deploy/doctor failures
 - `ftc-mcp` — stdio MCP server for Cursor agents (59 tools); see [docs/mcp.md](docs/mcp.md)
 - Optional `.ftc-dev.json` configuration + JSON Schema
-- VS Code/Cursor extension commands, FTC view, status bar, output channel, and Java snippets
-- Guided setup commands: **FTC: Set Up This Computer**, **FTC: Set Up This FTC Project**, **FTC: Configure Recommended Extensions**, **FTC: Install FTC CLI**
+- VS Code/Cursor extension: state-aware **FTC Robot** sidebar, **Vision** sidebar/panel, status bar, output channel, and Java snippets
+- Student onboarding: **FTC: Start Here**, Welcome walkthrough, **FTC: Connect My Robot (USB First)**, **FTC: First OpMode Journey**, competition readiness milestones
+- Guided setup commands: **FTC: Get or Open FTC Project**, **FTC: Set Up This Computer**, **FTC: Set Up This FTC Project**, **FTC: Configure Recommended Extensions**, **FTC: Install FTC CLI**
 - Cancellable robot log streaming in the extension (`FTC: Stop Robot Logs`)
 - Unit/integration-style tests with `MockDeviceProvider`
 - GitHub Actions CI on Windows, macOS, and Linux; Dependabot version updates; CodeQL analysis; pull request dependency review; [documentation site](https://the-allsparks.github.io/ftc-dev-tools/) on GitHub Pages
@@ -57,13 +61,14 @@ Integrated features above are first-class product surfaces. Remaining work aims 
 
 ### Planned (strong interest)
 
-| Capability                                     | Notes                                                                                             |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| **Vision Lab**                                 | Shipped foundation (mock-tested); see [docs/vision-lab.md](docs/vision-lab.md)                    |
-| **Telemetry / FTC Dashboard interoperability** | Prefer existing community tools; see [docs/telemetry-spike.md](docs/telemetry-spike.md)           |
-| **Java debugger attach (investigation)**       | JDWP spike only until Control Hub validated; see [docs/debugger-spike.md](docs/debugger-spike.md) |
-| **Richer Logcat / diagnostic bundles**         | Process filters, clickable stack traces, redacted share bundles                                   |
-| **TeamCode unit-test starter workflow**        | Document + Gradle/test commands; do not reinvent Test Explorer                                    |
+| Capability                                     | Notes                                                                                                                        |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **Vision Lab hardware validation**             | Foundation shipped (mock-tested); physical Limelight/Control Hub checklists pending                                          |
+| **Tuning Lab**                                 | Epic planned ([#146](https://github.com/The-Allsparks/ftc-dev-tools/issues/146)); not shipped yet                            |
+| **Telemetry / FTC Dashboard interoperability** | Vision Lab ships status/open helpers; full telemetry recording deferred — [docs/telemetry-spike.md](docs/telemetry-spike.md) |
+| **Java debugger attach (investigation)**       | JDWP spike only until Control Hub validated; see [docs/debugger-spike.md](docs/debugger-spike.md)                            |
+| **Richer Logcat / diagnostic bundles**         | Process filters, clickable stack traces, redacted share bundles                                                              |
+| **TeamCode unit-test starter workflow**        | Document + Gradle/test commands; do not reinvent Test Explorer                                                               |
 
 ### Maybe later
 
@@ -101,6 +106,7 @@ packages/
   shared/             Shared TypeScript services
   cli/                `ftc` command-line tool
   mcp/                `ftc-mcp` stdio MCP server for agents
+  maintainer-mcp/     Optional GitHub triage MCP for maintainers (`ftc-maintainer-mcp`)
   vscode-extension/   VS Code / Cursor extension
 docs/                 Student, coach, and mentor docs
 examples/             Sample FTC-like layout (not a full SDK)
@@ -199,7 +205,9 @@ ftc sdk check
 ftc wifi status
 ```
 
-3. Or use the Command Palette in VS Code/Cursor: `FTC: Run Environment Check`.
+3. Or use the Command Palette in VS Code/Cursor: **FTC: Start Here** or **FTC: Run Environment Check**.
+
+Track **Competition readiness** milestones in the FTC Robot sidebar after doctor, device, build, and deploy checks pass.
 
 ## CLI examples
 
@@ -266,6 +274,9 @@ Official-style Android Studio projects with:
 ### Guides
 
 - [Getting started](docs/getting-started.md)
+- [First OpMode journey](docs/first-opmode-journey.md)
+- [Onboarding 0.2 closure (maintainers)](docs/onboarding-0.2-closure.md)
+- [Environment doctor](docs/doctor.md)
 - [Install without Android Studio](docs/install-without-android-studio.md)
 - [Windows setup](docs/windows-setup.md)
 - [macOS setup](docs/macos-setup.md)
@@ -280,6 +291,8 @@ Official-style Android Studio projects with:
 - [Hardware map](docs/hwmap.md)
 - [Vision Lab](docs/vision-lab.md)
 - [MCP server](docs/mcp.md)
+- [Maintainer MCP (optional)](docs/maintainer-mcp.md)
+- [Vision sessions / replay schema](docs/vision-sessions.md)
 - [Snippets](docs/snippets.md)
 - [Wi-Fi manage API notes](docs/wifi-manage-api.md)
 - [Configuration](docs/configuration.md)

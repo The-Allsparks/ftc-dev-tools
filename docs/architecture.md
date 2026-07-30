@@ -11,6 +11,7 @@ Provide a shared TypeScript core that powers:
 1. A standalone CLI (`ftc`)
 2. A VS Code / Cursor extension
 3. A stdio MCP server (`ftc-mcp`) for Cursor agents
+4. An optional maintainer MCP (`ftc-maintainer-mcp`) for GitHub triage — not part of the student/team default setup
 
 All surfaces must share project detection, Gradle Wrapper invocation, ADB device handling, log filtering, configuration validation, and student-friendly error interpretation. Neither surface reimplements those concerns independently.
 
@@ -30,6 +31,7 @@ packages/
   shared/            # @ftc-dev-tools/shared — types, services, mocks
   cli/               # @ftc-dev-tools/cli — executable `ftc`
   mcp/               # @ftc-dev-tools/mcp — stdio MCP (`ftc-mcp`)
+  maintainer-mcp/    # @ftc-dev-tools/maintainer-mcp — optional GitHub triage MCP
   vscode-extension/  # ftc-dev-tools extension (thin UI)
 docs/                # Student/coach/mentor documentation
 examples/            # Minimal sample FTC-like layout for detection tests
@@ -73,6 +75,10 @@ Owns:
 - Cursor / agent-facing tool descriptions
 
 Delegates all substantive work to shared services. Does not replace the extension for interactive UX (tree, status bar, live Logcat).
+
+### `@ftc-dev-tools/maintainer-mcp`
+
+Optional stdio MCP for maintainers triaging `The-Allsparks/ftc-dev-tools` on GitHub (issues, PR alignment, CI failures). Separate from the product MCP so student Cursor sessions do not load maintainer tool schemas. See [maintainer-mcp.md](maintainer-mcp.md).
 
 ### `vscode-extension`
 

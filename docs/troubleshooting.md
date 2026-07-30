@@ -58,6 +58,15 @@ Include:
 
 Never paste passwords or Wi-Fi credentials.
 
+### Optional GitHub error reports
+
+When linked, FTC Dev Tools can file deduplicated issues to [The-Allsparks/ftc-dev-tools](https://github.com/The-Allsparks/ftc-dev-tools/issues) after build, deploy, or doctor failures.
+
+- **Extension:** **FTC: Link GitHub for Error Reports** (Command Palette)
+- **CLI:** `ftc github link`, then re-run with `--report` (for example `ftc doctor --report`)
+
+Reports require a GitHub token (`ftc github link`, `GITHUB_TOKEN`, or `GH_TOKEN`). Passwords and Wi-Fi credentials are never included. Maintainers reuse the same token for [maintainer-mcp.md](maintainer-mcp.md).
+
 ## Vision Lab
 
 ```bash

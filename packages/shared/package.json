@@ -27,7 +27,8 @@
     "./schemas/ftc-dev.schema.json": "./schemas/ftc-dev.schema.json",
     "./schemas/integration-manifest.schema.json": "./schemas/integration-manifest.schema.json",
     "./schemas/module-manifest.schema.json": "./schemas/module-manifest.schema.json",
-    "./schemas/session.schema.json": "./schemas/session.schema.json"
+    "./schemas/session.schema.json": "./schemas/session.schema.json",
+    "./schemas/session-event.schema.json": "./schemas/session-event.schema.json"
   },
   "files": [
     "dist",

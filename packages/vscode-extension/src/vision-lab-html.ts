@@ -1,6 +1,7 @@
 import type { VisionLabSnapshot } from "./vision-lab-data.js";
 import { escapeAttribute, escapeHtml } from "./vision-lab-text.js";
 import { renderVisionInspectorSection } from "./vision-lab-inspector-html.js";
+import { renderReplaySection } from "./vision-lab-replay-html.js";
 
 const CSP = "default-src 'none'; style-src 'unsafe-inline'; img-src data:;";
 
@@ -31,6 +32,7 @@ export function renderVisionLabHtml(
     renderDiagnosticsSection(snapshot),
     renderSourceSection(snapshot, options.refreshCommand),
     renderVisionInspectorSection(snapshot.resultInspector, options.copyInspectorCommand),
+    renderReplaySection(snapshot.replayStatus),
   ].join("");
 
   return `<!DOCTYPE html>

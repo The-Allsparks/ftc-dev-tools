@@ -29,6 +29,10 @@ import {
   scaffoldVisionBridge,
   scaffoldVisionCodegen,
   parseVisionCodegenKind,
+  getReplayStatus,
+  validateSessionHeader,
+  validateSessionEvent,
+  createSessionHeader,
   interpretFromUnknown,
   listOpModes,
   listRobotConfigs,
@@ -837,4 +841,48 @@ export async function toolVisionCodegen(
       return { ...result };
     },
   );
+}
+
+export async function toolReplayStatus(): Promise<CallToolResult> {
+  try {
+    return jsonResult(getReplayStatus());
+  } catch (err) {
+    return jsonResult({ error: interpretFromUnknown(err).summary }, true);
+  }
+}
+
+export async function toolReplayValidateHeader(args: { header: unknown }): Promise<CallToolResult> {
+  try {
+    return jsonResult(validateSessionHeader(args.header));
+  } catch (err) {
+    return jsonResult({ error: interpretFromUnknown(err).summary }, true);
+  }
+}
+
+export async function toolReplayValidateEvent(args: { event: unknown }): Promise<CallToolResult> {
+  try {
+    return jsonResult(validateSessionEvent(args.event));
+  } catch (err) {
+    return jsonResult({ error: interpretFromUnknown(err).summary }, true);
+  }
+}
+
+export async function toolReplayCreateHeader(args: {
+  sources: string[];
+  projectRoot?: string;
+  teamNumber?: number;
+  notes?: string;
+}): Promise<CallToolResult> {
+  try {
+    const ctx = ctxFrom(args);
+    const header = createSessionHeader({
+      sources: args.sources,
+      projectRoot: args.projectRoot ?? ctx.projectRoot,
+      teamNumber: args.teamNumber,
+      notes: args.notes,
+    });
+    return jsonResult({ header, validation: validateSessionHeader(header) });
+  } catch (err) {
+    return jsonResult({ error: interpretFromUnknown(err).summary }, true);
+  }
 }

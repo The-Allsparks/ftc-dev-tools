@@ -147,10 +147,11 @@ Java TeamCode generators for EasyOpenCV, VisionPortal, Limelight, and FTC Dashbo
 
 SDK compilation fixtures and official sample integration remain deferred.
 
-## Next steps (VISION-13+)
+## Session recording and replay (VISION-13)
 
-- Live frame acquisition and overlays for VisionPortal
-- Session capture and offline replay UI
+Versioned session header + JSONL event schema validation, replay capability flags, CLI/MCP status tools, and Vision Lab deferred replay section. Live capture and offline playback remain deferred — see [replay-session.md](./replay-session.md) and [FTC Replay epic](https://github.com/The-Allsparks/ftc-dev-tools/issues/143).
+
+## Next steps (VISION-14+)
 
 ## Related
 

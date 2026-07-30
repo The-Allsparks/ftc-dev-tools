@@ -11,6 +11,7 @@ import {
   NodeProcessRunner,
   buildVisionInspectorSnapshot,
   scanLimelightArtifacts,
+  getReplayStatus,
 } from "@ftc-dev-tools/shared";
 import type {
   DeviceProvider,
@@ -19,6 +20,7 @@ import type {
   VisionProviderDescriptor,
   VisionStatusReport,
   VisionInspectorSnapshot,
+  ReplayStatusReport,
 } from "@ftc-dev-tools/shared";
 
 export type VisionLabConnectionState = "offline" | "ready" | "selection-required" | "partial";
@@ -49,6 +51,7 @@ export interface VisionLabSnapshot {
   providerSections: VisionLabProviderSection[];
   sourceLinks: VisionLabSourceLink[];
   resultInspector?: VisionInspectorSnapshot;
+  replayStatus?: ReplayStatusReport;
 }
 
 export interface LoadVisionLabSnapshotOptions {
@@ -354,6 +357,7 @@ export async function loadVisionLabSnapshot(
     providerSections,
     sourceLinks,
     resultInspector,
+    replayStatus: getReplayStatus(),
   };
 }
 

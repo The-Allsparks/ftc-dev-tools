@@ -44,8 +44,10 @@ This ledger tracks workstreams for the modular architecture transition.
 | VISION-11 Vision result inspector (structured + overlay)     | Complete                   |
 | VISION-12 Vision Java codegen, snippets, source navigation   | Complete                   |
 | `ftc vision codegen` + MCP `vision_codegen`                  | Complete                   |
+| VISION-13 Session replay schema foundation                   | Complete                   |
+| `ftc replay` + MCP replay tools                              | Complete                   |
 | Vision Lab live video overlay / graphs / export              | Deferred — VISION-11+      |
-| Vision Lab live frames / capture / replay controls           | Deferred — VISION-10+      |
+| Vision Lab live frames / capture / replay controls           | Deferred — VISION-13+      |
 | Limelight upload / activate / rollback                       | Deferred — VISION-05+      |
 | Replay capture pipeline                                      | Deferred — FTC Replay epic |
 | Sim runtime adapters                                         | Deferred — FTC Sim epic    |

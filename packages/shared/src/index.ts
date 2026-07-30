@@ -904,3 +904,30 @@ export {
   renderVisionCodegenSource,
 } from "./vision/codegen/templates.js";
 export { scaffoldVisionCodegen, parseVisionCodegenKind } from "./vision/codegen/scaffold.js";
+export {
+  SESSION_HEADER_SCHEMA_VERSION,
+  SESSION_EVENT_SCHEMA_VERSION,
+  SESSION_EVENT_SCHEMA_URL,
+  REPLAY_SESSION_LIMITS,
+  REPLAY_SESSION_FILE_EXTENSION,
+  REPLAY_GITIGNORE_RECOMMENDATIONS,
+} from "./replay/constants.js";
+export type {
+  SessionHeader,
+  SessionEventEnvelope,
+  SessionEventKind,
+  ReplayCapabilities,
+  ReplaySessionLimits,
+  SessionValidationResult,
+  ReplayStatusReport,
+  CreateSessionHeaderInput,
+} from "./replay/types.js";
+export { REPLAY_CAPABILITIES } from "./replay/capabilities.js";
+export { sessionHeaderSchema, sessionEventSchema } from "./replay/schema.js";
+export {
+  validateSessionHeader,
+  validateSessionEvent,
+  parseSessionEventLine,
+} from "./replay/validate.js";
+export { createSessionHeader } from "./replay/create-header.js";
+export { getReplayStatus } from "./replay/status.js";

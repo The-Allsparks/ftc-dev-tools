@@ -217,6 +217,12 @@ export const VISION_CLI_CATALOG: VisionCliCatalogEntry[] = [
     available: true,
     mutating: false,
   },
+  {
+    command: "ftc vision validation status",
+    summary: "Automated coverage and pending hardware validation matrix (VISION-17)",
+    available: true,
+    mutating: false,
+  },
 ];
 
 export function getVisionCliCatalog(): VisionCliCatalogEntry[] {

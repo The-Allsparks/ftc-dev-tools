@@ -15,49 +15,52 @@ This ledger tracks workstreams for the modular architecture transition.
 
 ## Phase 3 deliverables (in progress)
 
-| Deliverable                                                     | Status                     |
-| --------------------------------------------------------------- | -------------------------- |
-| Module registry (capability + workflow manifests)               | Complete                   |
-| Provider registries (frame, vision, telemetry, sim, replay)     | Complete                   |
-| Session recording schema v1.0.0                                 | Complete                   |
-| Vision provider architecture doc (VISION-01)                    | Complete                   |
-| `ftc modules list` + `ftc providers list`                       | Complete                   |
-| MCP `modules_list` + `providers_list`                           | Complete                   |
-| VISION-02 vision config + workspace discovery                   | Complete                   |
-| `ftc vision status` / `discover` + MCP vision tools             | Complete                   |
-| VISION-03 vision endpoint + service discovery                   | Complete                   |
-| `ftc vision devices` + MCP `vision_devices`                     | Complete                   |
-| VISION-04 Limelight Vision HTTP provider (status/results)       | Complete                   |
-| `ftc vision limelight` + MCP limelight tools                    | Complete                   |
-| VISION-05 Limelight pipeline-as-code (scan/validate/diff)       | Complete                   |
-| `ftc vision limelight pipelines` + MCP pipeline tools           | Complete                   |
-| VISION-06 FTC Dashboard interoperability (status/open)          | Complete                   |
-| `ftc vision dashboard` + MCP dashboard tools                    | Complete                   |
-| VISION-07 robot-side diagnostic bridge (schema/scaffold)        | Complete                   |
-| `ftc vision bridge` + MCP bridge tools                          | Complete                   |
-| VISION-08 VisionPortal static analysis + bridge helpers         | Complete                   |
-| `ftc vision visionportal` + MCP `vision_visionportal_status`    | Complete                   |
-| VISION-09 EasyOpenCV static analysis + replay hints             | Complete                   |
-| `ftc vision easyopencv` + MCP `vision_easyopencv_status`        | Complete                   |
-| VISION-10 Vision Lab IDE panel (read-only foundation)           | Complete                   |
-| `FTC: Open Vision Lab` + activity-bar Vision sidebar            | Complete                   |
-| VISION-11 Vision result inspector (structured + overlay)        | Complete                   |
-| VISION-12 Vision Java codegen, snippets, source navigation      | Complete                   |
-| `ftc vision codegen` + MCP `vision_codegen`                     | Complete                   |
-| VISION-13 Session replay schema foundation                      | Complete                   |
-| `ftc replay` + MCP replay tools                                 | Complete                   |
-| VISION-14 Vision diagnostics foundation                         | Complete                   |
-| `ftc vision diagnostics` + MCP `vision_diagnostics`             | Complete                   |
-| Doctor optional Vision setup section                            | Complete                   |
-| VISION-15 Vision CLI catalog, shortcuts, and JSON envelopes     | Complete                   |
-| `ftc vision catalog` / `open` / `diagnose` / pipeline shortcuts | Complete                   |
-| VISION-16 Agent-friendly vision MCP tools                       | Complete                   |
-| `vision_list_devices` … `vision_upload_fieldmap`                | Complete                   |
-| Vision Lab live video overlay / graphs / export                 | Deferred — VISION-11+      |
-| Vision Lab live frames / capture / replay controls              | Deferred — VISION-13+      |
-| Limelight upload / activate / rollback                          | Deferred — VISION-05+      |
-| Replay capture pipeline                                         | Deferred — FTC Replay epic |
-| Sim runtime adapters                                            | Deferred — FTC Sim epic    |
+| Deliverable                                                     | Status                                      |
+| --------------------------------------------------------------- | ------------------------------------------- |
+| Module registry (capability + workflow manifests)               | Complete                                    |
+| Provider registries (frame, vision, telemetry, sim, replay)     | Complete                                    |
+| Session recording schema v1.0.0                                 | Complete                                    |
+| Vision provider architecture doc (VISION-01)                    | Complete                                    |
+| `ftc modules list` + `ftc providers list`                       | Complete                                    |
+| MCP `modules_list` + `providers_list`                           | Complete                                    |
+| VISION-02 vision config + workspace discovery                   | Complete                                    |
+| `ftc vision status` / `discover` + MCP vision tools             | Complete                                    |
+| VISION-03 vision endpoint + service discovery                   | Complete                                    |
+| `ftc vision devices` + MCP `vision_devices`                     | Complete                                    |
+| VISION-04 Limelight Vision HTTP provider (status/results)       | Complete                                    |
+| `ftc vision limelight` + MCP limelight tools                    | Complete                                    |
+| VISION-05 Limelight pipeline-as-code (scan/validate/diff)       | Complete                                    |
+| `ftc vision limelight pipelines` + MCP pipeline tools           | Complete                                    |
+| VISION-06 FTC Dashboard interoperability (status/open)          | Complete                                    |
+| `ftc vision dashboard` + MCP dashboard tools                    | Complete                                    |
+| VISION-07 robot-side diagnostic bridge (schema/scaffold)        | Complete                                    |
+| `ftc vision bridge` + MCP bridge tools                          | Complete                                    |
+| VISION-08 VisionPortal static analysis + bridge helpers         | Complete                                    |
+| `ftc vision visionportal` + MCP `vision_visionportal_status`    | Complete                                    |
+| VISION-09 EasyOpenCV static analysis + replay hints             | Complete                                    |
+| `ftc vision easyopencv` + MCP `vision_easyopencv_status`        | Complete                                    |
+| VISION-10 Vision Lab IDE panel (read-only foundation)           | Complete                                    |
+| `FTC: Open Vision Lab` + activity-bar Vision sidebar            | Complete                                    |
+| VISION-11 Vision result inspector (structured + overlay)        | Complete                                    |
+| VISION-12 Vision Java codegen, snippets, source navigation      | Complete                                    |
+| `ftc vision codegen` + MCP `vision_codegen`                     | Complete                                    |
+| VISION-13 Session replay schema foundation                      | Complete                                    |
+| `ftc replay` + MCP replay tools                                 | Complete                                    |
+| VISION-14 Vision diagnostics foundation                         | Complete                                    |
+| `ftc vision diagnostics` + MCP `vision_diagnostics`             | Complete                                    |
+| Doctor optional Vision setup section                            | Complete                                    |
+| VISION-15 Vision CLI catalog, shortcuts, and JSON envelopes     | Complete                                    |
+| `ftc vision catalog` / `open` / `diagnose` / pipeline shortcuts | Complete                                    |
+| VISION-16 Agent-friendly vision MCP tools                       | Complete                                    |
+| `vision_list_devices` … `vision_upload_fieldmap`                | Complete                                    |
+| VISION-17 Vision validation foundation                          | Complete                                    |
+| `ftc vision validation status` + MCP `vision_validation_status` | Complete                                    |
+| Physical hardware validation checklists                         | Pending — see vision-hardware-validation.md |
+| Vision Lab live video overlay / graphs / export                 | Deferred — VISION-11+                       |
+| Vision Lab live frames / capture / replay controls              | Deferred — VISION-13+                       |
+| Limelight upload / activate / rollback                          | Deferred — VISION-05+                       |
+| Replay capture pipeline                                         | Deferred — FTC Replay epic                  |
+| Sim runtime adapters                                            | Deferred — FTC Sim epic                     |
 
 ## Meta tracking
 

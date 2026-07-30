@@ -27,6 +27,7 @@ import {
   getEasyOpenCvStatus,
   getVisionBridgeStatus,
   getVisionPortalStatus,
+  getVisionValidationStatus,
   scaffoldVisionBridge,
   scaffoldVisionCodegen,
   parseVisionCodegenKind,
@@ -842,6 +843,14 @@ export async function toolVisionCodegen(
       return { ...result };
     },
   );
+}
+
+export async function toolVisionValidationStatus(): Promise<CallToolResult> {
+  try {
+    return jsonResult(getVisionValidationStatus());
+  } catch (err) {
+    return jsonResult({ error: interpretFromUnknown(err).summary }, true);
+  }
 }
 
 export async function toolVisionDiagnostics(

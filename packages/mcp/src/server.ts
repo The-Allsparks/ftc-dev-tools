@@ -42,6 +42,7 @@ import {
   toolReplayValidateEvent,
   toolReplayCreateHeader,
   toolVisionDiagnostics,
+  toolVisionValidationStatus,
   toolVisionStatus,
   toolSdkCheck,
   toolSdkUpdate,
@@ -89,6 +90,7 @@ export const FTC_MCP_TOOL_NAMES = [
   "vision_easyopencv_status",
   "vision_codegen",
   "vision_diagnostics",
+  "vision_validation_status",
   "vision_list_devices",
   "vision_get_status",
   "vision_get_diagnostics",
@@ -740,6 +742,18 @@ export function createFtcMcpServer(): McpServer {
       annotations: { readOnlyHint: true, openWorldHint: false },
     },
     async (args) => toolVisionDiagnostics(args),
+  );
+
+  server.registerTool(
+    "vision_validation_status",
+    {
+      title: "Vision validation status",
+      description:
+        "Report automated test coverage flags, feature maturity (mock-tested only), and pending hardware validation checklists (VISION-17).",
+      inputSchema: z.object({}),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async () => toolVisionValidationStatus(),
   );
 
   registerVisionAgentTools(server);

@@ -207,6 +207,13 @@
       "student-ux",
       "priority: P1"
     ],
+    "Redesign the FTC Robot sidebar as a student-friendly, state-aware dashboard": [
+      "enhancement",
+      "vscode",
+      "ui",
+      "student-ux",
+      "priority: P1"
+    ],
     "VS Code walkthroughs for first-time FTC Dev Tools setup": [
       "enhancement",
       "vscode",

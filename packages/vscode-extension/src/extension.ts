@@ -157,6 +157,7 @@ export function activate(context: vscode.ExtensionContext): void {
     () => cachedWifiStatus,
     () => normalizeStartHereProgress(context.globalState.get(START_HERE_PROGRESS_KEY)),
     () => milestoneStore.load(),
+    () => buildSnapshotStore.load(),
   );
 
   context.subscriptions.push(

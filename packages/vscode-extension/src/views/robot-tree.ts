@@ -6,24 +6,19 @@ import {
   discoverAdb,
   loadProjectConfig,
   selectDeploymentDevice,
-} from "@ftc-dev-tools/shared";
-import {
+  computeSidebarState,
+  type LastSuccessfulBuildSnapshot,
   type SdkStatusReport,
   type StartHereStepId,
   type WifiStatusReport,
 } from "@ftc-dev-tools/shared";
-import { buildGettingStartedTreeNodes } from "./getting-started-nodes.js";
-import { buildMilestoneChecklistNodes } from "./milestone-checklist-nodes.js";
 import type { MilestoneStepId } from "@ftc-dev-tools/shared";
-
-type RobotNode = {
-  id: string;
-  label: string;
-  description?: string;
-  collapsible: boolean;
-  children?: RobotNode[];
-  command?: vscode.Command;
-};
+import type { SidebarDeviceInfo, SidebarProjectInfo } from "@ftc-dev-tools/shared";
+import { buildHomeNodes } from "./home-nodes.js";
+import { buildJourneySectionNodes } from "./journey-nodes.js";
+import { buildQuickActionNodes } from "./quick-action-nodes.js";
+import { buildAdvancedNodes, buildDetailsNodes } from "./details-nodes.js";
+import { sectionNode, type RobotNode } from "./robot-node-types.js";
 
 export class FtcRobotTreeProvider implements vscode.TreeDataProvider<RobotNode> {
   private readonly emitter = new vscode.EventEmitter<RobotNode | undefined | void>();
@@ -36,6 +31,7 @@ export class FtcRobotTreeProvider implements vscode.TreeDataProvider<RobotNode> 
     private readonly getWifiStatus: () => WifiStatusReport | undefined,
     private readonly getStartHereCompleted: () => readonly StartHereStepId[],
     private readonly getMilestoneCompleted: () => readonly MilestoneStepId[],
+    private readonly getLastSuccessfulBuild: () => LastSuccessfulBuildSnapshot | undefined,
   ) {}
 
   refresh(): void {
@@ -43,15 +39,23 @@ export class FtcRobotTreeProvider implements vscode.TreeDataProvider<RobotNode> 
   }
 
   getTreeItem(element: RobotNode): vscode.TreeItem {
-    const item = new vscode.TreeItem(
-      element.label,
-      element.collapsible
-        ? vscode.TreeItemCollapsibleState.Expanded
-        : vscode.TreeItemCollapsibleState.None,
-    );
+    const collapsibleState = element.collapsible
+      ? element.initiallyCollapsed
+        ? vscode.TreeItemCollapsibleState.Collapsed
+        : vscode.TreeItemCollapsibleState.Expanded
+      : vscode.TreeItemCollapsibleState.None;
+
+    const item = new vscode.TreeItem(element.label, collapsibleState);
     item.description = element.description;
     item.id = element.id;
     item.command = element.command;
+    item.tooltip = element.tooltip ?? element.description;
+    item.contextValue = element.contextValue;
+
+    if (element.icon) {
+      item.iconPath = new vscode.ThemeIcon(element.icon);
+    }
+
     return item;
   }
 
@@ -64,198 +68,110 @@ export class FtcRobotTreeProvider implements vscode.TreeDataProvider<RobotNode> 
 
   private async buildRoot(): Promise<RobotNode[]> {
     const root = this.getRoot();
-    let projectLabel = "No folder open";
-    let moduleLabel = "Module: unknown";
-    if (root) {
-      try {
-        const info = await new OfficialFtcProjectAdapter().inspect(root);
-        projectLabel = "Official FTC project detected";
-        moduleLabel = `Module: ${info.moduleName}`;
-      } catch {
-        projectLabel = "Not an official FTC project (or unsupported layout)";
-      }
-    }
-
+    const project = await this.inspectProject(root);
+    const device = await this.inspectDevice(root);
+    const milestones = this.getMilestoneCompleted();
+    const startHereCompleted = this.getStartHereCompleted();
+    const lastBuild = this.getLastSuccessfulBuild();
     const sdk = this.getSdkStatus();
-    let sdkLabel = "SDK: not checked yet";
-    if (sdk?.local.version && sdk.remote) {
-      sdkLabel = `SDK: ${sdk.local.version} → ${sdk.remote.version} (${sdk.freshness})`;
-    } else if (sdk?.local.version) {
-      sdkLabel = `SDK: ${sdk.local.version} (${sdk.freshness})`;
-    } else if (sdk) {
-      sdkLabel = `SDK: ${sdk.freshness}`;
-    }
-
     const wifi = this.getWifiStatus();
-    let wifiLabel = "Wi-Fi: not checked yet";
-    if (wifi) {
-      const consolePart = wifi.console.reachable ? "console OK" : "console down";
-      const nicPart = wifi.selectedInterface
-        ? `NIC ${wifi.selectedInterface.name}`
-        : "no robot NIC";
-      wifiLabel = `Wi-Fi: ${consolePart}; ${nicPart}`;
-    }
 
-    let deviceTitle = "No Android device";
-    let connection = "Connection status: unknown";
-    let authorization = "Authorization status: unknown";
+    const sidebarState = computeSidebarState({
+      hasWorkspaceFolder: Boolean(root),
+      project,
+      device,
+      milestones,
+      hasSuccessfulBuild: Boolean(lastBuild?.completedAt),
+    });
+
+    const homeChildren = buildHomeNodes(sidebarState);
+    const journeyChildren = buildJourneySectionNodes(startHereCompleted, milestones, {
+      includeFocusedStartHere:
+        sidebarState.phase === "welcome-no-folder" ||
+        sidebarState.phase === "welcome-no-project" ||
+        sidebarState.phase === "connect-robot",
+    });
+    const quickChildren = buildQuickActionNodes(sidebarState);
+    const detailsChildren = buildDetailsNodes({
+      project,
+      device,
+      sdk,
+      wifi,
+      milestones,
+      moduleName: project.moduleName,
+    });
+    const advancedChildren = buildAdvancedNodes({ showProjectTools: project.detected });
+
+    const journeyLabel =
+      sidebarState.phase === "all-set" || sidebarState.phase === "run-opmode"
+        ? "Ready to run"
+        : "Getting started";
+
+    return [
+      sectionNode("section-home", "Current status", homeChildren),
+      sectionNode("section-journey", journeyLabel, journeyChildren, {
+        description: "Your progress",
+      }),
+      sectionNode("section-quick", "Quick actions", quickChildren),
+      sectionNode("section-details", "Details", detailsChildren, { initiallyCollapsed: true }),
+      sectionNode("section-advanced", "Advanced", advancedChildren, { initiallyCollapsed: true }),
+    ];
+  }
+
+  private async inspectProject(root: string | undefined): Promise<SidebarProjectInfo> {
+    if (!root) {
+      return { detected: false };
+    }
+    try {
+      const info = await new OfficialFtcProjectAdapter().inspect(root);
+      return { detected: true, moduleName: info.moduleName };
+    } catch {
+      return { detected: false };
+    }
+  }
+
+  private async inspectDevice(root: string | undefined): Promise<SidebarDeviceInfo> {
     try {
       const runner = new NodeProcessRunner();
       const adb = await discoverAdb(runner);
-      if (adb.found && adb.adbPath) {
-        const provider = new AdbDeviceProvider(runner, adb.adbPath);
-        const devices = await provider.listDevices();
-        const config = root ? await loadProjectConfig(root) : undefined;
-        const selection = selectDeploymentDevice({
-          devices,
-          explicitSerial: this.getSelectedSerial(),
-          preferredSerial:
-            vscode.workspace.getConfiguration("ftc").get<string>("preferredDeviceSerial") ||
-            undefined,
-          preferredConnection: config?.config.deployment?.preferredConnection ?? "any",
-        });
-        if (selection.ok) {
-          const device = selection.device;
-          deviceTitle =
-            device.controlHubLikelihood === "probable"
-              ? "Probable Control Hub (not guaranteed)"
-              : "Android device";
-          connection = `Connection: ${device.connectionType} (${device.state})`;
-          authorization = `Authorization: ${device.authorization}`;
-          deviceTitle = `${deviceTitle} — ${device.serial}`;
-        } else if (selection.code === "MULTIPLE_DEVICES") {
-          deviceTitle = "Multiple devices — select one";
-          connection = "Connection status: multiple";
-        } else if (selection.code === "DEVICE_UNAUTHORIZED") {
-          deviceTitle = "Unauthorized device";
-          authorization = "Authorization: unauthorized";
-        } else if (selection.code === "NO_MATCHING_CONNECTION") {
-          deviceTitle = "No device matches preferred connection";
-          connection = "Connection status: preference mismatch";
-        } else {
-          deviceTitle = "No usable Android device";
-        }
+      if (!adb.found || !adb.adbPath) {
+        return { phase: "adb-unavailable" };
       }
+
+      const provider = new AdbDeviceProvider(runner, adb.adbPath);
+      const devices = await provider.listDevices();
+      const config = root ? await loadProjectConfig(root) : undefined;
+      const selection = selectDeploymentDevice({
+        devices,
+        explicitSerial: this.getSelectedSerial(),
+        preferredSerial:
+          vscode.workspace.getConfiguration("ftc").get<string>("preferredDeviceSerial") ||
+          undefined,
+        preferredConnection: config?.config.deployment?.preferredConnection ?? "any",
+      });
+
+      if (selection.ok) {
+        const device = selection.device;
+        return {
+          phase: "connected",
+          serial: device.serial,
+          connectionType: device.connectionType,
+          isControlHub: device.controlHubLikelihood === "probable",
+        };
+      }
+
+      if (selection.code === "DEVICE_UNAUTHORIZED") {
+        return { phase: "unauthorized" };
+      }
+      if (selection.code === "MULTIPLE_DEVICES") {
+        return { phase: "multiple" };
+      }
+      if (selection.code === "NO_MATCHING_CONNECTION") {
+        return { phase: "preference-mismatch" };
+      }
+      return { phase: "no-devices" };
     } catch {
-      deviceTitle = "adb unavailable";
+      return { phase: "adb-unavailable" };
     }
-
-    const startHereCompleted = this.getStartHereCompleted();
-    const gettingStartedChildren = buildGettingStartedTreeNodes(startHereCompleted).map((node) => ({
-      id: node.id,
-      label: node.label,
-      description: node.description,
-      collapsible: false as const,
-      command: { command: node.commandId, title: node.commandTitle },
-    }));
-
-    const milestoneCompleted = this.getMilestoneCompleted();
-    const milestoneChildren = buildMilestoneChecklistNodes(milestoneCompleted).map((node) => ({
-      id: node.id,
-      label: node.label,
-      description: node.description,
-      collapsible: false as const,
-      command:
-        node.commandId && node.commandTitle
-          ? { command: node.commandId, title: node.commandTitle }
-          : undefined,
-    }));
-
-    return [
-      {
-        id: "header",
-        label: "FTC ROBOT",
-        collapsible: true,
-        children: [
-          {
-            id: "getting-started",
-            label: "Getting started",
-            collapsible: true,
-            children: gettingStartedChildren,
-          },
-          {
-            id: "competition-readiness",
-            label: "Competition readiness",
-            collapsible: true,
-            children: milestoneChildren,
-          },
-          {
-            id: "project",
-            label: "Project",
-            collapsible: true,
-            children: [
-              { id: "project-detect", label: projectLabel, collapsible: false },
-              { id: "project-module", label: moduleLabel, collapsible: false },
-              {
-                id: "project-sdk",
-                label: sdkLabel,
-                collapsible: false,
-                command: { command: "ftc.checkSdk", title: "Check SDK Version" },
-              },
-              {
-                id: "project-wifi",
-                label: wifiLabel,
-                collapsible: false,
-                command: { command: "ftc.wifiStatus", title: "Wi-Fi Status" },
-              },
-            ],
-          },
-          {
-            id: "device",
-            label: "Device",
-            collapsible: true,
-            children: [
-              { id: "device-title", label: deviceTitle, collapsible: false },
-              { id: "device-connection", label: connection, collapsible: false },
-              { id: "device-auth", label: authorization, collapsible: false },
-            ],
-          },
-          {
-            id: "actions",
-            label: "Actions",
-            collapsible: true,
-            children: [
-              actionNode("build", "Build", "ftc.build"),
-              actionNode("deploy", "Deploy", "ftc.deploy"),
-              actionNode("build-deploy", "Build and Deploy", "ftc.buildAndDeploy"),
-              actionNode("logs", "View Logs", "ftc.viewLogs"),
-              actionNode("stop-logs", "Stop Logs", "ftc.stopLogs"),
-              actionNode("check-sdk", "Check SDK Version", "ftc.checkSdk"),
-              actionNode("update-sdk", "Update FTC SDK", "ftc.updateSdk"),
-              actionNode("wifi-status", "Wi-Fi Status", "ftc.wifiStatus"),
-              actionNode("wifi-nic", "Select Robot NIC", "ftc.wifiSelectInterface"),
-              actionNode("wifi-connect", "Connect Wi-Fi ADB", "ftc.wifiConnect"),
-              actionNode("wifi-join", "Join Robot Wi-Fi", "ftc.wifiJoin"),
-              actionNode("wifi-manage", "Get Hub Wi-Fi Settings", "ftc.wifiManageGet"),
-              actionNode("wifi-prefer-inet", "Prefer Internet Interface", "ftc.wifiPreferInternet"),
-              actionNode("wifi-prefer-robot", "Prefer Robot Interface", "ftc.wifiPreferRobot"),
-              actionNode("hub-status", "Control Hub Status", "ftc.hubStatus"),
-              actionNode("hub-os-check", "Check Hub OS Update", "ftc.hubUpdateCheck"),
-              actionNode("pedro-status", "Pedro Pathing Status", "ftc.pedroStatus"),
-              actionNode("pedro-add", "Add Pedro Pathing", "ftc.pedroAdd"),
-              actionNode("opmode-list", "List OpModes", "ftc.opmodeList"),
-              actionNode("opmode-create", "Create OpMode", "ftc.opmodeCreate"),
-              actionNode("config-list", "List Robot Configs", "ftc.configList"),
-              actionNode("config-show", "Show Robot Config", "ftc.configShow"),
-              actionNode("config-validate", "Validate Robot Config", "ftc.configValidate"),
-              actionNode("config-pull", "Pull Robot Configs", "ftc.configPull"),
-              actionNode("hwmap-show", "Show Hardware Map", "ftc.hwmapShow"),
-              actionNode("hwmap-codegen", "Generate OpMode from Config", "ftc.hwmapCodegen"),
-              actionNode("wifi-console", "Open RC Console", "ftc.wifiOpenConsole"),
-              actionNode("doctor", "Run Environment Check", "ftc.runDoctor"),
-            ],
-          },
-        ],
-      },
-    ];
   }
-}
-
-function actionNode(id: string, label: string, command: string): RobotNode {
-  return {
-    id: `action-${id}`,
-    label,
-    collapsible: false,
-    command: { command, title: label },
-  };
 }

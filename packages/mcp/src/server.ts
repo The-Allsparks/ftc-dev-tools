@@ -29,6 +29,8 @@ import {
   toolVisionLimelightPipelinesList,
   toolVisionLimelightPipelinesValidate,
   toolVisionLimelightPipelinesDiff,
+  toolVisionDashboardStatus,
+  toolVisionDashboardOpen,
   toolVisionStatus,
   toolSdkCheck,
   toolSdkUpdate,
@@ -68,6 +70,8 @@ export const FTC_MCP_TOOL_NAMES = [
   "vision_limelight_pipelines_list",
   "vision_limelight_pipelines_validate",
   "vision_limelight_pipelines_diff",
+  "vision_dashboard_status",
+  "vision_dashboard_open",
 ] as const;
 
 export type FtcMcpToolName = (typeof FTC_MCP_TOOL_NAMES)[number];
@@ -553,6 +557,37 @@ export function createFtcMcpServer(): McpServer {
       annotations: { readOnlyHint: true, openWorldHint: false },
     },
     async (args) => toolVisionLimelightPipelinesDiff(args),
+  );
+
+  server.registerTool(
+    "vision_dashboard_status",
+    {
+      title: "FTC Dashboard status",
+      description:
+        "Detect FTC Dashboard dependency, resolve URL, and probe reachability on the robot network.",
+      inputSchema: z.object({
+        ...projectRootShape,
+        url: z.string().optional().describe("Dashboard URL or hostname"),
+        host: z.string().optional().describe("Robot hostname (builds http://host:8080/dash)"),
+      }),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolVisionDashboardStatus(args),
+  );
+
+  server.registerTool(
+    "vision_dashboard_open",
+    {
+      title: "Open FTC Dashboard",
+      description: "Open the detected or configured FTC Dashboard URL in the default browser.",
+      inputSchema: z.object({
+        ...projectRootShape,
+        url: z.string().optional().describe("Dashboard URL or hostname"),
+        host: z.string().optional().describe("Robot hostname (builds http://host:8080/dash)"),
+      }),
+      annotations: { readOnlyHint: false, openWorldHint: false },
+    },
+    async (args) => toolVisionDashboardOpen(args),
   );
 
   return server;

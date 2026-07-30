@@ -16,6 +16,7 @@ export function visionConfigFromProjectConfig(
     ...defaultVisionConfig(),
     ...vision,
     limelight: vision?.limelight ? { ...vision.limelight } : undefined,
+    dashboard: vision?.dashboard ? { ...vision.dashboard } : undefined,
     enabledProviderIds: vision?.enabledProviderIds ? [...vision.enabledProviderIds] : [],
   };
 }

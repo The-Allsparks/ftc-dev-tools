@@ -855,6 +855,32 @@ const RULES: ErrorRule[] = [
       "Check team-number static IP or mDNS hostname settings if not using limelight.local.",
     ],
   },
+  {
+    code: "DASHBOARD_URL_AMBIGUOUS",
+    test: ({ text, codeHint }) =>
+      codeHint === "DASHBOARD_URL_AMBIGUOUS" ||
+      /Multiple FTC Dashboard URLs|Pass --url or --host to select a dashboard/i.test(text),
+    title: "FTC Dashboard URL ambiguous",
+    summary: "More than one FTC Dashboard URL matches discovery and none was selected.",
+    suggestedActions: [
+      "Pass `--url <address>` or `--host <robot-ip>` to choose a dashboard.",
+      "Set `vision.dashboard.url` in `.ftc-dev.json` for a stable default.",
+      "Run `ftc vision devices --json` to review discovered endpoints.",
+    ],
+  },
+  {
+    code: "DASHBOARD_UNREACHABLE",
+    test: ({ text, codeHint }) =>
+      codeHint === "DASHBOARD_UNREACHABLE" ||
+      /FTC Dashboard unreachable|Could not open browser automatically/i.test(text),
+    title: "FTC Dashboard unreachable",
+    summary: "Could not reach or open the FTC Dashboard URL.",
+    suggestedActions: [
+      "Confirm the robot is running and connected on the same network as this computer.",
+      "Run `ftc vision dashboard status` to verify the resolved URL and reachability.",
+      "Open the URL manually in a browser if automatic launch failed.",
+    ],
+  },
 ];
 export function interpretError(input: string | ErrorContext): FriendlyError {
   const ctx: ErrorContext = typeof input === "string" ? { text: input } : input;

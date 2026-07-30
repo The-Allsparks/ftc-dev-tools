@@ -52,7 +52,8 @@ export const BUILTIN_INTEGRATIONS: readonly IntegrationManifest[] = [
     documentationUrl: "https://acmerobotics.github.io/ftc-dashboard/",
     experimental: false,
     deprecated: false,
-    summary: "Community telemetry dashboard; interoperability planned (VISION-06).",
+    summary:
+      "Community telemetry dashboard; open via ftc vision dashboard or FTC: Open FTC Dashboard.",
   },
   {
     id: "visionportal",

@@ -135,6 +135,10 @@
         "title": "FTC: Open Robot Controller Console"
       },
       {
+        "command": "ftc.openFtcDashboard",
+        "title": "FTC: Open FTC Dashboard"
+      },
+      {
         "command": "ftc.wifiJoin",
         "title": "FTC: Join Robot Wi-Fi"
       },

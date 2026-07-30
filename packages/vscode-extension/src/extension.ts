@@ -20,6 +20,9 @@ import {
   listNetworkInterfaces,
   loadProjectConfig,
   openRobotConsole,
+  openFtcDashboard,
+  resolveDashboardUrlReport,
+  getFtcDashboardStatus,
   preferInternetInterface,
   preferRobotInterface,
   applyHubOsUpdate,
@@ -262,6 +265,7 @@ export function activate(context: vscode.ExtensionContext): void {
   register("ftc.wifiConnect", wifiConnectCommand);
   register("ftc.wifiDisconnect", wifiDisconnectCommand);
   register("ftc.wifiOpenConsole", wifiOpenConsoleCommand);
+  register("ftc.openFtcDashboard", openFtcDashboardCommand);
   register("ftc.wifiJoin", wifiJoinCommand);
   register("ftc.wifiManageGet", wifiManageGetCommand);
   register("ftc.wifiManageSet", wifiManageSetCommand);
@@ -875,6 +879,90 @@ async function wifiOpenConsoleCommand(): Promise<void> {
   output.appendLine(result.message);
   if (!result.opened) {
     vscode.window.showWarningMessage(result.message);
+  }
+}
+
+async function openFtcDashboardCommand(): Promise<void> {
+  const root = getWorkspaceRoot();
+  if (!root) {
+    vscode.window.showWarningMessage("Open an FTC project folder first.");
+    return;
+  }
+
+  const runner = new NodeProcessRunner();
+  let deviceProvider: DeviceProvider | undefined;
+  try {
+    deviceProvider = await createDeviceProvider();
+  } catch {
+    deviceProvider = undefined;
+  }
+
+  let urlReport = await resolveDashboardUrlReport(root, { deviceProvider, runner });
+  if (urlReport.requiresSelection && urlReport.candidates.length > 0) {
+    const pick = await vscode.window.showQuickPick(
+      urlReport.candidates.map((candidate) => ({
+        label: candidate.url,
+        description: candidate.reachable ? "reachable" : "not verified",
+        detail: candidate.evidence,
+        url: candidate.url,
+      })),
+      { placeHolder: "Select FTC Dashboard URL", ignoreFocusOut: true },
+    );
+    if (!pick) {
+      return;
+    }
+    urlReport = {
+      url: pick.url,
+      source: "explicit",
+      evidence: "User selected from discovery",
+      candidates: urlReport.candidates,
+      requiresSelection: false,
+      message: `Using selected FTC Dashboard URL ${pick.url}.`,
+    };
+  }
+
+  if (!urlReport.url) {
+    vscode.window.showWarningMessage(urlReport.message);
+    return;
+  }
+
+  const status = await getFtcDashboardStatus(root, {
+    url: urlReport.url,
+    deviceProvider,
+    runner,
+    probeNetwork: false,
+  });
+  for (const warning of status.warnings) {
+    output.appendLine(`FTC Dashboard: ${warning}`);
+  }
+
+  let openedVia: "simple-browser" | "external" | "failed";
+  try {
+    await vscode.commands.executeCommand("simpleBrowser.show", urlReport.url);
+    openedVia = "simple-browser";
+  } catch {
+    try {
+      await vscode.env.openExternal(vscode.Uri.parse(urlReport.url));
+      openedVia = "external";
+    } catch {
+      openedVia = "failed";
+    }
+  }
+
+  if (openedVia === "simple-browser") {
+    output.appendLine(`Opened FTC Dashboard in Simple Browser: ${urlReport.url}`);
+    vscode.window.showInformationMessage(
+      `Opened FTC Dashboard in Simple Browser. Use your system browser if camera streams fail to load.`,
+    );
+  } else if (openedVia === "external") {
+    output.appendLine(`Opened FTC Dashboard in external browser: ${urlReport.url}`);
+    vscode.window.showInformationMessage(`Opened FTC Dashboard: ${urlReport.url}`);
+  } else {
+    const fallback = await openFtcDashboard(root, { url: urlReport.url, deviceProvider, runner });
+    output.appendLine(fallback.message);
+    if (!fallback.opened) {
+      vscode.window.showWarningMessage(fallback.message);
+    }
   }
 }
 

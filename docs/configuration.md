@@ -53,6 +53,7 @@ Optional `vision` section configures Vision Lab provider preferences:
 | `pipelineDirectory`           | Repo-relative pipeline-as-code root                                       |
 | `limelight.host`              | Limelight Vision hostname or IP (never store secrets here)                |
 | `limelight.pipelineDirectory` | Limelight Vision pipeline JSON directory                                  |
+| `dashboard.url`               | FTC Dashboard URL or robot hostname (defaults to `http://host:8080/dash`) |
 
 Discover what the project uses:
 
@@ -65,6 +66,8 @@ ftc vision limelight results --json
 ftc vision limelight pipelines list --json
 ftc vision limelight pipelines validate --json
 ftc vision limelight pipelines diff --slot 0 --json
+ftc vision dashboard status --json
+ftc vision dashboard open --json
 ```
 
 See [vision-providers.md](architecture/vision-providers.md).

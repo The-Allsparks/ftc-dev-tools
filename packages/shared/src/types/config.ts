@@ -16,11 +16,17 @@ export interface FtcDevLimelightConfig {
   pipelineDirectory?: string;
 }
 
+export interface FtcDevDashboardConfig {
+  /** Full dashboard URL or hostname (defaults to http://host:8080/dash). */
+  url?: string;
+}
+
 export interface FtcDevVisionConfig {
   defaultProviderId?: string;
   enabledProviderIds?: string[];
   pipelineDirectory?: string;
   limelight?: FtcDevLimelightConfig;
+  dashboard?: FtcDevDashboardConfig;
 }
 
 export interface FtcDevConfig {

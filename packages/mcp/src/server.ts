@@ -26,6 +26,9 @@ import {
   toolVisionDevices,
   toolVisionLimelightStatus,
   toolVisionLimelightResults,
+  toolVisionLimelightPipelinesList,
+  toolVisionLimelightPipelinesValidate,
+  toolVisionLimelightPipelinesDiff,
   toolVisionStatus,
   toolSdkCheck,
   toolSdkUpdate,
@@ -62,6 +65,9 @@ export const FTC_MCP_TOOL_NAMES = [
   "vision_devices",
   "vision_limelight_status",
   "vision_limelight_results",
+  "vision_limelight_pipelines_list",
+  "vision_limelight_pipelines_validate",
+  "vision_limelight_pipelines_diff",
 ] as const;
 
 export type FtcMcpToolName = (typeof FTC_MCP_TOOL_NAMES)[number];
@@ -508,6 +514,45 @@ export function createFtcMcpServer(): McpServer {
       annotations: { readOnlyHint: true, openWorldHint: false },
     },
     async (args) => toolVisionLimelightResults(args),
+  );
+
+  server.registerTool(
+    "vision_limelight_pipelines_list",
+    {
+      title: "Limelight pipelines list",
+      description: "List Limelight Vision pipeline-as-code artifacts in the workspace.",
+      inputSchema: z.object(projectRootShape),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolVisionLimelightPipelinesList(args),
+  );
+
+  server.registerTool(
+    "vision_limelight_pipelines_validate",
+    {
+      title: "Limelight pipelines validate",
+      description: "Validate Limelight Vision pipeline JSON files and slot assignments.",
+      inputSchema: z.object(projectRootShape),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolVisionLimelightPipelinesValidate(args),
+  );
+
+  server.registerTool(
+    "vision_limelight_pipelines_diff",
+    {
+      title: "Limelight pipelines diff",
+      description: "Compare a workspace pipeline file with the camera pipeline at a slot.",
+      inputSchema: z.object({
+        ...projectRootShape,
+        host: z.string().optional().describe("Limelight Vision hostname or IP"),
+        slot: z.number().int().min(0).max(9).describe("Pipeline slot index"),
+        path: z.string().optional().describe("Workspace pipeline file path"),
+        raw: z.boolean().optional().describe("Include full workspace and camera JSON"),
+      }),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolVisionLimelightPipelinesDiff(args),
   );
 
   return server;

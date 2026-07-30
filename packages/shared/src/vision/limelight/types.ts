@@ -77,6 +77,22 @@ export const LIMELIGHT_READ_ONLY_CAPABILITIES: LimelightProviderCapabilities = {
   snapshotDelete: false,
 };
 
+export interface LimelightPipelineCapabilities {
+  listArtifacts: boolean;
+  validateArtifacts: boolean;
+  diffArtifacts: boolean;
+  uploadPipeline: boolean;
+  activatePipeline: boolean;
+}
+
+export const LIMELIGHT_PIPELINE_CAPABILITIES: LimelightPipelineCapabilities = {
+  listArtifacts: true,
+  validateArtifacts: true,
+  diffArtifacts: true,
+  uploadPipeline: false,
+  activatePipeline: false,
+};
+
 export interface ResolveLimelightHostResult {
   host: string;
   source: "explicit" | "project-config" | "discovery";

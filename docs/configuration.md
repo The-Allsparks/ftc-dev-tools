@@ -62,6 +62,9 @@ ftc vision status --json
 ftc vision devices --json   # endpoint discovery + optional network probes
 ftc vision limelight status --json
 ftc vision limelight results --json
+ftc vision limelight pipelines list --json
+ftc vision limelight pipelines validate --json
+ftc vision limelight pipelines diff --slot 0 --json
 ```
 
 See [vision-providers.md](architecture/vision-providers.md).

@@ -70,7 +70,19 @@ Read-only HTTP integration on port **5807** (`/status`, `/results`). Pipeline sw
 
 Host resolution order: `--host` → `vision.limelight.host` → discovered API endpoint. Multiple matches require explicit `--host`.
 
-## Next steps (VISION-05+)
+## Pipeline-as-code (VISION-05)
+
+Version-control Limelight Vision pipelines under `vision.pipelineDirectory` or `vision.limelight.pipelineDirectory`:
+
+```bash
+ftc vision limelight pipelines list --json
+ftc vision limelight pipelines validate --json
+ftc vision limelight pipelines diff --slot 0 --json
+```
+
+Upload, activation, and rollback are separate follow-up work (capabilities flag them unsupported).
+
+## Next steps (VISION-06+)
 
 - Live frame acquisition for VisionPortal
 - Vision Lab IDE panel consuming `listVisionProviders()`

@@ -747,3 +747,21 @@ export {
   resolveLimelightHostReport,
 } from "./vision/limelight/resolve-host.js";
 export type { ResolveLimelightHostOptions } from "./vision/limelight/resolve-host.js";
+export type {
+  LimelightArtifactKind,
+  LimelightArtifact,
+  LimelightArtifactManifest,
+  LimelightPipelineArtifact,
+  LimelightArtifactValidationReport,
+  LimelightPipelineDiffReport,
+  LimelightJsonDiffEntry,
+} from "./vision/limelight/artifacts/types.js";
+export type { LimelightPipelineCapabilities } from "./vision/limelight/types.js";
+export { LIMELIGHT_PIPELINE_CAPABILITIES } from "./vision/limelight/types.js";
+export { scanLimelightArtifacts, findPipelineForSlot } from "./vision/limelight/artifacts/scan.js";
+export { validateLimelightArtifacts } from "./vision/limelight/artifacts/validate.js";
+export { diffLimelightPipeline } from "./vision/limelight/artifacts/diff.js";
+export type { DiffLimelightPipelineOptions } from "./vision/limelight/artifacts/diff.js";
+export { diffLimelightJson } from "./vision/limelight/artifacts/json-diff.js";
+export { resolveLimelightPipelineDirectory } from "./vision/limelight/resolve-pipeline-directory.js";
+export type { ResolvePipelineDirectoryResult } from "./vision/limelight/resolve-pipeline-directory.js";

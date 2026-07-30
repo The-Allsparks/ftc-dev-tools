@@ -2,10 +2,13 @@ import type { Command } from "commander";
 import {
   discoverVisionDevices,
   discoverVisionWorkspace,
+  diffLimelightPipeline,
   getLimelightResults,
   getLimelightStatus,
   getVisionStatus,
   interpretFromUnknown,
+  scanLimelightArtifacts,
+  validateLimelightArtifacts,
 } from "@ftc-dev-tools/shared";
 import { createCliContext } from "../context.js";
 import { printFriendlyError } from "../context.js";
@@ -222,4 +225,116 @@ export function registerVisionCommand(program: Command): void {
         process.exitCode = 1;
       }
     });
+
+  const pipelines = limelight
+    .command("pipelines")
+    .description("Limelight Vision pipeline-as-code (scan, validate, diff)");
+
+  pipelines
+    .command("list")
+    .description("List pipeline-as-code artifacts in the workspace")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(async (options: { json?: boolean }) => {
+      const ctx = createCliContext();
+      try {
+        const manifest = await scanLimelightArtifacts(ctx.cwd);
+        if (options.json) {
+          console.log(JSON.stringify(manifest, null, 2));
+          return;
+        }
+        console.log("Limelight Vision pipeline artifacts\n");
+        console.log(`Directory: ${manifest.pipelineDirectory || "(not configured)"}`);
+        for (const pipeline of manifest.pipelines) {
+          console.log(
+            `  [pipeline${pipeline.slot !== undefined ? ` slot ${pipeline.slot}` : ""}] ${pipeline.relativePath}`,
+          );
+        }
+        for (const script of manifest.pythonScripts) {
+          console.log(`  [python] ${script.relativePath}`);
+        }
+        for (const fieldMap of manifest.fieldMaps) {
+          console.log(`  [field-map] ${fieldMap.relativePath}`);
+        }
+        for (const warning of manifest.warnings) {
+          console.log(`Warning: ${warning}`);
+        }
+      } catch (error) {
+        await printFriendlyError(interpretFromUnknown(error), false);
+        process.exitCode = 1;
+      }
+    });
+
+  pipelines
+    .command("validate")
+    .description("Validate pipeline JSON syntax and slot assignments")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(async (options: { json?: boolean }) => {
+      const ctx = createCliContext();
+      try {
+        const report = await validateLimelightArtifacts(ctx.cwd);
+        if (options.json) {
+          console.log(JSON.stringify(report, null, 2));
+          return;
+        }
+        console.log("Limelight Vision pipeline validation\n");
+        console.log(report.message);
+        for (const issue of report.issues) {
+          console.log(`  [${issue.severity}] ${issue.relativePath}: ${issue.message}`);
+        }
+        if (!report.success) {
+          process.exitCode = 1;
+        }
+      } catch (error) {
+        await printFriendlyError(interpretFromUnknown(error), false);
+        process.exitCode = 1;
+      }
+    });
+
+  pipelines
+    .command("diff")
+    .description("Compare workspace pipeline file with camera slot")
+    .requiredOption("--slot <n>", "Pipeline slot (0-9)", (value) => Number.parseInt(value, 10))
+    .option("--host <address>", "Limelight Vision hostname or IP")
+    .option("--path <relative>", "Workspace pipeline file (default: file mapped to slot)")
+    .option("--raw", "Include full workspace and camera JSON in output")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(
+      async (options: {
+        slot: number;
+        host?: string;
+        path?: string;
+        raw?: boolean;
+        json?: boolean;
+      }) => {
+        const ctx = createCliContext();
+        let deviceProvider;
+        try {
+          deviceProvider = await ctx.createDeviceProvider();
+        } catch {
+          deviceProvider = undefined;
+        }
+        try {
+          const report = await diffLimelightPipeline(ctx.cwd, {
+            slot: options.slot,
+            host: options.host,
+            workspacePath: options.path,
+            includeRaw: options.raw,
+            deviceProvider,
+            runner: ctx.runner,
+          });
+          if (options.json) {
+            console.log(JSON.stringify(report, null, 2));
+            return;
+          }
+          console.log("Limelight Vision pipeline diff\n");
+          console.log(report.message);
+          for (const line of report.humanSummary) {
+            console.log(line);
+          }
+        } catch (error) {
+          await printFriendlyError(interpretFromUnknown(error), false);
+          process.exitCode = 1;
+        }
+      },
+    );
 }

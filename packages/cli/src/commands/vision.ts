@@ -6,6 +6,7 @@ import {
   getFtcDashboardStatus,
   getLimelightResults,
   getLimelightStatus,
+  getEasyOpenCvStatus,
   getVisionBridgeStatus,
   getVisionPortalStatus,
   getVisionStatus,
@@ -516,6 +517,41 @@ export function registerVisionCommand(program: Command): void {
       }
 
       console.log("VisionPortal status\n");
+      console.log(report.message);
+      for (const line of report.humanSummary) {
+        console.log(line);
+      }
+      if (report.discovery.requiresSelection) {
+        for (const reason of report.discovery.selectionReasons) {
+          console.log(`Selection required: ${reason}`);
+        }
+      }
+      for (const warning of report.discovery.warnings) {
+        console.log(`Warning: ${warning}`);
+      }
+      console.log("\nCapabilities:");
+      for (const [key, enabled] of Object.entries(report.capabilities)) {
+        console.log(`  ${key}: ${enabled ? "yes" : "deferred"}`);
+      }
+    });
+
+  const easyopencv = vision
+    .command("easyopencv")
+    .description("EasyOpenCV static analysis and desktop replay hints (VISION-09)");
+
+  easyopencv
+    .command("status")
+    .description("Scan Gradle and TeamCode for EasyOpenCV pipelines and webcam setup")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(async (options: { json?: boolean }) => {
+      const ctx = createCliContext();
+      const report = await getEasyOpenCvStatus(ctx.cwd);
+      if (options.json) {
+        console.log(JSON.stringify(report, null, 2));
+        return;
+      }
+
+      console.log("EasyOpenCV status\n");
       console.log(report.message);
       for (const line of report.humanSummary) {
         console.log(line);

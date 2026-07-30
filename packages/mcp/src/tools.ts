@@ -23,6 +23,7 @@ import {
   discoverVisionDevices,
   getFtcDashboardStatus,
   openFtcDashboard,
+  getEasyOpenCvStatus,
   getVisionBridgeStatus,
   getVisionPortalStatus,
   scaffoldVisionBridge,
@@ -751,6 +752,15 @@ export async function toolVisionVisionPortalStatus(args: ProjectRootArgs): Promi
   try {
     const ctx = ctxFrom(args);
     return jsonResult(await getVisionPortalStatus(ctx.projectRoot));
+  } catch (err) {
+    return jsonResult({ error: interpretFromUnknown(err).summary }, true);
+  }
+}
+
+export async function toolVisionEasyOpenCvStatus(args: ProjectRootArgs): Promise<CallToolResult> {
+  try {
+    const ctx = ctxFrom(args);
+    return jsonResult(await getEasyOpenCvStatus(ctx.projectRoot));
   } catch (err) {
     return jsonResult({ error: interpretFromUnknown(err).summary }, true);
   }

@@ -116,7 +116,17 @@ ftc vision visionportal status --json
 
 Runtime UVC controls and live processor mutations remain deferred.
 
-## Next steps (VISION-09+)
+## EasyOpenCV (VISION-09)
+
+Static Gradle/TeamCode analysis, Dashboard stream hints, and desktop replay compatibility. See [easyopencv-integration.md](./easyopencv-integration.md).
+
+```bash
+ftc vision easyopencv status --json
+```
+
+Live frame capture and the IDE panel remain VISION-10+.
+
+## Next steps (VISION-10+)
 
 - Live frame acquisition for VisionPortal
 - Vision Lab IDE panel consuming `listVisionProviders()`

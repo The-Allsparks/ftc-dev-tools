@@ -87,7 +87,7 @@ export const BUILTIN_INTEGRATIONS: readonly IntegrationManifest[] = [
     documentationUrl: "https://github.com/OpenFTC/EasyOpenCV",
     experimental: false,
     deprecated: false,
-    summary: "OpenCV wrapper for FTC; Vision Lab adapter target (VISION-09).",
+    summary: "OpenCV wrapper for FTC; static analysis and replay hints (VISION-09).",
   },
   {
     id: "limelight",

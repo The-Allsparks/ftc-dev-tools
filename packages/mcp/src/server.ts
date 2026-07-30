@@ -34,6 +34,7 @@ import {
   toolVisionBridgeStatus,
   toolVisionBridgeScaffold,
   toolVisionVisionPortalStatus,
+  toolVisionEasyOpenCvStatus,
   toolVisionStatus,
   toolSdkCheck,
   toolSdkUpdate,
@@ -78,6 +79,7 @@ export const FTC_MCP_TOOL_NAMES = [
   "vision_bridge_status",
   "vision_bridge_scaffold",
   "vision_visionportal_status",
+  "vision_easyopencv_status",
 ] as const;
 
 export type FtcMcpToolName = (typeof FTC_MCP_TOOL_NAMES)[number];
@@ -638,6 +640,18 @@ export function createFtcMcpServer(): McpServer {
       annotations: { readOnlyHint: true, openWorldHint: false },
     },
     async (args) => toolVisionVisionPortalStatus(args),
+  );
+
+  server.registerTool(
+    "vision_easyopencv_status",
+    {
+      title: "EasyOpenCV status",
+      description:
+        "Scan Gradle and TeamCode for EasyOpenCV pipelines, webcam setup, and desktop replay compatibility.",
+      inputSchema: z.object(projectRootShape),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolVisionEasyOpenCvStatus(args),
   );
 
   return server;

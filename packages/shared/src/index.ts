@@ -563,6 +563,16 @@ export {
   readinessLevelLabel,
 } from "./readiness/readiness-ui.js";
 export {
+  computeSidebarState,
+  type ComputeSidebarStateInput,
+  type DeviceConnectionPhase,
+  type SidebarAction,
+  type SidebarDeviceInfo,
+  type SidebarPhase,
+  type SidebarProjectInfo,
+  type SidebarState,
+} from "./readiness/sidebar-state.js";
+export {
   ROOKIE_JOURNEY_COMMAND_IDS,
   ONBOARDING_0_2_CHILD_ISSUES,
   ONBOARDING_0_1_SETUP_CLOSURE_ISSUES,

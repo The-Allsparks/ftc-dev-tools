@@ -102,10 +102,16 @@ Doctor JSON includes `sections` (machine / project / robot / optional) — see [
 | `vision_visionportal_status` | `ftc vision visionportal status --json` |
 | `vision_easyopencv_status` | `ftc vision easyopencv status --json` |
 | `vision_codegen` | `ftc vision codegen scaffold <kind> --yes --json` |
+| `vision_diagnostics` | `ftc vision diagnostics --json` |
+| `vision_validation_status` | `ftc vision validation status --json` |
 | `replay_status` | `ftc replay status --json` |
 | `replay_validate_header` | Validate session header object |
 | `replay_validate_event` | Validate session event envelope |
 | `replay_create_header` | Build session header (no file write) |
+
+### Vision agent tools (VISION-16)
+
+Fifteen additional read-only or gated tools (`vision_list_devices`, `vision_get_diagnostics`, `vision_generate_code`, deferred camera mutations, …). See [Vision Lab MCP architecture](./architecture/vision-mcp.md) and [vision-lab.md](./vision-lab.md).
 
 ### Confirmed mutations
 
@@ -135,5 +141,6 @@ Maintainers: optional GitHub triage MCP is documented in [maintainer-mcp.md](mai
 
 ## Related
 
+- [Vision Lab](./vision-lab.md)
 - [Architecture](architecture.md)
 - [CLI / extension roadmap](../README.md#roadmap-not-all-shipped)

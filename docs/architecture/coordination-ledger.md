@@ -56,6 +56,9 @@ This ledger tracks workstreams for the modular architecture transition.
 | VISION-17 Vision validation foundation                          | Complete                                    |
 | `ftc vision validation status` + MCP `vision_validation_status` | Complete                                    |
 | Physical hardware validation checklists                         | Pending — see vision-hardware-validation.md |
+| VISION-18 Vision Lab user documentation                         | Complete                                    |
+| `docs/vision-lab.md` + provider guides + samples                | Complete                                    |
+| Vision Lab panel screenshots                                    | Pending — placeholders in docs/images       |
 | Vision Lab live video overlay / graphs / export                 | Deferred — VISION-11+                       |
 | Vision Lab live frames / capture / replay controls              | Deferred — VISION-13+                       |
 | Limelight upload / activate / rollback                          | Deferred — VISION-05+                       |

@@ -47,4 +47,15 @@ When changing snippets:
 | `ftc-apriltag`      | AprilTag processor skeleton |
 | `ftc-safe-stop`     | finally zero-power          |
 
+## Vision codegen vs snippets
+
+For full OpMode scaffolds (Limelight, EasyOpenCV, VisionPortal, diagnostic bridge), prefer CLI codegen — it writes files with confirmation gates:
+
+```bash
+ftc vision codegen list
+ftc vision codegen limelight --class MyTele --yes --dry-run
+```
+
+See [Vision Lab](./vision-lab.md). Snippets remain quick inserts; codegen targets repeatable project files.
+
 Kotlin snippets are optional future work.

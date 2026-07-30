@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/packages/shared/schemas/ftc-dev.schema.json",
+  "teamNumber": 916,
+  "vision": {
+    "defaultProviderId": "vision:limelight",
+    "enabledProviderIds": ["vision:limelight", "telemetry:ftc-dashboard"],
+    "pipelineDirectory": "limelight/pipelines",
+    "limelight": {
+      "host": "10.9.16.11",
+      "pipelineDirectory": "limelight/pipelines"
+    },
+    "dashboard": {
+      "url": "http://10.9.16.11:8080/dash"
+    }
+  }
+}

@@ -40,7 +40,8 @@ Physical REV Control Hub compatibility has **not** been claimed as validated in 
 - `ftc opmode` — list / create TeleOp & Autonomous stubs; see [docs/opmodes.md](docs/opmodes.md)
 - `ftc config` — list / show / validate / pull robot config XML; see [docs/robot-config.md](docs/robot-config.md)
 - `ftc hwmap` — show hardware map / generate OpMode stubs from config; see [docs/hwmap.md](docs/hwmap.md)
-- `ftc-mcp` — stdio MCP server for Cursor agents; see [docs/mcp.md](docs/mcp.md)
+- **Vision Lab** — Limelight, VisionPortal, EasyOpenCV, FTC Dashboard, diagnostics, validation, Java codegen; see [docs/vision-lab.md](docs/vision-lab.md)
+- `ftc-mcp` — stdio MCP server for Cursor agents (59 tools); see [docs/mcp.md](docs/mcp.md)
 - Optional `.ftc-dev.json` configuration + JSON Schema
 - VS Code/Cursor extension commands, FTC view, status bar, output channel, and Java snippets
 - Guided setup commands: **FTC: Set Up This Computer**, **FTC: Set Up This FTC Project**, **FTC: Configure Recommended Extensions**, **FTC: Install FTC CLI**
@@ -58,6 +59,7 @@ Integrated features above are first-class product surfaces. Remaining work aims 
 
 | Capability                                     | Notes                                                                                             |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| **Vision Lab**                                 | Shipped foundation (mock-tested); see [docs/vision-lab.md](docs/vision-lab.md)                    |
 | **Telemetry / FTC Dashboard interoperability** | Prefer existing community tools; see [docs/telemetry-spike.md](docs/telemetry-spike.md)           |
 | **Java debugger attach (investigation)**       | JDWP spike only until Control Hub validated; see [docs/debugger-spike.md](docs/debugger-spike.md) |
 | **Richer Logcat / diagnostic bundles**         | Process filters, clickable stack traces, redacted share bundles                                   |
@@ -276,6 +278,7 @@ Official-style Android Studio projects with:
 - [OpModes](docs/opmodes.md)
 - [Robot configuration](docs/robot-config.md)
 - [Hardware map](docs/hwmap.md)
+- [Vision Lab](docs/vision-lab.md)
 - [MCP server](docs/mcp.md)
 - [Snippets](docs/snippets.md)
 - [Wi-Fi manage API notes](docs/wifi-manage-api.md)

@@ -178,7 +178,13 @@ Automated test coverage flags, per-feature maturity (`Mock-tested` only until ch
 
 Field runs on Control Hub, Limelight, and webcams remain pending; mock-tested features must not be labeled hardware-validated or Stable.
 
-## Next steps (VISION-18+)
+## Documentation (VISION-18)
+
+Student and mentor guides on the docs site. Start at [vision-lab.md](../vision-lab.md).
+
+## Epic complete (foundation)
+
+VISION-01–18 foundation PRs are merged. Follow-up work tracks hardware validation, live capture/replay, and panel screenshots separately.
 
 ## Related
 

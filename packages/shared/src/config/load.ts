@@ -31,9 +31,23 @@ const SECRET_KEYS = new Set([
   "credentials",
 ]);
 
-const KNOWN_TOP_LEVEL = new Set(["$schema", "teamNumber", "module", "deployment", "logs"]);
+const KNOWN_TOP_LEVEL = new Set([
+  "$schema",
+  "teamNumber",
+  "module",
+  "deployment",
+  "logs",
+  "vision",
+]);
 const KNOWN_DEPLOYMENT = new Set(["preferredConnection", "preferredDeviceSerial"]);
 const KNOWN_LOGS = new Set(["defaultFilter"]);
+const KNOWN_VISION = new Set([
+  "defaultProviderId",
+  "enabledProviderIds",
+  "pipelineDirectory",
+  "limelight",
+]);
+const KNOWN_LIMELIGHT = new Set(["host", "pipelineDirectory"]);
 
 export function defaultConfig(): FtcDevConfig {
   return {
@@ -122,6 +136,15 @@ function mergeWithDefaults(partial: FtcDevConfig): FtcDevConfig {
       ...defaults.logs,
       ...partial.logs,
     },
+    vision: partial.vision
+      ? {
+          ...partial.vision,
+          enabledProviderIds: partial.vision.enabledProviderIds
+            ? [...partial.vision.enabledProviderIds]
+            : undefined,
+          limelight: partial.vision.limelight ? { ...partial.vision.limelight } : undefined,
+        }
+      : undefined,
   };
 }
 
@@ -146,6 +169,21 @@ function collectUnknownPropertyWarnings(value: Record<string, unknown>, warnings
     for (const key of Object.keys(value.logs as Record<string, unknown>)) {
       if (!KNOWN_LOGS.has(key)) {
         warnings.push(`Unknown property "logs.${key}" will be ignored.`);
+      }
+    }
+  }
+  if (value.vision && typeof value.vision === "object" && !Array.isArray(value.vision)) {
+    for (const key of Object.keys(value.vision as Record<string, unknown>)) {
+      if (!KNOWN_VISION.has(key)) {
+        warnings.push(`Unknown property "vision.${key}" will be ignored.`);
+      }
+    }
+    const limelight = (value.vision as Record<string, unknown>).limelight;
+    if (limelight && typeof limelight === "object" && !Array.isArray(limelight)) {
+      for (const key of Object.keys(limelight as Record<string, unknown>)) {
+        if (!KNOWN_LIMELIGHT.has(key)) {
+          warnings.push(`Unknown property "vision.limelight.${key}" will be ignored.`);
+        }
       }
     }
   }

@@ -13,6 +13,8 @@ import {
   detectPedroStatus,
   getHubStatus,
   getWifiStatus,
+  getVisionStatus,
+  discoverVisionWorkspace,
   interpretFromUnknown,
   listOpModes,
   listRobotConfigs,
@@ -533,6 +535,28 @@ export async function toolModulesList(args: { layer?: string }): Promise<CallToo
 export async function toolProvidersList(): Promise<CallToolResult> {
   try {
     return jsonResult(createProviderRegistrySnapshot());
+  } catch (err) {
+    return jsonResult({
+      error: interpretFromUnknown(err).summary,
+    });
+  }
+}
+
+export async function toolVisionStatus(args: ProjectRootArgs): Promise<CallToolResult> {
+  try {
+    const ctx = ctxFrom(args);
+    return jsonResult(await getVisionStatus(ctx.projectRoot));
+  } catch (err) {
+    return jsonResult({
+      error: interpretFromUnknown(err).summary,
+    });
+  }
+}
+
+export async function toolVisionDiscover(args: ProjectRootArgs): Promise<CallToolResult> {
+  try {
+    const ctx = ctxFrom(args);
+    return jsonResult(await discoverVisionWorkspace(ctx.projectRoot));
   } catch (err) {
     return jsonResult({
       error: interpretFromUnknown(err).summary,

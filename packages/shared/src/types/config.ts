@@ -11,12 +11,25 @@ export interface FtcDevLogsConfig {
   defaultFilter?: DefaultLogFilter;
 }
 
+export interface FtcDevLimelightConfig {
+  host?: string;
+  pipelineDirectory?: string;
+}
+
+export interface FtcDevVisionConfig {
+  defaultProviderId?: string;
+  enabledProviderIds?: string[];
+  pipelineDirectory?: string;
+  limelight?: FtcDevLimelightConfig;
+}
+
 export interface FtcDevConfig {
   $schema?: string;
   teamNumber?: number;
   module?: string;
   deployment?: FtcDevDeploymentConfig;
   logs?: FtcDevLogsConfig;
+  vision?: FtcDevVisionConfig;
 }
 
 export interface ConfigLoadResult {

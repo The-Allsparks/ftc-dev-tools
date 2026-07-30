@@ -21,6 +21,15 @@ The tools work with **no config file**. Defaults are applied automatically.
   },
   "logs": {
     "defaultFilter": "teamcode"
+  },
+  "vision": {
+    "defaultProviderId": "vision:limelight",
+    "enabledProviderIds": ["vision:limelight", "vision:visionportal"],
+    "pipelineDirectory": "limelight/pipelines",
+    "limelight": {
+      "host": "limelight.local",
+      "pipelineDirectory": "limelight/pipelines"
+    }
   }
 }
 ```
@@ -32,6 +41,27 @@ The tools work with **no config file**. Defaults are applied automatically.
 - Never store passwords, Wi-Fi credentials, API keys, or tokens
 - `preferredDeviceSerial` is a **machine-local** preference; avoid committing real serials to shared repos when possible
 - `preferredConnection` (`usb` | `wifi` | `any`) narrows automatic device selection only. It never silently picks among multiple matches. Explicit `--device` / preferred serial always wins.
+
+## Vision configuration (Vision Lab)
+
+Optional `vision` section configures Vision Lab provider preferences:
+
+| Field                         | Purpose                                                                   |
+| ----------------------------- | ------------------------------------------------------------------------- |
+| `defaultProviderId`           | Preferred provider id from `ftc providers list` (e.g. `vision:limelight`) |
+| `enabledProviderIds`          | Providers enabled for this project                                        |
+| `pipelineDirectory`           | Repo-relative pipeline-as-code root                                       |
+| `limelight.host`              | Limelight hostname or IP (never store secrets here)                       |
+| `limelight.pipelineDirectory` | Limelight pipeline JSON directory                                         |
+
+Discover what the project uses:
+
+```bash
+ftc vision discover --json
+ftc vision status --json
+```
+
+See [vision-providers.md](architecture/vision-providers.md).
 
 ## Team-shared vs local editor settings
 

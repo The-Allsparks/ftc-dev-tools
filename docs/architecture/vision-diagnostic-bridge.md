@@ -53,7 +53,9 @@ Scaffold creates (default package `org.firstinspires.ftc.teamcode.vision`):
 | `FtcVisionDiagnosticBridge.java` | Rate-limited JSON emitter to Logcat  |
 | `FtcVisionDiagnosticOpMode.java` | Development TeleOp; no motor control |
 
-VISION-08 will wire VisionPortal snapshots into the bridge utility.
+VISION-08 wires VisionPortal snapshot helpers into the bridge utility when TeamCode uses VisionPortal.
+
+Run `ftc vision visionportal status` for static configuration hints, then re-scaffold the bridge with `--force` after adding VisionPortal to your project.
 
 ## Surfaces
 

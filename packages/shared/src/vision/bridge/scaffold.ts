@@ -6,6 +6,7 @@ import { isValidJavaPackageName } from "../../opmode/defaults.js";
 import { isGitWorkingTreeDirty } from "../../sdk/sync-sdk-update.js";
 import type { ProcessRunner } from "../../types/process.js";
 import { planVisionBridgeScaffoldPaths, resolveVisionBridgePackage } from "./status.js";
+import { discoverVisionPortalWorkspace } from "../visionportal/discover.js";
 import {
   renderVisionDiagnosticBridgeSource,
   renderVisionDiagnosticOpModeSource,
@@ -68,14 +69,17 @@ export async function scaffoldVisionBridge(
       };
     }
 
+    const portalDiscovery = await discoverVisionPortalWorkspace(projectRoot);
+    const includeVisionPortalHelpers = portalDiscovery.visionPortalImportDetected;
+
     const files = [
       {
         relativePath: planVisionBridgeScaffoldPaths(packageName)[0]!,
-        content: renderVisionDiagnosticBridgeSource({ packageName }),
+        content: renderVisionDiagnosticBridgeSource({ packageName, includeVisionPortalHelpers }),
       },
       {
         relativePath: planVisionBridgeScaffoldPaths(packageName)[1]!,
-        content: renderVisionDiagnosticOpModeSource({ packageName }),
+        content: renderVisionDiagnosticOpModeSource({ packageName, includeVisionPortalHelpers }),
       },
     ];
 

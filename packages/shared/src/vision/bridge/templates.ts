@@ -8,20 +8,95 @@ import {
 
 export interface VisionBridgeTemplateInput {
   packageName: string;
+  includeVisionPortalHelpers?: boolean;
+}
+
+function renderVisionPortalUtilityMethods(): string {
+  return `
+    /** Snapshot helpers for VisionPortal (VISION-08). Safe when portal is null. */
+    public static JSONObject cameraFromPortal(VisionPortal portal) {
+        JSONObject camera = new JSONObject();
+        if (portal == null) {
+            try {
+                camera.put("state", "unknown");
+            } catch (Exception ignored) {
+            }
+            return camera;
+        }
+        try {
+            camera.put("state", portal.getCameraState().name().toLowerCase());
+            org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName active =
+                    portal.getActiveCamera();
+            if (active != null) {
+                camera.put("name", active.toString());
+            }
+        } catch (Exception error) {
+            try {
+                camera.put("state", "error");
+                camera.put("error", error.getMessage());
+            } catch (Exception ignored) {
+            }
+        }
+        return camera;
+    }
+
+    public static JSONArray processorsFromPortal(VisionPortal portal) {
+        JSONArray processors = new JSONArray();
+        if (portal == null) {
+            return processors;
+        }
+        try {
+            for (String name : portal.getProcessorNames()) {
+                if (processors.length() >= ${VISION_BRIDGE_LIMITS.maxProcessors}) {
+                    break;
+                }
+                JSONObject entry = new JSONObject();
+                entry.put("name", name);
+                entry.put("enabled", portal.isProcessorEnabled(name));
+                entry.put("kind", classifyProcessor(name));
+                processors.put(entry);
+            }
+        } catch (Exception ignored) {
+            // omit broken processor enumeration
+        }
+        return processors;
+    }
+
+    private static String classifyProcessor(String processorName) {
+        String lower = processorName.toLowerCase();
+        if (lower.contains("apriltag")) {
+            return "apriltag";
+        }
+        if (lower.contains("color")) {
+            return "color";
+        }
+        if (lower.contains("tfod") || lower.contains("tensorflow")) {
+            return "tfod";
+        }
+        return "generic";
+    }
+`;
 }
 
 export function renderVisionDiagnosticBridgeSource(input: VisionBridgeTemplateInput): string {
   const { utility } = VISION_BRIDGE_CLASS_NAMES;
+  const visionPortalImports = input.includeVisionPortalHelpers
+    ? "\nimport org.firstinspires.ftc.vision.VisionPortal;"
+    : "";
+  const visionPortalMethods = input.includeVisionPortalHelpers
+    ? renderVisionPortalUtilityMethods()
+    : "";
+
   return `package ${input.packageName};
 
 import android.util.Log;
 import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.JSONObject;${visionPortalImports}
 
 /**
  * Optional Vision Lab diagnostic bridge (VISION-07).
  * Emits structured JSON to Logcat — never motor commands or raw frames.
- * Wire VisionPortal in VISION-08; this utility only serializes snapshots you provide.
+ * ${input.includeVisionPortalHelpers ? "VisionPortal snapshot helpers included (VISION-08)." : "Wire VisionPortal via `ftc vision visionportal status` hints or re-scaffold after adding VisionPortal."}
  */
 public final class ${utility} {
     public static final String BRIDGE_VERSION = "${VISION_BRIDGE_CODE_VERSION}";
@@ -77,20 +152,36 @@ public final class ${utility} {
             Log.w(LOG_TAG, "Failed to emit diagnostic payload: " + error.getMessage());
             return false;
         }
-    }
+    }${visionPortalMethods}
 }
 `;
 }
 
 export function renderVisionDiagnosticOpModeSource(input: VisionBridgeTemplateInput): string {
   const { utility, opMode } = VISION_BRIDGE_CLASS_NAMES;
+  const visionPortalFields = input.includeVisionPortalHelpers
+    ? `
+    // Assign your team's VisionPortal instance (see \`ftc vision visionportal status\`):
+    private VisionPortal visionPortal = null;
+`
+    : "";
+  const snapshotBlock = input.includeVisionPortalHelpers
+    ? `            JSONObject camera = ${utility}.cameraFromPortal(visionPortal);
+            JSONArray processors = ${utility}.processorsFromPortal(visionPortal);`
+    : `            JSONObject camera = new JSONObject();
+            try {
+                camera.put("state", "unknown");
+            } catch (Exception ignored) {
+            }
+            JSONArray processors = new JSONArray();`;
+
   return `package ${input.packageName};
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import java.util.UUID;
+import java.util.UUID;${input.includeVisionPortalHelpers ? "\nimport org.firstinspires.ftc.vision.VisionPortal;" : ""}
 
 /**
  * Development-only diagnostic OpMode. Does not drive motors or accept gamepad input.
@@ -98,7 +189,7 @@ import java.util.UUID;
  */
 @TeleOp(name = "FTC Vision Diagnostic", group = "FTC Dev Tools")
 public class ${opMode} extends LinearOpMode {
-    private final ${utility} bridge = new ${utility}();
+    private final ${utility} bridge = new ${utility}();${visionPortalFields}
 
     @Override
     public void runOpMode() {
@@ -110,12 +201,8 @@ public class ${opMode} extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            JSONObject camera = new JSONObject();
-            try {
-                camera.put("state", "unknown");
-            } catch (Exception ignored) {
-            }
-            bridge.emitSnapshot(System.currentTimeMillis(), camera, new JSONArray(), new JSONArray());
+${snapshotBlock}
+            bridge.emitSnapshot(System.currentTimeMillis(), camera, processors, new JSONArray());
             sleep(250);
         }
     }

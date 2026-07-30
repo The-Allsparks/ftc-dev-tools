@@ -24,6 +24,7 @@ import {
   getFtcDashboardStatus,
   openFtcDashboard,
   getVisionBridgeStatus,
+  getVisionPortalStatus,
   scaffoldVisionBridge,
   interpretFromUnknown,
   listOpModes,
@@ -744,4 +745,13 @@ export async function toolVisionBridgeScaffold(
       return { ...result };
     },
   );
+}
+
+export async function toolVisionVisionPortalStatus(args: ProjectRootArgs): Promise<CallToolResult> {
+  try {
+    const ctx = ctxFrom(args);
+    return jsonResult(await getVisionPortalStatus(ctx.projectRoot));
+  } catch (err) {
+    return jsonResult({ error: interpretFromUnknown(err).summary }, true);
+  }
 }

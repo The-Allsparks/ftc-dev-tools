@@ -99,6 +99,7 @@ Doctor JSON includes `sections` (machine / project / robot / optional) — see [
 | `vision_dashboard_open` | `ftc vision dashboard open --json` |
 | `vision_bridge_status` | `ftc vision bridge status --json` |
 | `vision_bridge_scaffold` | `ftc vision bridge scaffold --yes --json` |
+| `vision_visionportal_status` | `ftc vision visionportal status --json` |
 
 ### Confirmed mutations
 

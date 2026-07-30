@@ -2,7 +2,7 @@
 export const VISION_DIAGNOSTIC_SCHEMA_VERSION = "1.0.0";
 
 /** Generated Java bridge utility version — bump when templates change. */
-export const VISION_BRIDGE_CODE_VERSION = "1.0.0";
+export const VISION_BRIDGE_CODE_VERSION = "1.1.0";
 
 /** Logcat prefix for structured diagnostic lines. */
 export const VISION_DIAGNOSTIC_LOG_PREFIX = "FTC_VISION_DIAG:";

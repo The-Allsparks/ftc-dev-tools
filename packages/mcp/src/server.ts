@@ -33,6 +33,7 @@ import {
   toolVisionDashboardOpen,
   toolVisionBridgeStatus,
   toolVisionBridgeScaffold,
+  toolVisionVisionPortalStatus,
   toolVisionStatus,
   toolSdkCheck,
   toolSdkUpdate,
@@ -76,6 +77,7 @@ export const FTC_MCP_TOOL_NAMES = [
   "vision_dashboard_open",
   "vision_bridge_status",
   "vision_bridge_scaffold",
+  "vision_visionportal_status",
 ] as const;
 
 export type FtcMcpToolName = (typeof FTC_MCP_TOOL_NAMES)[number];
@@ -624,6 +626,18 @@ export function createFtcMcpServer(): McpServer {
       annotations: { readOnlyHint: false, openWorldHint: false },
     },
     async (args) => toolVisionBridgeScaffold(args),
+  );
+
+  server.registerTool(
+    "vision_visionportal_status",
+    {
+      title: "VisionPortal status",
+      description:
+        "Scan TeamCode for VisionPortal camera, stream format, and processor configuration.",
+      inputSchema: z.object(projectRootShape),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolVisionVisionPortalStatus(args),
   );
 
   return server;

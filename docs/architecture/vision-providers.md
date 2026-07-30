@@ -141,9 +141,14 @@ Structured Limelight result inspection in the Vision Lab panel: normalized overl
 
 Live video overlay, metric graphs, export, and thresholds remain deferred.
 
-## Next steps (VISION-12+)
+## Vision code generators (VISION-12)
 
-- Code generators, snippets, and source navigation helpers
+Java TeamCode generators for EasyOpenCV, VisionPortal, Limelight, and FTC Dashboard; VS Code snippets; expanded source navigation. **Kotlin robot code is not generated** — all stubs target `.java` TeamCode. See [vision-codegen.md](./vision-codegen.md).
+
+SDK compilation fixtures and official sample integration remain deferred.
+
+## Next steps (VISION-13+)
+
 - Live frame acquisition and overlays for VisionPortal
 - Session capture and offline replay UI
 

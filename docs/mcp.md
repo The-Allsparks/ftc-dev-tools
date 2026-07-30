@@ -101,6 +101,7 @@ Doctor JSON includes `sections` (machine / project / robot / optional) — see [
 | `vision_bridge_scaffold` | `ftc vision bridge scaffold --yes --json` |
 | `vision_visionportal_status` | `ftc vision visionportal status --json` |
 | `vision_easyopencv_status` | `ftc vision easyopencv status --json` |
+| `vision_codegen` | `ftc vision codegen scaffold <kind> --yes --json` |
 
 ### Confirmed mutations
 
@@ -115,6 +116,8 @@ These refuse unless `yes=true` (or `dryRun=true` when supported):
 | `opmode_create`                | TeleOp / Autonomous stubs                   |
 | `config_pull`                  | adb pull only; never activates hub config   |
 | `hwmap_codegen`                | New OpMode with `hardwareMap.get` stubs     |
+| `vision_codegen`               | Java vision OpMode stubs (VISION-12)        |
+| `vision_bridge_scaffold`       | Diagnostic bridge Java files                |
 
 Wi-Fi manage/set, hub OS download/apply, and live Logcat streaming are **not** exposed in this MVP (use CLI/extension).
 

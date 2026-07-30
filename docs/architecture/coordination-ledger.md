@@ -42,6 +42,8 @@ This ledger tracks workstreams for the modular architecture transition.
 | VISION-10 Vision Lab IDE panel (read-only foundation)        | Complete                   |
 | `FTC: Open Vision Lab` + activity-bar Vision sidebar         | Complete                   |
 | VISION-11 Vision result inspector (structured + overlay)     | Complete                   |
+| VISION-12 Vision Java codegen, snippets, source navigation   | Complete                   |
+| `ftc vision codegen` + MCP `vision_codegen`                  | Complete                   |
 | Vision Lab live video overlay / graphs / export              | Deferred — VISION-11+      |
 | Vision Lab live frames / capture / replay controls           | Deferred — VISION-10+      |
 | Limelight upload / activate / rollback                       | Deferred — VISION-05+      |

@@ -18,6 +18,14 @@ const REQUIRED_PREFIXES = [
   "ftc-elapsed",
   "ftc-vision",
   "ftc-apriltag",
+  "ftc-vision-color",
+  "ftc-easyopencv-pipeline",
+  "ftc-easyopencv-webcam",
+  "ftc-limelight-init",
+  "ftc-limelight-loop",
+  "ftc-limelight-pipeline",
+  "ftc-dashboard-stream",
+  "ftc-vision-cleanup",
   "ftc-safe-stop",
 ];
 

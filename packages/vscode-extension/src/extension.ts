@@ -40,6 +40,8 @@ import {
   validateRobotConfig,
   showHardwareMap,
   codegenHardwareMapOpMode,
+  scaffoldVisionCodegen,
+  VISION_CODEGEN_KINDS,
   runDoctor,
   buildDoctorSections,
   formatDoctorCheckLine,
@@ -308,6 +310,7 @@ export function activate(context: vscode.ExtensionContext): void {
   register("ftc.configPull", configPullCommand);
   register("ftc.hwmapShow", hwmapShowCommand);
   register("ftc.hwmapCodegen", hwmapCodegenCommand);
+  register("ftc.visionCodegen", visionCodegenCommand);
   register("ftc.configureRecommendedExtensions", () =>
     configureRecommendedExtensionsCommand(getWorkspaceRoot, output),
   );
@@ -1869,6 +1872,94 @@ async function hwmapCodegenCommand(): Promise<void> {
   vscode.window.showInformationMessage(result.message);
   if (result.absolutePath) {
     const doc = await vscode.workspace.openTextDocument(result.absolutePath);
+    await vscode.window.showTextDocument(doc);
+  }
+}
+
+async function visionCodegenCommand(): Promise<void> {
+  const root = getWorkspaceRoot();
+  if (!root) {
+    vscode.window.showWarningMessage("Open an FTC project folder first.");
+    return;
+  }
+
+  const kindPick = await vscode.window.showQuickPick(
+    VISION_CODEGEN_KINDS.map((entry) => ({
+      label: entry.label,
+      description: entry.kind,
+      detail: `${entry.description} (Java TeamCode)`,
+      codegenKind: entry.kind,
+    })),
+    { placeHolder: "Vision codegen template (Java TeamCode only)" },
+  );
+  if (!kindPick) {
+    return;
+  }
+
+  const className = await vscode.window.showInputBox({
+    prompt: "Java OpMode class name",
+    placeHolder: "VisionTeleOp",
+    ignoreFocusOut: true,
+    validateInput: (value) =>
+      /^[A-Za-z_][A-Za-z0-9_]*$/.test(value.trim()) ? undefined : "Invalid Java class name",
+  });
+  if (!className) {
+    return;
+  }
+
+  const runner = new NodeProcessRunner();
+  const dry = await scaffoldVisionCodegen({
+    projectRoot: root,
+    runner,
+    kind: kindPick.codegenKind,
+    className: className.trim(),
+    dryRun: true,
+  });
+
+  output.clear();
+  output.appendLine(dry.message);
+  if (dry.sourcePreview) {
+    output.appendLine("");
+    output.appendLine(dry.sourcePreview);
+  }
+  output.show(true);
+
+  if (!dry.success) {
+    if (dry.error) {
+      await showFriendlyError(dry.error);
+    }
+    return;
+  }
+
+  const confirm = await vscode.window.showWarningMessage(
+    dry.message,
+    { modal: true },
+    "Generate Java files",
+    "Cancel",
+  );
+  if (confirm !== "Generate Java files") {
+    return;
+  }
+
+  const result = await scaffoldVisionCodegen({
+    projectRoot: root,
+    runner,
+    kind: kindPick.codegenKind,
+    className: className.trim(),
+    yes: true,
+  });
+
+  output.appendLine(result.message);
+  if (!result.success && result.error) {
+    await showFriendlyError(result.error);
+    return;
+  }
+
+  vscode.window.showInformationMessage(result.message);
+  if (result.appliedPaths[0]) {
+    const doc = await vscode.workspace.openTextDocument(
+      vscode.Uri.joinPath(vscode.Uri.file(root), ...result.appliedPaths[0].split("/")),
+    );
     await vscode.window.showTextDocument(doc);
   }
 }

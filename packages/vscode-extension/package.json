@@ -160,6 +160,11 @@
         "category": "FTC"
       },
       {
+        "command": "ftc.visionCodegen",
+        "title": "FTC: Generate Vision Java Code",
+        "category": "FTC"
+      },
+      {
         "command": "ftc.wifiJoin",
         "title": "FTC: Join Robot Wi-Fi"
       },

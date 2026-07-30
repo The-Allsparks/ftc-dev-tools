@@ -14,6 +14,9 @@ import {
   openFtcDashboard,
   scanLimelightArtifacts,
   scaffoldVisionBridge,
+  scaffoldVisionCodegen,
+  parseVisionCodegenKind,
+  VISION_CODEGEN_KINDS,
   validateLimelightArtifacts,
 } from "@ftc-dev-tools/shared";
 import { createCliContext } from "../context.js";
@@ -569,4 +572,138 @@ export function registerVisionCommand(program: Command): void {
         console.log(`  ${key}: ${enabled ? "yes" : "deferred"}`);
       }
     });
+
+  const codegen = vision
+    .command("codegen")
+    .description("Generate Java TeamCode vision stubs (VISION-12)");
+
+  codegen
+    .command("list")
+    .description("List supported vision codegen kinds (Java TeamCode only)")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action((options: { json?: boolean }) => {
+      const kinds = VISION_CODEGEN_KINDS.map((entry) => ({
+        kind: entry.kind,
+        label: entry.label,
+        description: entry.description,
+        language: "java",
+      }));
+      if (options.json) {
+        console.log(JSON.stringify({ kinds, language: "java" }, null, 2));
+        return;
+      }
+      console.log("Vision codegen kinds (Java TeamCode only)\n");
+      for (const entry of kinds) {
+        console.log(`  ${entry.kind}`);
+        console.log(`    ${entry.label} — ${entry.description}`);
+      }
+    });
+
+  codegen
+    .command("scaffold <kind>")
+    .description("Generate Java vision OpMode and helper classes")
+    .option("--class <name>", "Java OpMode class name (required)")
+    .option("--pipeline-class <name>", "Pipeline class name (EasyOpenCV only)")
+    .option("--package <name>", "Java package (default org.firstinspires.ftc.teamcode.vision)")
+    .option("--camera <name>", "Webcam name from robot configuration")
+    .option("--config <name>", "Robot configuration XML base name")
+    .option("--type <teleop|autonomous>", "OpMode type", "teleop")
+    .option("--style <linear|iterative>", "OpMode style", "linear")
+    .option("--group <name>", "OpMode group annotation")
+    .option("--name <name>", "OpMode display name (defaults to class name)")
+    .option("--limelight-table <name>", "Limelight NetworkTables table name", "limelight")
+    .option("--dashboard", "Include FTC Dashboard camera stream when supported")
+    .option("--no-dashboard", "Disable automatic Dashboard stream for EasyOpenCV")
+    .option("--dry-run", "Preview generated Java without writing files")
+    .option("--yes", "Apply codegen (required unless --dry-run)")
+    .option("--force", "Overwrite existing files / bypass dirty-tree guard")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(
+      async (
+        kindArg: string,
+        options: {
+          class?: string;
+          pipelineClass?: string;
+          package?: string;
+          camera?: string;
+          config?: string;
+          type?: "teleop" | "autonomous";
+          style?: "linear" | "iterative";
+          group?: string;
+          name?: string;
+          limelightTable?: string;
+          dashboard?: boolean;
+          noDashboard?: boolean;
+          dryRun?: boolean;
+          yes?: boolean;
+          force?: boolean;
+          json?: boolean;
+        },
+      ) => {
+        const ctx = createCliContext();
+        const parsedKind = parseVisionCodegenKind(kindArg);
+        if (!parsedKind) {
+          console.error(`Unknown codegen kind: ${kindArg}. Run \`ftc vision codegen list\`.`);
+          process.exitCode = 1;
+          return;
+        }
+        const className = options.class?.trim();
+        if (!className) {
+          console.error("--class is required.");
+          process.exitCode = 1;
+          return;
+        }
+
+        const useDashboard =
+          options.noDashboard === true ? false : options.dashboard === true ? true : undefined;
+
+        const result = await scaffoldVisionCodegen({
+          projectRoot: ctx.cwd,
+          runner: ctx.runner,
+          kind: parsedKind,
+          className,
+          pipelineClassName: options.pipelineClass,
+          packageName: options.package,
+          cameraName: options.camera,
+          configName: options.config,
+          opModeKind: options.type,
+          style: options.style,
+          group: options.group,
+          name: options.name,
+          limelightTableName: options.limelightTable,
+          useDashboardStream: useDashboard,
+          dryRun: options.dryRun === true,
+          yes: options.yes === true,
+          force: options.force === true,
+        });
+
+        if (options.json) {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log("Vision codegen\n");
+          console.log(result.message);
+          console.log(`Language: ${result.language}`);
+          if (result.cameraName) {
+            console.log(`Camera: ${result.cameraName}`);
+          }
+          if (result.configName) {
+            console.log(`Robot config: ${result.configName}`);
+          }
+          for (const entry of result.plan) {
+            console.log(`  [${entry.action}] ${entry.relativePath}`);
+          }
+          for (const warning of result.warnings) {
+            console.log(`Warning: ${warning}`);
+          }
+          if (result.sourcePreview && (options.dryRun || !result.success)) {
+            console.log("\n--- preview ---\n");
+            console.log(result.sourcePreview);
+          }
+          if (result.error) {
+            await printFriendlyError(result.error, false);
+          }
+        }
+        process.exitCode = result.success ? 0 : 1;
+      },
+    );
 }

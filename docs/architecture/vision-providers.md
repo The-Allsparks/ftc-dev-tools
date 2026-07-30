@@ -151,7 +151,17 @@ SDK compilation fixtures and official sample integration remain deferred.
 
 Versioned session header + JSONL event schema validation, replay capability flags, CLI/MCP status tools, and Vision Lab deferred replay section. Live capture and offline playback remain deferred — see [replay-session.md](./replay-session.md) and [FTC Replay epic](https://github.com/The-Allsparks/ftc-dev-tools/issues/143).
 
-## Next steps (VISION-14+)
+## Vision diagnostics (VISION-14)
+
+Aggregated workspace, network, and artifact diagnostics with stable `VISION_*` codes and student-friendly suggested actions. See [vision-diagnostics.md](./vision-diagnostics.md).
+
+- CLI: `ftc vision diagnostics [--json] [--no-probe]`
+- MCP: `vision_diagnostics`
+- Doctor: optional **Vision setup** section (never blocks readiness)
+
+Live image heuristics, Logcat parsing, bundle export, and Vision Lab inline diagnostics remain deferred.
+
+## Next steps (VISION-15+)
 
 ## Related
 

@@ -39,6 +39,7 @@ import { notAnFtcProjectRootError, projectNotDetectedWrapperError } from "./wron
 import { discoverNearbyFtcProjectRoots } from "../project/discover-ftc-root.js";
 import type { MilestoneStepId } from "../onboarding/milestone-checklist.js";
 import type { LastSuccessfulBuildSnapshot } from "../readiness/build-snapshot.js";
+import { buildVisionDoctorChecks } from "../vision/diagnostics/doctor.js";
 
 export interface DoctorOptions {
   cwd: string;
@@ -53,6 +54,8 @@ export interface DoctorOptions {
   checkFtcSdkVersion?: boolean;
   /** When false, skip Wi-Fi console / robot-interface checks. Default true. */
   checkWifi?: boolean;
+  /** When false, skip optional vision setup checks. Default true. */
+  checkVision?: boolean;
   /** Env for Java discovery (FTC_JAVA_HOME / JAVA_HOME). Default `process.env`. */
   env?: NodeJS.ProcessEnv;
   /** Workspace competition checklist progress for readiness snapshot (#82). */
@@ -147,6 +150,17 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorReport> {
     checks.push(await checkWifiRobotInterface(options));
   }
 
+  const visionResult = await buildVisionDoctorChecks(options.cwd, {
+    projectPass: projectCheck.status === "pass",
+    checkVision: options.checkVision !== false,
+    deviceProvider: options.deviceProvider,
+    runner: options.runner,
+    platform,
+    fetchImpl: options.fetchImpl,
+    probeNetwork: Boolean(options.deviceProvider),
+  });
+  checks.push(...visionResult.checks);
+
   const requiredFailed = checks.some((check) => check.required && check.status === "fail");
 
   const computerIds = new Set(["os", "node", "java", "android-sdk", "adb"]);
@@ -226,11 +240,13 @@ function sectionsRecordFromList(sectionList: DoctorReportSection[]): DoctorRepor
     throw new Error("Doctor report must include machine and project sections");
   }
   const robot = sectionList.find((s) => s.id === "robot");
+  const vision = sectionList.find((s) => s.id === "vision");
   const other = sectionList.find((s) => s.id === "other");
   return {
     machine,
     project,
     ...(robot ? { robot } : {}),
+    ...(vision ? { vision } : {}),
     ...(other ? { other } : {}),
   };
 }

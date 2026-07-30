@@ -14,6 +14,7 @@ import {
   getHubStatus,
   getWifiStatus,
   getVisionStatus,
+  collectVisionDiagnostics,
   getLimelightStatus,
   getLimelightResults,
   scanLimelightArtifacts,
@@ -841,6 +842,23 @@ export async function toolVisionCodegen(
       return { ...result };
     },
   );
+}
+
+export async function toolVisionDiagnostics(
+  args: ProjectRootArgs & { probeNetwork?: boolean },
+): Promise<CallToolResult> {
+  try {
+    const ctx = ctxFrom(args);
+    const deviceProvider = await tryCreateDeviceProvider(ctx);
+    const report = await collectVisionDiagnostics(ctx.projectRoot, {
+      deviceProvider,
+      runner: ctx.runner,
+      probeNetwork: args.probeNetwork,
+    });
+    return jsonResult(report, report.summary.errorCount > 0);
+  } catch (err) {
+    return jsonResult({ error: interpretFromUnknown(err).summary }, true);
+  }
 }
 
 export async function toolReplayStatus(): Promise<CallToolResult> {

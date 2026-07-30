@@ -6,12 +6,13 @@ import type {
 } from "../types/errors.js";
 
 /** Section ids for doctor output (foundation for future category expansion). */
-export type DoctorSectionId = "machine" | "project" | "robot" | "other";
+export type DoctorSectionId = "machine" | "project" | "robot" | "vision" | "other";
 
 export const DOCTOR_SECTION_ORDER: readonly DoctorSectionId[] = [
   "machine",
   "project",
   "robot",
+  "vision",
   "other",
 ] as const;
 
@@ -19,6 +20,7 @@ export const DOCTOR_SECTION_TITLES: Record<DoctorSectionId, string> = {
   machine: "Computer setup",
   project: "FTC project setup",
   robot: "Robot connection",
+  vision: "Vision setup",
   other: "Optional checks",
 };
 
@@ -34,6 +36,9 @@ const CHECK_SECTION_BY_ID: Record<string, DoctorSectionId> = {
   devices: "robot",
   "wifi-console": "robot",
   "wifi-robot-interface": "robot",
+  "vision-workspace": "vision",
+  "vision-network": "vision",
+  "vision-artifacts": "vision",
   "ftc-sdk-version": "other",
 };
 
@@ -48,6 +53,7 @@ export function partitionChecksBySection(
     machine: [],
     project: [],
     robot: [],
+    vision: [],
     other: [],
   };
   for (const check of checks) {
@@ -69,6 +75,9 @@ function sectionIsReady(
   }
   if (id === "robot") {
     return readiness.robotReadyToDeploy;
+  }
+  if (id === "vision") {
+    return !checks.some((c) => c.status === "fail" || c.status === "warn");
   }
   return !checks.some((c) => c.status === "fail" || c.status === "warn");
 }

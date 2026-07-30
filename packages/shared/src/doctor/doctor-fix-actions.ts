@@ -206,6 +206,40 @@ export function buildDoctorCheckUiItem(
       "ftc.wifiSelectInterface",
     );
     secondary.push(vscodeCommand("wifi-status", "Wi-Fi status", "ftc.wifiStatus"));
+  } else if (
+    check.id === "vision-workspace" ||
+    check.id === "vision-network" ||
+    check.id === "vision-artifacts" ||
+    code?.startsWith("VISION_")
+  ) {
+    if (
+      code === "VISION_ENDPOINT_AMBIGUOUS" ||
+      code === "VISION_LIMELIGHT_HOST_UNRESOLVED" ||
+      code === "VISION_SELECTION_REQUIRED" ||
+      check.id === "vision-network"
+    ) {
+      primary = terminal("vision-devices", "List vision endpoints", "ftc vision devices");
+      secondary.push(
+        terminal("vision-diagnostics", "Run vision diagnostics", "ftc vision diagnostics"),
+      );
+    } else if (code === "VISION_BRIDGE_NOT_SCAFFOLDED" || check.id === "vision-artifacts") {
+      primary = terminal(
+        "vision-bridge-scaffold",
+        "Scaffold vision diagnostic bridge",
+        "ftc vision bridge scaffold --yes",
+      );
+      secondary.push(
+        terminal("vision-bridge-status", "Vision bridge status", "ftc vision bridge status"),
+      );
+    } else if (code === "VISION_NO_LIBRARIES") {
+      primary = terminal("vision-codegen", "Scaffold vision starter code", "ftc vision codegen");
+      secondary.push(
+        terminal("vision-discover", "Discover vision libraries", "ftc vision discover"),
+      );
+    } else {
+      primary = terminal("vision-diagnostics", "Run vision diagnostics", "ftc vision diagnostics");
+      secondary.push(terminal("vision-status", "Vision Lab status", "ftc vision status"));
+    }
   } else if (code === "UNSUPPORTED_PROJECT_LAYOUT") {
     primary = vscodeCommand(
       "select-project-root",

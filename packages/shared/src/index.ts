@@ -931,3 +931,22 @@ export {
 } from "./replay/validate.js";
 export { createSessionHeader } from "./replay/create-header.js";
 export { getReplayStatus } from "./replay/status.js";
+export { VISION_DIAGNOSTIC_CODES } from "./vision/diagnostics/codes.js";
+export type { VisionDiagnosticCode } from "./vision/diagnostics/codes.js";
+export type {
+  VisionDiagnostic,
+  VisionDiagnosticSeverity,
+  VisionDiagnosticConfidence,
+  VisionDiagnosticsReport,
+  VisionDiagnosticsSummary,
+  VisionDiagnosticsCapabilities,
+  CollectVisionDiagnosticsOptions,
+} from "./vision/diagnostics/types.js";
+export { VISION_DIAGNOSTICS_CAPABILITIES } from "./vision/diagnostics/capabilities.js";
+export {
+  visionDiagnosticToFriendlyError,
+  friendlyForVisionDiagnosticCode,
+} from "./vision/diagnostics/friendly.js";
+export { collectVisionDiagnostics } from "./vision/diagnostics/collect.js";
+export { buildVisionDoctorChecks } from "./vision/diagnostics/doctor.js";
+export type { BuildVisionDoctorChecksOptions } from "./vision/diagnostics/doctor.js";

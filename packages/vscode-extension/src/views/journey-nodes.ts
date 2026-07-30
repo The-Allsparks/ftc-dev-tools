@@ -150,9 +150,7 @@ export function buildJourneyNodes(
 }
 
 /** Key Start Here steps surfaced when the full checklist is hidden. */
-export function buildFocusedStartHereNodes(
-  completed: readonly StartHereStepId[],
-): RobotNode[] {
+export function buildFocusedStartHereNodes(completed: readonly StartHereStepId[]): RobotNode[] {
   const rows: JourneyTreeNodeSpec[] = [];
   const machineDone = isStartHereStepComplete(completed, "machine-checks");
   const projectDone = isStartHereStepComplete(completed, "project-folder");
@@ -291,7 +289,8 @@ export function buildMilestoneChecklistNodeSpecs(
     {
       id: "milestone-summary",
       label: `${doneCount}/${total} milestones`,
-      description: doneCount === total ? "Competition-ready checklist complete" : "Track your progress",
+      description:
+        doneCount === total ? "Competition-ready checklist complete" : "Track your progress",
       done: doneCount === total,
     },
     {

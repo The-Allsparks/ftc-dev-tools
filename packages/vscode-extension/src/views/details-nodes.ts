@@ -41,7 +41,11 @@ function formatWifi(wifi?: WifiStatusReport): string {
   return `${consolePart}; ${nicPart}`;
 }
 
-function formatDevice(device: SidebarDeviceInfo): { title: string; connection: string; auth: string } {
+function formatDevice(device: SidebarDeviceInfo): {
+  title: string;
+  connection: string;
+  auth: string;
+} {
   switch (device.phase) {
     case "adb-unavailable":
       return {

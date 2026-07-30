@@ -1,7 +1,4 @@
-import {
-  isMilestoneComplete,
-  type MilestoneStepId,
-} from "../onboarding/milestone-checklist.js";
+import { isMilestoneComplete, type MilestoneStepId } from "../onboarding/milestone-checklist.js";
 
 /** How the robot connection looks from the sidebar's perspective. */
 export type DeviceConnectionPhase =
@@ -126,7 +123,13 @@ export function computeSidebarState(input: ComputeSidebarStateInput): SidebarSta
       ),
       secondaryActions: [
         action("start-here", "Start Here guide", "ftc.startHere", "Start Here", "secondary"),
-        action("doctor", "Run Environment Check", "ftc.runDoctor", "Run Environment Check", "secondary"),
+        action(
+          "doctor",
+          "Run Environment Check",
+          "ftc.runDoctor",
+          "Run Environment Check",
+          "secondary",
+        ),
       ],
       showBuildActions: false,
       showDeviceActions: false,
@@ -150,7 +153,13 @@ export function computeSidebarState(input: ComputeSidebarStateInput): SidebarSta
         "primary",
       ),
       secondaryActions: [
-        action("doctor", "Run Environment Check", "ftc.runDoctor", "Run Environment Check", "secondary"),
+        action(
+          "doctor",
+          "Run Environment Check",
+          "ftc.runDoctor",
+          "Run Environment Check",
+          "secondary",
+        ),
         action(
           "connections-doc",
           "Connection guide",
@@ -186,7 +195,13 @@ export function computeSidebarState(input: ComputeSidebarStateInput): SidebarSta
           "Open Device Connections Doc",
           "secondary",
         ),
-        action("show-devices", "Show connected devices", "ftc.showDevices", "Show Devices", "secondary"),
+        action(
+          "show-devices",
+          "Show connected devices",
+          "ftc.showDevices",
+          "Show Devices",
+          "secondary",
+        ),
       ],
       showBuildActions: false,
       showDeviceActions: true,
@@ -198,7 +213,8 @@ export function computeSidebarState(input: ComputeSidebarStateInput): SidebarSta
     return {
       phase: "select-device",
       statusHeadline: "Choose which robot to use",
-      statusDetail: "More than one Android device is connected. Pick the Control Hub you want to deploy to.",
+      statusDetail:
+        "More than one Android device is connected. Pick the Control Hub you want to deploy to.",
       primaryAction: action(
         "select-device",
         "Select Robot Device",
@@ -245,7 +261,13 @@ export function computeSidebarState(input: ComputeSidebarStateInput): SidebarSta
           "Open Device Connections Doc",
           "secondary",
         ),
-        action("wifi-connect", "Connect over Wi‑Fi", "ftc.wifiConnect", "Connect Wi-Fi ADB", "secondary"),
+        action(
+          "wifi-connect",
+          "Connect over Wi‑Fi",
+          "ftc.wifiConnect",
+          "Connect Wi-Fi ADB",
+          "secondary",
+        ),
       ],
       showBuildActions: false,
       showDeviceActions: true,

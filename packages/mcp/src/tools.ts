@@ -623,7 +623,9 @@ export async function toolVisionLimelightResults(
   }
 }
 
-export async function toolVisionLimelightPipelinesList(args: ProjectRootArgs): Promise<CallToolResult> {
+export async function toolVisionLimelightPipelinesList(
+  args: ProjectRootArgs,
+): Promise<CallToolResult> {
   try {
     const ctx = ctxFrom(args);
     return jsonResult(await scanLimelightArtifacts(ctx.projectRoot));

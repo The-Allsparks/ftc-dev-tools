@@ -6,7 +6,9 @@ import {
   checkSdkStatus,
   codegenHardwareMapOpMode,
   createIntegrationRegistrySnapshot,
+  createModuleRegistrySnapshot,
   createOpMode,
+  createProviderRegistrySnapshot,
   deployProject,
   detectPedroStatus,
   getHubStatus,
@@ -505,6 +507,32 @@ export async function toolIntegrationsList(args: { shipped?: boolean }): Promise
       ? snapshot.integrations.filter((entry) => entry.cliCommand !== undefined)
       : snapshot.integrations;
     return jsonResult({ ...snapshot, integrations });
+  } catch (err) {
+    return jsonResult({
+      error: interpretFromUnknown(err).summary,
+    });
+  }
+}
+
+export async function toolModulesList(args: { layer?: string }): Promise<CallToolResult> {
+  try {
+    const snapshot = createModuleRegistrySnapshot();
+    const validLayers = new Set(["core", "capability", "workflow", "adapter"]);
+    const modules =
+      args.layer && validLayers.has(args.layer)
+        ? snapshot.modules.filter((entry) => entry.layer === args.layer)
+        : snapshot.modules;
+    return jsonResult({ ...snapshot, modules });
+  } catch (err) {
+    return jsonResult({
+      error: interpretFromUnknown(err).summary,
+    });
+  }
+}
+
+export async function toolProvidersList(): Promise<CallToolResult> {
+  try {
+    return jsonResult(createProviderRegistrySnapshot());
   } catch (err) {
     return jsonResult({
       error: interpretFromUnknown(err).summary,

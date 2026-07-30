@@ -15,11 +15,13 @@ import {
   toolHwMapCodegen,
   toolHwMapShow,
   toolIntegrationsList,
+  toolModulesList,
   toolOpModeCreate,
   toolOpModeList,
   toolPedroAdd,
   toolPedroScaffold,
   toolPedroStatus,
+  toolProvidersList,
   toolSdkCheck,
   toolSdkUpdate,
   toolWifiStatus,
@@ -48,6 +50,8 @@ export const FTC_MCP_TOOL_NAMES = [
   "hwmap_show",
   "hwmap_codegen",
   "integrations_list",
+  "modules_list",
+  "providers_list",
 ] as const;
 
 export type FtcMcpToolName = (typeof FTC_MCP_TOOL_NAMES)[number];
@@ -405,6 +409,33 @@ export function createFtcMcpServer(): McpServer {
       annotations: { readOnlyHint: true, openWorldHint: false },
     },
     async (args) => toolIntegrationsList(args),
+  );
+
+  server.registerTool(
+    "modules_list",
+    {
+      title: "List modules",
+      description: "List capability and workflow module manifests from the built-in registry.",
+      inputSchema: z.object({
+        layer: z
+          .enum(["core", "capability", "workflow", "adapter"])
+          .optional()
+          .describe("Filter by module layer"),
+      }),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolModulesList(args),
+  );
+
+  server.registerTool(
+    "providers_list",
+    {
+      title: "List providers",
+      description: "List frame, vision, telemetry, simulation, and replay provider descriptors.",
+      inputSchema: z.object({}),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async () => toolProvidersList(),
   );
 
   return server;

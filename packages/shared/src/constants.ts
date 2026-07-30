@@ -11,6 +11,9 @@ export const INTEGRATION_MANIFEST_SCHEMA_URL =
 export const MODULE_MANIFEST_SCHEMA_URL =
   "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/packages/shared/schemas/module-manifest.schema.json";
 
+export const SESSION_SCHEMA_URL =
+  "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/packages/shared/schemas/session.schema.json";
+
 export const PACKAGE_VERSION = "0.1.0";
 
 export const DEFAULT_MODULE_NAME = "TeamCode";

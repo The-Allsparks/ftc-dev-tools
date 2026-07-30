@@ -108,6 +108,7 @@ export default defineConfig({
           { text: "Backlog audit", link: "/architecture/backlog-audit" },
           { text: "Software ecosystem", link: "/architecture/ftc-software-ecosystem" },
           { text: "Capability matrix", link: "/architecture/library-capability-matrix" },
+          { text: "Vision providers", link: "/architecture/vision-providers" },
           { text: "Architecture decisions (ADRs)", link: "/architecture/adr/" },
         ],
       },

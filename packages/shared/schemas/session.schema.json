@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/packages/shared/schemas/session.schema.json",
+  "title": "FTC Dev Tools session recording",
+  "description": "Session header for replay recordings (ADR-0005, schema v1.0.0). Events use separate event schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "sessionId", "startedAt", "sources"],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "sessionId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique session identifier."
+    },
+    "startedAt": {
+      "type": "string",
+      "description": "ISO-8601 timestamp with optional nanosecond precision."
+    },
+    "endedAt": {
+      "type": "string",
+      "description": "ISO-8601 end timestamp when session is closed."
+    },
+    "projectRoot": {
+      "type": "string",
+      "description": "Optional FTC project root path at record time."
+    },
+    "teamNumber": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 99999
+    },
+    "sources": {
+      "type": "array",
+      "description": "Provider ids that contributed data to this session.",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional human-readable session label."
+    }
+  }
+}

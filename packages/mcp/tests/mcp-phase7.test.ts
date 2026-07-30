@@ -56,9 +56,11 @@ function parsePayload(result: {
 
 describe("mcp phase 7 tools", () => {
   it("exports the expected tool name catalog and constructs a server", () => {
-    expect(FTC_MCP_TOOL_NAMES).toHaveLength(21);
+    expect(FTC_MCP_TOOL_NAMES).toHaveLength(23);
     expect(FTC_MCP_TOOL_NAMES).toContain("doctor");
     expect(FTC_MCP_TOOL_NAMES).toContain("integrations_list");
+    expect(FTC_MCP_TOOL_NAMES).toContain("modules_list");
+    expect(FTC_MCP_TOOL_NAMES).toContain("providers_list");
     expect(FTC_MCP_TOOL_NAMES).toContain("hwmap_codegen");
     expect(() => createFtcMcpServer()).not.toThrow();
   });

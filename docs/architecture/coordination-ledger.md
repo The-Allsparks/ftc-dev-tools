@@ -1,68 +1,56 @@
-# Orchestrator Phase 1–2 — Coordination Ledger
+# Orchestrator Phase 1–3 — Coordination Ledger
 
-This ledger tracks workstreams for the modular architecture transition. It is the single in-repo coordination surface for branch ownership, review gates, and assumptions.
-
-**External direction:** Orchestrator v2 (maintainer chat, July 2026) defines product taxonomy, integration registry, and long-term phases. That document is not committed to the repo; this ledger references it for traceability.
+This ledger tracks workstreams for the modular architecture transition.
 
 ## Phase status
 
-| Phase                                                          | Status       | Notes                        |
-| -------------------------------------------------------------- | ------------ | ---------------------------- |
-| Phase 1 — Inventory, backlog audit, ADRs                       | **Complete** | Merged in PR #155            |
-| Phase 2 — ADRs accepted, public APIs, schemas, module registry | **Active**   | Branch `orchestrator/phase2` |
-| Phase 3 — Vision, Replay, Sim, Hardware, Tuning                | Blocked      | Pending Phase 2 review       |
-| Phase 4 — Adapter framework and library adapters               | Blocked      | Pending Phase 3              |
-| Phase 5 — Workflow modules                                     | Blocked      | Pending Phase 4              |
-| Phase 6 — Documentation, issue alignment, CI, packaging        | Blocked      | Pending Phase 5              |
+| Phase                                            | Status       | Notes                        |
+| ------------------------------------------------ | ------------ | ---------------------------- |
+| Phase 1 — Inventory, backlog audit, ADRs         | **Complete** | PR #155                      |
+| Phase 2 — Registry, schemas, ecosystem docs      | **Complete** | PR #156                      |
+| Phase 3 — Vision, Replay, Sim, Hardware, Tuning  | **Active**   | Branch `orchestrator/phase3` |
+| Phase 4 — Adapter framework and library adapters | Blocked      | Pending Phase 3 foundations  |
+| Phase 5 — Workflow modules                       | Blocked      | Pending Phase 4              |
+| Phase 6 — Documentation, CI, packaging           | Blocked      | Pending Phase 5              |
 
-## Phase 2 deliverables (in progress)
+## Phase 3 deliverables (in progress)
 
-| Deliverable                                       | Status             |
-| ------------------------------------------------- | ------------------ |
-| ADRs 0001–0006 accepted                           | Complete           |
-| `ftc-software-ecosystem.md`                       | Complete           |
-| `library-capability-matrix.md`                    | Complete           |
-| Integration manifest + module manifest schemas    | Complete           |
-| Integration registry in `packages/shared`         | Complete           |
-| `ftc integrations list` + MCP `integrations_list` | Complete           |
-| Pedro adapter migration to framework              | Deferred — Phase 4 |
-
-## Workstreams (Phase 1 — complete)
-
-| Workstream           | Branch                | Status   | Deliverables                                            |
-| -------------------- | --------------------- | -------- | ------------------------------------------------------- |
-| Coordination ledger  | `orchestrator/phase1` | Complete | Merged PR #155                                          |
-| Repository inventory | `orchestrator/phase1` | Complete | [repository-inventory.md](./repository-inventory.md)    |
-| Backlog audit        | `orchestrator/phase1` | Complete | [backlog-audit.md](./backlog-audit.md), epics #142–#154 |
-| ADR generation       | `orchestrator/phase1` | Complete | [adr/](./adr/)                                          |
+| Deliverable                                                 | Status                     |
+| ----------------------------------------------------------- | -------------------------- |
+| Module registry (capability + workflow manifests)           | Complete                   |
+| Provider registries (frame, vision, telemetry, sim, replay) | Complete                   |
+| Session recording schema v1.0.0                             | Complete                   |
+| Vision provider architecture doc (VISION-01)                | Complete                   |
+| `ftc modules list` + `ftc providers list`                   | Complete                   |
+| MCP `modules_list` + `providers_list`                       | Complete                   |
+| Vision Lab live frames / IDE panel                          | Deferred — VISION-02+      |
+| Replay capture pipeline                                     | Deferred — FTC Replay epic |
+| Sim runtime adapters                                        | Deferred — FTC Sim epic    |
 
 ## Meta tracking
 
 - Phase 1: [#141](https://github.com/The-Allsparks/ftc-dev-tools/issues/141) (complete)
-- Phase 2: track on Adapter Framework [#147](https://github.com/The-Allsparks/ftc-dev-tools/issues/147) and Core Platform [#142](https://github.com/The-Allsparks/ftc-dev-tools/issues/142)
+- Phase 2: [#142](https://github.com/The-Allsparks/ftc-dev-tools/issues/142), [#147](https://github.com/The-Allsparks/ftc-dev-tools/issues/147)
+- Phase 3: [#48 Vision Lab](https://github.com/The-Allsparks/ftc-dev-tools/issues/48), [#143 Replay](https://github.com/The-Allsparks/ftc-dev-tools/issues/143), [#145 Sim](https://github.com/The-Allsparks/ftc-dev-tools/issues/145)
 
-## Review gates (before Phase 3)
+## Review gates (before Phase 4)
 
-1. Integration registry API stable enough for Vision Lab provider work
-2. Module manifest schema used by at least one capability module stub
-3. Ecosystem doc and capability matrix reviewed by maintainers
-4. No breaking changes to existing CLI/MCP commands
+1. Vision provider interfaces stable for adapter implementations (Limelight, VisionPortal)
+2. Session schema reviewed for replay event format follow-up
+3. Module registry covers all capability epics
+4. No breaking changes to 0.1.0 CLI commands
 
 ## Assumptions log
 
-| Date       | Assumption                                                        | Rationale                   |
-| ---------- | ----------------------------------------------------------------- | --------------------------- |
-| 2026-07-29 | Orchestrator v2 remains chat-only                                 | Maintainer decision         |
-| 2026-07-29 | Pedro Pathing epic focuses on adapter-framework migration         | Integration already shipped |
-| 2026-07-29 | FTC Replay epic is platform-wide; VISION-13 is a child candidate  | Avoid duplicate replay work |
-| 2026-07-29 | Incremental layout evolution, not big-bang restructure            | ADR-0006                    |
-| 2026-07-30 | Phase 1 approved; Phase 2 registry is metadata-first              | Maintainer sign-off         |
-| 2026-07-30 | Built-in catalog is source of truth until external manifests load | Minimal Phase 2 scope       |
+| Date       | Assumption                                                                 | Rationale           |
+| ---------- | -------------------------------------------------------------------------- | ------------------- |
+| 2026-07-30 | Provider catalog is descriptor-only; no live streaming yet                 | Incremental Phase 3 |
+| 2026-07-30 | Vision references frame providers; Sim registers virtual frames separately | ADR-0004            |
+| 2026-07-30 | Session schema covers header only; events schema is next Replay task       | ADR-0005            |
 
 ## Related documents
 
-- [Repository inventory](./repository-inventory.md)
-- [Backlog audit](./backlog-audit.md)
+- [Vision providers](./vision-providers.md)
 - [FTC software ecosystem](./ftc-software-ecosystem.md)
 - [Library capability matrix](./library-capability-matrix.md)
 - [Architecture decision records](./adr/)

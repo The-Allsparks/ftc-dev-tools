@@ -51,8 +51,8 @@ Optional `vision` section configures Vision Lab provider preferences:
 | `defaultProviderId`           | Preferred provider id from `ftc providers list` (e.g. `vision:limelight`) |
 | `enabledProviderIds`          | Providers enabled for this project                                        |
 | `pipelineDirectory`           | Repo-relative pipeline-as-code root                                       |
-| `limelight.host`              | Limelight hostname or IP (never store secrets here)                       |
-| `limelight.pipelineDirectory` | Limelight pipeline JSON directory                                         |
+| `limelight.host`              | Limelight Vision hostname or IP (never store secrets here)                |
+| `limelight.pipelineDirectory` | Limelight Vision pipeline JSON directory                                  |
 
 Discover what the project uses:
 

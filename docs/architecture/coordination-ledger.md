@@ -39,7 +39,7 @@ This ledger tracks workstreams for the modular architecture transition.
 
 ## Review gates (before Phase 4)
 
-1. Vision provider interfaces stable for adapter implementations (Limelight, VisionPortal)
+1. Vision provider interfaces stable for adapter implementations (Limelight Vision, VisionPortal)
 2. Session schema reviewed for replay event format follow-up
 3. Module registry covers all capability epics
 4. No breaking changes to 0.1.0 CLI commands

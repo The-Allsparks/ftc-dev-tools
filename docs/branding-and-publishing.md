@@ -93,3 +93,17 @@ npm run release:check
 - [Releasing](releasing.md)
 - [Feature maturity](feature-maturity.md)
 - [SUPPORT.md](../SUPPORT.md) — donations do not purchase publish rights or roadmap control
+
+## Third-party vendor names
+
+Use proper company and product names in user-facing text (README, docs, CLI output, provider display names, integration catalog). Machine identifiers (`integrationId`, config keys, provider ids) stay lowercase for stability.
+
+| Vendor           | User-facing name                             | Notes                                                                     |
+| ---------------- | -------------------------------------------- | ------------------------------------------------------------------------- |
+| FIRST            | **FIRST**, **FIRST Tech Challenge**, **FTC** | Include in non-affiliation disclaimers                                    |
+| REV Robotics     | **REV Robotics**, **REV Control Hub**        | Include in non-affiliation disclaimers                                    |
+| Limelight Vision | **Limelight Vision**                         | Company name; include in non-affiliation disclaimers and trademark notice |
+| Microsoft        | **Visual Studio Code**                       | IDE host                                                                  |
+| Anysphere        | **Cursor**                                   | IDE host                                                                  |
+
+Do **not** imply official partnership or endorsement. Config keys such as `vision.limelight.host` and provider ids such as `vision:limelight` are intentional stable identifiers and are not rebranded.

@@ -43,10 +43,10 @@ export function bootstrapProviderCatalog(): void {
   });
   registerFrameProvider({
     id: "frame:limelight",
-    displayName: "Limelight MJPEG stream",
+    displayName: "Limelight Vision MJPEG stream",
     source: "network",
     integrationId: "limelight",
-    summary: "Network vision coprocessor frames.",
+    summary: "Limelight Vision coprocessor camera frames.",
   });
   registerFrameProvider({
     id: "frame:sim-virtual",
@@ -106,11 +106,11 @@ export function bootstrapProviderCatalog(): void {
   });
   registerVisionProvider({
     id: "vision:limelight",
-    displayName: "Limelight",
+    displayName: "Limelight Vision",
     kind: "limelight",
     integrationId: "limelight",
     frameProviderId: "frame:limelight",
-    summary: "Limelight pipeline and calibration.",
+    summary: "Limelight Vision pipeline and calibration.",
     experimental: true,
   });
   registerVisionProvider({

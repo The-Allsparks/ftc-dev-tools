@@ -27,7 +27,7 @@ Orchestrator v2 requires:
 
 3. **No cross-capability imports** — Vision Lab, FTC Sim, and FTC Replay depend on Core provider interfaces and schemas only.
 
-4. **Adapters** supply vendor-specific implementations (Limelight, VisionPortal, etc.) that plug into Vision providers without Vision knowing adapter internals.
+4. **Adapters** supply vendor-specific implementations (Limelight Vision, VisionPortal, etc.) that plug into Vision providers without Vision knowing adapter internals.
 
 5. **Observations vs hypotheses** in Replay: recorded data distinguishes measured observations from inferred/debug hypotheses (Replay-specific schema concern, Phase 3).
 

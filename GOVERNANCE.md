@@ -97,6 +97,6 @@ Optional support for The Allsparks is documented in [SUPPORT.md](SUPPORT.md) and
 
 ## Independence and trademarks
 
-FTC Dev Tools is a community-developed project. It is not officially affiliated with or endorsed by FIRST, REV Robotics, Microsoft, Anysphere, or other referenced organizations.
+FTC Dev Tools is a community-developed project. It is not officially affiliated with or endorsed by FIRST, REV Robotics, Limelight Vision, Microsoft, Anysphere, or other referenced organizations.
 
-FIRST®, FIRST Tech Challenge®, FTC®, REV Robotics®, Visual Studio Code®, and Cursor® may be trademarks of their respective owners. Their names are used only to describe compatibility and intended use.
+FIRST®, FIRST Tech Challenge®, FTC®, REV Robotics®, Limelight Vision®, Visual Studio Code®, and Cursor® may be trademarks of their respective owners. Their names are used only to describe compatibility and intended use.

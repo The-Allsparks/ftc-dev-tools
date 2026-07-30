@@ -20,7 +20,7 @@ Adopt the following taxonomy:
 
 3. **Workflow Modules** — Autonomous Studio, Driver Practice, Match Analysis, Season Support. These compose capabilities; they do not replace Core.
 
-4. **Integration Adapters** — SDK, VisionPortal, Pedro, Road Runner, NextFTC, FTCLib, FTC Dashboard, Limelight, etc. Adapters register metadata and implement detect/install/validate/codegen; they do not create direct dependencies between capabilities.
+4. **Integration Adapters** — SDK, VisionPortal, Pedro, Road Runner, NextFTC, FTCLib, FTC Dashboard, Limelight Vision, etc. Adapters register metadata and implement detect/install/validate/codegen; they do not create direct dependencies between capabilities.
 
 **Composition rules:**
 

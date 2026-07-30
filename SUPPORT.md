@@ -67,4 +67,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Independence
 
-FTC Dev Tools is community-developed and maintained by The Allsparks. It is not affiliated with or endorsed by FIRST, REV Robotics, Microsoft, Anysphere, or other referenced organizations.
+FTC Dev Tools is community-developed and maintained by The Allsparks. It is not affiliated with or endorsed by FIRST, REV Robotics, Limelight Vision, Microsoft, Anysphere, or other referenced organizations.

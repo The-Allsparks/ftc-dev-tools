@@ -2,7 +2,7 @@
 
 Build, deploy, and diagnose **FIRST Tech Challenge** Android robot projects from VS Code or Cursor—without living in Android Studio.
 
-Created by **[The Allsparks](https://www.theallsparks.org)** for our team and the wider FTC community. This extension is **community-developed and unofficial** (not affiliated with FIRST or REV).
+Created by **[The Allsparks](https://www.theallsparks.org)** for our team and the wider FTC community. This extension is **community-developed and unofficial** (not affiliated with FIRST, REV Robotics, Limelight Vision, or other referenced vendors).
 
 **Version:** 0.1.0
 

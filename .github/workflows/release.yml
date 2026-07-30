@@ -41,7 +41,7 @@ jobs:
             echo
             echo "Built by The Allsparks for our team and the wider FTC community."
             echo
-            echo "Community-developed tooling. Not affiliated with or endorsed by FIRST, REV Robotics, Microsoft, Anysphere, or other referenced organizations."
+            echo "Community-developed tooling. Not affiliated with or endorsed by FIRST, REV Robotics, Limelight Vision, Microsoft, Anysphere, or other referenced organizations."
             echo
             echo "### Changes"
             git log --pretty=format:'- %s (%h)' $(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo HEAD~20)..HEAD

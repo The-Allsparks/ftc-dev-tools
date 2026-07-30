@@ -129,7 +129,8 @@ export default defineConfig({
     ],
     socialLinks: [{ icon: "github", link: repoUrl }],
     footer: {
-      message: "Community-developed FTC tooling. Not affiliated with FIRST or REV.",
+      message:
+        "Community-developed FTC tooling. Not affiliated with FIRST, REV Robotics, Limelight Vision, or other vendors.",
       copyright: "Copyright © The Allsparks contributors",
     },
     editLink: {

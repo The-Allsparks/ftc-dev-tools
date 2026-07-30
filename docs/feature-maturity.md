@@ -17,24 +17,35 @@ Hardware-affecting features must not be labeled `Stable` solely because CI is gr
 
 ## Per-feature status (0.1.0)
 
-| Feature                              | Maturity      | Notes                                                         |
-| ------------------------------------ | ------------- | ------------------------------------------------------------- |
-| Project detection / doctor           | `Mock-tested` | Desktop use common; Control Hub not required                  |
-| Build / clean (Gradle Wrapper)       | `Mock-tested` | Desktop integration common on maintainer machines             |
-| Deploy (USB)                         | `Mock-tested` | Needs published physical matrix for Stable                    |
-| Deploy (Wi-Fi ADB)                   | `Mock-tested` | Needs phone + Control Hub rows                                |
-| Logcat stream                        | `Mock-tested` | Basic filters only                                            |
-| SDK check/update                     | `Mock-tested` | Never touches TeamCode; rollback hardening tracked separately |
-| Wi-Fi helpers                        | `Mock-tested` | Explicit confirmation required                                |
-| Hub OS check/download/guided apply   | `Mock-tested` | `--attempt-upload` **experimental**; not Stable               |
-| Pedro Pathing                        | `Mock-tested` |                                                               |
-| OpMode create                        | `Mock-tested` |                                                               |
-| Robot config list/show/validate/pull | `Mock-tested` | No push/activate                                              |
-| Hardware map codegen                 | `Mock-tested` |                                                               |
-| MCP server                           | `Mock-tested` | Subset of CLI                                                 |
-| Java snippets / setup wizards        | `Mock-tested` |                                                               |
-| Java debugger attach                 | Not shipped   | See [debugger-spike.md](debugger-spike.md)                    |
-| Telemetry dashboard                  | Not shipped   | See [telemetry-spike.md](telemetry-spike.md)                  |
+| Feature                                | Maturity      | Notes                                                                           |
+| -------------------------------------- | ------------- | ------------------------------------------------------------------------------- |
+| Project detection / doctor             | `Mock-tested` | Desktop use common; Control Hub not required                                    |
+| Build / clean (Gradle Wrapper)         | `Mock-tested` | Desktop integration common on maintainer machines                               |
+| Deploy (USB)                           | `Mock-tested` | Needs published physical matrix for Stable                                      |
+| Deploy (Wi-Fi ADB)                     | `Mock-tested` | Needs phone + Control Hub rows                                                  |
+| Logcat stream                          | `Mock-tested` | Basic filters only                                                              |
+| SDK check/update                       | `Mock-tested` | Never touches TeamCode; rollback hardening tracked separately                   |
+| Wi-Fi helpers                          | `Mock-tested` | Explicit confirmation required                                                  |
+| Hub OS check/download/guided apply     | `Mock-tested` | `--attempt-upload` **experimental**; not Stable                                 |
+| Pedro Pathing                          | `Mock-tested` |                                                                                 |
+| OpMode create                          | `Mock-tested` |                                                                                 |
+| Robot config list/show/validate/pull   | `Mock-tested` | No push/activate                                                                |
+| Hardware map codegen                   | `Mock-tested` |                                                                                 |
+| MCP server                             | `Mock-tested` | Subset of CLI                                                                   |
+| Java snippets / setup wizards          | `Mock-tested` |                                                                                 |
+| Java debugger attach                   | Not shipped   | See [debugger-spike.md](debugger-spike.md)                                      |
+| Telemetry dashboard                    | Not shipped   | See [telemetry-spike.md](telemetry-spike.md)                                    |
+| Vision Lab — workspace discovery       | `Mock-tested` | See [vision-hardware-validation.md](architecture/vision-hardware-validation.md) |
+| Vision Lab — endpoint discovery        | `Mock-tested` | Never auto-selects among hosts/cameras                                          |
+| Vision Lab — Limelight HTTP            | `Mock-tested` | Physical Limelight 3A checklist pending                                         |
+| Vision Lab — pipeline-as-code          | `Mock-tested` | Upload/activate deferred                                                        |
+| Vision Lab — FTC Dashboard             | `Mock-tested` | Stream validation on hardware pending                                           |
+| Vision Lab — diagnostic bridge         | `Mock-tested` | Robot-side transport pending                                                    |
+| Vision Lab — VisionPortal / EasyOpenCV | `Mock-tested` | UVC webcam on Control Hub pending                                               |
+| Vision Lab — diagnostics               | `Mock-tested` |                                                                                 |
+| Vision Lab — inspector / codegen       | `Mock-tested` | Generated Java not compiled on robot in CI                                      |
+| Vision Lab — session replay schema     | `Mock-tested` | Live capture deferred                                                           |
+| Vision Lab — agent MCP tools           | `Mock-tested` | 59 MCP tools including `vision_validation_status`                               |
 
 Update this table when physical test reports land. Do not include personal data in public reports.
 

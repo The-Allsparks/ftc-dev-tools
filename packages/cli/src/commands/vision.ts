@@ -24,6 +24,7 @@ import {
   parseVisionCodegenKind,
   VISION_CODEGEN_KINDS,
   validateLimelightArtifacts,
+  getVisionValidationStatus,
 } from "@ftc-dev-tools/shared";
 import { createCliContext } from "../context.js";
 import { printFriendlyError } from "../context.js";
@@ -209,6 +210,37 @@ export function registerVisionCommand(program: Command): void {
     .option("--redact", "Redact serial numbers and IP addresses in JSON output")
     .action((options: { json?: boolean; redact?: boolean }) => {
       emitDeferredVisionCommand(buildDeferredVisionCliResult("ftc vision capture"), options);
+    });
+
+  const validation = vision
+    .command("validation")
+    .description("Automated test coverage and hardware validation status (VISION-17)");
+
+  validation
+    .command("status")
+    .description("Report mock-tested coverage and pending physical validation checklists")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action((options: { json?: boolean }) => {
+      const report = getVisionValidationStatus();
+      if (options.json) {
+        console.log(JSON.stringify(report, null, 2));
+        return;
+      }
+
+      console.log("Vision validation status\n");
+      console.log(report.message);
+      console.log(`Mock-tested features: ${report.summary.mockTestedFeatures}`);
+      console.log(`Hardware-validated features: ${report.summary.hardwareValidatedFeatures}`);
+      console.log(`Pending hardware checks: ${report.summary.pendingHardwareChecks}`);
+      console.log("\nAutomated coverage:");
+      for (const [key, covered] of Object.entries(report.automatedCoverage)) {
+        console.log(`  ${key}: ${covered ? "yes" : "no"}`);
+      }
+      console.log("\nHardware checklists (pending until field runs):");
+      for (const row of report.hardwareChecklists) {
+        const blocked = row.blockedReason ? ` — ${row.blockedReason}` : "";
+        console.log(`  [${row.status}] ${row.id}: ${row.label}${blocked}`);
+      }
     });
 
   vision

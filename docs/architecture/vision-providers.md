@@ -169,7 +169,16 @@ Command catalog, shared flags, JSON envelopes, top-level shortcuts (`open`, `dia
 
 Fifteen agent-friendly MCP tools with explicit mutation gates, payload sanitization, and deferred camera mutations. Legacy `vision_*` tools remain for compatibility. See [vision-mcp.md](./vision-mcp.md).
 
-## Next steps (VISION-17+)
+## Vision validation (VISION-17)
+
+Automated test coverage flags, per-feature maturity (`Mock-tested` only until checklists pass), and pending physical validation matrix. See [vision-hardware-validation.md](./vision-hardware-validation.md).
+
+- CLI: `ftc vision validation status [--json]`
+- MCP: `vision_validation_status`
+
+Field runs on Control Hub, Limelight, and webcams remain pending; mock-tested features must not be labeled hardware-validated or Stable.
+
+## Next steps (VISION-18+)
 
 ## Related
 

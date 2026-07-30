@@ -1007,3 +1007,26 @@ export {
   resolveVisionEndpoint,
   hostFromVisionTarget,
 } from "./vision/mcp/sanitize.js";
+export {
+  getVisionValidationStatus,
+  VISION_VALIDATION_SCHEMA_VERSION,
+  VISION_AUTOMATED_COVERAGE,
+} from "./vision/validation/status.js";
+export {
+  getVisionFeatureMaturity,
+  assertMockTestedOnlyUnlessHardwareValidated,
+  VISION_FEATURE_MATURITY,
+} from "./vision/validation/maturity.js";
+export {
+  getVisionHardwareChecklists,
+  getPassedHardwareChecklistIds,
+  VISION_HARDWARE_CHECKLISTS,
+} from "./vision/validation/checklists.js";
+export type {
+  VisionFeatureMaturityLevel,
+  VisionHardwareChecklistStatus,
+  VisionFeatureMaturityEntry,
+  VisionHardwareChecklistEntry,
+  VisionAutomatedCoverage,
+  VisionValidationReport,
+} from "./vision/validation/types.js";

@@ -95,7 +95,18 @@ URL resolution order: `--url` / `--host` → `vision.dashboard.url` → discover
 
 The VS Code command **FTC: Open FTC Dashboard** tries Simple Browser first, then falls back to the system browser. Gamepad controls in the dashboard are for development only — not a competition Driver Station substitute.
 
-## Next steps (VISION-07+)
+## Diagnostic bridge (VISION-07)
+
+Optional robot-side JSON diagnostics over Logcat (`FTC_VISION_DIAG:` prefix). See [vision-diagnostic-bridge.md](./vision-diagnostic-bridge.md).
+
+```bash
+ftc vision bridge status --json
+ftc vision bridge scaffold --yes --json
+```
+
+Scaffold generates `FtcVisionDiagnosticBridge` and a development-only diagnostic OpMode. VisionPortal wiring is VISION-08.
+
+## Next steps (VISION-08+)
 
 - Live frame acquisition for VisionPortal
 - Vision Lab IDE panel consuming `listVisionProviders()`

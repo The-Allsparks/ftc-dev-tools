@@ -23,6 +23,8 @@ import {
   discoverVisionDevices,
   getFtcDashboardStatus,
   openFtcDashboard,
+  getVisionBridgeStatus,
+  scaffoldVisionBridge,
   interpretFromUnknown,
   listOpModes,
   listRobotConfigs,
@@ -704,4 +706,42 @@ export async function toolVisionDashboardOpen(
   } catch (err) {
     return jsonResult({ error: interpretFromUnknown(err).summary }, true);
   }
+}
+
+export async function toolVisionBridgeStatus(args: ProjectRootArgs): Promise<CallToolResult> {
+  try {
+    const ctx = ctxFrom(args);
+    return jsonResult(await getVisionBridgeStatus(ctx.projectRoot));
+  } catch (err) {
+    return jsonResult({ error: interpretFromUnknown(err).summary }, true);
+  }
+}
+
+export async function toolVisionBridgeScaffold(
+  args: ProjectRootArgs &
+    ConfirmArgs & {
+      packageName?: string;
+      force?: boolean;
+    },
+): Promise<CallToolResult> {
+  const ctx = ctxFrom(args);
+  const payload = { packageName: args.packageName, force: args.force === true };
+  return runGatedMutation(
+    args,
+    "vision_bridge_scaffold",
+    ctx.projectRoot,
+    payload,
+    "Scaffold optional vision diagnostic bridge Java files into TeamCode.",
+    async (dryRun) => {
+      const result = await scaffoldVisionBridge({
+        projectRoot: ctx.projectRoot,
+        runner: ctx.runner,
+        packageName: args.packageName,
+        dryRun,
+        yes: true,
+        force: args.force === true,
+      });
+      return { ...result };
+    },
+  );
 }

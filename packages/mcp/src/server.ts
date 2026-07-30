@@ -14,6 +14,7 @@ import {
   toolHubUpdateCheck,
   toolHwMapCodegen,
   toolHwMapShow,
+  toolIntegrationsList,
   toolOpModeCreate,
   toolOpModeList,
   toolPedroAdd,
@@ -46,6 +47,7 @@ export const FTC_MCP_TOOL_NAMES = [
   "config_pull",
   "hwmap_show",
   "hwmap_codegen",
+  "integrations_list",
 ] as const;
 
 export type FtcMcpToolName = (typeof FTC_MCP_TOOL_NAMES)[number];
@@ -386,6 +388,23 @@ export function createFtcMcpServer(): McpServer {
       annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
     },
     async (args) => toolHwMapCodegen(args),
+  );
+
+  server.registerTool(
+    "integrations_list",
+    {
+      title: "List integrations",
+      description:
+        "List known FTC ecosystem integrations and adapter metadata from the built-in registry.",
+      inputSchema: z.object({
+        shipped: z
+          .boolean()
+          .optional()
+          .describe("When true, only integrations with shipped CLI commands"),
+      }),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolIntegrationsList(args),
   );
 
   return server;

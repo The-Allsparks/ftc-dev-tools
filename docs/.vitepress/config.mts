@@ -106,6 +106,8 @@ export default defineConfig({
           { text: "Coordination ledger", link: "/architecture/coordination-ledger" },
           { text: "Repository inventory", link: "/architecture/repository-inventory" },
           { text: "Backlog audit", link: "/architecture/backlog-audit" },
+          { text: "Software ecosystem", link: "/architecture/ftc-software-ecosystem" },
+          { text: "Capability matrix", link: "/architecture/library-capability-matrix" },
           { text: "Architecture decisions (ADRs)", link: "/architecture/adr/" },
         ],
       },

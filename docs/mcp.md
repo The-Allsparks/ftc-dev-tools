@@ -84,6 +84,7 @@ Doctor JSON includes `sections` (machine / project / robot / optional) — see [
 | `opmode_list` | `ftc opmode list --json` |
 | `config_list` / `config_show` / `config_validate` | `ftc config …` |
 | `hwmap_show` | `ftc hwmap show --json` |
+| `integrations_list` | `ftc integrations list --json` |
 
 ### Confirmed mutations
 

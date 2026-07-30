@@ -37,6 +37,8 @@ export type {
 export {
   FTC_DEV_SCHEMA_URL,
   DOCTOR_REPORT_SCHEMA_URL,
+  INTEGRATION_MANIFEST_SCHEMA_URL,
+  MODULE_MANIFEST_SCHEMA_URL,
   PACKAGE_VERSION,
   DEFAULT_MODULE_NAME,
   DEFAULT_ROBOT_CONTROLLER_APPLICATION_ID,
@@ -605,3 +607,22 @@ export {
   normalizeOutboundErrorCode,
   sanitizeErrorReportInput,
 } from "./feedback/error-report-sanitize.js";
+
+export type {
+  IntegrationManifest,
+  IntegrationRegistrySnapshot,
+  IntegrationCategory,
+  IntegrationCapability,
+  EcosystemClassification,
+} from "./registry/types.js";
+export { INTEGRATION_MANIFEST_SCHEMA_VERSION } from "./registry/types.js";
+export {
+  listIntegrations,
+  getIntegration,
+  listIntegrationsByCategory,
+  listIntegrationsByClassification,
+  listIntegrationsWithCapability,
+  listShippedIntegrations,
+  createIntegrationRegistrySnapshot,
+} from "./registry/registry.js";
+export { BUILTIN_INTEGRATIONS } from "./registry/catalog.js";

@@ -17,6 +17,7 @@ import { registerSetupCommand } from "./commands/setup.js";
 import { registerInstallCliCommand } from "./commands/install-cli.js";
 
 import { registerGitHubCommand } from "./commands/github.js";
+import { registerIntegrationsCommand } from "./commands/integrations.js";
 
 export async function runCli(argv: string[]): Promise<void> {
   const program = new Command();
@@ -41,6 +42,7 @@ export async function runCli(argv: string[]): Promise<void> {
   registerConfigCommand(program);
   registerHwMapCommand(program);
   registerGitHubCommand(program);
+  registerIntegrationsCommand(program);
 
   await program.parseAsync(argv);
 }

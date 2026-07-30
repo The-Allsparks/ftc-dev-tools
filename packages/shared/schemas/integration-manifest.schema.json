@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/packages/shared/schemas/integration-manifest.schema.json",
+  "title": "FTC Dev Tools integration manifest",
+  "description": "Metadata for a third-party FTC library or integration adapter (ADR-0003, schema v1.0.0).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "displayName",
+    "category",
+    "classification",
+    "capabilities",
+    "supportedSdkVersions",
+    "supportedFtcDevToolsVersions",
+    "robotLanguage",
+    "desktopLanguage",
+    "replaySupport",
+    "simulationSupport",
+    "documentationUrl",
+    "experimental",
+    "deprecated",
+    "summary"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Manifest schema version, independent of npm package version."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Stable kebab-case integration identifier."
+    },
+    "displayName": { "type": "string", "minLength": 1 },
+    "category": {
+      "type": "string",
+      "enum": [
+        "official",
+        "pathing",
+        "framework",
+        "dashboard",
+        "vision",
+        "hardware",
+        "localization",
+        "simulation"
+      ]
+    },
+    "classification": {
+      "type": "string",
+      "enum": ["official", "supported", "experimental", "legacy", "deprecated"]
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "path-planning",
+          "commands",
+          "vision",
+          "dashboard",
+          "replay",
+          "simulation",
+          "logging",
+          "hardware",
+          "localization",
+          "code-generation"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "supportedSdkVersions": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "supportedFtcDevToolsVersions": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "robotLanguage": { "type": "string", "enum": ["java"] },
+    "desktopLanguage": { "type": "string", "enum": ["typescript"] },
+    "replaySupport": { "type": "boolean" },
+    "simulationSupport": { "type": "boolean" },
+    "documentationUrl": { "type": "string", "format": "uri" },
+    "experimental": { "type": "boolean" },
+    "deprecated": { "type": "boolean" },
+    "cliCommand": {
+      "type": "string",
+      "description": "Optional ftc CLI subcommand group when integration is shipped."
+    },
+    "summary": { "type": "string", "minLength": 1 }
+  }
+}

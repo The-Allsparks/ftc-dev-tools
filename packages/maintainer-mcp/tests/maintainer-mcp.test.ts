@@ -46,7 +46,9 @@ describe("maintainer parse helpers", () => {
       body: "",
       closingIssues: [],
     };
-    expect(relationForIssue(41, "#41 Guided Connect My Robot flow (USB first)", pr)).toBe("mentions");
+    expect(relationForIssue(41, "#41 Guided Connect My Robot flow (USB first)", pr)).toBe(
+      "mentions",
+    );
   });
 
   it("infers alignment from linked PRs", () => {
@@ -152,7 +154,8 @@ describe("issue_comment gate", () => {
 
 describe("maintainer MCP server catalog", () => {
   it("exports eleven tool names", async () => {
-    const { MAINTAINER_MCP_TOOL_NAMES, createMaintainerMcpServer } = await import("../src/server.js");
+    const { MAINTAINER_MCP_TOOL_NAMES, createMaintainerMcpServer } =
+      await import("../src/server.js");
     expect(MAINTAINER_MCP_TOOL_NAMES).toHaveLength(11);
     expect(MAINTAINER_MCP_TOOL_NAMES).toContain("open_prs_summary");
     expect(MAINTAINER_MCP_TOOL_NAMES).toContain("issue_label_check");

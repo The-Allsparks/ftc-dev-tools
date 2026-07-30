@@ -117,9 +117,7 @@ export async function listOpenIssues(
           labels: item.labels.map((label) => label.name),
           updatedAt: item.updated_at,
           url: item.html_url,
-          body: options.includeBodies
-            ? truncateText(item.body ?? "", 1500)
-            : undefined,
+          body: options.includeBodies ? truncateText(item.body ?? "", 1500) : undefined,
         });
       }
     }
@@ -150,7 +148,10 @@ export async function searchMergedPullRequests(
       labels: Array<{ name: string }>;
       pull_request?: { merged_at?: string };
     }>;
-  }>(`https://api.github.com/search/issues?q=${q}&sort=updated&order=desc&per_page=${Math.min(options.limit, 100)}`, ctx);
+  }>(
+    `https://api.github.com/search/issues?q=${q}&sort=updated&order=desc&per_page=${Math.min(options.limit, 100)}`,
+    ctx,
+  );
 
   const results: GitHubPullSummary[] = [];
   for (const item of data.items.slice(0, options.limit)) {
@@ -331,7 +332,14 @@ export async function createIssue(
 export async function getIssue(
   ctx: MaintainerContext,
   issueNumber: number,
-): Promise<{ number: number; title: string; state: string; body: string; labels: string[]; url: string }> {
+): Promise<{
+  number: number;
+  title: string;
+  state: string;
+  body: string;
+  labels: string[];
+  url: string;
+}> {
   const issue = await githubGet<{
     number: number;
     title: string;
@@ -464,7 +472,10 @@ export async function findLatestFailedRunForPr(
   ctx: MaintainerContext,
   prNumber: number,
 ): Promise<GitHubWorkflowRunSummary | undefined> {
-  const pr = await githubGet<{ head: { ref: string } }>(`${repoBase(ctx.repo)}/pulls/${prNumber}`, ctx);
+  const pr = await githubGet<{ head: { ref: string } }>(
+    `${repoBase(ctx.repo)}/pulls/${prNumber}`,
+    ctx,
+  );
   const runs = await listWorkflowRuns(ctx, { branch: pr.head.ref, limit: 20 });
   return runs.find((run) => run.conclusion === "failure");
 }

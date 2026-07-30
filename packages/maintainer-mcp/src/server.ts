@@ -103,10 +103,7 @@ export function createMaintainerMcpServer(): McpServer {
       title: "Merged PRs since",
       description: "List merged pull requests in a time window with parsed closing issue refs.",
       inputSchema: z.object({
-        since: z
-          .string()
-          .optional()
-          .describe("ISO date or relative window like 14d (default 14d)"),
+        since: z.string().optional().describe("ISO date or relative window like 14d (default 14d)"),
         limit: z.number().int().optional().describe("Max PRs (default 20, max 50)"),
       }),
       annotations: { readOnlyHint: true, openWorldHint: true },
@@ -187,7 +184,9 @@ export function createMaintainerMcpServer(): McpServer {
       description:
         "Preview a new issue with catalog-suggested labels. Requires yes=true to create on GitHub.",
       inputSchema: z.object({
-        title: z.string().describe("Exact issue title (matches issue-label-catalog.json when possible)"),
+        title: z
+          .string()
+          .describe("Exact issue title (matches issue-label-catalog.json when possible)"),
         body: z.string().optional(),
         labels: z.array(z.string()).optional().describe("Override catalog labels"),
         yes: z.boolean().optional().describe("Must be true to create the issue"),
@@ -203,7 +202,10 @@ export function createMaintainerMcpServer(): McpServer {
       title: "Release diff",
       description: "Compare latest release tag (or baseTag) to main for release-notes prep.",
       inputSchema: z.object({
-        baseTag: z.string().optional().describe("Release tag to compare from (default: latest release)"),
+        baseTag: z
+          .string()
+          .optional()
+          .describe("Release tag to compare from (default: latest release)"),
         compareBranch: z.string().optional().describe("Head branch (default main)"),
       }),
       annotations: { readOnlyHint: true, openWorldHint: true },

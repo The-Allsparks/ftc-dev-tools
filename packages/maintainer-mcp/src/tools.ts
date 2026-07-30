@@ -46,7 +46,9 @@ async function loadCatalog(ctx: MaintainerContext) {
   });
 }
 
-async function withContext(run: (ctx: MaintainerContext) => Promise<CallToolResult>): Promise<CallToolResult> {
+async function withContext(
+  run: (ctx: MaintainerContext) => Promise<CallToolResult>,
+): Promise<CallToolResult> {
   try {
     const ctx = await createMaintainerContext();
     return await run(ctx);
@@ -69,7 +71,7 @@ function groupIssues<T extends { labels: string[] }>(
   }
   const map = new Map<string, T[]>();
   for (const issue of issues) {
-    let key = "other";
+    let key: string;
     if (groupBy === "priority") {
       key = issue.labels.find((label) => label.startsWith("priority:")) ?? "priority: unset";
     } else {
@@ -219,7 +221,11 @@ export async function toolCiFailureSummary(args: {
       const failed = await findLatestFailedRunForPr(ctx, args.prNumber);
       if (!failed) {
         return jsonResult(
-          { success: false, code: "NO_FAILED_RUN", message: `No failed run found for PR #${args.prNumber}.` },
+          {
+            success: false,
+            code: "NO_FAILED_RUN",
+            message: `No failed run found for PR #${args.prNumber}.`,
+          },
           true,
         );
       }
@@ -238,7 +244,11 @@ export async function toolCiFailureSummary(args: {
       );
       if (!failedRun) {
         return jsonResult(
-          { success: false, code: "NO_FAILED_RUN", message: "No failed workflow run found for the given filters." },
+          {
+            success: false,
+            code: "NO_FAILED_RUN",
+            message: "No failed workflow run found for the given filters.",
+          },
           true,
         );
       }
@@ -249,7 +259,9 @@ export async function toolCiFailureSummary(args: {
     const run = await getWorkflowRun(ctx, runId);
     const failedJobs = [];
     for (const job of jobs.filter((item) => item.conclusion === "failure")) {
-      const failedSteps = job.steps.filter((step) => step.conclusion === "failure").map((step) => step.name);
+      const failedSteps = job.steps
+        .filter((step) => step.conclusion === "failure")
+        .map((step) => step.name);
       let logExcerpt: string | undefined;
       try {
         const raw = await downloadJobLogExcerpt(ctx, job.id, maxLogChars);
@@ -286,14 +298,9 @@ function buildAlignmentComment(input: {
     input.linkedPrs.length === 0
       ? "_No related PRs found in the search window._"
       : input.linkedPrs
-          .map(
-            (pr) =>
-              `- #${pr.number} (${pr.state}, ${pr.relation}): [${pr.title}](${pr.url})`,
-          )
+          .map((pr) => `- #${pr.number} (${pr.state}, ${pr.relation}): [${pr.title}](${pr.url})`)
           .join("\n");
-  const remaining = input.remainingWork
-    ? `\n\n### Remaining work\n\n${input.remainingWork}`
-    : "";
+  const remaining = input.remainingWork ? `\n\n### Remaining work\n\n${input.remainingWork}` : "";
   return [
     "## Issue ↔ PR alignment",
     "",

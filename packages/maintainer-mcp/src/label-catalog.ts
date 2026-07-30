@@ -50,9 +50,12 @@ export async function loadLabelCatalog(options: {
   if (options.fetchFromGitHub) {
     return options.fetchFromGitHub();
   }
-  throw Object.assign(new Error("Label catalog unavailable. Set MAINTAINER_REPO_ROOT or use GitHub API."), {
-    code: "CATALOG_UNAVAILABLE",
-  });
+  throw Object.assign(
+    new Error("Label catalog unavailable. Set MAINTAINER_REPO_ROOT or use GitHub API."),
+    {
+      code: "CATALOG_UNAVAILABLE",
+    },
+  );
 }
 
 function missingLabels(actual: string[], expected: string[]): string[] {

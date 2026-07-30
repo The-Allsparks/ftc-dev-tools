@@ -58,19 +58,19 @@ Or run `node packages/maintainer-mcp/dist/bin.js` directly with `GITHUB_TOKEN` /
 
 ## Tools
 
-| Tool | Description |
-| ---- | ----------- |
-| `issues_open_summary` | Open issue backlog summary (optional label filter, grouping) |
-| `issues_search` | Free-text issue search (`VISION`, `Orchestrator`, etc.) |
-| `issue_show` | Single issue + parsed acceptance criteria |
-| `issue_label_check` | Validate labels vs `issue-label-catalog.json` |
-| `prs_merged_since` | Merged PRs in a time window with `Fixes #` refs |
-| `open_prs_summary` | Open PRs (draft, labels, closing refs) |
-| `issue_pr_alignment` | Cross-reference issues with PRs (`Fixes #`, `#N`, codenames like `VISION-06`) |
-| `ci_failure_summary` | Failed Actions run with bounded log excerpt |
-| `issue_comment` | Preview or post comment (`yes=true` required to post) |
-| `issue_create_preview` | Preview/create issue with catalog-suggested labels |
-| `release_diff` | Commits on `main` since latest release tag |
+| Tool                   | Description                                                                   |
+| ---------------------- | ----------------------------------------------------------------------------- |
+| `issues_open_summary`  | Open issue backlog summary (optional label filter, grouping)                  |
+| `issues_search`        | Free-text issue search (`VISION`, `Orchestrator`, etc.)                       |
+| `issue_show`           | Single issue + parsed acceptance criteria                                     |
+| `issue_label_check`    | Validate labels vs `issue-label-catalog.json`                                 |
+| `prs_merged_since`     | Merged PRs in a time window with `Fixes #` refs                               |
+| `open_prs_summary`     | Open PRs (draft, labels, closing refs)                                        |
+| `issue_pr_alignment`   | Cross-reference issues with PRs (`Fixes #`, `#N`, codenames like `VISION-06`) |
+| `ci_failure_summary`   | Failed Actions run with bounded log excerpt                                   |
+| `issue_comment`        | Preview or post comment (`yes=true` required to post)                         |
+| `issue_create_preview` | Preview/create issue with catalog-suggested labels                            |
+| `release_diff`         | Commits on `main` since latest release tag                                    |
 
 ## Safety
 

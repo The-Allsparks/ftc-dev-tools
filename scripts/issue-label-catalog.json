@@ -94,7 +94,7 @@
       "vscode",
       "hardware-validation",
       "reliability",
-      "priority: P2"
+      "priority: P0"
     ],
     "Harden SDK migration and rollback": [
       "enhancement",

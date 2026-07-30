@@ -16,6 +16,9 @@ import {
   getVisionStatus,
   getLimelightStatus,
   getLimelightResults,
+  scanLimelightArtifacts,
+  validateLimelightArtifacts,
+  diffLimelightPipeline,
   discoverVisionWorkspace,
   discoverVisionDevices,
   interpretFromUnknown,
@@ -611,6 +614,50 @@ export async function toolVisionLimelightResults(
     return jsonResult(
       await getLimelightResults(ctx.projectRoot, {
         host: args.host,
+        deviceProvider,
+        runner: ctx.runner,
+      }),
+    );
+  } catch (err) {
+    return jsonResult({ error: interpretFromUnknown(err).summary }, true);
+  }
+}
+
+export async function toolVisionLimelightPipelinesList(
+  args: ProjectRootArgs,
+): Promise<CallToolResult> {
+  try {
+    const ctx = ctxFrom(args);
+    return jsonResult(await scanLimelightArtifacts(ctx.projectRoot));
+  } catch (err) {
+    return jsonResult({ error: interpretFromUnknown(err).summary }, true);
+  }
+}
+
+export async function toolVisionLimelightPipelinesValidate(
+  args: ProjectRootArgs,
+): Promise<CallToolResult> {
+  try {
+    const ctx = ctxFrom(args);
+    const report = await validateLimelightArtifacts(ctx.projectRoot);
+    return jsonResult(report, !report.success);
+  } catch (err) {
+    return jsonResult({ error: interpretFromUnknown(err).summary }, true);
+  }
+}
+
+export async function toolVisionLimelightPipelinesDiff(
+  args: ProjectRootArgs & { host?: string; slot: number; path?: string; raw?: boolean },
+): Promise<CallToolResult> {
+  try {
+    const ctx = ctxFrom(args);
+    const deviceProvider = await tryCreateDeviceProvider(ctx);
+    return jsonResult(
+      await diffLimelightPipeline(ctx.projectRoot, {
+        slot: args.slot,
+        host: args.host,
+        workspacePath: args.path,
+        includeRaw: args.raw === true,
         deviceProvider,
         runner: ctx.runner,
       }),

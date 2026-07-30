@@ -29,8 +29,10 @@ This ledger tracks workstreams for the modular architecture transition.
 | `ftc vision devices` + MCP `vision_devices`                 | Complete                   |
 | VISION-04 Limelight Vision HTTP provider (status/results)   | Complete                   |
 | `ftc vision limelight` + MCP limelight tools                | Complete                   |
-| Vision Lab live frames / IDE panel                          | Deferred — VISION-05+      |
-| Limelight mutations (pipeline switch, snapshots)            | Deferred — VISION-04+      |
+| VISION-05 Limelight pipeline-as-code (scan/validate/diff)   | Complete                   |
+| `ftc vision limelight pipelines` + MCP pipeline tools       | Complete                   |
+| Vision Lab live frames / IDE panel                          | Deferred — VISION-10+      |
+| Limelight upload / activate / rollback                      | Deferred — VISION-05+      |
 | Replay capture pipeline                                     | Deferred — FTC Replay epic |
 | Sim runtime adapters                                        | Deferred — FTC Sim epic    |
 

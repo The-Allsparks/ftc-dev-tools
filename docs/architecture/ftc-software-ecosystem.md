@@ -4,48 +4,48 @@ Classification of libraries and tools that FTC Dev Tools integrates with or may 
 
 ## Classification legend
 
-| Class | Meaning |
-|-------|---------|
-| **Official** | FIRST / FTC SDK or documented official mechanism |
-| **Supported** | Community library with active maintenance; adapter planned or shipped |
-| **Experimental** | Under evaluation; may change or not ship |
-| **Legacy** | Still used in the community but not the project's primary focus |
-| **Deprecated** | Do not use for new projects; adapter may warn |
+| Class            | Meaning                                                               |
+| ---------------- | --------------------------------------------------------------------- |
+| **Official**     | FIRST / FTC SDK or documented official mechanism                      |
+| **Supported**    | Community library with active maintenance; adapter planned or shipped |
+| **Experimental** | Under evaluation; may change or not ship                              |
+| **Legacy**       | Still used in the community but not the project's primary focus       |
+| **Deprecated**   | Do not use for new projects; adapter may warn                         |
 
 FTC Dev Tools **integrates** with the ecosystem; it does not replace upstream projects unless explicitly approved.
 
 ## Official
 
-| Library | Category | FTC Dev Tools status |
-|---------|----------|----------------------|
-| FTC SDK | Core | Project detection, build, deploy, SDK update |
-| VisionPortal | Vision | Vision Lab target (VISION-08) |
-| Driver Station telemetry | Dashboard | Documented; competition-legal |
+| Library                  | Category  | FTC Dev Tools status                         |
+| ------------------------ | --------- | -------------------------------------------- |
+| FTC SDK                  | Core      | Project detection, build, deploy, SDK update |
+| VisionPortal             | Vision    | Vision Lab target (VISION-08)                |
+| Driver Station telemetry | Dashboard | Documented; competition-legal                |
 
 ## Supported
 
-| Library | Category | FTC Dev Tools status |
-|---------|----------|----------------------|
-| Pedro Pathing | Pathing | **Shipped** — `ftc pedro` |
-| FTC Dashboard | Dashboard | Epic #152; VISION-06; [telemetry spike](../telemetry-spike.md) |
-| EasyOpenCV | Vision | Vision Lab adapter target (VISION-09) |
-| Limelight | Vision | Vision Lab provider (VISION-04) |
-| GoBilda Pinpoint | Localization | Hardware Lab epic |
-| SparkFun OTOS | Localization | Hardware Lab epic |
+| Library          | Category     | FTC Dev Tools status                                           |
+| ---------------- | ------------ | -------------------------------------------------------------- |
+| Pedro Pathing    | Pathing      | **Shipped** — `ftc pedro`                                      |
+| FTC Dashboard    | Dashboard    | Epic #152; VISION-06; [telemetry spike](../telemetry-spike.md) |
+| EasyOpenCV       | Vision       | Vision Lab adapter target (VISION-09)                          |
+| Limelight        | Vision       | Vision Lab provider (VISION-04)                                |
+| GoBilda Pinpoint | Localization | Hardware Lab epic                                              |
+| SparkFun OTOS    | Localization | Hardware Lab epic                                              |
 
 ## Experimental
 
-| Library | Category | Notes |
-|---------|----------|-------|
-| NextFTC | Framework | Evaluation epic #150 |
-| FTCLib | Framework | Evaluation epic #151 |
+| Library                  | Category   | Notes                                |
+| ------------------------ | ---------- | ------------------------------------ |
+| NextFTC                  | Framework  | Evaluation epic #150                 |
+| FTCLib                   | Framework  | Evaluation epic #151                 |
 | FTC simulators (generic) | Simulation | Epic #145; pluggable adapter backlog |
 
 ## Legacy / deferred
 
-| Library | Category | Notes |
-|---------|----------|-------|
-| Road Runner | Pathing | Epic #148; Pedro is committed pathing focus |
+| Library     | Category | Notes                                       |
+| ----------- | -------- | ------------------------------------------- |
+| Road Runner | Pathing  | Epic #148; Pedro is committed pathing focus |
 
 ## Not yet classified
 

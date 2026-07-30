@@ -30,11 +30,7 @@ export type IntegrationCapability =
   | "code-generation";
 
 export type EcosystemClassification =
-  | "official"
-  | "supported"
-  | "experimental"
-  | "legacy"
-  | "deprecated";
+  "official" | "supported" | "experimental" | "legacy" | "deprecated";
 
 export interface IntegrationManifest {
   /** Stable kebab-case identifier */

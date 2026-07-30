@@ -498,9 +498,7 @@ export async function toolHwMapCodegen(
   );
 }
 
-export async function toolIntegrationsList(args: {
-  shipped?: boolean;
-}): Promise<CallToolResult> {
+export async function toolIntegrationsList(args: { shipped?: boolean }): Promise<CallToolResult> {
   try {
     const snapshot = createIntegrationRegistrySnapshot();
     const integrations = args.shipped

@@ -1,0 +1,42 @@
+{
+  "name": "@ftc-dev-tools/maintainer-mcp",
+  "version": "0.1.0",
+  "description": "Optional stdio MCP server for ftc-dev-tools repo maintainers (GitHub issue/PR/CI triage)",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "The Allsparks contributors",
+    "url": "https://github.com/The-Allsparks"
+  },
+  "homepage": "https://www.theallsparks.org",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/The-Allsparks/ftc-dev-tools.git",
+    "directory": "packages/maintainer-mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/The-Allsparks/ftc-dev-tools/issues"
+  },
+  "type": "module",
+  "bin": {
+    "ftc-maintainer-mcp": "./dist/bin.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "node --input-type=module -e \"import fs from 'node:fs'; fs.rmSync('dist',{recursive:true,force:true});\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node ./dist/bin.js"
+  },
+  "dependencies": {
+    "@ftc-dev-tools/shared": "0.1.0",
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^4.4.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

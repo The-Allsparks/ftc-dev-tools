@@ -116,6 +116,8 @@ These refuse unless `yes=true` (or `dryRun=true` when supported):
 
 Wi-Fi manage/set, hub OS download/apply, and live Logcat streaming are **not** exposed in this MVP (use CLI/extension).
 
+Maintainers: optional GitHub triage MCP is documented in [maintainer-mcp.md](maintainer-mcp.md) (`@ftc-dev-tools/maintainer-mcp`) — separate server from this catalog.
+
 ## Safety
 
 - Same shared invariants as CLI: no silent multi-device selection, no automatic firmware flash, no TeamCode wipe on SDK update

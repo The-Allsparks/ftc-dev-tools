@@ -24,7 +24,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "npm run build --workspace @ftc-dev-tools/shared && npm run build --workspace @ftc-dev-tools/cli && npm run build --workspace @ftc-dev-tools/mcp && npm run build --workspace ftc-dev-tools",
+    "build": "npm run build --workspace @ftc-dev-tools/shared && npm run build --workspace @ftc-dev-tools/cli && npm run build --workspace @ftc-dev-tools/mcp && npm run build --workspace @ftc-dev-tools/maintainer-mcp && npm run build --workspace ftc-dev-tools",
     "clean": "npm run clean --workspaces --if-present",
     "lint": "eslint \"packages/*/src/**/*.ts\" \"packages/*/tests/**/*.ts\"",
     "lint:fix": "eslint \"packages/*/src/**/*.ts\" \"packages/*/tests/**/*.ts\" --fix",

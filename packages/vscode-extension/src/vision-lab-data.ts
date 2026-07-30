@@ -9,6 +9,7 @@ import {
   getVisionStatus,
   listVisionProviders,
   NodeProcessRunner,
+  buildVisionInspectorSnapshot,
 } from "@ftc-dev-tools/shared";
 import type {
   DeviceProvider,
@@ -16,6 +17,7 @@ import type {
   VisionDevicesReport,
   VisionProviderDescriptor,
   VisionStatusReport,
+  VisionInspectorSnapshot,
 } from "@ftc-dev-tools/shared";
 
 export type VisionLabConnectionState = "offline" | "ready" | "selection-required" | "partial";
@@ -45,6 +47,7 @@ export interface VisionLabSnapshot {
   providers: readonly VisionProviderDescriptor[];
   providerSections: VisionLabProviderSection[];
   sourceLinks: VisionLabSourceLink[];
+  resultInspector?: VisionInspectorSnapshot;
 }
 
 export interface LoadVisionLabSnapshotOptions {
@@ -52,6 +55,7 @@ export interface LoadVisionLabSnapshotOptions {
   deviceProvider?: DeviceProvider;
   runner?: ProcessRunner;
   probeNetwork?: boolean;
+  loadResults?: boolean;
 }
 
 async function safeProviderSection(
@@ -283,6 +287,22 @@ export async function loadVisionLabSnapshot(
     providerSections,
   });
 
+  let resultInspector: VisionInspectorSnapshot | undefined;
+  if (projectRoot && options.loadResults !== false && probeNetwork) {
+    try {
+      resultInspector = await buildVisionInspectorSnapshot({
+        projectRoot,
+        deviceProvider: options.deviceProvider,
+        runner,
+        probeNetwork,
+      });
+    } catch (error) {
+      errors.push(
+        `Result inspector failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
   return {
     projectRoot,
     generatedAt,
@@ -294,6 +314,7 @@ export async function loadVisionLabSnapshot(
     providers,
     providerSections,
     sourceLinks,
+    resultInspector,
   };
 }
 

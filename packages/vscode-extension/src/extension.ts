@@ -91,6 +91,7 @@ import { StartHereDockProvider } from "./start-here-dock.js";
 import {
   VisionLabPanelController,
   VisionLabSidebarProvider,
+  visionCopyInspectorJsonCommand,
   visionOpenSourceCommand,
 } from "./vision-lab-panel.js";
 import { obtainOrOpenFtcProjectCommand } from "./obtain-project.js";
@@ -350,6 +351,7 @@ export function activate(context: vscode.ExtensionContext): void {
   register("ftc.visionOpenSource", (relativePath?: string) =>
     visionOpenSourceCommand(getWorkspaceRoot, relativePath),
   );
+  register("ftc.visionCopyInspectorJson", () => visionCopyInspectorJsonCommand());
   register("ftc.linkGitHubForReports", linkGitHubForErrorReportsCommand);
   register("ftc.unlinkGitHubForReports", unlinkGitHubForErrorReportsCommand);
 

@@ -155,6 +155,11 @@
         "category": "FTC"
       },
       {
+        "command": "ftc.visionCopyInspectorJson",
+        "title": "FTC: Copy Vision Inspector JSON",
+        "category": "FTC"
+      },
+      {
         "command": "ftc.wifiJoin",
         "title": "FTC: Join Robot Wi-Fi"
       },

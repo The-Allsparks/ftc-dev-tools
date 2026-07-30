@@ -3,6 +3,29 @@ import type { DeviceProvider } from "@ftc-dev-tools/shared";
 import { loadVisionLabSnapshot, type VisionLabSnapshot } from "./vision-lab-data.js";
 import { renderVisionLabHtml } from "./vision-lab-html.js";
 
+let lastInspectorJson: string | undefined;
+
+export function setLastInspectorJsonFromSnapshot(snapshot: VisionLabSnapshot): void {
+  lastInspectorJson = snapshot.resultInspector
+    ? JSON.stringify(snapshot.resultInspector, null, 2)
+    : undefined;
+}
+
+export function getLastInspectorJson(): string | undefined {
+  return lastInspectorJson;
+}
+
+export async function visionCopyInspectorJsonCommand(): Promise<void> {
+  if (!lastInspectorJson) {
+    void vscode.window.showWarningMessage(
+      "No inspector results loaded. Open Vision Lab and refresh with a reachable Limelight host.",
+    );
+    return;
+  }
+  await vscode.env.clipboard.writeText(lastInspectorJson);
+  void vscode.window.showInformationMessage("Vision inspector JSON copied to clipboard.");
+}
+
 export class VisionLabSidebarProvider implements vscode.WebviewViewProvider {
   static readonly viewType = "ftc.visionSidebar";
 
@@ -33,7 +56,9 @@ export class VisionLabSidebarProvider implements vscode.WebviewViewProvider {
       projectRoot: this.getProjectRoot(),
       deviceProvider: await this.getDeviceProvider(),
       probeNetwork: false,
+      loadResults: false,
     });
+    setLastInspectorJsonFromSnapshot(this.snapshot);
     this.render();
   }
 
@@ -110,11 +135,15 @@ export class VisionLabPanelController {
       projectRoot: this.getProjectRoot(),
       deviceProvider: await this.getDeviceProvider(),
       probeNetwork: true,
+      loadResults: true,
     });
+
+    setLastInspectorJsonFromSnapshot(snapshot);
 
     target.webview.html = renderVisionLabHtml(snapshot, {
       compact: false,
       refreshCommand: "ftc.visionRefresh",
+      copyInspectorCommand: "ftc.visionCopyInspectorJson",
     });
   }
 

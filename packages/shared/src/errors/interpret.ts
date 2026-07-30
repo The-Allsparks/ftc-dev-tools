@@ -725,6 +725,17 @@ const RULES: ErrorRule[] = [
     ],
   },
   {
+    code: "MISSING_CONFIG_NAME",
+    test: ({ text, codeHint }) =>
+      codeHint === "MISSING_CONFIG_NAME" || /Robot config name or path is required/i.test(text),
+    title: "Robot config name required",
+    summary: "A robot config base name or path must be provided.",
+    suggestedActions: [
+      "Run `ftc config list` to see available configs.",
+      "Pass the config base name (e.g. my_robot) or a path under the project.",
+    ],
+  },
+  {
     code: "CONFIG_NOT_FOUND",
     test: ({ text, codeHint }) =>
       codeHint === "CONFIG_NOT_FOUND" || /Robot config not found/i.test(text),

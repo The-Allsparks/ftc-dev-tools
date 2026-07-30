@@ -61,6 +61,7 @@ describe("friendly error interpretation", () => {
       "OPMODE_ABORTED",
       "OPMODE_DIRTY_TREE",
       "CONFIG_PROJECT_UNSUPPORTED",
+      "MISSING_CONFIG_NAME",
       "CONFIG_NOT_FOUND",
       "CONFIG_ABORTED",
       "CONFIG_REMOTE_EMPTY",

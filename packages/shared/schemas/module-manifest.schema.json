@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/packages/shared/schemas/module-manifest.schema.json",
+  "title": "FTC Dev Tools module manifest",
+  "description": "Declares a capability or workflow module and its dependencies (ADR-0005, schema v1.0.0).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "displayName", "layer", "summary"],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "displayName": { "type": "string", "minLength": 1 },
+    "layer": {
+      "type": "string",
+      "enum": ["core", "capability", "workflow", "adapter"]
+    },
+    "summary": { "type": "string", "minLength": 1 },
+    "dependsOn": {
+      "type": "array",
+      "description": "Module or integration ids this module requires.",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "provides": {
+      "type": "array",
+      "description": "Capability tags this module provides.",
+      "items": {
+        "type": "string",
+        "enum": [
+          "path-planning",
+          "commands",
+          "vision",
+          "dashboard",
+          "replay",
+          "simulation",
+          "logging",
+          "hardware",
+          "localization",
+          "code-generation"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "experimental": { "type": "boolean", "default": false },
+    "deprecated": { "type": "boolean", "default": false }
+  }
+}

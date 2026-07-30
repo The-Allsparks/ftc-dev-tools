@@ -5,6 +5,7 @@ import {
   checkHubUpdate,
   checkSdkStatus,
   codegenHardwareMapOpMode,
+  createIntegrationRegistrySnapshot,
   createOpMode,
   deployProject,
   detectPedroStatus,
@@ -495,4 +496,18 @@ export async function toolHwMapCodegen(
       return { ...result };
     },
   );
+}
+
+export async function toolIntegrationsList(args: { shipped?: boolean }): Promise<CallToolResult> {
+  try {
+    const snapshot = createIntegrationRegistrySnapshot();
+    const integrations = args.shipped
+      ? snapshot.integrations.filter((entry) => entry.cliCommand !== undefined)
+      : snapshot.integrations;
+    return jsonResult({ ...snapshot, integrations });
+  } catch (err) {
+    return jsonResult({
+      error: interpretFromUnknown(err).summary,
+    });
+  }
 }

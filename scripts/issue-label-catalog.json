@@ -536,12 +536,7 @@
       "priority: P2",
       "developer-experience"
     ],
-    "Phase 1: Orchestrator coordination": [
-      "epic",
-      "architecture",
-      "documentation",
-      "priority: P1"
-    ],
+    "Phase 1: Orchestrator coordination": ["epic", "architecture", "documentation", "priority: P1"],
     "[EPIC] Core Platform — shared-core consolidation and registry foundations": [
       "epic",
       "shared-core",
@@ -582,26 +577,14 @@
       "integration",
       "priority: P1"
     ],
-    "[EPIC] Pedro Pathing — migrate to adapter framework": [
-      "epic",
-      "integration",
-      "priority: P2"
-    ],
+    "[EPIC] Pedro Pathing — migrate to adapter framework": ["epic", "integration", "priority: P2"],
     "[EPIC] Road Runner — evaluation and experimental integration": [
       "epic",
       "integration",
       "priority: P2"
     ],
-    "[EPIC] NextFTC — framework evaluation": [
-      "epic",
-      "integration",
-      "priority: P2"
-    ],
-    "[EPIC] FTCLib — framework evaluation": [
-      "epic",
-      "integration",
-      "priority: P2"
-    ],
+    "[EPIC] NextFTC — framework evaluation": ["epic", "integration", "priority: P2"],
+    "[EPIC] FTCLib — framework evaluation": ["epic", "integration", "priority: P2"],
     "[EPIC] FTC Dashboard — telemetry and dashboard interoperability": [
       "epic",
       "ftc-dashboard",

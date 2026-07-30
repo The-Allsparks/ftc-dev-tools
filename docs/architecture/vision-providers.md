@@ -165,7 +165,11 @@ Live image heuristics, Logcat parsing, bundle export, and Vision Lab inline diag
 
 Command catalog, shared flags, JSON envelopes, top-level shortcuts (`open`, `diagnose`, `pipelines`, `codegen` aliases), and deferred stubs. See [vision-cli.md](./vision-cli.md).
 
-## Next steps (VISION-16+)
+## Vision MCP agent tools (VISION-16)
+
+Fifteen agent-friendly MCP tools with explicit mutation gates, payload sanitization, and deferred camera mutations. Legacy `vision_*` tools remain for compatibility. See [vision-mcp.md](./vision-mcp.md).
+
+## Next steps (VISION-17+)
 
 ## Related
 

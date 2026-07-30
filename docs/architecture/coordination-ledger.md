@@ -51,6 +51,8 @@ This ledger tracks workstreams for the modular architecture transition.
 | Doctor optional Vision setup section                            | Complete                   |
 | VISION-15 Vision CLI catalog, shortcuts, and JSON envelopes     | Complete                   |
 | `ftc vision catalog` / `open` / `diagnose` / pipeline shortcuts | Complete                   |
+| VISION-16 Agent-friendly vision MCP tools                       | Complete                   |
+| `vision_list_devices` … `vision_upload_fieldmap`                | Complete                   |
 | Vision Lab live video overlay / graphs / export                 | Deferred — VISION-11+      |
 | Vision Lab live frames / capture / replay controls              | Deferred — VISION-13+      |
 | Limelight upload / activate / rollback                          | Deferred — VISION-05+      |

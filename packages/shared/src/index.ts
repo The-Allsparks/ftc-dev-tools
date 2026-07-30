@@ -831,3 +831,33 @@ export {
   normalizeVisionPortalProcessorResult,
   registerVisionPortalProcessorAdapter,
 } from "./vision/visionportal/normalize.js";
+export type {
+  EasyOpenCvDependencyInfo,
+  EasyOpenCvWebcamSignal,
+  EasyOpenCvPipelineSignal,
+  EasyOpenCvWorkspaceDiscovery,
+  EasyOpenCvStatusReport,
+  EasyOpenCvCapabilities,
+  EasyOpenCvSourceNavigationEntry,
+  EasyOpenCvDiagnosticResult,
+  EasyOpenCvCustomDiagnosticAdapter,
+  EasyOpenCvDesktopReplayCompatibility,
+} from "./vision/easyopencv/types.js";
+export { EASYOPENCV_CAPABILITIES } from "./vision/easyopencv/capabilities.js";
+export { detectEasyOpenCvDependency } from "./vision/easyopencv/detect-dependency.js";
+export { scanEasyOpenCvJavaSource, scanEasyOpenCvTeamCode } from "./vision/easyopencv/scan.js";
+export { discoverEasyOpenCvWorkspace } from "./vision/easyopencv/discover.js";
+export { getEasyOpenCvStatus } from "./vision/easyopencv/status.js";
+export { assessDesktopReplayCompatibility } from "./vision/easyopencv/replay.js";
+export {
+  normalizeEasyOpenCvDiagnosticResult,
+  registerEasyOpenCvDiagnosticAdapter,
+} from "./vision/easyopencv/normalize.js";
+export {
+  renderEasyOpenCvPipelineSource,
+  renderEasyOpenCvWebcamInitSnippet,
+} from "./vision/easyopencv/templates.js";
+export type {
+  EasyOpenCvPipelineTemplateInput,
+  EasyOpenCvWebcamInitTemplateInput,
+} from "./vision/easyopencv/templates.js";

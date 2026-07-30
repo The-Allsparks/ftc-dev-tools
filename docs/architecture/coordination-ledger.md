@@ -37,6 +37,8 @@ This ledger tracks workstreams for the modular architecture transition.
 | `ftc vision bridge` + MCP bridge tools                       | Complete                   |
 | VISION-08 VisionPortal static analysis + bridge helpers      | Complete                   |
 | `ftc vision visionportal` + MCP `vision_visionportal_status` | Complete                   |
+| VISION-09 EasyOpenCV static analysis + replay hints          | Complete                   |
+| `ftc vision easyopencv` + MCP `vision_easyopencv_status`     | Complete                   |
 | Vision Lab live frames / IDE panel                           | Deferred — VISION-10+      |
 | Limelight upload / activate / rollback                       | Deferred — VISION-05+      |
 | Replay capture pipeline                                      | Deferred — FTC Replay epic |

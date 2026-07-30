@@ -861,3 +861,24 @@ export type {
   EasyOpenCvPipelineTemplateInput,
   EasyOpenCvWebcamInitTemplateInput,
 } from "./vision/easyopencv/templates.js";
+export type {
+  VisionInspectorSnapshot,
+  VisionInspectorDetection,
+  VisionInspectorMetrics,
+  VisionInspectorCapabilities,
+  VisionInspectorPoint,
+  VisionInspectorBox,
+  BuildVisionInspectorOptions,
+} from "./vision/inspector/types.js";
+export { VISION_INSPECTOR_CAPABILITIES } from "./vision/inspector/capabilities.js";
+export {
+  VISION_INSPECTOR_OVERLAY_CONVENTION,
+  LIMELIGHT_DEFAULT_FOV,
+  limelightDegreesToNormalizedPoint,
+  targetAreaToNormalizedBox,
+} from "./vision/inspector/coordinates.js";
+export {
+  buildLimelightInspectorSnapshot,
+  emptyInspectorSnapshot,
+} from "./vision/inspector/limelight.js";
+export { buildVisionInspectorSnapshot } from "./vision/inspector/build.js";

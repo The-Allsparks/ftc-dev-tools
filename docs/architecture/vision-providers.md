@@ -135,8 +135,15 @@ Read-only VS Code panel and activity-bar sidebar. See [vision-lab-panel.md](./vi
 
 Live camera streaming, capture, pause/resume, and replay controls remain deferred.
 
-## Next steps (VISION-11+)
+## Vision result inspector (VISION-11)
 
+Structured Limelight result inspection in the Vision Lab panel: normalized overlay preview, detections table, performance metrics, raw JSON, and copy-as-JSON. See [vision-result-inspector.md](./vision-result-inspector.md).
+
+Live video overlay, metric graphs, export, and thresholds remain deferred.
+
+## Next steps (VISION-12+)
+
+- Code generators, snippets, and source navigation helpers
 - Live frame acquisition and overlays for VisionPortal
 - Session capture and offline replay UI
 

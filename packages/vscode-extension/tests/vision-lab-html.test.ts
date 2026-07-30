@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { VISION_INSPECTOR_CAPABILITIES } from "@ftc-dev-tools/shared";
 import type { VisionLabSnapshot } from "../src/vision-lab-data.js";
 import { escapeHtml, renderVisionLabHtml } from "../src/vision-lab-html.js";
 
@@ -37,7 +38,66 @@ describe("renderVisionLabHtml", () => {
     expect(html).toContain('role="main"');
     expect(html).toContain("Selection required");
     expect(html).toContain("Pick a host in .ftc-dev.json");
-    expect(html).toContain("Live camera streaming");
+    expect(html).toContain("Result inspector");
+    expect(html).toContain("Sidebar view stays offline-only");
+  });
+
+  it("renders inspector overlay and copy link when results are loaded", () => {
+    const html = renderVisionLabHtml(
+      minimalSnapshot({
+        resultInspector: {
+          providerId: "vision:limelight",
+          providerLabel: "Limelight",
+          host: "limelight.local",
+          reachable: true,
+          stale: false,
+          requiresSelection: false,
+          message: "Targeting results loaded.",
+          overlayConvention: "Normalized frame space",
+          selectedTarget: {
+            id: "limelight-primary",
+            label: "Primary target",
+            valid: true,
+            txDegrees: 1,
+            tyDegrees: 2,
+            areaPercent: 4,
+            overlay: [
+              { kind: "crosshair", point: { x: 0.5, y: 0.5 } },
+              { kind: "target-point", point: { x: 0.52, y: 0.46 } },
+            ],
+          },
+          detections: [
+            {
+              id: "limelight-primary",
+              label: "Primary target",
+              valid: true,
+              txDegrees: 1,
+              tyDegrees: 2,
+              areaPercent: 4,
+              overlay: [{ kind: "target-point", point: { x: 0.52, y: 0.46 } }],
+            },
+          ],
+          metrics: {
+            fps: 30,
+            captureLatencyMs: null,
+            pipelineLatencyMs: 8,
+            totalLatencyMs: null,
+            frameAgeMs: null,
+            cpuPercent: null,
+            temperatureCelsius: null,
+          },
+          rawPayload: { tl: { valid: true } },
+          capabilities: { ...VISION_INSPECTOR_CAPABILITIES },
+          generatedAt: "2026-07-30T00:00:00.000Z",
+        },
+      }),
+      { copyInspectorCommand: "ftc.visionCopyInspectorJson" },
+    );
+
+    expect(html).toContain('aria-label="Normalized overlay preview without live video"');
+    expect(html).toContain("Detections");
+    expect(html).toContain("command:ftc.visionCopyInspectorJson");
+    expect(html).toContain("Raw provider payload");
   });
 
   it("renders provider errors without throwing", () => {

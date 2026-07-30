@@ -1,4 +1,6 @@
 import type { VisionLabSnapshot } from "./vision-lab-data.js";
+import { escapeAttribute, escapeHtml } from "./vision-lab-text.js";
+import { renderVisionInspectorSection } from "./vision-lab-inspector-html.js";
 
 const CSP = "default-src 'none'; style-src 'unsafe-inline'; img-src data:;";
 
@@ -6,6 +8,7 @@ export interface RenderVisionLabHtmlOptions {
   compact?: boolean;
   openPanelCommand?: string;
   refreshCommand?: string;
+  copyInspectorCommand?: string;
 }
 
 export function renderVisionLabHtml(
@@ -27,7 +30,7 @@ export function renderVisionLabHtml(
     renderPipelineSection(snapshot),
     renderDiagnosticsSection(snapshot),
     renderSourceSection(snapshot, options.refreshCommand),
-    renderDeferredSection(),
+    renderVisionInspectorSection(snapshot.resultInspector, options.copyInspectorCommand),
   ].join("");
 
   return `<!DOCTYPE html>
@@ -267,14 +270,6 @@ function renderSourceSection(snapshot: VisionLabSnapshot, refreshCommand?: strin
   );
 }
 
-function renderDeferredSection(): string {
-  return section(
-    "live",
-    "Live camera &amp; replay",
-    `<p class="placeholder" role="note">Live camera streaming, capture, pause/resume, and offline replay controls are not activated from this panel yet. Use FTC Dashboard or provider-specific tools for live streams. Opening Vision Lab does not connect cameras.</p>`,
-  );
-}
-
 function section(id: string, title: string, body: string): string {
   return `<section id="${id}" aria-labelledby="${id}-title" class="section">
     <h2 id="${id}-title">${title}</h2>
@@ -350,18 +345,14 @@ h3{font-size:.95em;margin:0 0 6px}
 a{color:var(--vscode-textLink-foreground);text-decoration:none}
 a:hover{text-decoration:underline}
 .action{display:inline-block;margin-top:4px}
+.overlay-frame{border:1px solid var(--vscode-panel-border);border-radius:6px;padding:8px;margin:8px 0;background:var(--vscode-editor-inactiveSelectionBackground)}
+.overlay-svg{width:100%;max-width:420px;aspect-ratio:4/3;display:block;background:var(--vscode-textBlockQuote-background)}
+.inspector-table{width:100%;border-collapse:collapse;font-size:.92em;margin:8px 0}
+.inspector-table th,.inspector-table td{border:1px solid var(--vscode-panel-border);padding:6px 8px;text-align:left;vertical-align:top}
+.inspector-table.metrics th{width:40%}
+.raw-json{overflow:auto;max-height:240px;font-family:var(--vscode-editor-font-family,monospace);font-size:.85em;padding:8px;border:1px solid var(--vscode-panel-border);border-radius:4px;background:var(--vscode-textBlockQuote-background)}
 @media (max-width: 640px){body{padding:10px}.section{padding:10px}}
 `;
 }
 
-export function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-function escapeAttribute(text: string): string {
-  return escapeHtml(text).replace(/'/g, "&#39;");
-}
+export { escapeHtml } from "./vision-lab-text.js";

@@ -100,11 +100,27 @@ export async function listRobotConfigs(projectRoot: string): Promise<RobotConfig
   }
 }
 
+function isMissingConfigName(nameOrPath: string | null | undefined): boolean {
+  return nameOrPath == null || nameOrPath.trim() === "";
+}
+
 export async function showRobotConfig(
   projectRoot: string,
   nameOrPath: string,
 ): Promise<RobotConfigShowResult> {
   try {
+    if (isMissingConfigName(nameOrPath)) {
+      return {
+        success: false,
+        message: "Robot config name or path is required.",
+        error: interpretFromUnknown(
+          Object.assign(new Error("Robot config name or path is required."), {
+            code: "MISSING_CONFIG_NAME",
+          }),
+        ),
+      };
+    }
+
     const resolved = await resolveConfigPath(projectRoot, nameOrPath);
     if (!resolved) {
       return {
@@ -144,6 +160,10 @@ export async function resolveConfigPath(
   projectRoot: string,
   nameOrPath: string,
 ): Promise<RobotConfigInfo | undefined> {
+  if (isMissingConfigName(nameOrPath)) {
+    return undefined;
+  }
+
   const root = path.resolve(projectRoot);
   const trimmed = nameOrPath.trim();
   const asPath = path.isAbsolute(trimmed) ? trimmed : path.join(root, trimmed);

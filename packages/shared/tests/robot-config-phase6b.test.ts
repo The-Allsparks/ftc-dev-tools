@@ -210,6 +210,19 @@ describe("list / show / validate robot configs", () => {
     expect(shown.success).toBe(false);
     expect(shown.error?.code).toBe("CONFIG_NOT_FOUND");
   });
+
+  it("returns MISSING_CONFIG_NAME for null, undefined, or blank nameOrPath", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "ftc-config-"));
+    tempDirs.push(root);
+    await writeOfficialProject(root);
+
+    for (const nameOrPath of [null, undefined, "", "   "] as const) {
+      const shown = await showRobotConfig(root, nameOrPath as any);
+      expect(shown.success).toBe(false);
+      expect(shown.error?.code).toBe("MISSING_CONFIG_NAME");
+      expect(shown.message).toMatch(/required/i);
+    }
+  });
 });
 
 describe("pull robot configs", () => {

@@ -24,6 +24,8 @@ import {
   toolProvidersList,
   toolVisionDiscover,
   toolVisionDevices,
+  toolVisionLimelightStatus,
+  toolVisionLimelightResults,
   toolVisionStatus,
   toolSdkCheck,
   toolSdkUpdate,
@@ -58,6 +60,8 @@ export const FTC_MCP_TOOL_NAMES = [
   "vision_status",
   "vision_discover",
   "vision_devices",
+  "vision_limelight_status",
+  "vision_limelight_results",
 ] as const;
 
 export type FtcMcpToolName = (typeof FTC_MCP_TOOL_NAMES)[number];
@@ -476,6 +480,34 @@ export function createFtcMcpServer(): McpServer {
       annotations: { readOnlyHint: true, openWorldHint: false },
     },
     async (args) => toolVisionDevices(args),
+  );
+
+  server.registerTool(
+    "vision_limelight_status",
+    {
+      title: "Limelight Vision status",
+      description: "Read Limelight Vision device status from the HTTP API (port 5807).",
+      inputSchema: z.object({
+        ...projectRootShape,
+        host: z.string().optional().describe("Limelight Vision hostname or IP"),
+      }),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolVisionLimelightStatus(args),
+  );
+
+  server.registerTool(
+    "vision_limelight_results",
+    {
+      title: "Limelight Vision results",
+      description: "Read normalized Limelight Vision targeting results from the HTTP API.",
+      inputSchema: z.object({
+        ...projectRootShape,
+        host: z.string().optional().describe("Limelight Vision hostname or IP"),
+      }),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolVisionLimelightResults(args),
   );
 
   return server;

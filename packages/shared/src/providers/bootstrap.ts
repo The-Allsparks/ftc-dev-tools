@@ -110,7 +110,7 @@ export function bootstrapProviderCatalog(): void {
     kind: "limelight",
     integrationId: "limelight",
     frameProviderId: "frame:limelight",
-    summary: "Limelight Vision pipeline and calibration.",
+    summary: "Limelight Vision HTTP API — status and targeting results (VISION-04).",
     experimental: true,
   });
   registerVisionProvider({

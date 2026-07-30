@@ -53,11 +53,13 @@ export default defineConfig({
         items: [
           { text: "Overview", link: "/" },
           { text: "Getting started", link: "/getting-started" },
+          { text: "First OpMode journey", link: "/first-opmode-journey" },
           {
             text: "Install without Android Studio",
             link: "/install-without-android-studio",
           },
           { text: "CLI install", link: "/cli-install" },
+          { text: "Environment doctor", link: "/doctor" },
           { text: "Recommended extensions", link: "/recommended-extensions" },
         ],
       },
@@ -107,6 +109,7 @@ export default defineConfig({
           { text: "Control Hub OS", link: "/hub-update" },
           { text: "Pedro Pathing", link: "/pedro-pathing" },
           { text: "MCP (Cursor agents)", link: "/mcp" },
+          { text: "Maintainer MCP", link: "/maintainer-mcp" },
         ],
       },
       {

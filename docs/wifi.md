@@ -76,6 +76,8 @@ ftc wifi adapter enable Ethernet --yes
 
 ## Hub Wi-Fi manage (Apply Wi-Fi Settings)
 
+Hub Wi-Fi manage reads and writes the Robot Controller Console **Manage** page. Reach the console over **USB debugging** or **wireless adb** once the hub is on your network — you do not need USB for manage operations if the console URL is reachable (for example after `ftc wifi connect --yes`).
+
 Read current settings from the Robot Controller Console (password never printed in JSON):
 
 ```bash

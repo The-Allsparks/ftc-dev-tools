@@ -43,6 +43,7 @@ features:
 | Goal                                     | Guide                                                                 |
 | ---------------------------------------- | --------------------------------------------------------------------- |
 | First-time setup                         | [Getting started](./getting-started.md)                               |
+| First OpMode (create → deploy → run)     | [First OpMode journey](./first-opmode-journey.md)                     |
 | Vision (Limelight or webcam)             | [Vision Lab](./vision-lab.md)                                         |
 | Install JDK + SDK without Android Studio | [Install without Android Studio](./install-without-android-studio.md) |
 | Install the `ftc` CLI                    | [CLI install](./cli-install.md)                                       |

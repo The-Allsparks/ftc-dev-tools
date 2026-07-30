@@ -31,8 +31,12 @@ Hardware-affecting features must not be labeled `Stable` solely because CI is gr
 | OpMode create                          | `Mock-tested` |                                                                                 |
 | Robot config list/show/validate/pull   | `Mock-tested` | No push/activate                                                                |
 | Hardware map codegen                   | `Mock-tested` |                                                                                 |
-| MCP server                             | `Mock-tested` | Subset of CLI                                                                   |
-| Java snippets / setup wizards          | `Mock-tested` |                                                                                 |
+| MCP server                             | `Mock-tested` | Subset of CLI (59 tools)                                                        |
+| Java snippets / setup wizards          | `Mock-tested` | Start Here, walkthrough, First OpMode journey                                   |
+| Readiness / competition checklist      | `Mock-tested` | `readinessSnapshot` in doctor JSON; sidebar milestones                          |
+| GitHub error reporting                 | `Mock-tested` | Opt-in via `ftc github link` or `GITHUB_TOKEN`                                  |
+| Session replay schema                  | `Mock-tested` | `ftc replay` validate/create-header; live capture deferred                      |
+| Maintainer MCP                         | `Mock-tested` | Maintainers only; see [maintainer-mcp.md](maintainer-mcp.md)                    |
 | Java debugger attach                   | Not shipped   | See [debugger-spike.md](debugger-spike.md)                                      |
 | Telemetry dashboard                    | Not shipped   | See [telemetry-spike.md](telemetry-spike.md)                                    |
 | Vision Lab — workspace discovery       | `Mock-tested` | See [vision-hardware-validation.md](architecture/vision-hardware-validation.md) |

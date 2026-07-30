@@ -68,6 +68,8 @@ ftc vision limelight pipelines validate --json
 ftc vision limelight pipelines diff --slot 0 --json
 ftc vision dashboard status --json
 ftc vision dashboard open --json
+ftc vision bridge status --json
+ftc vision bridge scaffold --yes --json
 ```
 
 See [vision-providers.md](architecture/vision-providers.md).

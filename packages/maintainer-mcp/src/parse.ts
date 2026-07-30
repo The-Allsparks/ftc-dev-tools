@@ -25,7 +25,7 @@ export function parseMentionIssueRefs(text: string): number[] {
 }
 
 export function extractIssueCodename(title: string): string | undefined {
-  const match = title.match(/^([A-Z][A-Z0-9]+-\d+)\s*[—:\-]/);
+  const match = title.match(/^([A-Z][A-Z0-9]+-\d+)\s*[—:-]/);
   return match?.[1];
 }
 

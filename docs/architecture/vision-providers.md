@@ -82,7 +82,20 @@ ftc vision limelight pipelines diff --slot 0 --json
 
 Upload, activation, and rollback are separate follow-up work (capabilities flag them unsupported).
 
-## Next steps (VISION-06+)
+## FTC Dashboard (VISION-06)
+
+Detect the community [FTC Dashboard](https://acmerobotics.github.io/ftc-dashboard/) dependency, resolve its URL, and open it when reachable:
+
+```bash
+ftc vision dashboard status --json
+ftc vision dashboard open --json
+```
+
+URL resolution order: `--url` / `--host` → `vision.dashboard.url` → discovered `ftc-dashboard` endpoint from `ftc vision devices`. Multiple matches require explicit selection.
+
+The VS Code command **FTC: Open FTC Dashboard** tries Simple Browser first, then falls back to the system browser. Gamepad controls in the dashboard are for development only — not a competition Driver Station substitute.
+
+## Next steps (VISION-07+)
 
 - Live frame acquisition for VisionPortal
 - Vision Lab IDE panel consuming `listVisionProviders()`

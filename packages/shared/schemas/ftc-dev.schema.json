@@ -67,6 +67,16 @@
             "host": { "type": "string" },
             "pipelineDirectory": { "type": "string" }
           }
+        },
+        "dashboard": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "FTC Dashboard URL or robot hostname (defaults to http://host:8080/dash)."
+            }
+          }
         }
       }
     }

@@ -34,6 +34,7 @@ export type {
   DefaultLogFilter,
   FtcDevVisionConfig,
   FtcDevLimelightConfig,
+  FtcDevDashboardConfig,
 } from "./types/config.js";
 
 export {
@@ -765,3 +766,22 @@ export type { DiffLimelightPipelineOptions } from "./vision/limelight/artifacts/
 export { diffLimelightJson } from "./vision/limelight/artifacts/json-diff.js";
 export { resolveLimelightPipelineDirectory } from "./vision/limelight/resolve-pipeline-directory.js";
 export type { ResolvePipelineDirectoryResult } from "./vision/limelight/resolve-pipeline-directory.js";
+export type {
+  ResolveDashboardUrlReport,
+  ResolveDashboardUrlResult,
+  FtcDashboardStatusReport,
+  FtcDashboardDependencyInfo,
+  OpenFtcDashboardResult,
+} from "./vision/dashboard/types.js";
+export {
+  DEFAULT_FTC_DASHBOARD_PORT,
+  DEFAULT_FTC_DASHBOARD_PATH,
+  buildFtcDashboardUrl,
+} from "./vision/dashboard/constants.js";
+export { detectFtcDashboardDependency } from "./vision/dashboard/detect-dependency.js";
+export { resolveDashboardUrl, resolveDashboardUrlReport } from "./vision/dashboard/resolve-url.js";
+export type { ResolveDashboardUrlOptions } from "./vision/dashboard/resolve-url.js";
+export { getFtcDashboardStatus } from "./vision/dashboard/status.js";
+export type { GetFtcDashboardStatusOptions } from "./vision/dashboard/status.js";
+export { openFtcDashboard } from "./vision/dashboard/open.js";
+export type { OpenFtcDashboardOptions } from "./vision/dashboard/open.js";

@@ -95,6 +95,8 @@ Doctor JSON includes `sections` (machine / project / robot / optional) — see [
 | `vision_limelight_pipelines_list` | `ftc vision limelight pipelines list --json` |
 | `vision_limelight_pipelines_validate` | `ftc vision limelight pipelines validate --json` |
 | `vision_limelight_pipelines_diff` | `ftc vision limelight pipelines diff --slot 0 --json` |
+| `vision_dashboard_status` | `ftc vision dashboard status --json` |
+| `vision_dashboard_open` | `ftc vision dashboard open --json` |
 
 ### Confirmed mutations
 

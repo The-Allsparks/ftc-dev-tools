@@ -3,10 +3,12 @@ import {
   discoverVisionDevices,
   discoverVisionWorkspace,
   diffLimelightPipeline,
+  getFtcDashboardStatus,
   getLimelightResults,
   getLimelightStatus,
   getVisionStatus,
   interpretFromUnknown,
+  openFtcDashboard,
   scanLimelightArtifacts,
   validateLimelightArtifacts,
 } from "@ftc-dev-tools/shared";
@@ -337,4 +339,84 @@ export function registerVisionCommand(program: Command): void {
         }
       },
     );
+
+  const dashboard = vision
+    .command("dashboard")
+    .description("FTC Dashboard interoperability (detect, status, open)");
+
+  dashboard
+    .command("status")
+    .description("Detect FTC Dashboard dependency and probe reachability")
+    .option("--url <address>", "Dashboard URL or hostname")
+    .option("--host <address>", "Robot hostname (builds http://host:8080/dash)")
+    .option("--json", "Emit stable machine-readable JSON")
+    .option("--no-probe", "Skip network reachability checks")
+    .action(async (options: { url?: string; host?: string; json?: boolean; probe?: boolean }) => {
+      const ctx = createCliContext();
+      let deviceProvider;
+      try {
+        deviceProvider = await ctx.createDeviceProvider();
+      } catch {
+        deviceProvider = undefined;
+      }
+      try {
+        const report = await getFtcDashboardStatus(ctx.cwd, {
+          url: options.url,
+          host: options.host,
+          deviceProvider,
+          runner: ctx.runner,
+          probeNetwork: options.probe !== false,
+        });
+        if (options.json) {
+          console.log(JSON.stringify(report, null, 2));
+          return;
+        }
+        console.log("FTC Dashboard status\n");
+        console.log(report.message);
+        for (const line of report.humanSummary) {
+          console.log(line);
+        }
+        for (const warning of report.warnings) {
+          console.log(`Warning: ${warning}`);
+        }
+      } catch (error) {
+        await printFriendlyError(interpretFromUnknown(error), false);
+        process.exitCode = 1;
+      }
+    });
+
+  dashboard
+    .command("open")
+    .description("Open FTC Dashboard in the default browser")
+    .option("--url <address>", "Dashboard URL or hostname")
+    .option("--host <address>", "Robot hostname (builds http://host:8080/dash)")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(async (options: { url?: string; host?: string; json?: boolean }) => {
+      const ctx = createCliContext();
+      let deviceProvider;
+      try {
+        deviceProvider = await ctx.createDeviceProvider();
+      } catch {
+        deviceProvider = undefined;
+      }
+      try {
+        const result = await openFtcDashboard(ctx.cwd, {
+          url: options.url,
+          host: options.host,
+          deviceProvider,
+          runner: ctx.runner,
+        });
+        if (options.json) {
+          console.log(JSON.stringify(result, null, 2));
+          return;
+        }
+        console.log(result.message);
+        if (!result.opened) {
+          process.exitCode = 1;
+        }
+      } catch (error) {
+        await printFriendlyError(interpretFromUnknown(error), false);
+        process.exitCode = 1;
+      }
+    });
 }

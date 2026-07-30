@@ -21,6 +21,8 @@ import {
   diffLimelightPipeline,
   discoverVisionWorkspace,
   discoverVisionDevices,
+  getFtcDashboardStatus,
+  openFtcDashboard,
   interpretFromUnknown,
   listOpModes,
   listRobotConfigs,
@@ -662,6 +664,43 @@ export async function toolVisionLimelightPipelinesDiff(
         runner: ctx.runner,
       }),
     );
+  } catch (err) {
+    return jsonResult({ error: interpretFromUnknown(err).summary }, true);
+  }
+}
+
+export async function toolVisionDashboardStatus(
+  args: ProjectRootArgs & { url?: string; host?: string },
+): Promise<CallToolResult> {
+  try {
+    const ctx = ctxFrom(args);
+    const deviceProvider = await tryCreateDeviceProvider(ctx);
+    return jsonResult(
+      await getFtcDashboardStatus(ctx.projectRoot, {
+        url: args.url,
+        host: args.host,
+        deviceProvider,
+        runner: ctx.runner,
+      }),
+    );
+  } catch (err) {
+    return jsonResult({ error: interpretFromUnknown(err).summary }, true);
+  }
+}
+
+export async function toolVisionDashboardOpen(
+  args: ProjectRootArgs & { url?: string; host?: string },
+): Promise<CallToolResult> {
+  try {
+    const ctx = ctxFrom(args);
+    const deviceProvider = await tryCreateDeviceProvider(ctx);
+    const result = await openFtcDashboard(ctx.projectRoot, {
+      url: args.url,
+      host: args.host,
+      deviceProvider,
+      runner: ctx.runner,
+    });
+    return jsonResult(result, !result.opened);
   } catch (err) {
     return jsonResult({ error: interpretFromUnknown(err).summary }, true);
   }

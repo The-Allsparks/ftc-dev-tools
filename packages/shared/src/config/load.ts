@@ -46,8 +46,10 @@ const KNOWN_VISION = new Set([
   "enabledProviderIds",
   "pipelineDirectory",
   "limelight",
+  "dashboard",
 ]);
 const KNOWN_LIMELIGHT = new Set(["host", "pipelineDirectory"]);
+const KNOWN_DASHBOARD = new Set(["url"]);
 
 export function defaultConfig(): FtcDevConfig {
   return {
@@ -143,6 +145,7 @@ function mergeWithDefaults(partial: FtcDevConfig): FtcDevConfig {
             ? [...partial.vision.enabledProviderIds]
             : undefined,
           limelight: partial.vision.limelight ? { ...partial.vision.limelight } : undefined,
+          dashboard: partial.vision.dashboard ? { ...partial.vision.dashboard } : undefined,
         }
       : undefined,
   };
@@ -183,6 +186,14 @@ function collectUnknownPropertyWarnings(value: Record<string, unknown>, warnings
       for (const key of Object.keys(limelight as Record<string, unknown>)) {
         if (!KNOWN_LIMELIGHT.has(key)) {
           warnings.push(`Unknown property "vision.limelight.${key}" will be ignored.`);
+        }
+      }
+    }
+    const dashboard = (value.vision as Record<string, unknown>).dashboard;
+    if (dashboard && typeof dashboard === "object" && !Array.isArray(dashboard)) {
+      for (const key of Object.keys(dashboard as Record<string, unknown>)) {
+        if (!KNOWN_DASHBOARD.has(key)) {
+          warnings.push(`Unknown property "vision.dashboard.${key}" will be ignored.`);
         }
       }
     }

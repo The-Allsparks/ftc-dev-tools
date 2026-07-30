@@ -101,9 +101,18 @@ export default defineConfig({
         ],
       },
       {
+        text: "Architecture",
+        items: [
+          { text: "Coordination ledger", link: "/architecture/coordination-ledger" },
+          { text: "Repository inventory", link: "/architecture/repository-inventory" },
+          { text: "Backlog audit", link: "/architecture/backlog-audit" },
+          { text: "Architecture decisions (ADRs)", link: "/architecture/adr/" },
+        ],
+      },
+      {
         text: "Project",
         items: [
-          { text: "Architecture", link: "/architecture" },
+          { text: "Architecture (0.1.0)", link: "/architecture" },
           { text: "Project principles", link: "/project-principles" },
           { text: "Team use", link: "/team-use" },
           { text: "Parity audit", link: "/parity-audit" },

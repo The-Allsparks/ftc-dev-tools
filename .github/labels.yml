@@ -145,6 +145,21 @@
 - name: "priority: P2"
   color: FBCA04
   description: Later enhancement
+- name: sim
+  color: 1D76DB
+  description: FTC Sim and simulator runtimes
+- name: adapter-framework
+  color: 5319E7
+  description: Generic integration adapter framework
+- name: hardware-lab
+  color: B60205
+  description: Hardware Lab capability module
+- name: tuning-lab
+  color: F9D0C4
+  description: Tuning Lab capability module
+- name: workflow
+  color: 7057FF
+  description: Workflow module composition
 - name: reliability
   color: 1D76DB
   description: Reliability, concurrency, and recovery

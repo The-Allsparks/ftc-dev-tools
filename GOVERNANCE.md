@@ -51,6 +51,8 @@ Maintainers should seek community input for substantial changes, but final respo
 
 GitHub **issue labels** (priority, surface, vision sub-areas) are documented in [docs/issue-labels.md](docs/issue-labels.md) and enforced in CI via `scripts/issue-label-catalog.json`.
 
+**Architecture decision records (ADRs)** document significant technical choices that affect public APIs, module boundaries, or cross-language contracts. ADRs live in [docs/architecture/adr/](docs/architecture/adr/) and follow the template in [0000-adr-template.md](docs/architecture/adr/0000-adr-template.md). New ADRs start in **Proposed** status; maintainers move them to **Accepted** after review. Phase coordination is tracked in [docs/architecture/coordination-ledger.md](docs/architecture/coordination-ledger.md).
+
 ## Maintainer expectations
 
 Maintainers are expected to:

@@ -977,3 +977,23 @@ export {
 } from "./vision/cli/format.js";
 export { openVisionTarget } from "./vision/cli/open.js";
 export type { OpenVisionTargetOptions } from "./vision/cli/open.js";
+export { VISION_MCP_CATALOG_VERSION, VISION_MCP_AGENT_TOOL_NAMES } from "./vision/mcp/constants.js";
+export type { VisionMcpAgentToolName } from "./vision/mcp/constants.js";
+export type {
+  VisionMcpToolKind,
+  VisionMcpToolDescriptor,
+  VisionMcpDeferredResult,
+  VisionMcpSanitizeOptions,
+  ResolveVisionEndpointResult,
+} from "./vision/mcp/types.js";
+export {
+  VISION_MCP_TOOL_CATALOG,
+  getVisionMcpToolCatalog,
+  findVisionMcpTool,
+} from "./vision/mcp/catalog.js";
+export { buildDeferredVisionMcpResult, assertVisionMutationTarget } from "./vision/mcp/deferred.js";
+export {
+  sanitizeVisionMcpPayload,
+  resolveVisionEndpoint,
+  hostFromVisionTarget,
+} from "./vision/mcp/sanitize.js";

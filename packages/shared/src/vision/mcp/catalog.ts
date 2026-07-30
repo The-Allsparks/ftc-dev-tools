@@ -1,0 +1,150 @@
+import type { VisionMcpToolDescriptor } from "./types.js";
+
+/** Agent-safe vision MCP catalog (VISION-16). Legacy vision_* tools remain for compatibility. */
+export const VISION_MCP_TOOL_CATALOG: VisionMcpToolDescriptor[] = [
+  {
+    name: "vision_list_devices",
+    kind: "read-only",
+    summary: "List discovered vision endpoints; use endpoint ids for mutations.",
+    available: true,
+    requiresEndpoint: false,
+    requiresConfirmation: false,
+    legacyEquivalent: "vision_devices",
+  },
+  {
+    name: "vision_get_status",
+    kind: "read-only",
+    summary: "Vision config and workspace discovery signals.",
+    available: true,
+    requiresEndpoint: false,
+    requiresConfirmation: false,
+    legacyEquivalent: "vision_status",
+  },
+  {
+    name: "vision_get_diagnostics",
+    kind: "read-only",
+    summary: "Student-friendly vision setup diagnostics.",
+    available: true,
+    requiresEndpoint: false,
+    requiresConfirmation: false,
+    legacyEquivalent: "vision_diagnostics",
+  },
+  {
+    name: "vision_list_pipelines",
+    kind: "read-only",
+    summary: "List Limelight pipeline-as-code artifacts in the workspace.",
+    available: true,
+    requiresEndpoint: false,
+    requiresConfirmation: false,
+    legacyEquivalent: "vision_limelight_pipelines_list",
+  },
+  {
+    name: "vision_validate_pipeline",
+    kind: "read-only",
+    summary: "Validate workspace Limelight pipeline JSON files.",
+    available: true,
+    requiresEndpoint: false,
+    requiresConfirmation: false,
+    legacyEquivalent: "vision_limelight_pipelines_validate",
+  },
+  {
+    name: "vision_compare_pipeline",
+    kind: "read-only",
+    summary:
+      "Compare workspace pipeline JSON with a camera slot (requires slot + host or endpointId).",
+    available: true,
+    requiresEndpoint: true,
+    requiresConfirmation: false,
+    legacyEquivalent: "vision_limelight_pipelines_diff",
+  },
+  {
+    name: "vision_list_sessions",
+    kind: "deferred",
+    summary: "List recorded vision sessions.",
+    available: false,
+    requiresEndpoint: false,
+    requiresConfirmation: false,
+    deferredReason: "Session capture deferred — use replay_status for schema foundation.",
+    legacyEquivalent: "replay_status",
+  },
+  {
+    name: "vision_inspect_session",
+    kind: "deferred",
+    summary: "Inspect a recorded session file.",
+    available: false,
+    requiresEndpoint: false,
+    requiresConfirmation: false,
+    deferredReason: "Offline session inspection deferred (VISION-13+).",
+  },
+  {
+    name: "vision_analyze_recording",
+    kind: "deferred",
+    summary: "Analyze a session recording for vision metrics.",
+    available: false,
+    requiresEndpoint: false,
+    requiresConfirmation: false,
+    deferredReason: "Recording analysis deferred (FTC Replay epic).",
+  },
+  {
+    name: "vision_generate_code",
+    kind: "mutating",
+    summary: "Generate Java TeamCode vision stubs (requires confirmation; Kotlin not supported).",
+    available: true,
+    requiresEndpoint: false,
+    requiresConfirmation: true,
+    legacyEquivalent: "vision_codegen",
+  },
+  {
+    name: "vision_capture_frame",
+    kind: "mutating",
+    summary: "Capture a still frame from a vision endpoint (deferred implementation).",
+    available: false,
+    requiresEndpoint: true,
+    requiresConfirmation: true,
+    deferredReason: "Live frame capture deferred until replay capture ships.",
+  },
+  {
+    name: "vision_upload_pipeline",
+    kind: "mutating",
+    summary: "Upload workspace pipeline JSON to Limelight (deferred).",
+    available: false,
+    requiresEndpoint: true,
+    requiresConfirmation: true,
+    deferredReason: "Limelight upload deferred (VISION-05+).",
+  },
+  {
+    name: "vision_activate_pipeline",
+    kind: "mutating",
+    summary: "Activate a pipeline slot on Limelight (deferred).",
+    available: false,
+    requiresEndpoint: true,
+    requiresConfirmation: true,
+    deferredReason: "Limelight activate deferred (VISION-05+).",
+  },
+  {
+    name: "vision_upload_python",
+    kind: "mutating",
+    summary: "Upload Limelight SnapScript Python to camera (deferred).",
+    available: false,
+    requiresEndpoint: true,
+    requiresConfirmation: true,
+    deferredReason: "Limelight Python upload deferred (VISION-05+).",
+  },
+  {
+    name: "vision_upload_fieldmap",
+    kind: "mutating",
+    summary: "Upload Limelight field map JSON to camera (deferred).",
+    available: false,
+    requiresEndpoint: true,
+    requiresConfirmation: true,
+    deferredReason: "Limelight field map upload deferred (VISION-05+).",
+  },
+];
+
+export function getVisionMcpToolCatalog(): VisionMcpToolDescriptor[] {
+  return VISION_MCP_TOOL_CATALOG.map((entry) => ({ ...entry }));
+}
+
+export function findVisionMcpTool(name: string): VisionMcpToolDescriptor | undefined {
+  return VISION_MCP_TOOL_CATALOG.find((entry) => entry.name === name);
+}

@@ -1,6 +1,7 @@
 import { PACKAGE_VERSION } from "@ftc-dev-tools/shared";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import { registerVisionAgentTools } from "./register-vision-agent-tools.js";
 import {
   toolBuild,
   toolConfigList,
@@ -88,6 +89,21 @@ export const FTC_MCP_TOOL_NAMES = [
   "vision_easyopencv_status",
   "vision_codegen",
   "vision_diagnostics",
+  "vision_list_devices",
+  "vision_get_status",
+  "vision_get_diagnostics",
+  "vision_list_pipelines",
+  "vision_validate_pipeline",
+  "vision_compare_pipeline",
+  "vision_list_sessions",
+  "vision_inspect_session",
+  "vision_analyze_recording",
+  "vision_generate_code",
+  "vision_capture_frame",
+  "vision_upload_pipeline",
+  "vision_activate_pipeline",
+  "vision_upload_python",
+  "vision_upload_fieldmap",
   "replay_status",
   "replay_validate_header",
   "replay_validate_event",
@@ -725,6 +741,8 @@ export function createFtcMcpServer(): McpServer {
     },
     async (args) => toolVisionDiagnostics(args),
   );
+
+  registerVisionAgentTools(server);
 
   server.registerTool(
     "replay_status",

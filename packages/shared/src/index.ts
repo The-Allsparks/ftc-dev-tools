@@ -950,3 +950,30 @@ export {
 export { collectVisionDiagnostics } from "./vision/diagnostics/collect.js";
 export { buildVisionDoctorChecks } from "./vision/diagnostics/doctor.js";
 export type { BuildVisionDoctorChecksOptions } from "./vision/diagnostics/doctor.js";
+export {
+  VISION_CLI_SCHEMA_VERSION,
+  VISION_CLI_EXIT,
+  VISION_CLI_EXIT_DOCS,
+} from "./vision/cli/constants.js";
+export type { VisionCliExitCode } from "./vision/cli/constants.js";
+export type {
+  VisionCliCommonOptions,
+  VisionCliCatalogEntry,
+  VisionCliDeferredResult,
+  OpenVisionTargetResult,
+  VisionCliJsonEnvelope,
+  VisionCliProviderId,
+} from "./vision/cli/types.js";
+export {
+  VISION_CLI_CATALOG,
+  getVisionCliCatalog,
+  findVisionCliCatalogEntry,
+} from "./vision/cli/catalog.js";
+export { buildDeferredVisionCliResult } from "./vision/cli/deferred.js";
+export {
+  redactVisionCliPayload,
+  wrapVisionCliJson,
+  formatEndpointTable,
+} from "./vision/cli/format.js";
+export { openVisionTarget } from "./vision/cli/open.js";
+export type { OpenVisionTargetOptions } from "./vision/cli/open.js";

@@ -104,9 +104,19 @@ ftc vision bridge status --json
 ftc vision bridge scaffold --yes --json
 ```
 
-Scaffold generates `FtcVisionDiagnosticBridge` and a development-only diagnostic OpMode. VisionPortal wiring is VISION-08.
+Scaffold generates `FtcVisionDiagnosticBridge` and a development-only diagnostic OpMode. When VisionPortal is present in TeamCode, scaffold includes `cameraFromPortal()` / `processorsFromPortal()` helpers (bridge code v1.1.0+).
 
-## Next steps (VISION-08+)
+## VisionPortal (VISION-08)
+
+Static TeamCode analysis and bridge snapshot helpers. See [vision-portal-integration.md](./vision-portal-integration.md).
+
+```bash
+ftc vision visionportal status --json
+```
+
+Runtime UVC controls and live processor mutations remain deferred.
+
+## Next steps (VISION-09+)
 
 - Live frame acquisition for VisionPortal
 - Vision Lab IDE panel consuming `listVisionProviders()`

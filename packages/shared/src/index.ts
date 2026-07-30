@@ -809,3 +809,25 @@ export {
   renderVisionDiagnosticBridgeSource,
   renderVisionDiagnosticOpModeSource,
 } from "./vision/bridge/templates.js";
+export type {
+  VisionPortalConfigSignal,
+  VisionPortalProcessorSignal,
+  VisionPortalWorkspaceDiscovery,
+  VisionPortalStatusReport,
+  VisionPortalCapabilities,
+  VisionPortalProcessorKind,
+  VisionPortalNormalizedProcessorResult,
+  VisionPortalCustomProcessorAdapter,
+} from "./vision/visionportal/types.js";
+export { VISION_PORTAL_CAPABILITIES } from "./vision/visionportal/capabilities.js";
+export {
+  scanVisionPortalJavaSource,
+  scanVisionPortalTeamCode,
+} from "./vision/visionportal/scan.js";
+export { discoverVisionPortalWorkspace } from "./vision/visionportal/discover.js";
+export { getVisionPortalStatus } from "./vision/visionportal/status.js";
+export {
+  normalizeVisionPortalProcessorKind,
+  normalizeVisionPortalProcessorResult,
+  registerVisionPortalProcessorAdapter,
+} from "./vision/visionportal/normalize.js";

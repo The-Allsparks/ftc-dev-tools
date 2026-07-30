@@ -7,6 +7,7 @@ import {
   getLimelightResults,
   getLimelightStatus,
   getVisionBridgeStatus,
+  getVisionPortalStatus,
   getVisionStatus,
   interpretFromUnknown,
   openFtcDashboard,
@@ -497,4 +498,39 @@ export function registerVisionCommand(program: Command): void {
         process.exitCode = result.success ? 0 : 1;
       },
     );
+
+  const visionportal = vision
+    .command("visionportal")
+    .description("VisionPortal static analysis and bridge integration (VISION-08)");
+
+  visionportal
+    .command("status")
+    .description("Scan TeamCode for VisionPortal camera, stream, and processor configuration")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(async (options: { json?: boolean }) => {
+      const ctx = createCliContext();
+      const report = await getVisionPortalStatus(ctx.cwd);
+      if (options.json) {
+        console.log(JSON.stringify(report, null, 2));
+        return;
+      }
+
+      console.log("VisionPortal status\n");
+      console.log(report.message);
+      for (const line of report.humanSummary) {
+        console.log(line);
+      }
+      if (report.discovery.requiresSelection) {
+        for (const reason of report.discovery.selectionReasons) {
+          console.log(`Selection required: ${reason}`);
+        }
+      }
+      for (const warning of report.discovery.warnings) {
+        console.log(`Warning: ${warning}`);
+      }
+      console.log("\nCapabilities:");
+      for (const [key, enabled] of Object.entries(report.capabilities)) {
+        console.log(`  ${key}: ${enabled ? "yes" : "deferred"}`);
+      }
+    });
 }

@@ -3,6 +3,7 @@ import path from "node:path";
 import { OfficialFtcProjectAdapter } from "../../adapters/official-ftc-project-adapter.js";
 import { DEFAULT_OPMODE_PACKAGE, packageToRelativePath } from "../../opmode/defaults.js";
 import { discoverVisionWorkspace } from "../discover.js";
+import { discoverVisionPortalWorkspace } from "../visionportal/discover.js";
 import { detectFtcDashboardDependency } from "../dashboard/detect-dependency.js";
 import {
   VISION_BRIDGE_CLASS_NAMES,
@@ -117,8 +118,16 @@ export async function getVisionBridgeStatus(
   const generatedAt = new Date().toISOString();
   const packageName = defaultBridgePackage();
   const workspace = await discoverVisionWorkspace(root);
+  const portalDiscovery = await discoverVisionPortalWorkspace(root);
   const dashboard = await detectFtcDashboardDependency(root);
   const visionPortalDetected = workspace.signals.some((signal) => signal.kind === "visionportal");
+  const hasDetailedPortalConfig = portalDiscovery.configs.some(
+    (config) =>
+      Boolean(config.cameraName) ||
+      Boolean(config.resolution) ||
+      Boolean(config.streamFormat) ||
+      config.processors.length > 0,
+  );
   const ftcDashboardDetected = dashboard.detected;
 
   const adapter = new OfficialFtcProjectAdapter();
@@ -140,7 +149,11 @@ export async function getVisionBridgeStatus(
   ];
   if (!visionPortalDetected) {
     warnings.push(
-      "VisionPortal not detected in this project yet; scaffold creates placeholder diagnostics until VISION-08 wiring.",
+      "VisionPortal not detected in this project yet; scaffold creates placeholder diagnostics until VisionPortal is added.",
+    );
+  } else if (!hasDetailedPortalConfig) {
+    warnings.push(
+      "VisionPortal import detected but camera/processor details were not found — run `ftc vision visionportal status` after configuring VisionPortal.",
     );
   }
   if (files.utility.present && files.diagnosticOpMode.present) {
@@ -173,7 +186,7 @@ export async function getVisionBridgeStatus(
     preferredTransports,
     capabilities: {
       scaffoldSupported: isOfficial,
-      liveVisionPortalDiagnostics: false,
+      liveVisionPortalDiagnostics: visionPortalDetected && hasDetailedPortalConfig,
       ftcDashboardTelemetry: ftcDashboardDetected,
     },
     warnings,

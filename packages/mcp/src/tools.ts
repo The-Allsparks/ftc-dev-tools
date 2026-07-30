@@ -15,6 +15,7 @@ import {
   getWifiStatus,
   getVisionStatus,
   discoverVisionWorkspace,
+  discoverVisionDevices,
   interpretFromUnknown,
   listOpModes,
   listRobotConfigs,
@@ -557,6 +558,23 @@ export async function toolVisionDiscover(args: ProjectRootArgs): Promise<CallToo
   try {
     const ctx = ctxFrom(args);
     return jsonResult(await discoverVisionWorkspace(ctx.projectRoot));
+  } catch (err) {
+    return jsonResult({
+      error: interpretFromUnknown(err).summary,
+    });
+  }
+}
+
+export async function toolVisionDevices(args: ProjectRootArgs): Promise<CallToolResult> {
+  try {
+    const ctx = ctxFrom(args);
+    const deviceProvider = await tryCreateDeviceProvider(ctx);
+    return jsonResult(
+      await discoverVisionDevices(ctx.projectRoot, {
+        deviceProvider,
+        runner: ctx.runner,
+      }),
+    );
   } catch (err) {
     return jsonResult({
       error: interpretFromUnknown(err).summary,

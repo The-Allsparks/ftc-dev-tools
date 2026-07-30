@@ -25,7 +25,9 @@ This ledger tracks workstreams for the modular architecture transition.
 | MCP `modules_list` + `providers_list`                       | Complete                   |
 | VISION-02 vision config + workspace discovery               | Complete                   |
 | `ftc vision status` / `discover` + MCP vision tools         | Complete                   |
-| Vision Lab live frames / IDE panel                          | Deferred — VISION-03+      |
+| VISION-03 vision endpoint + service discovery               | Complete                   |
+| `ftc vision devices` + MCP `vision_devices`                 | Complete                   |
+| Vision Lab live frames / IDE panel                          | Deferred — VISION-04+      |
 | Replay capture pipeline                                     | Deferred — FTC Replay epic |
 | Sim runtime adapters                                        | Deferred — FTC Sim epic    |
 

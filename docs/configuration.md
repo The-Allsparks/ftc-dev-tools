@@ -59,6 +59,7 @@ Discover what the project uses:
 ```bash
 ftc vision discover --json
 ftc vision status --json
+ftc vision devices --json   # endpoint discovery + optional network probes
 ```
 
 See [vision-providers.md](architecture/vision-providers.md).

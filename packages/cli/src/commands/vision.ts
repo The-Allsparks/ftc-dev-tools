@@ -1,5 +1,10 @@
 import type { Command } from "commander";
-import { discoverVisionWorkspace, getVisionStatus } from "@ftc-dev-tools/shared";
+import {
+  discoverVisionDevices,
+  discoverVisionWorkspace,
+  getVisionStatus,
+} from "@ftc-dev-tools/shared";
+import { createCliContext } from "../context.js";
 
 export function registerVisionCommand(program: Command): void {
   const vision = program
@@ -70,6 +75,53 @@ export function registerVisionCommand(program: Command): void {
       }
       for (const dir of discovery.pipelineDirectories) {
         console.log(`Pipeline directory: ${dir.relativePath} (${dir.fileCount} files)`);
+      }
+    });
+
+  vision
+    .command("devices")
+    .description("Discover vision endpoints and probe local-network services")
+    .option("--json", "Emit stable machine-readable JSON")
+    .option("--no-probe", "Skip network reachability checks")
+    .action(async (options: { json?: boolean; probe?: boolean }) => {
+      const ctx = createCliContext();
+      let deviceProvider;
+      try {
+        deviceProvider = await ctx.createDeviceProvider();
+      } catch {
+        deviceProvider = undefined;
+      }
+
+      const report = await discoverVisionDevices(ctx.cwd, {
+        deviceProvider,
+        runner: ctx.runner,
+        probeNetwork: options.probe !== false,
+      });
+
+      if (options.json) {
+        console.log(JSON.stringify(report, null, 2));
+        return;
+      }
+
+      console.log("Vision endpoint discovery\n");
+      console.log(report.message);
+      if (report.requiresSelection) {
+        for (const reason of report.selectionReasons) {
+          console.log(`Selection required: ${reason}`);
+        }
+      }
+      for (const endpoint of report.endpoints) {
+        const hostLabel = endpoint.host ? `${endpoint.host}:${endpoint.port ?? ""}` : "config";
+        console.log(
+          `[${endpoint.kind}] ${hostLabel} (${endpoint.probe.reachable}) — ${endpoint.providerId}`,
+        );
+        console.log(`  sources: ${endpoint.sources.join(", ")}`);
+        for (const line of endpoint.evidence) {
+          console.log(`  ${line}`);
+        }
+      }
+      for (const warning of report.warnings) {
+        console.log(`Warning: ${warning}`);
       }
     });
 }

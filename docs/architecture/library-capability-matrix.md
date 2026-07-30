@@ -26,7 +26,7 @@ Cross-reference of FTC ecosystem libraries against capability areas. Generated f
 | FTC Dashboard      | Supported    |      |     |        |  ✓   |   ✓    |     |  ✓  |     |     |         |
 | VisionPortal       | Official     |      |     |   ✓    |      |   ✓    |  ✓  |     |     |     |         |
 | EasyOpenCV         | Supported    |      |     |   ✓    |      |   ✓    |     |     |     |     |         |
-| Limelight          | Supported    |      |     |   ✓    |      |   ✓    |     |     |     |  ✓  |         |
+| Limelight Vision   | Supported    |      |     |   ✓    |      |   ✓    |     |     |     |  ✓  |         |
 | Road Runner        | Legacy       |  ✓   |     |        |      |        |  ✓  |     |     |  ✓  |         |
 | NextFTC            | Experimental |      |  ✓  |        |      |        |     |     |     |     |         |
 | FTCLib             | Experimental |      |  ✓  |        |      |        |     |     |  ✓  |     |         |

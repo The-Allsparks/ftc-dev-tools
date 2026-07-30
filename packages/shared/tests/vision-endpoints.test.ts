@@ -35,7 +35,7 @@ async function writeMinimalFtcProject(root: string): Promise<void> {
 }
 
 describe("vision endpoint helpers", () => {
-  it("derives Limelight host from team number", () => {
+  it("derives Limelight Vision host from team number", () => {
     expect(teamNumberToLimelightHost(916)).toBe("10.9.16.11");
     expect(teamNumberToLimelightHost(9106)).toBe("10.91.6.11");
     expect(teamNumberToLimelightHost(12345)).toBe("10.23.45.11");

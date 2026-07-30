@@ -57,7 +57,7 @@
   description: Network reachability and routing
 - name: limelight
   color: E99695
-  description: Limelight devices and pipelines
+  description: Limelight Vision devices and pipelines
 - name: provider
   color: B60205
   description: Vision provider implementation

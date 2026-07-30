@@ -14,9 +14,9 @@ We publish the project for the broader FTC community because useful team-built t
 
 The Allsparks remain the project’s founding maintainers, but FTC Dev Tools is intended to be a community project. Contributions, testing, documentation improvements, feature requests, and feedback from other FTC teams are welcome.
 
-> **Disclaimer:** This project is community-developed and unofficial. It is **not** affiliated with or endorsed by FIRST, REV Robotics, Microsoft, Anysphere, or other referenced vendors or community projects.
+> **Disclaimer:** This project is community-developed and unofficial. It is **not** affiliated with or endorsed by FIRST, REV Robotics, Limelight Vision, Microsoft, Anysphere, or other referenced vendors or community projects.
 >
-> FIRST®, FIRST Tech Challenge®, FTC®, REV Robotics®, Visual Studio Code®, and Cursor® may be trademarks of their respective owners. Their names are used only to describe compatibility and intended use.
+> FIRST®, FIRST Tech Challenge®, FTC®, REV Robotics®, Limelight Vision®, Visual Studio Code®, and Cursor® may be trademarks of their respective owners. Their names are used only to describe compatibility and intended use.
 
 ## Current status
 

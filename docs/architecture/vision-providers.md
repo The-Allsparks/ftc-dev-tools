@@ -8,7 +8,7 @@ Phase 3 foundation for **VISION-01**. Implements [ADR-0004](./adr/0004-provider-
 graph TD
   subgraph adapters [Integration adapters]
     VP[VisionPortal]
-    LL[Limelight]
+    LL[Limelight Vision]
     EOCV[EasyOpenCV]
   end
   subgraph core [Core provider registries]
@@ -64,7 +64,7 @@ MCP: `modules_list`, `providers_list`, `vision_status`, `vision_discover`, `visi
 
 ## Next steps (VISION-04+)
 
-- Limelight provider implementation (live frames)
+- Limelight Vision provider implementation (live frames)
 - Live frame acquisition for VisionPortal
 - Vision Lab IDE panel consuming `listVisionProviders()`
 

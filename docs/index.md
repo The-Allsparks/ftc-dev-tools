@@ -29,7 +29,7 @@ features:
     link: https://github.com/The-Allsparks/ftc-dev-tools/blob/main/README.md#safety-guarantees
 ---
 
-> **Disclaimer:** Community-developed and unofficial. Not affiliated with or endorsed by FIRST, REV Robotics, Microsoft, Anysphere, or other referenced vendors.
+> **Disclaimer:** Community-developed and unofficial. Not affiliated with or endorsed by FIRST, REV Robotics, Limelight Vision, Microsoft, Anysphere, or other referenced vendors.
 
 ## Current status
 

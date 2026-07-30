@@ -29,7 +29,7 @@ FTC Dev Tools **integrates** with the ecosystem; it does not replace upstream pr
 | Pedro Pathing    | Pathing      | **Shipped** — `ftc pedro`                                      |
 | FTC Dashboard    | Dashboard    | Epic #152; VISION-06; [telemetry spike](../telemetry-spike.md) |
 | EasyOpenCV       | Vision       | Vision Lab adapter target (VISION-09)                          |
-| Limelight        | Vision       | Vision Lab provider (VISION-04)                                |
+| Limelight Vision | Vision       | Vision Lab provider (VISION-04)                                |
 | GoBilda Pinpoint | Localization | Hardware Lab epic                                              |
 | SparkFun OTOS    | Localization | Hardware Lab epic                                              |
 

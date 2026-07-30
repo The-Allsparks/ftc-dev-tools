@@ -187,13 +187,13 @@ async function buildCandidates(
     const host = teamNumberToLimelightHost(teamNumber);
     if (host) {
       addLimelightCandidates(map, host, ["team-number-heuristic"], "low", [
-        `Team number ${teamNumber} → heuristic Limelight host ${host}`,
+        `Team number ${teamNumber} → heuristic Limelight Vision host ${host}`,
       ]);
     }
   }
 
   addLimelightCandidates(map, "limelight.local", ["default-hostname"], "medium", [
-    "Default mDNS hostname limelight.local",
+    "Default mDNS hostname limelight.local (Limelight Vision)",
   ]);
 
   const robotHosts = collectRobotHosts(devices);
@@ -311,7 +311,7 @@ async function buildCandidates(
           host,
           ["workspace-signal"],
           host === "limelight.local" ? "medium" : "low",
-          ["Limelight reference detected in TeamCode or Gradle"],
+          ["Limelight Vision reference detected in TeamCode or Gradle"],
         );
       }
     }
@@ -357,7 +357,9 @@ function analyzeSelection(
       .map((endpoint) => endpoint.host as string),
   );
   if (reachableLimelightHosts.size > 1) {
-    reasons.push(`Multiple reachable Limelight hosts: ${[...reachableLimelightHosts].join(", ")}.`);
+    reasons.push(
+      `Multiple reachable Limelight Vision hosts: ${[...reachableLimelightHosts].join(", ")}.`,
+    );
   }
 
   return {

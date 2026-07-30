@@ -90,7 +90,7 @@ export const BUILTIN_INTEGRATIONS: readonly IntegrationManifest[] = [
   },
   {
     id: "limelight",
-    displayName: "Limelight",
+    displayName: "Limelight Vision",
     category: "vision",
     classification: "supported",
     capabilities: ["vision", "localization"],
@@ -103,7 +103,7 @@ export const BUILTIN_INTEGRATIONS: readonly IntegrationManifest[] = [
     documentationUrl: "https://docs.limelightvision.io/",
     experimental: false,
     deprecated: false,
-    summary: "Network vision coprocessor; Vision Lab provider target (VISION-04).",
+    summary: "Limelight Vision network coprocessors; Vision Lab provider target (VISION-04).",
   },
   {
     id: "road-runner",

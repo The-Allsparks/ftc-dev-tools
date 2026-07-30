@@ -93,6 +93,12 @@ mustMatch(
   /not[\s*_]*(officially[\s*_]*)?(affiliated|endorsed)/i,
   "README disclaimer must deny official affiliation/endorsement.",
 );
+mustInclude(
+  "README.md",
+  readme,
+  "Limelight Vision",
+  "README disclaimer must name Limelight Vision alongside other vendors.",
+);
 mustInclude("README.md", readme, "GOVERNANCE.md", "Link to governance from the README.");
 mustInclude("README.md", readme, "AUTHORS.md", "Link to AUTHORS.md from the README.");
 mustInclude(
@@ -156,6 +162,12 @@ mustInclude(
 mustInclude(
   "GOVERNANCE.md",
   governance,
+  "Limelight Vision",
+  "Governance must name Limelight Vision in vendor disclaimers.",
+);
+mustInclude(
+  "GOVERNANCE.md",
+  governance,
   "Financial independence",
   "Governance must document that donations do not purchase technical influence.",
 );
@@ -170,6 +182,12 @@ mustInclude("NOTICE", notice, "The Allsparks", "NOTICE must credit The Allsparks
 mustInclude(
   "NOTICE",
   notice,
+  "Limelight Vision",
+  "NOTICE must name Limelight Vision in vendor disclaimers.",
+);
+mustInclude(
+  "NOTICE",
+  notice,
   "not officially affiliated",
   "NOTICE must deny official affiliation.",
 );
@@ -181,6 +199,12 @@ mustInclude(
   support,
   officialDonationUrl,
   "SUPPORT.md must use the official HCB donation URL exactly.",
+);
+mustInclude(
+  "SUPPORT.md",
+  support,
+  "Limelight Vision",
+  "SUPPORT.md must name Limelight Vision in vendor disclaimers.",
 );
 mustInclude("SUPPORT.md", support, "fiscal", "SUPPORT.md must explain fiscal sponsorship.");
 mustInclude(

@@ -32,6 +32,8 @@ export type {
   ConfigLoadResult,
   PreferredConnection,
   DefaultLogFilter,
+  FtcDevVisionConfig,
+  FtcDevLimelightConfig,
 } from "./types/config.js";
 
 export {
@@ -685,3 +687,17 @@ export {
   resetProviderCatalogForTests,
   createProviderRegistrySnapshot,
 } from "./providers/bootstrap.js";
+
+export type {
+  VisionDetectionKind,
+  VisionPipelineDirectory,
+  VisionStatusReport,
+  VisionWorkspaceDiscovery,
+  VisionWorkspaceSignal,
+} from "./vision/types.js";
+export { discoverVisionWorkspace } from "./vision/discover.js";
+export {
+  defaultVisionConfig,
+  getVisionStatus,
+  visionConfigFromProjectConfig,
+} from "./vision/status.js";

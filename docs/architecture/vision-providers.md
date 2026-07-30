@@ -55,11 +55,13 @@ Vision providers reference a **frame provider id** instead of importing Sim or R
 ```bash
 ftc modules list --json      # capability module manifests
 ftc providers list --json    # provider registry snapshot
+ftc vision discover --json   # scan TeamCode / Gradle for vision signals
+ftc vision status --json     # config + discovery combined
 ```
 
-MCP: `modules_list`, `providers_list` (read-only).
+MCP: `modules_list`, `providers_list`, `vision_status`, `vision_discover` (read-only).
 
-## Next steps (VISION-02+)
+## Next steps (VISION-03+)
 
 - Vision configuration and workspace discovery
 - Live frame acquisition for VisionPortal / Limelight

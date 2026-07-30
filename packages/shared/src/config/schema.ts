@@ -45,6 +45,33 @@ export const ftcDevSchema = {
         },
       },
     },
+    vision: {
+      type: "object",
+      additionalProperties: true,
+      properties: {
+        defaultProviderId: {
+          type: "string",
+          description: "Preferred vision provider id from the FTC Dev Tools provider registry.",
+        },
+        enabledProviderIds: {
+          type: "array",
+          items: { type: "string", minLength: 1 },
+          uniqueItems: true,
+        },
+        pipelineDirectory: {
+          type: "string",
+          description: "Repo-relative directory for pipeline-as-code assets.",
+        },
+        limelight: {
+          type: "object",
+          additionalProperties: true,
+          properties: {
+            host: { type: "string" },
+            pipelineDirectory: { type: "string" },
+          },
+        },
+      },
+    },
   },
   not: {
     anyOf: [

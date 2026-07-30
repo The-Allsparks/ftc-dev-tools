@@ -55,6 +55,13 @@ export function bootstrapProviderCatalog(): void {
     summary: "Virtual camera from FTC Sim runtime.",
   });
   registerFrameProvider({
+    id: "frame:easyopencv",
+    displayName: "EasyOpenCV camera",
+    source: "hardware",
+    integrationId: "easyopencv",
+    summary: "Webcam or phone camera via EasyOpenCV.",
+  });
+  registerFrameProvider({
     id: "frame:replay-file",
     displayName: "Replay file frames",
     source: "replay",
@@ -105,6 +112,14 @@ export function bootstrapProviderCatalog(): void {
     frameProviderId: "frame:limelight",
     summary: "Limelight pipeline and calibration.",
     experimental: true,
+  });
+  registerVisionProvider({
+    id: "vision:easyopencv",
+    displayName: "EasyOpenCV",
+    kind: "easyopencv",
+    integrationId: "easyopencv",
+    frameProviderId: "frame:easyopencv",
+    summary: "OpenCV wrapper for FTC cameras.",
   });
   registerVisionProvider({
     id: "vision:sim-virtual",

@@ -22,6 +22,8 @@ import {
   toolPedroScaffold,
   toolPedroStatus,
   toolProvidersList,
+  toolVisionDiscover,
+  toolVisionStatus,
   toolSdkCheck,
   toolSdkUpdate,
   toolWifiStatus,
@@ -52,6 +54,8 @@ export const FTC_MCP_TOOL_NAMES = [
   "integrations_list",
   "modules_list",
   "providers_list",
+  "vision_status",
+  "vision_discover",
 ] as const;
 
 export type FtcMcpToolName = (typeof FTC_MCP_TOOL_NAMES)[number];
@@ -436,6 +440,28 @@ export function createFtcMcpServer(): McpServer {
       annotations: { readOnlyHint: true, openWorldHint: false },
     },
     async () => toolProvidersList(),
+  );
+
+  server.registerTool(
+    "vision_status",
+    {
+      title: "Vision status",
+      description: "Show vision configuration and workspace discovery signals for the FTC project.",
+      inputSchema: z.object(projectRootShape),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolVisionStatus(args),
+  );
+
+  server.registerTool(
+    "vision_discover",
+    {
+      title: "Vision discover",
+      description: "Scan TeamCode and Gradle for vision library signals.",
+      inputSchema: z.object(projectRootShape),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolVisionDiscover(args),
   );
 
   return server;

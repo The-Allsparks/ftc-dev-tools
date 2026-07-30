@@ -124,12 +124,21 @@ Static Gradle/TeamCode analysis, Dashboard stream hints, and desktop replay comp
 ftc vision easyopencv status --json
 ```
 
-Live frame capture and the IDE panel remain VISION-10+.
+Live frame capture remains deferred.
 
-## Next steps (VISION-10+)
+## Vision Lab panel (VISION-10)
 
-- Live frame acquisition for VisionPortal
-- Vision Lab IDE panel consuming `listVisionProviders()`
+Read-only VS Code panel and activity-bar sidebar. See [vision-lab-panel.md](./vision-lab-panel.md).
+
+- Command Palette: **FTC: Open Vision Lab**
+- FTC activity bar → **Vision** sidebar
+
+Live camera streaming, capture, pause/resume, and replay controls remain deferred.
+
+## Next steps (VISION-11+)
+
+- Live frame acquisition and overlays for VisionPortal
+- Session capture and offline replay UI
 
 ## Related
 

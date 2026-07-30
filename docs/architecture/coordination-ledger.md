@@ -39,7 +39,9 @@ This ledger tracks workstreams for the modular architecture transition.
 | `ftc vision visionportal` + MCP `vision_visionportal_status` | Complete                   |
 | VISION-09 EasyOpenCV static analysis + replay hints          | Complete                   |
 | `ftc vision easyopencv` + MCP `vision_easyopencv_status`     | Complete                   |
-| Vision Lab live frames / IDE panel                           | Deferred — VISION-10+      |
+| VISION-10 Vision Lab IDE panel (read-only foundation)        | Complete                   |
+| `FTC: Open Vision Lab` + activity-bar Vision sidebar         | Complete                   |
+| Vision Lab live frames / capture / replay controls           | Deferred — VISION-10+      |
 | Limelight upload / activate / rollback                       | Deferred — VISION-05+      |
 | Replay capture pipeline                                      | Deferred — FTC Replay epic |
 | Sim runtime adapters                                         | Deferred — FTC Sim epic    |

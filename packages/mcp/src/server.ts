@@ -31,6 +31,8 @@ import {
   toolVisionLimelightPipelinesDiff,
   toolVisionDashboardStatus,
   toolVisionDashboardOpen,
+  toolVisionBridgeStatus,
+  toolVisionBridgeScaffold,
   toolVisionStatus,
   toolSdkCheck,
   toolSdkUpdate,
@@ -72,6 +74,8 @@ export const FTC_MCP_TOOL_NAMES = [
   "vision_limelight_pipelines_diff",
   "vision_dashboard_status",
   "vision_dashboard_open",
+  "vision_bridge_status",
+  "vision_bridge_scaffold",
 ] as const;
 
 export type FtcMcpToolName = (typeof FTC_MCP_TOOL_NAMES)[number];
@@ -588,6 +592,38 @@ export function createFtcMcpServer(): McpServer {
       annotations: { readOnlyHint: false, openWorldHint: false },
     },
     async (args) => toolVisionDashboardOpen(args),
+  );
+
+  server.registerTool(
+    "vision_bridge_status",
+    {
+      title: "Vision bridge status",
+      description:
+        "Report optional robot-side vision diagnostic bridge scaffold and preferred transports.",
+      inputSchema: z.object(projectRootShape),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolVisionBridgeStatus(args),
+  );
+
+  server.registerTool(
+    "vision_bridge_scaffold",
+    {
+      title: "Vision bridge scaffold",
+      description:
+        "Generate optional FtcVisionDiagnosticBridge utility and diagnostic OpMode in TeamCode.",
+      inputSchema: z.object({
+        ...projectRootShape,
+        ...confirmShape,
+        packageName: z
+          .string()
+          .optional()
+          .describe("Java package (default org.firstinspires.ftc.teamcode.vision)"),
+        force: z.boolean().optional().describe("Overwrite existing bridge files"),
+      }),
+      annotations: { readOnlyHint: false, openWorldHint: false },
+    },
+    async (args) => toolVisionBridgeScaffold(args),
   );
 
   return server;

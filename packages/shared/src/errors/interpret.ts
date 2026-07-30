@@ -881,6 +881,28 @@ const RULES: ErrorRule[] = [
       "Open the URL manually in a browser if automatic launch failed.",
     ],
   },
+  {
+    code: "BRIDGE_ABORTED",
+    test: ({ text, codeHint }) =>
+      codeHint === "BRIDGE_ABORTED" || /Bridge scaffold requires --yes/i.test(text),
+    title: "Vision bridge scaffold cancelled",
+    summary: "The vision diagnostic bridge scaffold requires explicit confirmation.",
+    suggestedActions: [
+      "Re-run with `--yes` if you intend to write bridge files into TeamCode.",
+      "Use `--dry-run` to preview planned files without writing.",
+    ],
+  },
+  {
+    code: "BRIDGE_SCAFFOLD_EXISTS",
+    test: ({ text, codeHint }) =>
+      codeHint === "BRIDGE_SCAFFOLD_EXISTS" || /Bridge files already exist/i.test(text),
+    title: "Vision bridge files already exist",
+    summary: "Scaffold refused because diagnostic bridge files are already present.",
+    suggestedActions: [
+      "Run `ftc vision bridge status` to see existing paths.",
+      "Pass `--force` only if you intend to overwrite generated bridge files.",
+    ],
+  },
 ];
 export function interpretError(input: string | ErrorContext): FriendlyError {
   const ctx: ErrorContext = typeof input === "string" ? { text: input } : input;

@@ -785,3 +785,27 @@ export { getFtcDashboardStatus } from "./vision/dashboard/status.js";
 export type { GetFtcDashboardStatusOptions } from "./vision/dashboard/status.js";
 export { openFtcDashboard } from "./vision/dashboard/open.js";
 export type { OpenFtcDashboardOptions } from "./vision/dashboard/open.js";
+export type {
+  VisionDiagnosticPayload,
+  VisionDiagnosticValidationResult,
+  VisionBridgeStatusReport,
+  VisionBridgeScaffoldResult,
+} from "./vision/bridge/types.js";
+export {
+  VISION_DIAGNOSTIC_SCHEMA_VERSION,
+  VISION_BRIDGE_CODE_VERSION,
+  VISION_DIAGNOSTIC_LOG_PREFIX,
+  VISION_BRIDGE_LIMITS,
+} from "./vision/bridge/constants.js";
+export {
+  extractVisionDiagnosticJson,
+  parseVisionDiagnosticLine,
+  validateVisionDiagnosticPayload,
+} from "./vision/bridge/validate.js";
+export { getVisionBridgeStatus } from "./vision/bridge/status.js";
+export { scaffoldVisionBridge } from "./vision/bridge/scaffold.js";
+export type { ScaffoldVisionBridgeOptions } from "./vision/bridge/scaffold.js";
+export {
+  renderVisionDiagnosticBridgeSource,
+  renderVisionDiagnosticOpModeSource,
+} from "./vision/bridge/templates.js";

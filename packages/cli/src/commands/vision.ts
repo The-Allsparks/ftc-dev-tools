@@ -6,10 +6,12 @@ import {
   getFtcDashboardStatus,
   getLimelightResults,
   getLimelightStatus,
+  getVisionBridgeStatus,
   getVisionStatus,
   interpretFromUnknown,
   openFtcDashboard,
   scanLimelightArtifacts,
+  scaffoldVisionBridge,
   validateLimelightArtifacts,
 } from "@ftc-dev-tools/shared";
 import { createCliContext } from "../context.js";
@@ -419,4 +421,80 @@ export function registerVisionCommand(program: Command): void {
         process.exitCode = 1;
       }
     });
+
+  const bridge = vision
+    .command("bridge")
+    .description("Optional robot-side vision diagnostic bridge (VISION-07)");
+
+  bridge
+    .command("status")
+    .description("Report bridge scaffold status and preferred diagnostic transports")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(async (options: { json?: boolean }) => {
+      const ctx = createCliContext();
+      const report = await getVisionBridgeStatus(ctx.cwd);
+      if (options.json) {
+        console.log(JSON.stringify(report, null, 2));
+        return;
+      }
+      console.log("Vision diagnostic bridge status\n");
+      console.log(report.message);
+      console.log(`Schema: ${report.schemaVersion} | Bridge code: ${report.bridgeCodeVersion}`);
+      console.log(`VisionPortal detected: ${report.visionPortalDetected ? "yes" : "no"}`);
+      console.log(`FTC Dashboard detected: ${report.ftcDashboardDetected ? "yes" : "no"}`);
+      console.log(
+        `Bridge utility: ${report.bridgeUtility.present ? report.bridgeUtility.relativePath : "missing"}`,
+      );
+      console.log(
+        `Diagnostic OpMode: ${report.diagnosticOpMode.present ? report.diagnosticOpMode.relativePath : "missing"}`,
+      );
+      console.log(`Preferred transports: ${report.preferredTransports.join(", ")}`);
+      for (const warning of report.warnings) {
+        console.log(`Warning: ${warning}`);
+      }
+    });
+
+  bridge
+    .command("scaffold")
+    .description("Generate optional FtcVisionDiagnosticBridge + diagnostic OpMode in TeamCode")
+    .option("--package <name>", "Java package (default org.firstinspires.ftc.teamcode.vision)")
+    .option("--yes", "Apply scaffold (required unless --dry-run)")
+    .option("--dry-run", "Show planned files without writing")
+    .option("--force", "Overwrite existing bridge files")
+    .option("--json", "Emit stable machine-readable JSON")
+    .action(
+      async (options: {
+        package?: string;
+        yes?: boolean;
+        dryRun?: boolean;
+        force?: boolean;
+        json?: boolean;
+      }) => {
+        const ctx = createCliContext();
+        const result = await scaffoldVisionBridge({
+          projectRoot: ctx.cwd,
+          runner: ctx.runner,
+          packageName: options.package,
+          dryRun: options.dryRun === true,
+          yes: options.yes === true,
+          force: options.force === true,
+        });
+        if (options.json) {
+          console.log(JSON.stringify(result, null, 2));
+        } else {
+          console.log("Vision bridge scaffold\n");
+          console.log(result.message);
+          for (const entry of result.plan) {
+            console.log(`  [${entry.action}] ${entry.relativePath}`);
+          }
+          for (const warning of result.warnings) {
+            console.log(`Warning: ${warning}`);
+          }
+          if (result.error) {
+            await printFriendlyError(result.error, false);
+          }
+        }
+        process.exitCode = result.success ? 0 : 1;
+      },
+    );
 }

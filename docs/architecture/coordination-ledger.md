@@ -33,6 +33,8 @@ This ledger tracks workstreams for the modular architecture transition.
 | `ftc vision limelight pipelines` + MCP pipeline tools       | Complete                   |
 | VISION-06 FTC Dashboard interoperability (status/open)      | Complete                   |
 | `ftc vision dashboard` + MCP dashboard tools                | Complete                   |
+| VISION-07 robot-side diagnostic bridge (schema/scaffold)    | Complete                   |
+| `ftc vision bridge` + MCP bridge tools                      | Complete                   |
 | Vision Lab live frames / IDE panel                          | Deferred — VISION-10+      |
 | Limelight upload / activate / rollback                      | Deferred — VISION-05+      |
 | Replay capture pipeline                                     | Deferred — FTC Replay epic |

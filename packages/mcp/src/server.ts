@@ -36,6 +36,10 @@ import {
   toolVisionVisionPortalStatus,
   toolVisionEasyOpenCvStatus,
   toolVisionCodegen,
+  toolReplayStatus,
+  toolReplayValidateHeader,
+  toolReplayValidateEvent,
+  toolReplayCreateHeader,
   toolVisionStatus,
   toolSdkCheck,
   toolSdkUpdate,
@@ -82,6 +86,10 @@ export const FTC_MCP_TOOL_NAMES = [
   "vision_visionportal_status",
   "vision_easyopencv_status",
   "vision_codegen",
+  "replay_status",
+  "replay_validate_header",
+  "replay_validate_event",
+  "replay_create_header",
 ] as const;
 
 export type FtcMcpToolName = (typeof FTC_MCP_TOOL_NAMES)[number];
@@ -696,6 +704,60 @@ export function createFtcMcpServer(): McpServer {
       annotations: { readOnlyHint: false, openWorldHint: false },
     },
     async (args) => toolVisionCodegen(args),
+  );
+
+  server.registerTool(
+    "replay_status",
+    {
+      title: "Replay status",
+      description:
+        "Report session recording schema versions, replay capabilities, limits, and registered backends.",
+      inputSchema: z.object({}),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async () => toolReplayStatus(),
+  );
+
+  server.registerTool(
+    "replay_validate_header",
+    {
+      title: "Validate session header",
+      description: "Validate a session header object against session.schema.json v1.0.0.",
+      inputSchema: z.object({
+        header: z.unknown().describe("Session header JSON object"),
+      }),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolReplayValidateHeader(args),
+  );
+
+  server.registerTool(
+    "replay_validate_event",
+    {
+      title: "Validate session event",
+      description: "Validate a session event envelope against session-event.schema.json v1.0.0.",
+      inputSchema: z.object({
+        event: z.unknown().describe("Session event JSON object"),
+      }),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolReplayValidateEvent(args),
+  );
+
+  server.registerTool(
+    "replay_create_header",
+    {
+      title: "Create session header",
+      description: "Build a new valid session header with a generated sessionId (no file write).",
+      inputSchema: z.object({
+        ...projectRootShape,
+        sources: z.array(z.string()).min(1).describe("Provider ids contributing to the session"),
+        teamNumber: z.number().int().optional(),
+        notes: z.string().optional(),
+      }),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolReplayCreateHeader(args),
   );
 
   return server;

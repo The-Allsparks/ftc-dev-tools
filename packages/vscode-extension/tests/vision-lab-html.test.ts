@@ -136,4 +136,43 @@ describe("renderVisionLabHtml", () => {
     expect(html).toContain("command:ftc.openVisionLab");
     expect(html).toContain("Open full Vision Lab panel");
   });
+
+  it("renders replay section with deferred capture capabilities", () => {
+    const html = renderVisionLabHtml(
+      minimalSnapshot({
+        replayStatus: {
+          generatedAt: "2026-07-30T00:00:00.000Z",
+          message: "Replay foundation only.",
+          headerSchemaVersion: "1.0.0",
+          eventSchemaVersion: "1.0.0",
+          sessionSchemaUrl: "https://example/session.schema.json",
+          eventSchemaUrl: "https://example/session-event.schema.json",
+          capabilities: {
+            sessionHeaderValidation: true,
+            sessionEventValidation: true,
+            sessionManifest: true,
+            liveCapture: false,
+            offlineReplay: false,
+            frameCapture: false,
+            annotatedFrameCapture: false,
+            exportBundle: false,
+            redaction: false,
+            visionLabControls: false,
+          },
+          limits: {
+            maxDurationMs: 1_800_000,
+            maxTotalBytes: 500_000_000,
+            maxEventPayloadBytes: 65_536,
+            maxEvents: 100_000,
+          },
+          gitignoreRecommendations: [".ftc-sessions/"],
+          replayBackends: [],
+          humanSummary: [],
+        },
+      }),
+    );
+
+    expect(html).toContain("Live camera &amp; replay");
+    expect(html).toContain("liveCapture=no");
+  });
 });

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/The-Allsparks/ftc-dev-tools/main/packages/shared/schemas/session-event.schema.json",
+  "title": "FTC Dev Tools session event",
+  "description": "Append-only session event envelope (ADR-0005, schema v1.0.0). Stream-friendly JSONL records reference this shape.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "sessionId", "sequence", "timestampMs", "kind", "sourceId"],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "sessionId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "timestampMs": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Wall-clock epoch milliseconds when the event was recorded."
+    },
+    "monotonicMs": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Optional monotonic offset from session start."
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "vision.diagnostic",
+        "vision.results",
+        "frame.metadata",
+        "session.note",
+        "session.marker"
+      ]
+    },
+    "sourceId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Provider or subsystem id (e.g. vision:bridge, vision:limelight)."
+    },
+    "pipelineId": {
+      "type": "string",
+      "description": "Active pipeline identity when applicable."
+    },
+    "payload": {
+      "type": "object",
+      "description": "Kind-specific JSON payload. Must not contain credentials."
+    },
+    "labels": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 16
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

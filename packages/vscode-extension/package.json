@@ -139,6 +139,22 @@
         "title": "FTC: Open FTC Dashboard"
       },
       {
+        "command": "ftc.openVisionLab",
+        "title": "FTC: Open Vision Lab",
+        "category": "FTC"
+      },
+      {
+        "command": "ftc.visionRefresh",
+        "title": "FTC: Refresh Vision Lab",
+        "category": "FTC",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "ftc.visionOpenSource",
+        "title": "FTC: Open Vision Source File",
+        "category": "FTC"
+      },
+      {
         "command": "ftc.wifiJoin",
         "title": "FTC: Join Robot Wi-Fi"
       },
@@ -402,6 +418,11 @@
         {
           "id": "ftc.robotView",
           "name": "FTC Robot"
+        },
+        {
+          "type": "webview",
+          "id": "ftc.visionSidebar",
+          "name": "Vision"
         }
       ],
       "ftcStartHerePanel": [
@@ -417,6 +438,16 @@
         {
           "command": "ftc.refreshView",
           "when": "view == ftc.robotView",
+          "group": "navigation"
+        },
+        {
+          "command": "ftc.visionRefresh",
+          "when": "view == ftc.visionSidebar",
+          "group": "navigation"
+        },
+        {
+          "command": "ftc.openVisionLab",
+          "when": "view == ftc.visionSidebar",
           "group": "navigation"
         }
       ]

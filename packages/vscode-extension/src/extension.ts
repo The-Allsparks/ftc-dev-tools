@@ -88,6 +88,11 @@ import {
   startHereCommand,
 } from "./start-here.js";
 import { StartHereDockProvider } from "./start-here-dock.js";
+import {
+  VisionLabPanelController,
+  VisionLabSidebarProvider,
+  visionOpenSourceCommand,
+} from "./vision-lab-panel.js";
 import { obtainOrOpenFtcProjectCommand } from "./obtain-project.js";
 import { connectRobotUsbFirstCommand } from "./connect-robot-usb.js";
 import { firstOpModeJourneyCommand } from "./first-opmode-journey.js";
@@ -166,6 +171,20 @@ export function activate(context: vscode.ExtensionContext): void {
   const startHereDock = new StartHereDockProvider();
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(StartHereDockProvider.viewType, startHereDock),
+  );
+
+  const visionLabPanel = new VisionLabPanelController(
+    context.extensionUri,
+    () => getWorkspaceRoot(),
+    tryCreateDeviceProvider,
+  );
+  const visionSidebar = new VisionLabSidebarProvider(
+    () => getWorkspaceRoot(),
+    tryCreateDeviceProvider,
+  );
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider(VisionLabSidebarProvider.viewType, visionSidebar),
+    { dispose: () => visionLabPanel.dispose() },
   );
 
   context.subscriptions.push(output, status, {
@@ -320,6 +339,17 @@ export function activate(context: vscode.ExtensionContext): void {
     tree.refresh();
   });
   register("ftc.startHere", () => startHereCommand(context, startHereDock, getWorkspaceRoot));
+  register("ftc.openVisionLab", async () => {
+    await visionLabPanel.open();
+    await visionSidebar.refresh();
+  });
+  register("ftc.visionRefresh", async () => {
+    await visionLabPanel.refresh();
+    await visionSidebar.refresh();
+  });
+  register("ftc.visionOpenSource", (relativePath?: string) =>
+    visionOpenSourceCommand(getWorkspaceRoot, relativePath),
+  );
   register("ftc.linkGitHubForReports", linkGitHubForErrorReportsCommand);
   register("ftc.unlinkGitHubForReports", unlinkGitHubForErrorReportsCommand);
 
@@ -328,6 +358,14 @@ export function activate(context: vscode.ExtensionContext): void {
 
 export function deactivate(): void {
   // disposables handled by context
+}
+
+async function tryCreateDeviceProvider(): Promise<DeviceProvider | undefined> {
+  try {
+    return await createDeviceProvider();
+  } catch {
+    return undefined;
+  }
 }
 
 async function createDeviceProvider(): Promise<DeviceProvider> {

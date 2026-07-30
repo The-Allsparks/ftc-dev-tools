@@ -1,5 +1,7 @@
 # Architecture
 
+> **Note:** Parts of this document are superseded by [Architecture Decision Records](./architecture/adr/) in `docs/architecture/adr/`. The 0.1.0 content below remains the reference for current shipped behavior until ADRs are accepted and implementation catches up.
+
 This document is the architectural plan for `ftc-dev-tools` version `0.1.0`.
 
 ## Purpose

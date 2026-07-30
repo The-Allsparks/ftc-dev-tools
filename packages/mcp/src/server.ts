@@ -23,6 +23,7 @@ import {
   toolPedroStatus,
   toolProvidersList,
   toolVisionDiscover,
+  toolVisionDevices,
   toolVisionStatus,
   toolSdkCheck,
   toolSdkUpdate,
@@ -56,6 +57,7 @@ export const FTC_MCP_TOOL_NAMES = [
   "providers_list",
   "vision_status",
   "vision_discover",
+  "vision_devices",
 ] as const;
 
 export type FtcMcpToolName = (typeof FTC_MCP_TOOL_NAMES)[number];
@@ -462,6 +464,18 @@ export function createFtcMcpServer(): McpServer {
       annotations: { readOnlyHint: true, openWorldHint: false },
     },
     async (args) => toolVisionDiscover(args),
+  );
+
+  server.registerTool(
+    "vision_devices",
+    {
+      title: "Vision devices",
+      description:
+        "Discover vision endpoints from config, robot XML, and connected devices; probe local-network services when available.",
+      inputSchema: z.object(projectRootShape),
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async (args) => toolVisionDevices(args),
   );
 
   return server;

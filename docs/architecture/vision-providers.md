@@ -57,14 +57,15 @@ ftc modules list --json      # capability module manifests
 ftc providers list --json    # provider registry snapshot
 ftc vision discover --json   # scan TeamCode / Gradle for vision signals
 ftc vision status --json     # config + discovery combined
+ftc vision devices --json    # endpoint discovery + network probes
 ```
 
-MCP: `modules_list`, `providers_list`, `vision_status`, `vision_discover` (read-only).
+MCP: `modules_list`, `providers_list`, `vision_status`, `vision_discover`, `vision_devices` (read-only).
 
-## Next steps (VISION-03+)
+## Next steps (VISION-04+)
 
-- Vision configuration and workspace discovery
-- Live frame acquisition for VisionPortal / Limelight
+- Limelight provider implementation (live frames)
+- Live frame acquisition for VisionPortal
 - Vision Lab IDE panel consuming `listVisionProviders()`
 
 ## Related

@@ -701,3 +701,26 @@ export {
   getVisionStatus,
   visionConfigFromProjectConfig,
 } from "./vision/status.js";
+export type {
+  VisionEndpointKind,
+  VisionEndpointLocation,
+  VisionEndpointSource,
+  VisionEndpointConfidence,
+  VisionEndpointReachability,
+  VisionEndpointCandidate,
+  VisionEndpointProbeResult,
+  VisionEndpointDescriptor,
+  VisionDevicesDiscoveryContext,
+  VisionDevicesReport,
+  DiscoverVisionDevicesOptions,
+} from "./vision/endpoints/types.js";
+export {
+  discoverVisionDevices,
+  extractWebcamDevicesFromXml,
+} from "./vision/endpoints/discover-devices.js";
+export type { DiscoverVisionDevicesFullOptions } from "./vision/endpoints/discover-devices.js";
+export {
+  teamNumberToLimelightHost,
+  teamNumberToSubnetOctets,
+  wifiSerialToHost,
+} from "./vision/endpoints/team-ip.js";

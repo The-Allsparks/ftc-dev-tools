@@ -89,6 +89,7 @@ Doctor JSON includes `sections` (machine / project / robot / optional) — see [
 | `providers_list` | `ftc providers list --json` |
 | `vision_status` | `ftc vision status --json` |
 | `vision_discover` | `ftc vision discover --json` |
+| `vision_devices` | `ftc vision devices --json` |
 
 ### Confirmed mutations
 

@@ -411,6 +411,21 @@
       "security",
       "priority: P0"
     ],
+    "Add agent-oriented MCP tools: logs capture, project snapshot, and bounded error summaries": [
+      "enhancement",
+      "shared-core",
+      "mcp",
+      "cli",
+      "student-ux",
+      "priority: P2"
+    ],
+    "Add optional maintainer MCP package for GitHub issue, PR, and CI triage": [
+      "enhancement",
+      "shared-core",
+      "mcp",
+      "integration",
+      "priority: P2"
+    ],
     "Add project and device operation locking": [
       "enhancement",
       "shared-core",

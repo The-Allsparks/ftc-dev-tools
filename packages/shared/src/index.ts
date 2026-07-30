@@ -882,3 +882,25 @@ export {
   emptyInspectorSnapshot,
 } from "./vision/inspector/limelight.js";
 export { buildVisionInspectorSnapshot } from "./vision/inspector/build.js";
+export {
+  VISION_CODEGEN_LANGUAGE,
+  DEFAULT_VISION_CODEGEN_PACKAGE,
+  VISION_CODEGEN_GENERATED_MARKER,
+} from "./vision/codegen/constants.js";
+export type {
+  VisionCodegenKind,
+  VisionCodegenKindDescriptor,
+  VisionCodegenPlanEntry,
+  VisionCodegenResult,
+  ScaffoldVisionCodegenOptions,
+} from "./vision/codegen/types.js";
+export { resolveVisionCodegenContext, VISION_CODEGEN_KINDS } from "./vision/codegen/context.js";
+export {
+  renderEasyOpenCvOpModeSource,
+  renderVisionPortalAprilTagOpModeSource,
+  renderVisionPortalColorOpModeSource,
+  renderLimelightOpModeSource,
+  renderDashboardStreamOpModeSource,
+  renderVisionCodegenSource,
+} from "./vision/codegen/templates.js";
+export { scaffoldVisionCodegen, parseVisionCodegenKind } from "./vision/codegen/scaffold.js";

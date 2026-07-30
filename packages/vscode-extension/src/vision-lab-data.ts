@@ -10,6 +10,7 @@ import {
   listVisionProviders,
   NodeProcessRunner,
   buildVisionInspectorSnapshot,
+  scanLimelightArtifacts,
 } from "@ftc-dev-tools/shared";
 import type {
   DeviceProvider,
@@ -273,6 +274,44 @@ export async function loadVisionLabSnapshot(
           label: entry.label,
           relativePath: entry.relativePath,
           providerId: "vision:easyopencv",
+        });
+      }
+    } catch {
+      // optional section
+    }
+    try {
+      const bridge = await getVisionBridgeStatus(projectRoot);
+      if (bridge.bridgeUtility.present && bridge.bridgeUtility.relativePath) {
+        sourceLinks.push({
+          label: "Diagnostic bridge utility",
+          relativePath: bridge.bridgeUtility.relativePath,
+          providerId: "vision:bridge",
+        });
+      }
+      if (bridge.diagnosticOpMode.present && bridge.diagnosticOpMode.relativePath) {
+        sourceLinks.push({
+          label: "Vision diagnostic OpMode",
+          relativePath: bridge.diagnosticOpMode.relativePath,
+          providerId: "vision:bridge",
+        });
+      }
+    } catch {
+      // optional section
+    }
+    try {
+      const limelight = await scanLimelightArtifacts(projectRoot);
+      for (const pipeline of limelight.pipelines) {
+        sourceLinks.push({
+          label: `Pipeline slot ${pipeline.slot ?? "?"}`,
+          relativePath: pipeline.relativePath,
+          providerId: "vision:limelight",
+        });
+      }
+      for (const script of limelight.pythonScripts) {
+        sourceLinks.push({
+          label: `Limelight script ${pathBasename(script.relativePath)}`,
+          relativePath: script.relativePath,
+          providerId: "vision:limelight",
         });
       }
     } catch {

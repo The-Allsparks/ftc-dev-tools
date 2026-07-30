@@ -35,6 +35,7 @@ import {
   toolVisionBridgeScaffold,
   toolVisionVisionPortalStatus,
   toolVisionEasyOpenCvStatus,
+  toolVisionCodegen,
   toolVisionStatus,
   toolSdkCheck,
   toolSdkUpdate,
@@ -80,6 +81,7 @@ export const FTC_MCP_TOOL_NAMES = [
   "vision_bridge_scaffold",
   "vision_visionportal_status",
   "vision_easyopencv_status",
+  "vision_codegen",
 ] as const;
 
 export type FtcMcpToolName = (typeof FTC_MCP_TOOL_NAMES)[number];
@@ -652,6 +654,48 @@ export function createFtcMcpServer(): McpServer {
       annotations: { readOnlyHint: true, openWorldHint: false },
     },
     async (args) => toolVisionEasyOpenCvStatus(args),
+  );
+
+  server.registerTool(
+    "vision_codegen",
+    {
+      title: "Vision codegen",
+      description:
+        "Generate Java TeamCode vision OpMode stubs (EasyOpenCV, VisionPortal, Limelight, Dashboard). Kotlin is not supported.",
+      inputSchema: z.object({
+        ...projectRootShape,
+        ...confirmShape,
+        kind: z
+          .enum([
+            "easyopencv",
+            "visionportal-apriltag",
+            "visionportal-color",
+            "limelight",
+            "dashboard-stream",
+          ])
+          .describe("Vision codegen template kind"),
+        className: z.string().describe("Java OpMode class name"),
+        pipelineClassName: z.string().optional().describe("EasyOpenCV pipeline class name"),
+        packageName: z
+          .string()
+          .optional()
+          .describe("Java package (default org.firstinspires.ftc.teamcode.vision)"),
+        cameraName: z.string().optional().describe("Webcam name from robot configuration"),
+        configName: z.string().optional().describe("Robot configuration XML base name"),
+        type: z.enum(["teleop", "autonomous"]).optional().describe("OpMode type"),
+        style: z.enum(["linear", "iterative"]).optional().describe("OpMode style"),
+        group: z.string().optional().describe("OpMode group annotation"),
+        name: z.string().optional().describe("OpMode display name"),
+        limelightTableName: z.string().optional().describe("Limelight NetworkTables table"),
+        useDashboardStream: z
+          .boolean()
+          .optional()
+          .describe("Include FTC Dashboard stream when supported"),
+        force: z.boolean().optional().describe("Overwrite existing generated files"),
+      }),
+      annotations: { readOnlyHint: false, openWorldHint: false },
+    },
+    async (args) => toolVisionCodegen(args),
   );
 
   return server;

@@ -177,6 +177,97 @@
       "        .build();"
     ]
   },
+  "FTC VisionPortal color processor": {
+    "prefix": "ftc-vision-color",
+    "description": "VisionPortal ColorProcessor builder skeleton",
+    "body": [
+      "ColorProcessor ${1:colorProcessor} = new ColorProcessor.Builder()",
+      "        .setDrawContours(true)",
+      "        .build();"
+    ]
+  },
+  "FTC EasyOpenCV pipeline class": {
+    "prefix": "ftc-easyopencv-pipeline",
+    "description": "EasyOpenCV OpenCvPipeline subclass stub",
+    "body": [
+      "public class ${1:SamplePipeline} extends OpenCvPipeline {",
+      "    @Override",
+      "    public Mat processFrame(Mat input) {",
+      "        return input;",
+      "    }",
+      "}"
+    ]
+  },
+  "FTC EasyOpenCV webcam init": {
+    "prefix": "ftc-easyopencv-webcam",
+    "description": "EasyOpenCV webcam async open with safe close",
+    "body": [
+      "${1:SamplePipeline} pipeline = new ${1:SamplePipeline}();",
+      "OpenCvWebcam webcam = OpenCvWebcamFactory.getInstance()",
+      "        .createWebcam(hardwareMap.get(WebcamName.class, \"${2:Webcam 1}\"), pipeline);",
+      "webcam.openCameraDeviceAsync();",
+      "while (!isStopRequested() && !webcam.isOpen()) {",
+      "    idle();",
+      "}",
+      "// remember webcam.closeCameraDevice() in finally"
+    ]
+  },
+  "FTC Limelight init": {
+    "prefix": "ftc-limelight-init",
+    "description": "Limelight NetworkTables initialization (Java)",
+    "body": [
+      "NetworkTableInstance inst = NetworkTableInstance.getDefault();",
+      "NetworkTable limelight = inst.getTable(\"${1:limelight}\");",
+      "limelight.getEntry(\"pipeline\").setNumber(${2:0});"
+    ]
+  },
+  "FTC Limelight result loop": {
+    "prefix": "ftc-limelight-loop",
+    "description": "Read Limelight tx/ty/ta/tv from NetworkTables",
+    "body": [
+      "double tv = limelight.getEntry(\"tv\").getDouble(0.0);",
+      "boolean targetValid = tv == 1.0;",
+      "double tx = limelight.getEntry(\"tx\").getDouble(0.0);",
+      "double ty = limelight.getEntry(\"ty\").getDouble(0.0);",
+      "double ta = limelight.getEntry(\"ta\").getDouble(0.0);",
+      "telemetry.addData(\"Target valid\", targetValid);",
+      "telemetry.addData(\"tx\", tx);",
+      "telemetry.addData(\"ty\", ty);",
+      "telemetry.addData(\"ta\", ta);"
+    ]
+  },
+  "FTC Limelight pipeline switch": {
+    "prefix": "ftc-limelight-pipeline",
+    "description": "Switch Limelight pipeline index with gamepad",
+    "body": [
+      "if (gamepad1.dpad_up) {",
+      "    ${1:activePipeline} = Math.max(0, ${1:activePipeline} - 1);",
+      "    limelight.getEntry(\"pipeline\").setNumber(${1:activePipeline});",
+      "} else if (gamepad1.dpad_down) {",
+      "    ${1:activePipeline} = ${1:activePipeline} + 1;",
+      "    limelight.getEntry(\"pipeline\").setNumber(${1:activePipeline});",
+      "}"
+    ]
+  },
+  "FTC Dashboard camera stream": {
+    "prefix": "ftc-dashboard-stream",
+    "description": "Start FTC Dashboard camera stream for VisionPortal",
+    "body": [
+      "FtcDashboard dashboard = FtcDashboard.getInstance();",
+      "dashboard.startCameraStream(${1:visionPortal});",
+      "// call dashboard.stopCameraStream(${1:visionPortal}) and visionPortal.close() when done"
+    ]
+  },
+  "FTC VisionPortal safe cleanup": {
+    "prefix": "ftc-vision-cleanup",
+    "description": "Close VisionPortal safely in finally",
+    "body": [
+      "if (${1:visionPortal} != null) {",
+      "    ${1:visionPortal}.close();",
+      "    ${1:visionPortal} = null;",
+      "}"
+    ]
+  },
   "FTC Safe stop finally": {
     "prefix": "ftc-safe-stop",
     "description": "try/finally pattern that zeros a motor",

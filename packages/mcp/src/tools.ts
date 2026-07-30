@@ -27,6 +27,8 @@ import {
   getVisionBridgeStatus,
   getVisionPortalStatus,
   scaffoldVisionBridge,
+  scaffoldVisionCodegen,
+  parseVisionCodegenKind,
   interpretFromUnknown,
   listOpModes,
   listRobotConfigs,
@@ -764,4 +766,75 @@ export async function toolVisionEasyOpenCvStatus(args: ProjectRootArgs): Promise
   } catch (err) {
     return jsonResult({ error: interpretFromUnknown(err).summary }, true);
   }
+}
+
+export async function toolVisionCodegen(
+  args: ProjectRootArgs &
+    ConfirmArgs & {
+      kind: string;
+      className: string;
+      pipelineClassName?: string;
+      packageName?: string;
+      cameraName?: string;
+      configName?: string;
+      type?: "teleop" | "autonomous";
+      style?: "linear" | "iterative";
+      group?: string;
+      name?: string;
+      limelightTableName?: string;
+      useDashboardStream?: boolean;
+      force?: boolean;
+    },
+): Promise<CallToolResult> {
+  const ctx = ctxFrom(args);
+  const parsedKind = parseVisionCodegenKind(args.kind);
+  if (!parsedKind) {
+    return jsonResult({ error: `Unknown vision codegen kind: ${args.kind}` }, true);
+  }
+
+  const payload = {
+    kind: parsedKind,
+    className: args.className,
+    pipelineClassName: args.pipelineClassName,
+    packageName: args.packageName,
+    cameraName: args.cameraName,
+    configName: args.configName,
+    type: args.type,
+    style: args.style,
+    group: args.group,
+    name: args.name,
+    limelightTableName: args.limelightTableName,
+    useDashboardStream: args.useDashboardStream,
+    force: args.force === true,
+  };
+
+  return runGatedMutation(
+    args,
+    "vision_codegen",
+    ctx.projectRoot,
+    payload,
+    "Generate Java TeamCode vision stubs (VISION-12).",
+    async (dryRun) => {
+      const result = await scaffoldVisionCodegen({
+        projectRoot: ctx.projectRoot,
+        runner: ctx.runner,
+        kind: parsedKind,
+        className: args.className,
+        pipelineClassName: args.pipelineClassName,
+        packageName: args.packageName,
+        cameraName: args.cameraName,
+        configName: args.configName,
+        opModeKind: args.type,
+        style: args.style,
+        group: args.group,
+        name: args.name,
+        limelightTableName: args.limelightTableName,
+        useDashboardStream: args.useDashboardStream,
+        dryRun,
+        yes: true,
+        force: args.force === true,
+      });
+      return { ...result };
+    },
+  );
 }

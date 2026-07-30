@@ -106,7 +106,7 @@ function isMissingConfigName(nameOrPath: string | null | undefined): boolean {
 
 export async function showRobotConfig(
   projectRoot: string,
-  nameOrPath: string,
+  nameOrPath: string | null | undefined,
 ): Promise<RobotConfigShowResult> {
   try {
     if (isMissingConfigName(nameOrPath)) {
@@ -158,7 +158,7 @@ export async function showRobotConfig(
 
 export async function resolveConfigPath(
   projectRoot: string,
-  nameOrPath: string,
+  nameOrPath: string | null | undefined,
 ): Promise<RobotConfigInfo | undefined> {
   if (isMissingConfigName(nameOrPath)) {
     return undefined;

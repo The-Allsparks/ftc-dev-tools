@@ -217,7 +217,7 @@ describe("list / show / validate robot configs", () => {
     await writeOfficialProject(root);
 
     for (const nameOrPath of [null, undefined, "", "   "] as const) {
-      const shown = await showRobotConfig(root, nameOrPath as any);
+      const shown = await showRobotConfig(root, nameOrPath);
       expect(shown.success).toBe(false);
       expect(shown.error?.code).toBe("MISSING_CONFIG_NAME");
       expect(shown.message).toMatch(/required/i);

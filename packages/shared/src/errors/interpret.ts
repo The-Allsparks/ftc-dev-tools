@@ -727,8 +727,7 @@ const RULES: ErrorRule[] = [
   {
     code: "MISSING_CONFIG_NAME",
     test: ({ text, codeHint }) =>
-      codeHint === "MISSING_CONFIG_NAME" ||
-      /Robot config name or path is required/i.test(text),
+      codeHint === "MISSING_CONFIG_NAME" || /Robot config name or path is required/i.test(text),
     title: "Robot config name required",
     summary: "A robot config base name or path must be provided.",
     suggestedActions: [

@@ -1,82 +1,116 @@
-# Orchestrator Phase 1–3 — Coordination Ledger
+# Orchestrator v2 — Coordination Ledger
 
-This ledger tracks workstreams for the modular architecture transition.
+**Single source of truth:** FTC Dev Tools Cursor Orchestrator v2 (supersedes all prior orchestration prompts).
+
+This ledger tracks workstreams, review gates, and phase status for the modular architecture transition.
+
+## Immediate execution status (2026-07-30)
+
+| Workstream           | Status       | Deliverable                                                 |
+| -------------------- | ------------ | ----------------------------------------------------------- |
+| Repository Inventory | **Complete** | [repository-inventory.md](./repository-inventory.md)        |
+| Backlog Audit        | **Complete** | [backlog-audit.md](./backlog-audit.md)                      |
+| ADR Generation       | **Complete** | [adr/index.md](./adr/index.md), ADRs 0007–0013 **Accepted** |
+
+**Gate A:** Approved 2026-07-30 — maintainer sign-off received.
+
+---
 
 ## Phase status
 
-| Phase                                            | Status       | Notes                        |
-| ------------------------------------------------ | ------------ | ---------------------------- |
-| Phase 1 — Inventory, backlog audit, ADRs         | **Complete** | PR #155                      |
-| Phase 2 — Registry, schemas, ecosystem docs      | **Complete** | PR #156                      |
-| Phase 3 — Vision, Replay, Sim, Hardware, Tuning  | **Active**   | Branch `orchestrator/phase3` |
-| Phase 4 — Adapter framework and library adapters | Blocked      | Pending Phase 3 foundations  |
-| Phase 5 — Workflow modules                       | Blocked      | Pending Phase 4              |
-| Phase 6 — Documentation, CI, packaging           | Blocked      | Pending Phase 5              |
+| Phase                                            | Status       | Notes                                                              |
+| ------------------------------------------------ | ------------ | ------------------------------------------------------------------ |
+| Phase 1 — Inventory, backlog audit, ADRs         | **Complete** | v2 refresh + Gate A approved                                       |
+| Phase 2 — Registry, schemas, ecosystem docs      | **Complete** | PR #156; registries and docs on `main`                             |
+| Phase 3 — Vision, Replay, Sim, Hardware, Tuning  | **Active**   | Vision foundations shipped; Replay schema only; Sim/Tuning partial |
+| Phase 4 — Adapter framework and library adapters | **Active**   | ADR-0010 Accepted; ADAPT-01 filed                                  |
+| Phase 5 — Workflow modules                       | **Blocked**  | Pending Phase 4                                                    |
+| Phase 6 — Documentation, CI, packaging           | **Blocked**  | Pending Phase 5                                                    |
 
-## Phase 3 deliverables (in progress)
+---
 
-| Deliverable                                                     | Status                                      |
-| --------------------------------------------------------------- | ------------------------------------------- |
-| Module registry (capability + workflow manifests)               | Complete                                    |
-| Provider registries (frame, vision, telemetry, sim, replay)     | Complete                                    |
-| Session recording schema v1.0.0                                 | Complete                                    |
-| Vision provider architecture doc (VISION-01)                    | Complete                                    |
-| `ftc modules list` + `ftc providers list`                       | Complete                                    |
-| MCP `modules_list` + `providers_list`                           | Complete                                    |
-| VISION-02 vision config + workspace discovery                   | Complete                                    |
-| `ftc vision status` / `discover` + MCP vision tools             | Complete                                    |
-| VISION-03 vision endpoint + service discovery                   | Complete                                    |
-| `ftc vision devices` + MCP `vision_devices`                     | Complete                                    |
-| VISION-04 Limelight Vision HTTP provider (status/results)       | Complete                                    |
-| `ftc vision limelight` + MCP limelight tools                    | Complete                                    |
-| VISION-05 Limelight pipeline-as-code (scan/validate/diff)       | Complete                                    |
-| `ftc vision limelight pipelines` + MCP pipeline tools           | Complete                                    |
-| VISION-06 FTC Dashboard interoperability (status/open)          | Complete                                    |
-| `ftc vision dashboard` + MCP dashboard tools                    | Complete                                    |
-| VISION-07 robot-side diagnostic bridge (schema/scaffold)        | Complete                                    |
-| `ftc vision bridge` + MCP bridge tools                          | Complete                                    |
-| VISION-08 VisionPortal static analysis + bridge helpers         | Complete                                    |
-| `ftc vision visionportal` + MCP `vision_visionportal_status`    | Complete                                    |
-| VISION-09 EasyOpenCV static analysis + replay hints             | Complete                                    |
-| `ftc vision easyopencv` + MCP `vision_easyopencv_status`        | Complete                                    |
-| VISION-10 Vision Lab IDE panel (read-only foundation)           | Complete                                    |
-| `FTC: Open Vision Lab` + activity-bar Vision sidebar            | Complete                                    |
-| VISION-11 Vision result inspector (structured + overlay)        | Complete                                    |
-| VISION-12 Vision Java codegen, snippets, source navigation      | Complete                                    |
-| `ftc vision codegen` + MCP `vision_codegen`                     | Complete                                    |
-| VISION-13 Session replay schema foundation                      | Complete                                    |
-| `ftc replay` + MCP replay tools                                 | Complete                                    |
-| VISION-14 Vision diagnostics foundation                         | Complete                                    |
-| `ftc vision diagnostics` + MCP `vision_diagnostics`             | Complete                                    |
-| Doctor optional Vision setup section                            | Complete                                    |
-| VISION-15 Vision CLI catalog, shortcuts, and JSON envelopes     | Complete                                    |
-| `ftc vision catalog` / `open` / `diagnose` / pipeline shortcuts | Complete                                    |
-| VISION-16 Agent-friendly vision MCP tools                       | Complete                                    |
-| `vision_list_devices` … `vision_upload_fieldmap`                | Complete                                    |
-| VISION-17 Vision validation foundation                          | Complete                                    |
-| `ftc vision validation status` + MCP `vision_validation_status` | Complete                                    |
-| Physical hardware validation checklists                         | Pending — see vision-hardware-validation.md |
-| VISION-18 Vision Lab user documentation                         | Complete                                    |
-| `docs/vision-lab.md` + provider guides + samples                | Complete                                    |
-| Vision Lab panel screenshots                                    | Pending — placeholders in docs/images       |
-| Vision Lab live video overlay / graphs / export                 | Deferred — VISION-11+                       |
-| Vision Lab live frames / capture / replay controls              | Deferred — VISION-13+                       |
-| Limelight upload / activate / rollback                          | Deferred — VISION-05+                       |
-| Replay capture pipeline                                         | Deferred — FTC Replay epic                  |
-| Sim runtime adapters                                            | Deferred — FTC Sim epic                     |
+## Phase 3 deliverables
+
+| Deliverable                                                         | Status                    |
+| ------------------------------------------------------------------- | ------------------------- |
+| Module registry (8 manifests)                                       | Complete                  |
+| Integration registry (11 entries)                                   | Complete                  |
+| Provider registries (frame, vision, telemetry, sim, replay)         | Complete                  |
+| Session recording schema v1.0.0                                     | Complete                  |
+| Vision Lab foundation (VISION-01–18)                                | Complete                  |
+| `ftc modules list` / `ftc providers list` / `ftc integrations list` | Complete                  |
+| MCP registry + vision tools (59 tools)                              | Complete                  |
+| Vision Lab IDE panel (read-only foundation)                         | Complete                  |
+| Replay schema + validation CLI/MCP                                  | Complete                  |
+| Live replay capture pipeline                                        | **Active** — REPLAY-01    |
+| Sim runtime adapters                                                | **Active** — SIM-01       |
+| Physical hardware validation (VISION-17)                            | Pending                   |
+| Tuning Lab architecture (TUNE-01+)                                  | Backlog filed (#208–#232) |
+
+---
+
+## Phase 4 deliverables (active)
+
+| Deliverable                                 | Status      | Issue                                                                      |
+| ------------------------------------------- | ----------- | -------------------------------------------------------------------------- |
+| IntegrationAdapter interface + registration | In progress | [#235 ADAPT-01](https://github.com/The-Allsparks/ftc-dev-tools/issues/235) |
+| Pedro reference adapter                     | Pending     | #149 migration                                                             |
+| `ftc integrations list --with-adapters`     | Pending     | ADAPT-01                                                                   |
+| Pedro migration to adapter contract         | Pending     | #149                                                                       |
+| Registry-driven integration docs            | Pending     | ADAPT-03 (not filed)                                                       |
+
+---
+
+## Review gates
+
+### Gate A — Phase 1 v2 sign-off ✅ Approved 2026-07-30
+
+- [x] Repository inventory reviewed
+- [x] Backlog audit reviewed
+- [x] ADRs 0007–0013 Accepted
+- [x] Close stale VISION-01–05 (#49–#53)
+- [x] Dedupe #185 / #186
+- [ ] MCP smoke bugs (#188–#204) — triage in progress (pre-1.0 gate)
+
+### Gate B — Phase 4 → Phase 5 entry
+
+1. Vision provider interfaces stable for adapter implementations
+2. Session schema `recordClass` field per ADR-0008
+3. IntegrationAdapter interface shipped (ADAPT-01)
+4. No breaking changes to shipped 0.1.x CLI commands
+
+---
+
+## Backlog actions (Gate A execution)
+
+| Action                                | Status  |
+| ------------------------------------- | ------- |
+| Close VISION-01–05 (#49–#53)          | Done    |
+| Close duplicate #186 (keep #185)      | Done    |
+| Sync Tuning Lab epic title in catalog | Done    |
+| Add Robot Inspector epic to catalog   | Done    |
+| File ADAPT-01, REPLAY-01, SIM-01      | Done    |
+| MCP smoke triage (#188–#204)          | Pending |
+
+---
 
 ## Meta tracking
 
-- Phase 1: [#141](https://github.com/The-Allsparks/ftc-dev-tools/issues/141) (complete)
-- Phase 2: [#142](https://github.com/The-Allsparks/ftc-dev-tools/issues/142), [#147](https://github.com/The-Allsparks/ftc-dev-tools/issues/147)
-- Phase 3: [#48 Vision Lab](https://github.com/The-Allsparks/ftc-dev-tools/issues/48), [#143 Replay](https://github.com/The-Allsparks/ftc-dev-tools/issues/143), [#145 Sim](https://github.com/The-Allsparks/ftc-dev-tools/issues/145)
+| Phase                  | GitHub                                                                                                                                        |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Phase 1 meta           | [#141](https://github.com/The-Allsparks/ftc-dev-tools/issues/141)                                                                             |
+| Phase 2 Core           | [#142](https://github.com/The-Allsparks/ftc-dev-tools/issues/142), [#147](https://github.com/The-Allsparks/ftc-dev-tools/issues/147)          |
+| Phase 3 Vision         | [#48](https://github.com/The-Allsparks/ftc-dev-tools/issues/48)                                                                               |
+| Phase 3 Replay         | [#143](https://github.com/The-Allsparks/ftc-dev-tools/issues/143)                                                                             |
+| Phase 3 Sim            | [#145](https://github.com/The-Allsparks/ftc-dev-tools/issues/145)                                                                             |
+| Phase 3 Hardware       | [#144](https://github.com/The-Allsparks/ftc-dev-tools/issues/144)                                                                             |
+| Phase 3 Tuning         | [#146](https://github.com/The-Allsparks/ftc-dev-tools/issues/146)                                                                             |
+| Robot Inspector        | [#205](https://github.com/The-Allsparks/ftc-dev-tools/issues/205)                                                                             |
+| Phase 4 Adapter        | [#147](https://github.com/The-Allsparks/ftc-dev-tools/issues/147), [#235 ADAPT-01](https://github.com/The-Allsparks/ftc-dev-tools/issues/235) |
+| Phase 3 Replay capture | [#233 REPLAY-01](https://github.com/The-Allsparks/ftc-dev-tools/issues/233)                                                                   |
+| Phase 3 Sim runtime    | [#234 SIM-01](https://github.com/The-Allsparks/ftc-dev-tools/issues/234)                                                                      |
 
-## Review gates (before Phase 4)
-
-1. Vision provider interfaces stable for adapter implementations (Limelight Vision, VisionPortal)
-2. Session schema reviewed for replay event format follow-up
-3. Module registry covers all capability epics
-4. No breaking changes to 0.1.0 CLI commands
+---
 
 ## Assumptions log
 
@@ -84,11 +118,19 @@ This ledger tracks workstreams for the modular architecture transition.
 | ---------- | -------------------------------------------------------------------------- | ------------------- |
 | 2026-07-30 | Provider catalog is descriptor-only; no live streaming yet                 | Incremental Phase 3 |
 | 2026-07-30 | Vision references frame providers; Sim registers virtual frames separately | ADR-0004            |
-| 2026-07-30 | Session schema covers header only; events schema is next Replay task       | ADR-0005            |
+| 2026-07-30 | Session schema covers header; events need `recordClass` per ADR-0008       | ADR-0005, ADR-0008  |
+| 2026-07-30 | **Gate A approved** — ADRs 0007–0013 Accepted; Phase 4 unblocked           | Maintainer sign-off |
+
+---
 
 ## Related documents
 
-- [Vision providers](./vision-providers.md)
-- [FTC software ecosystem](./ftc-software-ecosystem.md)
-- [Library capability matrix](./library-capability-matrix.md)
-- [Architecture decision records](./adr/)
+| Document                                                    | Purpose                              |
+| ----------------------------------------------------------- | ------------------------------------ |
+| [Repository inventory](./repository-inventory.md)           | Current repo map to product taxonomy |
+| [Backlog audit](./backlog-audit.md)                         | GitHub epic alignment                |
+| [ADR index](./adr/index.md)                                 | Architecture decisions               |
+| [ADR gap analysis](./adr/gap-analysis.md)                   | §1–§19 coverage vs existing ADRs     |
+| [FTC software ecosystem](./ftc-software-ecosystem.md)       | Library classification               |
+| [Library capability matrix](./library-capability-matrix.md) | Capability cross-reference           |
+| [Vision providers](./vision-providers.md)                   | Vision Lab provider architecture     |

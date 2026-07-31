@@ -118,7 +118,7 @@ Surfaces still import shared services directly; registries are read-only catalog
 
 ### Integration Adapters
 
-**Registry:** `packages/shared/src/registry/` — 11 built-in integrations in `catalog.ts`. **Behavioral contract:** `IntegrationAdapter` interface defined in ADR-0010 ([#235 ADAPT-01](https://github.com/The-Allsparks/ftc-dev-tools/issues/235); implementation pending).
+**Registry:** `packages/shared/src/registry/` — 11 built-in integrations in `catalog.ts`. **Behavioral contract:** `IntegrationAdapter` interface (ADR-0010, [#235 ADAPT-01](https://github.com/The-Allsparks/ftc-dev-tools/issues/235) shipped in [#239](https://github.com/The-Allsparks/ftc-dev-tools/pull/239)) with Pedro as the reference adapter in `registry/adapters/`.
 
 | Integration id     | Library            | Shipped CLI                   | Capabilities (summary)               |
 | ------------------ | ------------------ | ----------------------------- | ------------------------------------ |

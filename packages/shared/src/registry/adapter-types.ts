@@ -5,6 +5,7 @@
 
 import type { ProcessRunner } from "../types/process.js";
 import type { FetchLike } from "../sdk/types.js";
+import type { IntegrationManifest } from "./types.js";
 
 /** Schema version for adapter registry snapshots. */
 export const INTEGRATION_ADAPTER_SCHEMA_VERSION = "1.0.0";
@@ -150,14 +151,14 @@ export interface IntegrationAdapterDescriptor {
 }
 
 export interface IntegrationRegistryEntry extends IntegrationAdapterDescriptor {
-  manifest: import("./types.js").IntegrationManifest;
+  manifest: IntegrationManifest;
   adapterRegistered: boolean;
 }
 
 export interface IntegrationRegistrySnapshot {
   schemaVersion: string;
   generatedAt: string;
-  integrations: import("./types.js").IntegrationManifest[];
+  integrations: IntegrationManifest[];
   adapters: IntegrationAdapterDescriptor[];
 }
 

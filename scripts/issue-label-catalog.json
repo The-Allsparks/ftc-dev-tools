@@ -586,10 +586,31 @@
       "integration",
       "priority: P2"
     ],
-    "[EPIC] Tuning Lab — PID and mechanism tuning workflows": [
+    "[EPIC] Tuning Lab — safe drivetrain characterization, localization, and control tuning": [
       "epic",
       "tuning-lab",
       "developer-experience",
+      "priority: P2"
+    ],
+    "ADAPT-01: Define IntegrationAdapter interface and registration API": [
+      "adapter-framework",
+      "architecture",
+      "shared-core",
+      "integration",
+      "priority: P1"
+    ],
+    "REPLAY-01: Define platform session capture pipeline": [
+      "replay",
+      "recording",
+      "architecture",
+      "shared-core",
+      "priority: P2"
+    ],
+    "SIM-01: Define simulation runtime provider interface": [
+      "sim",
+      "architecture",
+      "shared-core",
+      "integration",
       "priority: P2"
     ],
     "[EPIC] Adapter Framework — detect, install, validate, and codegen contract": [

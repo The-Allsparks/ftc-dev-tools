@@ -54,7 +54,9 @@ describe("integration registry", () => {
   });
 
   it("marks adapter readiness on registry entries", () => {
-    const pedro = listIntegrationRegistryEntries().find((entry) => entry.manifestId === "pedro-pathing");
+    const pedro = listIntegrationRegistryEntries().find(
+      (entry) => entry.manifestId === "pedro-pathing",
+    );
     expect(pedro?.adapterRegistered).toBe(true);
     expect(pedro?.operations.some((entry) => entry.operation === "detect" && entry.supported)).toBe(
       true,

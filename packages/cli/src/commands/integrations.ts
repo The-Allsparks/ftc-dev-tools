@@ -1,5 +1,8 @@
 import type { Command } from "commander";
-import { createIntegrationRegistrySnapshot, listIntegrationRegistryEntries } from "@ftc-dev-tools/shared";
+import {
+  createIntegrationRegistrySnapshot,
+  listIntegrationRegistryEntries,
+} from "@ftc-dev-tools/shared";
 
 export function registerIntegrationsCommand(program: Command): void {
   const integrations = program
@@ -15,7 +18,9 @@ export function registerIntegrationsCommand(program: Command): void {
     .action((options: { json?: boolean; shipped?: boolean; withAdapters?: boolean }) => {
       if (options.withAdapters && options.json) {
         const entries = options.shipped
-          ? listIntegrationRegistryEntries().filter((entry) => entry.manifest.cliCommand !== undefined)
+          ? listIntegrationRegistryEntries().filter(
+              (entry) => entry.manifest.cliCommand !== undefined,
+            )
           : listIntegrationRegistryEntries();
         console.log(
           JSON.stringify(

@@ -10,13 +10,7 @@ import type { FetchLike } from "../sdk/types.js";
 export const INTEGRATION_ADAPTER_SCHEMA_VERSION = "1.0.0";
 
 export type AdapterOperation =
-  | "detect"
-  | "validate"
-  | "install"
-  | "patch"
-  | "codegen"
-  | "replayHints"
-  | "simulationHooks";
+  "detect" | "validate" | "install" | "patch" | "codegen" | "replayHints" | "simulationHooks";
 
 export type AdapterPresence = "absent" | "partial" | "present";
 

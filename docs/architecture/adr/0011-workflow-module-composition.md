@@ -39,12 +39,12 @@ Phase 5 is blocked pending Phase 4 adapter framework. Module manifests (`module-
 
 4. **Orchestration patterns**
 
-   | Pattern | Description | Example |
-   | ------- | ----------- | ------- |
-   | **Session handoff** | Workflow opens or creates a replay session, then invokes capability tools | Match Analysis loads `.ftc-session.jsonl`, opens Vision result inspector |
-   | **Readiness gate** | Workflow runs Core doctor/readiness before enabling capability features | Autonomous Studio checks deploy + opmode before path preview |
-   | **Guided sequence** | Workflow presents steps; each step calls Core or capability commands | Driver Practice checklist |
-   | **Advisory aggregation** | Workflow combines doctor, rules, and capability status | Season Support (ties REQ-RULE-001) |
+   | Pattern                  | Description                                                               | Example                                                                  |
+   | ------------------------ | ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+   | **Session handoff**      | Workflow opens or creates a replay session, then invokes capability tools | Match Analysis loads `.ftc-session.jsonl`, opens Vision result inspector |
+   | **Readiness gate**       | Workflow runs Core doctor/readiness before enabling capability features   | Autonomous Studio checks deploy + opmode before path preview             |
+   | **Guided sequence**      | Workflow presents steps; each step calls Core or capability commands      | Driver Practice checklist                                                |
+   | **Advisory aggregation** | Workflow combines doctor, rules, and capability status                    | Season Support (ties REQ-RULE-001)                                       |
 
 5. **Surfaces** — Workflow modules may add VS Code command groups, CLI command groups, and MCP tools prefixed by workflow id (e.g. `ftc match-analysis`, MCP `match_analysis_*`). They should reuse JSON envelope conventions from Core/capabilities.
 

@@ -16,24 +16,24 @@ Telemetry today is fragmented: Logcat parsing, Limelight HTTP results, FTC Dashb
 
 1. **Core owns session and telemetry infrastructure**
 
-   | Concern | Owner | Notes |
-   | ------- | ----- | ----- |
-   | Session header schema | Core | `session.schema.json` |
-   | Session event envelope | Core | `session-event.schema.json` |
-   | Event validation, JSONL parsing | Core | `packages/shared/src/replay/` validators |
-   | Session id generation, limits, capability flags | Core | `REPLAY_SESSION_LIMITS`, `REPLAY_CAPABILITIES` |
-   | Telemetry provider registry | Core | Provider descriptors; adapters register streams |
-   | Recording writer interface (future) | Core | Bounded disk writer, redaction hooks, `.gitignore` guidance |
-   | Replay backend registry | Core | e.g. `replay:session-file` descriptor |
+   | Concern                                         | Owner | Notes                                                       |
+   | ----------------------------------------------- | ----- | ----------------------------------------------------------- |
+   | Session header schema                           | Core  | `session.schema.json`                                       |
+   | Session event envelope                          | Core  | `session-event.schema.json`                                 |
+   | Event validation, JSONL parsing                 | Core  | `packages/shared/src/replay/` validators                    |
+   | Session id generation, limits, capability flags | Core  | `REPLAY_SESSION_LIMITS`, `REPLAY_CAPABILITIES`              |
+   | Telemetry provider registry                     | Core  | Provider descriptors; adapters register streams             |
+   | Recording writer interface (future)             | Core  | Bounded disk writer, redaction hooks, `.gitignore` guidance |
+   | Replay backend registry                         | Core  | e.g. `replay:session-file` descriptor                       |
 
 2. **FTC Replay capability owns**
 
-   | Concern | Owner | Notes |
-   | ------- | ----- | ----- |
-   | Capture pipeline orchestration | FTC Replay | Subscribes to telemetry/frame providers |
-   | Playback / seek / export | FTC Replay | Consumes session files |
-   | Replay-specific UX | FTC Replay + surfaces | CLI `ftc replay record`, future transport controls |
-   | Domain event producers coordination | FTC Replay | Ensures ordering, sequence numbers, recordClass (ADR-0008) |
+   | Concern                             | Owner                 | Notes                                                      |
+   | ----------------------------------- | --------------------- | ---------------------------------------------------------- |
+   | Capture pipeline orchestration      | FTC Replay            | Subscribes to telemetry/frame providers                    |
+   | Playback / seek / export            | FTC Replay            | Consumes session files                                     |
+   | Replay-specific UX                  | FTC Replay + surfaces | CLI `ftc replay record`, future transport controls         |
+   | Domain event producers coordination | FTC Replay            | Ensures ordering, sequence numbers, recordClass (ADR-0008) |
 
 3. **Capability modules as event producers** — Vision Lab, Hardware Lab, Sim adapters, and integration adapters emit session events through Core writer APIs. They do not define alternate session file formats.
 

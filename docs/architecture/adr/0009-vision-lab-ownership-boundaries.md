@@ -16,35 +16,35 @@ Without explicit ownership rules, adapter logic drifts into Vision Lab (tight co
 
 1. **Vision Lab owns (capability module)**
 
-   | Area | Responsibility | In-repo today |
-   | ---- | -------------- | ------------- |
-   | Vision provider catalog | Register and describe vision-specific providers (`vision:*`) | `packages/shared/src/vision/` |
-   | Frame consumption | Resolve frames via Core frame registry by id; no direct camera drivers in Vision Lab | ADR-0004 |
-   | Structured results | Normalize vendor results (Limelight, bridge JSON) into shared result shapes | `vision/limelight/results.ts`, inspector |
-   | Overlays | Render normalized detection overlays in Vision Lab panel (not live video yet) | Result inspector |
-   | Calibration UX | Future: calibration workflows, field maps, upload gates | Deferred |
-   | Vision diagnostics | Aggregated `VISION_*` codes, workspace/network checks | `vision/diagnostics/` |
-   | Vision codegen | Java TeamCode stubs/snippets for vision libraries | `vision/codegen/` |
-   | Vision Lab surfaces | VS Code panel, CLI `ftc vision *`, MCP vision tools | extension, cli, mcp |
+   | Area                    | Responsibility                                                                       | In-repo today                            |
+   | ----------------------- | ------------------------------------------------------------------------------------ | ---------------------------------------- |
+   | Vision provider catalog | Register and describe vision-specific providers (`vision:*`)                         | `packages/shared/src/vision/`            |
+   | Frame consumption       | Resolve frames via Core frame registry by id; no direct camera drivers in Vision Lab | ADR-0004                                 |
+   | Structured results      | Normalize vendor results (Limelight, bridge JSON) into shared result shapes          | `vision/limelight/results.ts`, inspector |
+   | Overlays                | Render normalized detection overlays in Vision Lab panel (not live video yet)        | Result inspector                         |
+   | Calibration UX          | Future: calibration workflows, field maps, upload gates                              | Deferred                                 |
+   | Vision diagnostics      | Aggregated `VISION_*` codes, workspace/network checks                                | `vision/diagnostics/`                    |
+   | Vision codegen          | Java TeamCode stubs/snippets for vision libraries                                    | `vision/codegen/`                        |
+   | Vision Lab surfaces     | VS Code panel, CLI `ftc vision *`, MCP vision tools                                  | extension, cli, mcp                      |
 
 2. **Core owns (platform)**
 
-   | Area | Responsibility |
-   | ---- | -------------- |
-   | Frame provider registry | Registration, listing, id stability |
-   | Telemetry provider registry | Shared telemetry stream descriptors |
+   | Area                          | Responsibility                                      |
+   | ----------------------------- | --------------------------------------------------- |
+   | Frame provider registry       | Registration, listing, id stability                 |
+   | Telemetry provider registry   | Shared telemetry stream descriptors                 |
    | Session/recording foundations | Header/event schemas, validation, limits (ADR-0012) |
-   | Project/workspace discovery | Gradle/TeamCode analysis used by vision discover |
-   | Network/process execution | HTTP probes, scaffold file writes, safety gates |
+   | Project/workspace discovery   | Gradle/TeamCode analysis used by vision discover    |
+   | Network/process execution     | HTTP probes, scaffold file writes, safety gates     |
 
 3. **Integration adapters own (per library)**
 
-   | Area | Responsibility | Examples |
-   | ---- | -------------- | -------- |
+   | Area                          | Responsibility                                                          | Examples                                    |
+   | ----------------------------- | ----------------------------------------------------------------------- | ------------------------------------------- |
    | Vendor protocol / file format | Limelight HTTP, VisionPortal static analysis, EasyOpenCV Gradle signals | `vision/limelight/`, `vision/visionportal/` |
-   | Robot-side bridge templates | Generated Java diagnostic bridge | `vision/bridge/` |
-   | Adapter metadata | Registry manifest, capability flags | `registry/catalog.ts` |
-   | Upstream documentation links | Official vendor docs | integration manifest |
+   | Robot-side bridge templates   | Generated Java diagnostic bridge                                        | `vision/bridge/`                            |
+   | Adapter metadata              | Registry manifest, capability flags                                     | `registry/catalog.ts`                       |
+   | Upstream documentation links  | Official vendor docs                                                    | integration manifest                        |
 
    Adapters MUST NOT import Vision Lab panel or workflow module code. Vision Lab MUST NOT embed vendor-specific protocol details beyond thin adapter delegation.
 

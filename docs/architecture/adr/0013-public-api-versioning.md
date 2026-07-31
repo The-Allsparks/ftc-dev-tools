@@ -23,11 +23,11 @@ Breaking CLI or MCP changes affect agents, CI, and mentor scripts independently 
 
 1. **Three version axes** — maintain separately:
 
-   | Axis | Example | Governs |
-   | ---- | ------- | ------- |
-   | **Package semver** | `0.1.0` | npm release, extension marketplace version |
-   | **Schema version** | `1.0.0` in `$id` / `schemaVersion` | JSON documents (ADR-0005) |
-   | **Public API version** | `2026-07-30` or `1.x` | CLI, MCP, extension command contracts |
+   | Axis                   | Example                            | Governs                                    |
+   | ---------------------- | ---------------------------------- | ------------------------------------------ |
+   | **Package semver**     | `0.1.0`                            | npm release, extension marketplace version |
+   | **Schema version**     | `1.0.0` in `$id` / `schemaVersion` | JSON documents (ADR-0005)                  |
+   | **Public API version** | `2026-07-30` or `1.x`              | CLI, MCP, extension command contracts      |
 
 2. **Public API version identifier** — use calendar-based `apiVersion` string (`YYYY-MM-DD`) for MCP/CLI JSON envelopes until 1.0 stable, then optional semver. Every structured JSON response from CLI (`--json`) and MCP tools includes:
 
@@ -44,14 +44,14 @@ Breaking CLI or MCP changes affect agents, CI, and mentor scripts independently 
 
 3. **Compatibility policy**
 
-   | Change type | Policy |
-   | ----------- | ------ |
-   | Add optional CLI flag | Compatible — same API version |
-   | Add MCP tool | Compatible |
-   | Add required JSON field in response | Minor API bump |
-   | Rename/remove CLI flag or MCP tool | Major API bump; deprecate first release cycle |
-   | Change `--json` envelope shape | Major API bump |
-   | `@ftc-dev-tools/shared` exported function signature change | Package semver + API changelog entry |
+   | Change type                                                | Policy                                        |
+   | ---------------------------------------------------------- | --------------------------------------------- |
+   | Add optional CLI flag                                      | Compatible — same API version                 |
+   | Add MCP tool                                               | Compatible                                    |
+   | Add required JSON field in response                        | Minor API bump                                |
+   | Rename/remove CLI flag or MCP tool                         | Major API bump; deprecate first release cycle |
+   | Change `--json` envelope shape                             | Major API bump                                |
+   | `@ftc-dev-tools/shared` exported function signature change | Package semver + API changelog entry          |
 
 4. **Deprecation** — Deprecated CLI commands and MCP tools remain functional for at least one minor package release with console/tool description warning. Removal requires major package version or documented breaking release.
 

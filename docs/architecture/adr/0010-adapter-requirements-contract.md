@@ -18,15 +18,15 @@ Phase 4 (adapter framework, [#147](https://github.com/The-Allsparks/ftc-dev-tool
 
 2. **Required operations**
 
-   | Operation | Purpose | Safety |
-   | --------- | ------- | ------ |
-   | `detect(projectRoot)` | Determine if integration is present, partial, or absent | Read-only |
-   | `validate(projectRoot)` | Check version compatibility, config consistency, doctor-style warnings | Read-only |
-   | `install(projectRoot, options)` | Add dependency, apply Gradle/settings changes | Dry-run default; `--yes` to write |
-   | `patch(projectRoot, plan)` | Apply idempotent project patches (templates, config snippets) | Backup or dry-run |
-   | `codegen(projectRoot, spec)` | Generate or update Java (or template) files in TeamCode | Never overwrite without confirmation |
-   | `replayHints(projectRoot)` | Declare replay event sources and `recordClass` defaults (ADR-0008) | Read-only |
-   | `simulationHooks(projectRoot)` | Register or document simulation runtime entry points (ADR-0007) | Read-only until Sim ships |
+   | Operation                       | Purpose                                                                | Safety                               |
+   | ------------------------------- | ---------------------------------------------------------------------- | ------------------------------------ |
+   | `detect(projectRoot)`           | Determine if integration is present, partial, or absent                | Read-only                            |
+   | `validate(projectRoot)`         | Check version compatibility, config consistency, doctor-style warnings | Read-only                            |
+   | `install(projectRoot, options)` | Add dependency, apply Gradle/settings changes                          | Dry-run default; `--yes` to write    |
+   | `patch(projectRoot, plan)`      | Apply idempotent project patches (templates, config snippets)          | Backup or dry-run                    |
+   | `codegen(projectRoot, spec)`    | Generate or update Java (or template) files in TeamCode                | Never overwrite without confirmation |
+   | `replayHints(projectRoot)`      | Declare replay event sources and `recordClass` defaults (ADR-0008)     | Read-only                            |
+   | `simulationHooks(projectRoot)`  | Register or document simulation runtime entry points (ADR-0007)        | Read-only until Sim ships            |
 
    Not every adapter implements every operation — unsupported operations return a structured `unsupported` result with reason. Manifest `capabilities` must reflect what is actually implemented.
 

@@ -16,10 +16,10 @@ Replay files may be used for debugging, mentor review, and agent analysis. Mixin
 
 1. **Two record classes** for all replay session events and derived artifacts:
 
-   | Class | Definition | Examples |
-   | ----- | ---------- | -------- |
-   | **Observation** | Measured or directly captured data from robot, network, or registered providers at record time | Limelight `/results`, Logcat line, motor encoder reading, frame metadata hash, dashboard telemetry sample |
-   | **Hypothesis** | Inferred, derived, debug-only, or tool-computed values not guaranteed to match on-robot ground truth | Pose estimate fusion, path planner preview, agent annotation, overlay alignment guess, replay-time interpolation |
+   | Class           | Definition                                                                                           | Examples                                                                                                         |
+   | --------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+   | **Observation** | Measured or directly captured data from robot, network, or registered providers at record time       | Limelight `/results`, Logcat line, motor encoder reading, frame metadata hash, dashboard telemetry sample        |
+   | **Hypothesis**  | Inferred, derived, debug-only, or tool-computed values not guaranteed to match on-robot ground truth | Pose estimate fusion, path planner preview, agent annotation, overlay alignment guess, replay-time interpolation |
 
 2. **Schema encoding** — Session events gain a required field (proposed name: `recordClass`) with enum values `observation` | `hypothesis`. Default for new producers is `observation`. Hypothesis events must not be promoted to observations without re-capture.
 
@@ -27,15 +27,15 @@ Replay files may be used for debugging, mentor review, and agent analysis. Mixin
 
 4. **Replay domains** — Extend event `kind` taxonomy over time (minor schema versions per ADR-0005):
 
-   | Domain | Initial kinds (v1.0.0+) | recordClass default |
-   | ------ | ----------------------- | ------------------- |
-   | Vision | `vision.diagnostic`, `vision.results`, `frame.metadata` | observation |
-   | Session | `session.note`, `session.marker` | hypothesis (notes) or observation (markers) |
-   | Telemetry | `telemetry.sample` (future) | observation |
-   | Hardware | `hardware.state` (future) | observation |
-   | Simulation | `sim.state` (future) | observation for sim output; hypothesis for derived viz |
-   | Logs | `log.line` (future) | observation |
-   | Annotations | `annotation.*` (future) | hypothesis |
+   | Domain      | Initial kinds (v1.0.0+)                                 | recordClass default                                    |
+   | ----------- | ------------------------------------------------------- | ------------------------------------------------------ |
+   | Vision      | `vision.diagnostic`, `vision.results`, `frame.metadata` | observation                                            |
+   | Session     | `session.note`, `session.marker`                        | hypothesis (notes) or observation (markers)            |
+   | Telemetry   | `telemetry.sample` (future)                             | observation                                            |
+   | Hardware    | `hardware.state` (future)                               | observation                                            |
+   | Simulation  | `sim.state` (future)                                    | observation for sim output; hypothesis for derived viz |
+   | Logs        | `log.line` (future)                                     | observation                                            |
+   | Annotations | `annotation.*` (future)                                 | hypothesis                                             |
 
 5. **UI and export rules** — Vision Lab replay controls, Match Analysis, and export bundles must visually distinguish hypotheses (e.g. dashed overlays, "inferred" badge). Export manifests list observation and hypothesis counts separately.
 

@@ -18,14 +18,14 @@ This ledger tracks workstreams, review gates, and phase status for the modular a
 
 ## Phase status
 
-| Phase                                            | Status       | Notes                                                              |
-| ------------------------------------------------ | ------------ | ------------------------------------------------------------------ |
-| Phase 1 — Inventory, backlog audit, ADRs         | **Complete** | v2 refresh + Gate A approved                                       |
-| Phase 2 — Registry, schemas, ecosystem docs      | **Complete** | PR #156; registries and docs on `main`                             |
-| Phase 3 — Vision, Replay, Sim, Hardware, Tuning  | **Active**   | Vision foundations shipped; Replay schema only; Sim/Tuning partial |
+| Phase                                            | Status       | Notes                                                                                                 |
+| ------------------------------------------------ | ------------ | ----------------------------------------------------------------------------------------------------- |
+| Phase 1 — Inventory, backlog audit, ADRs         | **Complete** | v2 refresh + Gate A approved                                                                          |
+| Phase 2 — Registry, schemas, ecosystem docs      | **Complete** | PR #156; registries and docs on `main`                                                                |
+| Phase 3 — Vision, Replay, Sim, Hardware, Tuning  | **Active**   | Vision foundations shipped; Replay schema only; Sim/Tuning partial                                    |
 | Phase 4 — Adapter framework and library adapters | **Active**   | ADR-0010 Accepted; ADAPT-01 shipped ([#239](https://github.com/The-Allsparks/ftc-dev-tools/pull/239)) |
-| Phase 5 — Workflow modules                       | **Blocked**  | Pending Phase 4                                                    |
-| Phase 6 — Documentation, CI, packaging           | **Blocked**  | Pending Phase 5                                                    |
+| Phase 5 — Workflow modules                       | **Blocked**  | Pending Phase 4                                                                                       |
+| Phase 6 — Documentation, CI, packaging           | **Blocked**  | Pending Phase 5                                                                                       |
 
 ---
 
@@ -51,13 +51,13 @@ This ledger tracks workstreams, review gates, and phase status for the modular a
 
 ## Phase 4 deliverables (active)
 
-| Deliverable                                 | Status       | Issue / PR                                                                 |
-| ------------------------------------------- | ------------ | -------------------------------------------------------------------------- |
-| IntegrationAdapter interface + registration | **Shipped**  | [#235 ADAPT-01](https://github.com/The-Allsparks/ftc-dev-tools/issues/235) closed via [#239](https://github.com/The-Allsparks/ftc-dev-tools/pull/239) |
-| Pedro reference adapter                     | **Shipped**  | `packages/shared/src/registry/adapters/pedro-integration-adapter.ts`       |
-| `ftc integrations list --with-adapters`     | **Shipped**  | adapter operation readiness in CLI                                         |
-| Pedro migration to adapter contract         | Pending      | #149                                                                       |
-| Registry-driven integration docs            | Pending      | ADAPT-03 (not filed)                                                       |
+| Deliverable                                 | Status      | Issue / PR                                                                                                                                            |
+| ------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| IntegrationAdapter interface + registration | **Shipped** | [#235 ADAPT-01](https://github.com/The-Allsparks/ftc-dev-tools/issues/235) closed via [#239](https://github.com/The-Allsparks/ftc-dev-tools/pull/239) |
+| Pedro reference adapter                     | **Shipped** | `packages/shared/src/registry/adapters/pedro-integration-adapter.ts`                                                                                  |
+| `ftc integrations list --with-adapters`     | **Shipped** | adapter operation readiness in CLI                                                                                                                    |
+| Pedro migration to adapter contract         | Pending     | #149                                                                                                                                                  |
+| Registry-driven integration docs            | Pending     | ADAPT-03 (not filed)                                                                                                                                  |
 
 ---
 
@@ -83,14 +83,14 @@ This ledger tracks workstreams, review gates, and phase status for the modular a
 
 ## Backlog actions (Gate A execution)
 
-| Action                                | Status  |
-| ------------------------------------- | ------- |
-| Close VISION-01–05 (#49–#53)          | Done    |
-| Close duplicate #186 (keep #185)      | Done    |
-| Sync Tuning Lab epic title in catalog | Done    |
-| Add Robot Inspector epic to catalog   | Done    |
-| File ADAPT-01, REPLAY-01, SIM-01      | Done    |
-| MCP smoke triage (#188–#204)          | Done    |
+| Action                                | Status |
+| ------------------------------------- | ------ |
+| Close VISION-01–05 (#49–#53)          | Done   |
+| Close duplicate #186 (keep #185)      | Done   |
+| Sync Tuning Lab epic title in catalog | Done   |
+| Add Robot Inspector epic to catalog   | Done   |
+| File ADAPT-01, REPLAY-01, SIM-01      | Done   |
+| MCP smoke triage (#188–#204)          | Done   |
 
 ---
 

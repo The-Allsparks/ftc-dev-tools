@@ -5,6 +5,7 @@
 
 import type { ProcessRunner } from "../types/process.js";
 import type { FetchLike } from "../sdk/types.js";
+import type { FriendlyError } from "../types/errors.js";
 import type { IntegrationManifest } from "./types.js";
 
 /** Schema version for adapter registry snapshots. */
@@ -31,6 +32,10 @@ export interface IntegrationAdapterInstallOptions extends IntegrationAdapterCont
   dryRun?: boolean;
   yes?: boolean;
   force?: boolean;
+  /** Pedro: pin com.pedropathing:ftc Maven version */
+  version?: string;
+  /** Pedro: bump compileSdk to minimum (default true) */
+  patchCompileSdk?: boolean;
 }
 
 export interface IntegrationAdapterPatchOptions extends IntegrationAdapterContext {
@@ -41,12 +46,16 @@ export interface IntegrationAdapterPatchOptions extends IntegrationAdapterContex
 export interface IntegrationAdapterCodegenOptions extends IntegrationAdapterContext {
   dryRun?: boolean;
   yes?: boolean;
+  force?: boolean;
+  /** Pedro: Quickstart release tag */
+  tag?: string;
 }
 
 export interface AdapterResultBase {
   success: boolean;
   message: string;
   warnings: string[];
+  error?: FriendlyError;
 }
 
 export interface AdapterUnsupportedResult extends AdapterResultBase {
@@ -74,6 +83,8 @@ export interface AdapterValidationCheck {
 export interface AdapterInstallResult extends AdapterResultBase {
   dryRun: boolean;
   plan: readonly AdapterPlanEntry[];
+  backupDirectory?: string;
+  ftcVersion?: string;
 }
 
 export interface AdapterPatchResult extends AdapterResultBase {
@@ -84,6 +95,9 @@ export interface AdapterPatchResult extends AdapterResultBase {
 export interface AdapterCodegenResult extends AdapterResultBase {
   dryRun: boolean;
   plan: readonly AdapterPlanEntry[];
+  backupDirectory?: string;
+  sourceTag?: string;
+  appliedPaths?: readonly string[];
 }
 
 export interface AdapterPlanEntry {

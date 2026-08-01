@@ -63,11 +63,9 @@ export class PedroPathingIntegrationAdapter implements IntegrationAdapter {
       presence: pedroPresence(status),
       message: status.message,
       warnings: status.warnings,
+      error: status.error,
       details: {
-        ftcVersion: status.ftcVersion,
-        pedroPathingPackagePresent: status.pedroPathingPackagePresent,
-        byalazarRepoPresent: status.byalazarRepoPresent,
-        compileSdkOk: status.compileSdkOk,
+        status,
       },
     };
   }
@@ -133,6 +131,8 @@ export class PedroPathingIntegrationAdapter implements IntegrationAdapter {
       dryRun: options.dryRun,
       yes: options.yes,
       force: options.force,
+      version: options.version,
+      patchCompileSdk: options.patchCompileSdk,
     });
 
     return {
@@ -140,6 +140,9 @@ export class PedroPathingIntegrationAdapter implements IntegrationAdapter {
       dryRun: result.dryRun,
       message: result.message,
       warnings: result.warnings,
+      error: result.error,
+      ftcVersion: result.ftcVersion,
+      backupDirectory: result.backupDirectory,
       plan: result.plan.map((entry) => ({
         kind: entry.kind,
         description: entry.description,
@@ -170,6 +173,8 @@ export class PedroPathingIntegrationAdapter implements IntegrationAdapter {
       signal: options.signal,
       dryRun: options.dryRun,
       yes: options.yes,
+      force: options.force,
+      tag: options.tag,
     });
 
     return {
@@ -177,6 +182,10 @@ export class PedroPathingIntegrationAdapter implements IntegrationAdapter {
       dryRun: result.dryRun,
       message: result.message,
       warnings: result.warnings,
+      error: result.error,
+      backupDirectory: result.backupDirectory,
+      sourceTag: result.sourceTag,
+      appliedPaths: result.appliedPaths,
       plan: result.plan.map((entry) => ({
         kind: entry.action,
         description: entry.relativePath,

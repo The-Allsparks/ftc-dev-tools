@@ -1,5 +1,10 @@
 import type { Command } from "commander";
-import { addPedroPathing, detectPedroStatus, scaffoldPedroPathing } from "@ftc-dev-tools/shared";
+import {
+  getPedroIntegrationAdapter,
+  pedroAddFromInstall,
+  pedroScaffoldFromCodegen,
+  pedroStatusFromDetect,
+} from "@ftc-dev-tools/shared";
 import { createCliContext, printFriendlyError } from "../context.js";
 
 async function confirm(question: string): Promise<boolean> {
@@ -28,7 +33,9 @@ export function registerPedroCommand(program: Command): void {
     .option("--verbose", "Include technical details for failures")
     .action(async (options: { json?: boolean; verbose?: boolean }) => {
       const ctx = createCliContext(process.cwd(), options.verbose === true);
-      const report = await detectPedroStatus(ctx.cwd);
+      const adapter = getPedroIntegrationAdapter();
+      const detectResult = await adapter.detect(ctx.cwd);
+      const report = pedroStatusFromDetect(ctx.cwd, detectResult);
       if (options.json) {
         console.log(JSON.stringify(report, null, 2));
       } else {
@@ -76,15 +83,20 @@ export function registerPedroCommand(program: Command): void {
         verbose?: boolean;
       }) => {
         const ctx = createCliContext(process.cwd(), options.verbose === true);
+        const adapter = getPedroIntegrationAdapter();
+        const installOptions = {
+          runner: ctx.runner,
+          version: options.version,
+          patchCompileSdk: options.patchCompileSdk !== false,
+          dryRun: options.dryRun === true,
+          yes: options.yes === true || options.dryRun === true,
+          force: options.force === true,
+        };
 
         if (!options.dryRun && !options.yes && process.stdin.isTTY) {
-          const preview = await addPedroPathing({
-            projectRoot: ctx.cwd,
-            runner: ctx.runner,
-            version: options.version,
-            patchCompileSdk: options.patchCompileSdk !== false,
-            dryRun: true,
-          });
+          const preview = pedroAddFromInstall(
+            await adapter.install(ctx.cwd, { ...installOptions, dryRun: true, yes: true }),
+          );
           console.log(preview.message);
           for (const entry of preview.plan) {
             console.log(`  - ${entry.description}`);
@@ -94,18 +106,10 @@ export function registerPedroCommand(program: Command): void {
             process.exitCode = 1;
             return;
           }
-          options.yes = true;
+          installOptions.yes = true;
         }
 
-        const result = await addPedroPathing({
-          projectRoot: ctx.cwd,
-          runner: ctx.runner,
-          version: options.version,
-          patchCompileSdk: options.patchCompileSdk !== false,
-          dryRun: options.dryRun === true,
-          yes: options.yes === true || options.dryRun === true,
-          force: options.force === true,
-        });
+        const result = pedroAddFromInstall(await adapter.install(ctx.cwd, installOptions));
 
         if (options.json) {
           console.log(JSON.stringify(result, null, 2));
@@ -152,6 +156,7 @@ export function registerPedroCommand(program: Command): void {
         verbose?: boolean;
       }) => {
         const ctx = createCliContext(process.cwd(), options.verbose === true);
+        const adapter = getPedroIntegrationAdapter();
 
         if (!options.dryRun && !options.yes && process.stdin.isTTY) {
           const ok = await confirm(
@@ -164,14 +169,15 @@ export function registerPedroCommand(program: Command): void {
           options.yes = true;
         }
 
-        const result = await scaffoldPedroPathing({
-          projectRoot: ctx.cwd,
-          runner: ctx.runner,
-          tag: options.tag,
-          dryRun: options.dryRun === true,
-          yes: options.yes === true || options.dryRun === true,
-          force: options.force === true,
-        });
+        const result = pedroScaffoldFromCodegen(
+          await adapter.codegen(ctx.cwd, {
+            runner: ctx.runner,
+            tag: options.tag,
+            dryRun: options.dryRun === true,
+            yes: options.yes === true || options.dryRun === true,
+            force: options.force === true,
+          }),
+        );
 
         if (options.json) {
           console.log(JSON.stringify(result, null, 2));

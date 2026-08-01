@@ -73,5 +73,28 @@ describe("integration adapters", () => {
     const result = await adapter!.detect(sampleProject);
     expect(result.success).toBe(true);
     expect(["absent", "partial", "present"]).toContain(result.presence);
+    expect(result.details?.status).toBeDefined();
+  });
+
+  it("maps Pedro detect result to status report shape", async () => {
+    const { pedroStatusFromDetect } = await import("../src/registry/adapters/pedro-bridge.js");
+    const adapter = getIntegrationAdapter("pedro-pathing");
+    const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
+    const sampleProject = path.join(repoRoot, "examples/sample-ftc-project");
+    const detectResult = await adapter!.detect(sampleProject);
+    const report = pedroStatusFromDetect(sampleProject, detectResult);
+    expect(report.projectRoot).toBe(sampleProject);
+    expect(Array.isArray(report.dependencies)).toBe(true);
+    expect(typeof report.pedroPathingPackagePresent).toBe("boolean");
+  });
+
+  it("returns unsupported install when runner is missing", async () => {
+    const { pedroAddFromInstall } = await import("../src/registry/adapters/pedro-bridge.js");
+    const adapter = getIntegrationAdapter("pedro-pathing");
+    const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
+    const sampleProject = path.join(repoRoot, "examples/sample-ftc-project");
+    const result = pedroAddFromInstall(await adapter!.install(sampleProject, { dryRun: true }));
+    expect(result.success).toBe(false);
+    expect(result.message).toContain("ProcessRunner");
   });
 });

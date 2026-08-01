@@ -5,7 +5,7 @@ import { createCliContext, printFriendlyError } from "../context.js";
 export function registerDevicesCommand(program: Command): void {
   program
     .command("devices")
-    .description("List connected Android devices")
+    .description("List connected robot devices")
     .option("--json", "Emit JSON")
     .action(async (options: { json?: boolean }) => {
       const ctx = createCliContext();
@@ -17,7 +17,7 @@ export function registerDevicesCommand(program: Command): void {
           return;
         }
         if (devices.length === 0) {
-          console.log("No Android devices found.");
+          console.log("No robot devices found.");
           process.exitCode = 1;
           return;
         }

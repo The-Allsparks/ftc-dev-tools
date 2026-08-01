@@ -25,6 +25,7 @@ import {
   VISION_CODEGEN_KINDS,
   validateLimelightArtifacts,
   getVisionValidationStatus,
+  tryCreateOptionalDeviceProvider,
 } from "@ftc-dev-tools/shared";
 import { createCliContext } from "../context.js";
 import { printFriendlyError } from "../context.js";
@@ -32,7 +33,6 @@ import {
   attachVisionCommonOptions,
   emitDeferredVisionCommand,
   emitVisionJson,
-  tryCreateVisionDeviceProvider,
 } from "./vision-common.js";
 
 export function registerVisionCommand(program: Command): void {
@@ -137,7 +137,9 @@ export function registerVisionCommand(program: Command): void {
     .option("--redact", "Redact serial numbers and IP addresses in JSON output")
     .action(async (options: { json?: boolean; probe?: boolean; redact?: boolean }) => {
       const ctx = createCliContext(process.cwd());
-      const deviceProvider = await tryCreateVisionDeviceProvider(() => ctx.createDeviceProvider());
+      const deviceProvider = await tryCreateOptionalDeviceProvider(() =>
+        ctx.createDeviceProvider(),
+      );
       const report = await collectVisionDiagnostics(process.cwd(), {
         deviceProvider,
         runner: ctx.runner,
@@ -175,7 +177,7 @@ export function registerVisionCommand(program: Command): void {
         redact?: boolean;
       }) => {
         const ctx = createCliContext(process.cwd());
-        const deviceProvider = await tryCreateVisionDeviceProvider(() =>
+        const deviceProvider = await tryCreateOptionalDeviceProvider(() =>
           ctx.createDeviceProvider(),
         );
         try {
@@ -308,7 +310,7 @@ export function registerVisionCommand(program: Command): void {
     .action(
       async (options: { json?: boolean; probe?: boolean; timeout?: number; redact?: boolean }) => {
         const ctx = createCliContext();
-        const deviceProvider = await tryCreateVisionDeviceProvider(() =>
+        const deviceProvider = await tryCreateOptionalDeviceProvider(() =>
           ctx.createDeviceProvider(),
         );
 
@@ -412,7 +414,7 @@ export function registerVisionCommand(program: Command): void {
         json?: boolean;
       }) => {
         const ctx = createCliContext();
-        const deviceProvider = await tryCreateVisionDeviceProvider(() =>
+        const deviceProvider = await tryCreateOptionalDeviceProvider(() =>
           ctx.createDeviceProvider(),
         );
         try {

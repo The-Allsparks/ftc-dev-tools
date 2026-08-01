@@ -10,6 +10,11 @@ assignees: ""
 
 A clear description of what went wrong.
 
+## Student impact
+
+- **What were you trying to do?** (build, deploy, diagnose, vision, …)
+- **Did you get an actionable error, or was the failure unclear?**
+
 ## Environment
 
 - FTC Dev Tools version:
@@ -36,6 +41,11 @@ Paste `ftc doctor --json` and relevant verbose output.
 
 - Remove passwords, Wi-Fi credentials, tokens, student information, and other private data before posting.
 - Prefer redacted serials when they are not needed to reproduce the issue.
+
+## Safety / mutation context (if relevant)
+
+- Did the action modify the robot, network, or project files?
+- Was confirmation (`--yes` or UI prompt) shown before a mutating step?
 
 ## Project layout notes
 

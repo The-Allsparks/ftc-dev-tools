@@ -123,6 +123,9 @@ export default defineConfig({
       {
         text: "Architecture",
         items: [
+          { text: "Product philosophy", link: "/architecture/product-philosophy" },
+          { text: "Architecture dimensions", link: "/architecture/dimensions" },
+          { text: "Integration expectations", link: "/architecture/integration-expectations" },
           { text: "Coordination ledger", link: "/architecture/coordination-ledger" },
           { text: "Repository inventory", link: "/architecture/repository-inventory" },
           { text: "Backlog audit", link: "/architecture/backlog-audit" },

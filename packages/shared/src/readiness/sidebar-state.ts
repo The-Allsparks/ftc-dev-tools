@@ -333,7 +333,7 @@ export function computeSidebarState(input: ComputeSidebarStateInput): SidebarSta
     return {
       phase: "ready-to-deploy",
       statusHeadline: "Build succeeded — deploy to your robot",
-      statusDetail: `Your project${moduleHint} compiled. Deploy the APK to your ${robotLabel}${serialHint}.`,
+      statusDetail: `Your project${moduleHint} compiled. Deploy the app to your ${robotLabel}${serialHint}.`,
       primaryAction: action("deploy", "Deploy to Robot", "ftc.deploy", "Deploy", "primary"),
       secondaryActions: [
         action(

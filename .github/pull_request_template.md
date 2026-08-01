@@ -2,6 +2,21 @@
 
 Briefly describe what this PR changes and why.
 
+## Product alignment
+
+Answer briefly (link issues or docs where helpful):
+
+1. **Student/mentor problem:** Which goal does this serve (build, deploy, diagnose, configure, vision, autonomous, …)?
+2. **Friction reduction:** How does it reduce time on toolchain vs robotics?
+3. **Wrap vs rewrite:** Should an existing authoritative tool own this instead?
+4. **Upstream ownership:** What external system owns the underlying behavior?
+5. **Validation evidence:** Mock / desktop / Control Hub / real users — what was tested?
+6. **New assumptions:** Any new platform, language, framework, vendor, or tool lock-in?
+7. **Mutation/safety risks:** Deploy, network, source, firmware, or config changes?
+8. **Safe failure:** How do unsupported or ambiguous cases fail without silent damage?
+
+See [docs/architecture/product-philosophy.md](../docs/architecture/product-philosophy.md).
+
 ## Type of change
 
 - [ ] Bug fix

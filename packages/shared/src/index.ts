@@ -639,7 +639,7 @@ export type {
   AdapterValidateResult,
 } from "./registry/adapter-types.js";
 export { INTEGRATION_MANIFEST_SCHEMA_VERSION } from "./registry/types.js";
-export { INTEGRATION_ADAPTER_SCHEMA_VERSION } from "./registry/adapter-types.js";
+export { INTEGRATION_ADAPTER_SCHEMA_VERSION, isAdapterUnsupportedResult } from "./registry/adapter-types.js";
 export {
   listIntegrations,
   getIntegration,
@@ -655,6 +655,13 @@ export {
 export { BUILTIN_INTEGRATIONS } from "./registry/catalog.js";
 export { BUILTIN_INTEGRATION_ADAPTERS } from "./registry/adapters/index.js";
 export { PedroPathingIntegrationAdapter } from "./registry/adapters/pedro-integration-adapter.js";
+export {
+  PEDRO_PATHING_MANIFEST_ID,
+  getPedroIntegrationAdapter,
+  pedroStatusFromDetect,
+  pedroAddFromInstall,
+  pedroScaffoldFromCodegen,
+} from "./registry/adapters/pedro-bridge.js";
 
 export type { ModuleManifest, ModuleRegistrySnapshot, ModuleLayer } from "./modules/types.js";
 export { MODULE_MANIFEST_SCHEMA_VERSION } from "./modules/types.js";

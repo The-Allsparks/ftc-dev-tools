@@ -1,5 +1,4 @@
 import {
-  addPedroPathing,
   applySdkUpdate,
   buildProject,
   checkHubUpdate,
@@ -10,7 +9,7 @@ import {
   createOpMode,
   createProviderRegistrySnapshot,
   deployProject,
-  detectPedroStatus,
+  getPedroIntegrationAdapter,
   getHubStatus,
   getWifiStatus,
   getVisionStatus,
@@ -39,7 +38,9 @@ import {
   listOpModes,
   listRobotConfigs,
   pullRobotConfigs,
-  scaffoldPedroPathing,
+  pedroAddFromInstall,
+  pedroScaffoldFromCodegen,
+  pedroStatusFromDetect,
   showHardwareMap,
   showRobotConfig,
   runDoctor,
@@ -288,7 +289,9 @@ export async function toolHubUpdateCheck(
 
 export async function toolPedroStatus(args: ProjectRootArgs): Promise<CallToolResult> {
   const ctx = ctxFrom(args);
-  const report = await detectPedroStatus(ctx.projectRoot);
+  const adapter = getPedroIntegrationAdapter();
+  const detectResult = await adapter.detect(ctx.projectRoot);
+  const report = pedroStatusFromDetect(ctx.projectRoot, detectResult);
   return jsonResult({ ...report, projectRoot: ctx.projectRoot }, Boolean(report.error));
 }
 
@@ -306,6 +309,7 @@ export async function toolPedroAdd(
     version: args.version,
     patchCompileSdk: args.patchCompileSdk !== false,
   };
+  const adapter = getPedroIntegrationAdapter();
   return runGatedMutation(
     args,
     "pedro_add",
@@ -313,15 +317,16 @@ export async function toolPedroAdd(
     payload,
     "Add Pedro Pathing Maven repo and dependencies.",
     async (dryRun) => {
-      const result = await addPedroPathing({
-        projectRoot: ctx.projectRoot,
-        runner: ctx.runner,
-        version: args.version,
-        dryRun,
-        yes: true,
-        force: args.force === true,
-        patchCompileSdk: args.patchCompileSdk !== false,
-      });
+      const result = pedroAddFromInstall(
+        await adapter.install(ctx.projectRoot, {
+          runner: ctx.runner,
+          version: args.version,
+          dryRun,
+          yes: true,
+          force: args.force === true,
+          patchCompileSdk: args.patchCompileSdk !== false,
+        }),
+      );
       return { ...result };
     },
   );
@@ -336,6 +341,7 @@ export async function toolPedroScaffold(
 ): Promise<CallToolResult> {
   const ctx = ctxFrom(args);
   const payload = { force: args.force === true, tag: args.tag };
+  const adapter = getPedroIntegrationAdapter();
   return runGatedMutation(
     args,
     "pedro_scaffold",
@@ -343,14 +349,15 @@ export async function toolPedroScaffold(
     payload,
     "Scaffold Pedro Pathing into TeamCode.",
     async (dryRun) => {
-      const result = await scaffoldPedroPathing({
-        projectRoot: ctx.projectRoot,
-        runner: ctx.runner,
-        tag: args.tag,
-        dryRun,
-        yes: true,
-        force: args.force === true,
-      });
+      const result = pedroScaffoldFromCodegen(
+        await adapter.codegen(ctx.projectRoot, {
+          runner: ctx.runner,
+          tag: args.tag,
+          dryRun,
+          yes: true,
+          force: args.force === true,
+        }),
+      );
       return { ...result };
     },
   );

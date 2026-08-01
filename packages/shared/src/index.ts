@@ -1061,3 +1061,47 @@ export type {
   VisionAutomatedCoverage,
   VisionValidationReport,
 } from "./vision/validation/types.js";
+export {
+  getGoldenPathValidationStatus,
+  GOLDEN_PATH_VALIDATION_SCHEMA_VERSION,
+  GOLDEN_PATH_AUTOMATED_COVERAGE,
+  SUPPORTED_ALPHA_CONFIGURATION,
+} from "./validation/golden-path/status.js";
+export {
+  getGoldenPathFeatureMaturity,
+  assertMockTestedOnlyUnlessHardwareValidated as assertGoldenPathMockTestedOnlyUnlessHardwareValidated,
+  GOLDEN_PATH_FEATURE_MATURITY,
+} from "./validation/golden-path/maturity.js";
+export {
+  getGoldenPathHardwareChecklists,
+  getPassedGoldenPathChecklistIds,
+  GOLDEN_PATH_HARDWARE_CHECKLISTS,
+} from "./validation/golden-path/checklists.js";
+export type {
+  GoldenPathFeatureMaturityLevel,
+  GoldenPathHardwareChecklistStatus,
+  GoldenPathFeatureMaturityEntry,
+  GoldenPathHardwareChecklistEntry,
+  GoldenPathAutomatedCoverage,
+  GoldenPathValidationReport,
+  SupportedAlphaConfiguration,
+} from "./validation/golden-path/types.js";
+export {
+  collectEnvironmentSnapshot,
+  type EnvironmentSnapshot,
+  type CollectEnvironmentSnapshotOptions,
+} from "./diagnostics/environment-snapshot.js";
+export {
+  collectGoldenPathBundle,
+  formatGoldenPathBundleMarkdown,
+  GOLDEN_PATH_BUNDLE_SCHEMA_VERSION,
+  BUNDLE_MAX_BUILD_OUTPUT_CHARS,
+  BUNDLE_MAX_LOGCAT_LINES,
+  type GoldenPathDiagnosticBundle,
+  type CollectGoldenPathBundleOptions,
+} from "./diagnostics/golden-path-bundle.js";
+export {
+  redactDiagnosticText,
+  redactDiagnosticValue,
+  truncateDiagnosticText,
+} from "./diagnostics/redact.js";

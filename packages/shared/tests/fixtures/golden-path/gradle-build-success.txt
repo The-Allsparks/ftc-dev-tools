@@ -1,0 +1,10 @@
+Starting a Gradle Daemon (Gradle daemon started in 2 s)
+> Task :FtcRobotController:preBuild UP-TO-DATE
+> Task :FtcRobotController:preDebugBuild UP-TO-DATE
+> Task :TeamCode:preBuild UP-TO-DATE
+> Task :TeamCode:preDebugBuild UP-TO-DATE
+> Task :TeamCode:compileDebugJavaWithJavac
+> Task :TeamCode:assembleDebug
+
+BUILD SUCCESSFUL in 45s
+12 actionable tasks: 4 executed, 8 up-to-date

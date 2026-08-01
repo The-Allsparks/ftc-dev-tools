@@ -15,15 +15,17 @@ Unit tests alone do **not** make a feature Stable. Use these levels in docs, iss
 
 Hardware-affecting features must not be labeled `Stable` solely because CI is green.
 
+Golden-path validation (Control Hub build/deploy/log): [testing/golden-path.md](testing/golden-path.md), [testing/validation-matrix.md](testing/validation-matrix.md).
+
 ## Per-feature status (0.1.0)
 
 | Feature                                | Maturity      | Notes                                                                           |
 | -------------------------------------- | ------------- | ------------------------------------------------------------------------------- |
-| Project detection / doctor             | `Mock-tested` | Desktop use common; Control Hub not required                                    |
-| Build / clean (Gradle Wrapper)         | `Mock-tested` | Desktop integration common on maintainer machines                               |
-| Deploy (USB)                           | `Mock-tested` | Needs published physical matrix for Stable                                      |
-| Deploy (Wi-Fi ADB)                     | `Mock-tested` | Needs phone + Control Hub rows                                                  |
-| Logcat stream                          | `Mock-tested` | Basic filters only                                                              |
+| Project detection / doctor             | `Mock-tested` | Desktop use common; Control Hub golden-path validation pending — see [validation matrix](testing/validation-matrix.md) |
+| Build / clean (Gradle Wrapper)         | `Mock-tested` | Gradle fixture tests; Control Hub build pending |
+| Deploy (USB)                           | `Mock-tested` | Golden-path USB checklist pending |
+| Deploy (Wi-Fi ADB)                     | `Mock-tested` | Not alpha-gated; needs phone + Control Hub rows |
+| Logcat stream                          | `Mock-tested` | TeamCode fixture tests; Control Hub streaming pending |
 | SDK check/update                       | `Mock-tested` | Never touches TeamCode; rollback hardening tracked separately                   |
 | Wi-Fi helpers                          | `Mock-tested` | Explicit confirmation required                                                  |
 | Hub OS check/download/guided apply     | `Mock-tested` | `--attempt-upload` **experimental**; not Stable                                 |
@@ -34,7 +36,9 @@ Hardware-affecting features must not be labeled `Stable` solely because CI is gr
 | MCP server                             | `Mock-tested` | Subset of CLI (59 tools)                                                        |
 | Java snippets / setup wizards          | `Mock-tested` | Start Here, walkthrough, First OpMode journey                                   |
 | Readiness / competition checklist      | `Mock-tested` | `readinessSnapshot` in doctor JSON; sidebar milestones                          |
-| GitHub error reporting                 | `Mock-tested` | Opt-in via `ftc github link` or `GITHUB_TOKEN`                                  |
+| GitHub error reporting                 | `Mock-tested` | Opt-in via `ftc github link` or `GITHUB_TOKEN`                                    |
+| Golden-path diagnostic bundle          | `Mock-tested` | `ftc validation bundle collect --redact`; hardware failure capture pending      |
+| Environment snapshot                   | `Mock-tested` | `ftc validation env`; version skew warnings                                     |
 | Session replay schema                  | `Mock-tested` | `ftc replay` validate/create-header; live capture deferred                      |
 | Maintainer MCP                         | `Mock-tested` | Maintainers only; see [maintainer-mcp.md](maintainer-mcp.md)                    |
 | Java debugger attach                   | Not shipped   | See [debugger-spike.md](debugger-spike.md)                                      |
@@ -56,6 +60,10 @@ Update this table when physical test reports land. Do not include personal data 
 Vision Lab detail: [vision-lab.md](vision-lab.md) and [vision-hardware-testing.md](vision-hardware-testing.md).
 
 ## Hardware test report template (no PII)
+
+Use the structured [golden-path hardware test report](testing/hardware-test-report-template.md) for Control Hub validation runs.
+
+Legacy short form:
 
 ```text
 Feature:

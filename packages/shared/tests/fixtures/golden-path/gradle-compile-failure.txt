@@ -1,0 +1,14 @@
+> Task :TeamCode:compileDebugJavaWithJavac FAILED
+C:\Users\student\Documents\FTC\TeamCode\src\main\java\org\firstinspires\ftc\teamcode\TeleOpDrive.java:42: error: cannot find symbol
+        motor.setPower(sped);
+                       ^
+  symbol:   variable sped
+  location: class TeleOpDrive
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':TeamCode:compileDebugJavaWithJavac'.
+> Compilation failed; see the compiler error output for details.
+
+BUILD FAILED in 8s

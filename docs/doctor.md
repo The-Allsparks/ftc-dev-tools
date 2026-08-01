@@ -72,3 +72,23 @@ After each run:
 - **Full success** shows an information message suggesting the next wizard step (typically **Build robot code**, or **Set up this FTC project** / **Show connected devices** when only part of the pipeline was in scope).
 
 Mapping logic lives in `@ftc-dev-tools/shared` (`doctor-fix-actions`) so CLI/MCP consumers can reuse the same action ids later.
+
+## Version and environment snapshot
+
+For golden-path troubleshooting and hardware test reports, use the validation env command (complements doctor with version skew detection):
+
+```bash
+ftc validation env
+ftc validation env --json
+ftc validation env --extension-version 0.1.0
+```
+
+Reports FTC Dev Tools version, CLI-on-PATH version, Java, ADB, Gradle Wrapper, detected project root, device selection, and FTC SDK version when a project is open.
+
+After a failed run, collect a redacted diagnostic bundle:
+
+```bash
+ftc validation bundle collect --redact -o bundle.json
+```
+
+See [testing/golden-path.md](testing/golden-path.md).

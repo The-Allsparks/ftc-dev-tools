@@ -4,6 +4,7 @@ import {
   parseAdbInstallOutput,
 } from "../src/devices/parse-adb-install.js";
 import { refuseMutationWithoutYes } from "../src/process/mutation-guard.js";
+import { readGoldenPathFixture } from "./helpers/official-ftc-project-fixture.js";
 
 describe("parseAdbInstallOutput", () => {
   it("detects signature conflicts", () => {
@@ -14,6 +15,11 @@ describe("parseAdbInstallOutput", () => {
       message: "Installation signature conflict.",
     });
     expect(detectAdbInstallErrorCode(output)).toBe("INSTALL_SIGNATURE_CONFLICT");
+  });
+
+  it("detects signature conflicts from golden-path fixture", async () => {
+    const output = await readGoldenPathFixture("adb-install-signature-failure.txt");
+    expect(parseAdbInstallOutput(output).code).toBe("INSTALL_SIGNATURE_CONFLICT");
   });
 
   it("detects insufficient storage", () => {

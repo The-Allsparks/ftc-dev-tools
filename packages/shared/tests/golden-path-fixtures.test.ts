@@ -70,12 +70,10 @@ describe("official FTC project fixture helper", () => {
   });
 
   it("writes detectable project without wrapper when requested", async () => {
-    const { writeMinimalOfficialFtcProject } = await import(
-      "./helpers/official-ftc-project-fixture.js"
-    );
-    const { OfficialFtcProjectAdapter } = await import(
-      "../src/adapters/official-ftc-project-adapter.js"
-    );
+    const { writeMinimalOfficialFtcProject } =
+      await import("./helpers/official-ftc-project-fixture.js");
+    const { OfficialFtcProjectAdapter } =
+      await import("../src/adapters/official-ftc-project-adapter.js");
     const dir = await fs.mkdtemp(path.join(os.tmpdir(), "ftc-fixture-"));
     tempDirs.push(dir);
     await writeMinimalOfficialFtcProject(dir, { includeWrapper: false });

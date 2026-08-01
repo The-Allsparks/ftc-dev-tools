@@ -1,7 +1,6 @@
 const SERIAL_PATTERN = /\b[A-Z0-9]{8,16}\b/g;
 const IPV4_PATTERN = /\b(?:\d{1,3}\.){3}\d{1,3}\b/g;
-const USER_HOME_PATTERN =
-  /(?:[A-Za-z]:\\Users\\[^\\]+|\/Users\/[^/]+|\/home\/[^/]+)(?:\\|\/)?/g;
+const USER_HOME_PATTERN = /(?:[A-Za-z]:\\Users\\[^\\]+|\/Users\/[^/]+|\/home\/[^/]+)(?:\\|\/)?/g;
 
 const SECRET_PATTERNS = [
   /ghp_[A-Za-z0-9]{20,}/g,

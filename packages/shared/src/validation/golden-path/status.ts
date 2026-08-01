@@ -49,18 +49,18 @@ export function getGoldenPathValidationStatus(): GoldenPathValidationReport {
     (entry) => entry.maturity === "Mock-tested",
   ).length;
   const hardwareValidatedFeatures = featureMaturity.filter((entry) =>
-    ["Android phone tested", "REV Control Hub tested", "Multi-team field tested", "Stable"].includes(
-      entry.maturity,
-    ),
+    [
+      "Android phone tested",
+      "REV Control Hub tested",
+      "Multi-team field tested",
+      "Stable",
+    ].includes(entry.maturity),
   ).length;
   const pendingHardwareChecks = hardwareChecklists.filter(
     (entry) => entry.status === "pending" || entry.status === "blocked",
   ).length;
 
-  const mockOnlyPolicyOk = assertMockTestedOnlyUnlessHardwareValidated(
-    featureMaturity,
-    passedIds,
-  );
+  const mockOnlyPolicyOk = assertMockTestedOnlyUnlessHardwareValidated(featureMaturity, passedIds);
 
   return {
     schemaVersion: GOLDEN_PATH_VALIDATION_SCHEMA_VERSION,

@@ -96,7 +96,9 @@ export function registerValidationCommand(program: Command): void {
         console.log(`Gradle: ${snapshot.gradle.versionLine ?? "wrapper found"}`);
       }
       if (snapshot.ftcSdk?.version) {
-        console.log(`FTC SDK: ${snapshot.ftcSdk.version} (${snapshot.ftcSdk.freshness ?? "unknown"})`);
+        console.log(
+          `FTC SDK: ${snapshot.ftcSdk.version} (${snapshot.ftcSdk.freshness ?? "unknown"})`,
+        );
       }
       if (snapshot.project) {
         console.log(

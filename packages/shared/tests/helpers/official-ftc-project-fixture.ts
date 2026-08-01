@@ -22,7 +22,10 @@ export async function writeMinimalOfficialFtcProject(
   const includeDependencies = options.includeDependencies !== false;
   const ftcSdkVersion = options.ftcSdkVersion ?? "11.1.0";
 
-  await fs.writeFile(path.join(dir, "settings.gradle"), "include ':FtcRobotController', ':TeamCode'\n");
+  await fs.writeFile(
+    path.join(dir, "settings.gradle"),
+    "include ':FtcRobotController', ':TeamCode'\n",
+  );
   await fs.writeFile(path.join(dir, "build.common.gradle"), "// common\n");
   if (includeDependencies) {
     await fs.writeFile(

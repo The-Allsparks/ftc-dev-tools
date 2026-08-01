@@ -1,7 +1,10 @@
 import type { DoctorReport } from "../types/errors.js";
 import type { FriendlyError } from "../types/errors.js";
 import type { BuildResult } from "../types/project.js";
-import { collectEnvironmentSnapshot, type CollectEnvironmentSnapshotOptions } from "./environment-snapshot.js";
+import {
+  collectEnvironmentSnapshot,
+  type CollectEnvironmentSnapshotOptions,
+} from "./environment-snapshot.js";
 import { redactDiagnosticValue, truncateDiagnosticText } from "./redact.js";
 import { runDoctor, type DoctorOptions } from "../doctor/run-doctor.js";
 
@@ -208,7 +211,13 @@ export function formatGoldenPathBundleMarkdown(bundle: GoldenPathDiagnosticBundl
   }
 
   if (bundle.devices) {
-    lines.push("## Devices", "", `- Count: ${bundle.devices.count}`, `- ${bundle.devices.summary}`, "");
+    lines.push(
+      "## Devices",
+      "",
+      `- Count: ${bundle.devices.count}`,
+      `- ${bundle.devices.summary}`,
+      "",
+    );
   }
 
   if (bundle.build) {

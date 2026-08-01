@@ -9,12 +9,7 @@ export type GoldenPathFeatureMaturityLevel =
   | "Not shipped"
   | "Deferred";
 
-export type GoldenPathHardwareChecklistStatus =
-  | "pending"
-  | "pass"
-  | "fail"
-  | "partial"
-  | "blocked";
+export type GoldenPathHardwareChecklistStatus = "pending" | "pass" | "fail" | "partial" | "blocked";
 
 export interface GoldenPathFeatureMaturityEntry {
   featureId: string;

@@ -12,13 +12,13 @@ Repeatable procedure for validating the core FTC Dev Tools workflow on a physica
 
 ## Required hardware
 
-| Item | Notes |
-| ---- | ----- |
-| Windows 11 PC | Primary alpha evidence target |
-| REV Control Hub | Charged, known-good USB cable |
-| USB cable | Data-capable (not charge-only) |
+| Item                  | Notes                                               |
+| --------------------- | --------------------------------------------------- |
+| Windows 11 PC         | Primary alpha evidence target                       |
+| REV Control Hub       | Charged, known-good USB cable                       |
+| USB cable             | Data-capable (not charge-only)                      |
 | Driver Station device | Android phone or tablet with REV Driver Station app |
-| Optional: USB hub | Document if used — can affect ADB stability |
+| Optional: USB hub     | Document if used — can affect ADB stability         |
 
 Do **not** factory-reset the Control Hub or flash firmware as part of this protocol.
 
@@ -26,14 +26,14 @@ Do **not** factory-reset the Control Hub or flash firmware as part of this proto
 
 ## Required host environment
 
-| Component | Requirement |
-| --------- | ----------- |
-| IDE | VS Code or Cursor with FTC Dev Tools extension installed |
-| CLI | `ftc` on PATH (`ftc --version` matches extension release when possible) |
-| JDK | 17 (`ftc doctor` Java check passes) |
-| Android SDK platform-tools | ADB available (`ftc doctor` ADB check passes) |
-| FTC project | Official-style Android project with Gradle Wrapper and TeamCode module |
-| FTC SDK | Document exact Maven version from `build.dependencies.gradle` (supported range: 11.0.x – 11.1.x) |
+| Component                  | Requirement                                                                                      |
+| -------------------------- | ------------------------------------------------------------------------------------------------ |
+| IDE                        | VS Code or Cursor with FTC Dev Tools extension installed                                         |
+| CLI                        | `ftc` on PATH (`ftc --version` matches extension release when possible)                          |
+| JDK                        | 17 (`ftc doctor` Java check passes)                                                              |
+| Android SDK platform-tools | ADB available (`ftc doctor` ADB check passes)                                                    |
+| FTC project                | Official-style Android project with Gradle Wrapper and TeamCode module                           |
+| FTC SDK                    | Document exact Maven version from `build.dependencies.gradle` (supported range: 11.0.x – 11.1.x) |
 
 Record versions with:
 
@@ -108,18 +108,18 @@ Follow [Getting started](../getting-started.md) and [CLI install](../cli-install
 
 ## Workflow steps
 
-| # | Step | Command / action | Expected result | Failure evidence |
-| - | ---- | ---------------- | --------------- | ---------------- |
-| 1 | Install toolchain | See Installation above | Doctor computer checks pass | `ftc doctor --json` |
-| 2 | Open project | Open root in IDE | Project detected | Doctor project section |
-| 3 | Run diagnostics | `ftc doctor` or **FTC: Run Environment Check** | Required checks pass; actionable messages for failures | Doctor JSON, bundle |
-| 4 | Connect Control Hub | USB + authorize | One authorized device | `ftc devices`, env snapshot |
-| 5 | Build | `ftc build` or **FTC: Build Robot Code** | BUILD SUCCESSFUL; APK produced | Build stdout/stderr (bounded) |
-| 6 | Deploy | `ftc deploy` or **FTC: Deploy to Robot** | Install succeeds; RC app updated | Deploy steps, ADB install output |
-| 7 | Driver Station handoff | Start configured OpMode on DS | OpMode appears in list; starts without crash | DS screenshot (no PII), logcat |
-| 8 | Capture logs | `ftc logs --teamcode` or **FTC: View Robot Logs** | TeamCode lines stream; Ctrl+C stops cleanly | Last 50 log lines |
-| 9 | Modify code | Change a TeleOp comment or telemetry line | File saves | Git diff (do not publish) |
-| 10 | Repeat cycle | Build → deploy → logs | Updated behavior or log message visible | Timings, bundle if fail |
+| #   | Step                   | Command / action                                  | Expected result                                        | Failure evidence                 |
+| --- | ---------------------- | ------------------------------------------------- | ------------------------------------------------------ | -------------------------------- |
+| 1   | Install toolchain      | See Installation above                            | Doctor computer checks pass                            | `ftc doctor --json`              |
+| 2   | Open project           | Open root in IDE                                  | Project detected                                       | Doctor project section           |
+| 3   | Run diagnostics        | `ftc doctor` or **FTC: Run Environment Check**    | Required checks pass; actionable messages for failures | Doctor JSON, bundle              |
+| 4   | Connect Control Hub    | USB + authorize                                   | One authorized device                                  | `ftc devices`, env snapshot      |
+| 5   | Build                  | `ftc build` or **FTC: Build Robot Code**          | BUILD SUCCESSFUL; APK produced                         | Build stdout/stderr (bounded)    |
+| 6   | Deploy                 | `ftc deploy` or **FTC: Deploy to Robot**          | Install succeeds; RC app updated                       | Deploy steps, ADB install output |
+| 7   | Driver Station handoff | Start configured OpMode on DS                     | OpMode appears in list; starts without crash           | DS screenshot (no PII), logcat   |
+| 8   | Capture logs           | `ftc logs --teamcode` or **FTC: View Robot Logs** | TeamCode lines stream; Ctrl+C stops cleanly            | Last 50 log lines                |
+| 9   | Modify code            | Change a TeleOp comment or telemetry line         | File saves                                             | Git diff (do not publish)        |
+| 10  | Repeat cycle           | Build → deploy → logs                             | Updated behavior or log message visible                | Timings, bundle if fail          |
 
 Record **time spent** on each major stage in the test report (§H metrics).
 
@@ -129,15 +129,15 @@ Record **time spent** on each major stage in the test report (§H metrics).
 
 After the first successful deploy, run these scenarios in one session when possible:
 
-| Scenario | Action | Expected |
-| -------- | ------ | -------- |
-| G.1 Incremental rebuild | Small code change → build → deploy | Second deploy succeeds without manual APK delete |
-| G.2 Robot reboot | Reboot Control Hub, reconnect USB | Doctor device check passes; deploy works |
-| G.3 ADB server restart | `adb kill-server && adb start-server` | `ftc devices` recovers without IDE restart |
-| G.4 USB disconnect | Unplug during idle, replug | Clear reconnect guidance; deploy works after replug |
-| G.5 IDE restart | Close and reopen VS Code/Cursor on same folder | Project still detected; deploy works |
-| G.6 CLI + extension | Build from CLI, deploy from extension (or reverse) | Same device selection; no silent multi-device pick |
-| G.7 Multi-device (optional) | Connect phone + Control Hub | Tool refuses until `--device` or picker selection |
+| Scenario                    | Action                                             | Expected                                            |
+| --------------------------- | -------------------------------------------------- | --------------------------------------------------- |
+| G.1 Incremental rebuild     | Small code change → build → deploy                 | Second deploy succeeds without manual APK delete    |
+| G.2 Robot reboot            | Reboot Control Hub, reconnect USB                  | Doctor device check passes; deploy works            |
+| G.3 ADB server restart      | `adb kill-server && adb start-server`              | `ftc devices` recovers without IDE restart          |
+| G.4 USB disconnect          | Unplug during idle, replug                         | Clear reconnect guidance; deploy works after replug |
+| G.5 IDE restart             | Close and reopen VS Code/Cursor on same folder     | Project still detected; deploy works                |
+| G.6 CLI + extension         | Build from CLI, deploy from extension (or reverse) | Same device selection; no silent multi-device pick  |
+| G.7 Multi-device (optional) | Connect phone + Control Hub                        | Tool refuses until `--device` or picker selection   |
 
 Document recovery actions taken for each failure.
 
@@ -187,11 +187,11 @@ Do **not** include Wi-Fi passwords, tokens, student names, or full device serial
 
 ## Pass / partial / fail criteria
 
-| Result | Criteria |
-| ------ | -------- |
-| **Pass** | Steps 1–8 complete without mentor intervention; step 10 repeat cycle succeeds at least once (G.1); all failures (if any) had actionable messages |
+| Result      | Criteria                                                                                                                                                           |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Pass**    | Steps 1–8 complete without mentor intervention; step 10 repeat cycle succeeds at least once (G.1); all failures (if any) had actionable messages                   |
 | **Partial** | Initial deploy succeeds but repeat-cycle or recovery scenario failed; OR mentor guided through a documented gap; OR version skew documented and workaround applied |
-| **Fail** | Cannot complete build + deploy + logs on Control Hub; OR silent multi-device selection; OR blocking failure with no actionable message |
+| **Fail**    | Cannot complete build + deploy + logs on Control Hub; OR silent multi-device selection; OR blocking failure with no actionable message                             |
 
 ---
 
@@ -199,15 +199,15 @@ Do **not** include Wi-Fi passwords, tokens, student names, or full device serial
 
 Record in each test report:
 
-| Metric | How to measure |
-| ------ | -------------- |
-| Time to doctor pass | Project open → first doctor `ready: true` |
-| Time to first deploy | Device connected → first successful deploy |
-| Time to updated deploy | Code save → deploy complete after change |
-| Time to actionable explanation | Failure → first friendly error with suggested actions |
-| Manual terminal commands | Count commands outside IDE/CLI golden-path flow |
-| Mentor interventions | Count times a mentor ran undocumented steps |
-| Knew next action | Yes/No — did the tester know what to do without external docs? |
+| Metric                         | How to measure                                                 |
+| ------------------------------ | -------------------------------------------------------------- |
+| Time to doctor pass            | Project open → first doctor `ready: true`                      |
+| Time to first deploy           | Device connected → first successful deploy                     |
+| Time to updated deploy         | Code save → deploy complete after change                       |
+| Time to actionable explanation | Failure → first friendly error with suggested actions          |
+| Manual terminal commands       | Count commands outside IDE/CLI golden-path flow                |
+| Mentor interventions           | Count times a mentor ran undocumented steps                    |
+| Knew next action               | Yes/No — did the tester know what to do without external docs? |
 
 ---
 

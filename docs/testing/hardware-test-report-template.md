@@ -11,32 +11,32 @@ Privacy-safe format for golden-path and Control Hub validation runs. Copy this t
 reportVersion: "1.0"
 
 # Product versions
-ftcDevToolsVersion: ""       # ftc --version
-extensionVersion: ""         # VS Code/Cursor Extensions panel
-cliVersion: ""               # ftc --version (should match extension)
+ftcDevToolsVersion: "" # ftc --version
+extensionVersion: "" # VS Code/Cursor Extensions panel
+cliVersion: "" # ftc --version (should match extension)
 
 # Host environment
-hostOs: ""                   # e.g. Windows 11 Pro 26200
-javaVersion: ""              # from ftc validation env
-adbVersion: ""               # from ftc validation env
-androidSdkPresent: true      # yes/no
+hostOs: "" # e.g. Windows 11 Pro 26200
+javaVersion: "" # from ftc validation env
+adbVersion: "" # from ftc validation env
+androidSdkPresent: true # yes/no
 
 # Robot and project
-ftcSdkVersion: ""            # from build.dependencies.gradle
-controlHubOsVersion: ""      # from REV Hardware Client or ftc hub status (optional)
-robotControllerVersion: ""   # RC app version if known
-connectionType: "usb"        # usb | wifi-adb
-projectShape: ""             # e.g. official-ftc, TeamCode module, Gradle Wrapper present
+ftcSdkVersion: "" # from build.dependencies.gradle
+controlHubOsVersion: "" # from REV Hardware Client or ftc hub status (optional)
+robotControllerVersion: "" # RC app version if known
+connectionType: "usb" # usb | wifi-adb
+projectShape: "" # e.g. official-ftc, TeamCode module, Gradle Wrapper present
 
 # Test metadata
 testDate: "YYYY-MM-DD"
-testerRole: ""               # maintainer | student | mentor | external-team (no personal name)
+testerRole: "" # maintainer | student | mentor | external-team (no personal name)
 testProtocolVersion: "golden-path.md @ commit or tag"
 
 # Workflow step results
 steps:
   installation:
-    result: pass             # pass | partial | fail | skipped
+    result: pass # pass | partial | fail | skipped
     minutes: 0
     notes: ""
   extensionActivation:
@@ -92,14 +92,14 @@ repeatCycle:
   usbDisconnectReconnect: pass
   ideRestart: pass
   cliAndExtensionSameProject: pass
-  multiDeviceExplicitSelection: skipped   # optional scenario
+  multiDeviceExplicitSelection: skipped # optional scenario
 
 # User-centered metrics
 metrics:
   minutesToDoctorPass: 0
   minutesToFirstDeploy: 0
   minutesToUpdatedDeploy: 0
-  minutesToActionableExplanation: 0       # 0 if no failures
+  minutesToActionableExplanation: 0 # 0 if no failures
   manualTerminalCommands: 0
   mentorInterventions: 0
   knewNextActionWithoutExternalDocs: true
@@ -112,9 +112,9 @@ failures: []
   #   mentorRequired: false
 
 # Summary
-finalResult: pass            # pass | partial | fail
+finalResult: pass # pass | partial | fail
 knownLimitations: ""
-diagnosticBundleAttached: false   # redacted bundle shared with maintainers only
+diagnosticBundleAttached: false # redacted bundle shared with maintainers only
 ```
 
 ---

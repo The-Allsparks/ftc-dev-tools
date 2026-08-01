@@ -6,18 +6,18 @@ Initial supported configuration for external alpha invitations. Other environmen
 
 ## Target configuration
 
-| Dimension | Supported alpha value |
-| --------- | --------------------- |
-| **Host OS** | Windows 11 |
-| **IDE** | VS Code and Cursor |
-| **Robot platform** | REV Control Hub |
-| **Robot language** | Java |
-| **Project type** | Official-style FTC Android project (Gradle Wrapper, `TeamCode` module, `FtcRobotController`) |
-| **FTC SDK** | **11.0.x – 11.1.x** Maven coordinates in `build.dependencies.gradle` |
-| **Connection** | USB ADB first |
-| **Build system** | Checked-in Gradle Wrapper (`gradlew` / `gradlew.bat`) |
-| **Deployment** | ADB install via `ftc deploy` |
-| **Logs** | Bounded or streaming TeamCode logcat via `ftc logs` |
+| Dimension          | Supported alpha value                                                                        |
+| ------------------ | -------------------------------------------------------------------------------------------- |
+| **Host OS**        | Windows 11                                                                                   |
+| **IDE**            | VS Code and Cursor                                                                           |
+| **Robot platform** | REV Control Hub                                                                              |
+| **Robot language** | Java                                                                                         |
+| **Project type**   | Official-style FTC Android project (Gradle Wrapper, `TeamCode` module, `FtcRobotController`) |
+| **FTC SDK**        | **11.0.x – 11.1.x** Maven coordinates in `build.dependencies.gradle`                         |
+| **Connection**     | USB ADB first                                                                                |
+| **Build system**   | Checked-in Gradle Wrapper (`gradlew` / `gradlew.bat`)                                        |
+| **Deployment**     | ADB install via `ftc deploy`                                                                 |
+| **Logs**           | Bounded or streaming TeamCode logcat via `ftc logs`                                          |
 
 ---
 

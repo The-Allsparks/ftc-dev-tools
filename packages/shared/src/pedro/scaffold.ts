@@ -1,11 +1,13 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { OfficialFtcProjectAdapter } from "../adapters/official-ftc-project-adapter.js";
+import { resolveProjectAdapter } from "../adapters/resolve-project-adapter.js";
 import { interpretFromUnknown } from "../errors/interpret.js";
+import { refuseMutationWithoutYes } from "../process/mutation-guard.js";
 import { isGitWorkingTreeDirty } from "../sdk/sync-sdk-update.js";
 import type { FetchLike } from "../sdk/types.js";
 import type { CommandSpec, ProcessRunner } from "../types/process.js";
+import type { ProjectAdapter } from "../types/project.js";
 import {
   PEDRO_QUICKSTART_OWNER,
   PEDRO_QUICKSTART_RELEASES_URL,
@@ -25,6 +27,7 @@ export interface ScaffoldPedroOptions {
   sourceRoot?: string;
   /** Prefer this release tag when downloading. */
   tag?: string;
+  adapter?: ProjectAdapter;
 }
 
 export async function scaffoldPedroPathing(
@@ -36,7 +39,7 @@ export async function scaffoldPedroPathing(
   let cleanupTemp: string | undefined;
 
   try {
-    const adapter = new OfficialFtcProjectAdapter();
+    const adapter = resolveProjectAdapter(options.adapter);
     const info = await adapter.inspect(projectRoot);
     if (info.kind === "unknown" || !info.teamCodeSourcePath) {
       return {
@@ -140,17 +143,19 @@ export async function scaffoldPedroPathing(
     }
 
     if (!options.yes) {
+      const refusal = refuseMutationWithoutYes({
+        actionDescription: "scaffold Pedro Pathing",
+        code: "PEDRO_ABORTED",
+      });
       return {
         success: false,
         dryRun: true,
         plan,
         appliedPaths: [],
         sourceTag,
-        message: "Refusing to scaffold Pedro Pathing without --yes.",
+        message: refusal.message,
         warnings,
-        error: interpretFromUnknown(
-          Object.assign(new Error("Pedro scaffold requires --yes."), { code: "PEDRO_ABORTED" }),
-        ),
+        error: refusal.error,
       };
     }
 

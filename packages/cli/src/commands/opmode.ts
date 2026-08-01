@@ -28,7 +28,7 @@ export function registerOpModeCommand(program: Command): void {
     .option("--verbose", "Include technical details for failures")
     .action(async (options: { json?: boolean; verbose?: boolean }) => {
       const ctx = createCliContext(process.cwd(), options.verbose === true);
-      const report = await listOpModes(ctx.cwd);
+      const report = await listOpModes(ctx.cwd, { adapter: ctx.adapter });
       if (options.json) {
         console.log(JSON.stringify(report, null, 2));
       } else {
@@ -93,6 +93,7 @@ export function registerOpModeCommand(program: Command): void {
           const preview = await createOpMode({
             projectRoot: ctx.cwd,
             runner: ctx.runner,
+            adapter: ctx.adapter,
             className,
             kind,
             style,
@@ -114,6 +115,7 @@ export function registerOpModeCommand(program: Command): void {
         const result = await createOpMode({
           projectRoot: ctx.cwd,
           runner: ctx.runner,
+          adapter: ctx.adapter,
           className,
           kind,
           style,

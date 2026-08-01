@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { OfficialFtcProjectAdapter } from "../adapters/official-ftc-project-adapter.js";
+import { resolveProjectAdapter } from "../adapters/resolve-project-adapter.js";
+import type { ProjectAdapter } from "../types/project.js";
 import type {
   VisionDetectionKind,
   VisionPipelineDirectory,
@@ -199,12 +200,17 @@ function suggestDefaultProvider(signals: VisionWorkspaceSignal[]): string | unde
     ?.suggestedProviderId;
 }
 
+export interface DiscoverVisionWorkspaceOptions {
+  adapter?: ProjectAdapter;
+}
+
 export async function discoverVisionWorkspace(
   projectRoot: string,
+  options?: DiscoverVisionWorkspaceOptions,
 ): Promise<VisionWorkspaceDiscovery> {
   const root = path.resolve(projectRoot);
   const warnings: string[] = [];
-  const adapter = new OfficialFtcProjectAdapter();
+  const adapter = resolveProjectAdapter(options?.adapter);
 
   let info;
   try {

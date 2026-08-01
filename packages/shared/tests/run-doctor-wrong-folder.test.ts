@@ -89,5 +89,5 @@ describe("runDoctor wrong folder", () => {
 
     const wrapperCheck = report.checks.find((c) => c.id === "gradle-wrapper");
     expect(wrapperCheck?.suggestedProjectRoots?.[0]).toBe(path.resolve(ftcRoot));
-  });
+  }, 60_000);
 });

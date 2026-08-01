@@ -1,7 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { OfficialFtcProjectAdapter } from "../../adapters/official-ftc-project-adapter.js";
+import { resolveProjectAdapter } from "../../adapters/resolve-project-adapter.js";
 import { extractWebcamDevicesFromXml } from "../endpoints/discover-devices.js";
+import type { ProjectAdapter } from "../../types/project.js";
 import { scanVisionPortalTeamCode } from "./scan.js";
 import type { VisionPortalWorkspaceDiscovery } from "./types.js";
 
@@ -75,13 +76,14 @@ function resolveSelection(
 
 export async function discoverVisionPortalWorkspace(
   projectRoot: string,
+  options?: { adapter?: ProjectAdapter },
 ): Promise<VisionPortalWorkspaceDiscovery> {
   const root = path.resolve(projectRoot);
   const generatedAt = new Date().toISOString();
   const warnings: string[] = [];
   const robotConfigWebcams = await loadRobotConfigWebcams(root);
 
-  const adapter = new OfficialFtcProjectAdapter();
+  const adapter = resolveProjectAdapter(options?.adapter);
   let isOfficial = false;
   let teamCodeJavaRoot: string | undefined;
 

@@ -6,6 +6,7 @@ import {
   codegenHardwareMapOpMode,
   createIntegrationRegistrySnapshot,
   createModuleRegistrySnapshot,
+  isModuleLayer,
   createOpMode,
   createProviderRegistrySnapshot,
   deployProject,
@@ -365,7 +366,7 @@ export async function toolPedroScaffold(
 
 export async function toolOpModeList(args: ProjectRootArgs): Promise<CallToolResult> {
   const ctx = ctxFrom(args);
-  const report = await listOpModes(ctx.projectRoot);
+  const report = await listOpModes(ctx.projectRoot, { adapter: ctx.adapter });
   return jsonResult({ ...report, projectRoot: ctx.projectRoot }, Boolean(report.error));
 }
 
@@ -546,9 +547,8 @@ export async function toolIntegrationsList(args: { shipped?: boolean }): Promise
 export async function toolModulesList(args: { layer?: string }): Promise<CallToolResult> {
   try {
     const snapshot = createModuleRegistrySnapshot();
-    const validLayers = new Set(["core", "capability", "workflow", "adapter"]);
     const modules =
-      args.layer && validLayers.has(args.layer)
+      args.layer && isModuleLayer(args.layer)
         ? snapshot.modules.filter((entry) => entry.layer === args.layer)
         : snapshot.modules;
     return jsonResult({ ...snapshot, modules });

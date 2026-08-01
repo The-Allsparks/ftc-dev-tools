@@ -9,8 +9,9 @@ import type {
   LogOptions,
 } from "../types/device.js";
 import type { ProcessRunner } from "../types/process.js";
-import { parseLogcatLine } from "../logcat/parse.js";
+import { parseAdbInstallOutput } from "./parse-adb-install.js";
 import { inferConnectionType, inferControlHubLikelihood } from "./device-heuristics.js";
+import { parseLogcatLine } from "../logcat/parse.js";
 
 export class AdbDeviceProvider implements DeviceProvider {
   private readonly propertyCache = new Map<string, Record<string, string>>();
@@ -52,19 +53,14 @@ export class AdbDeviceProvider implements DeviceProvider {
       { timeoutMs: 300_000 },
     );
     const combined = `${result.stdout}\n${result.stderr}`;
-    if (/INSTALL_FAILED_UPDATE_INCOMPATIBLE|signatures do not match/i.test(combined)) {
-      throw Object.assign(new Error("Installation signature conflict."), {
-        code: "INSTALL_SIGNATURE_CONFLICT",
-        technicalDetails: combined,
-      });
-    }
-    if (/INSTALL_FAILED_INSUFFICIENT_STORAGE/i.test(combined)) {
-      throw Object.assign(new Error("Insufficient device storage."), {
-        code: "INSUFFICIENT_STORAGE",
-        technicalDetails: combined,
-      });
-    }
-    if (result.exitCode !== 0 || /Failure/i.test(combined)) {
+    const parsed = parseAdbInstallOutput(combined);
+    if (!parsed.success || result.exitCode !== 0) {
+      if (!parsed.success && parsed.code && parsed.message) {
+        throw Object.assign(new Error(parsed.message), {
+          code: parsed.code,
+          technicalDetails: combined,
+        });
+      }
       throw Object.assign(new Error("APK installation failed."), {
         code: "INSTALL_FAILED",
         technicalDetails: combined,

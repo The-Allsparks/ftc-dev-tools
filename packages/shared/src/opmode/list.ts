@@ -1,13 +1,21 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { OfficialFtcProjectAdapter } from "../adapters/official-ftc-project-adapter.js";
+import { resolveProjectAdapter } from "../adapters/resolve-project-adapter.js";
 import { interpretFromUnknown } from "../errors/interpret.js";
+import type { ProjectAdapter } from "../types/project.js";
 import type { DetectedOpMode, OpModeKind, OpModeListResult } from "./types.js";
 
-export async function listOpModes(projectRoot: string): Promise<OpModeListResult> {
+export interface ListOpModesOptions {
+  adapter?: ProjectAdapter;
+}
+
+export async function listOpModes(
+  projectRoot: string,
+  options?: ListOpModesOptions,
+): Promise<OpModeListResult> {
   const root = path.resolve(projectRoot);
   try {
-    const adapter = new OfficialFtcProjectAdapter();
+    const adapter = resolveProjectAdapter(options?.adapter);
     const info = await adapter.inspect(root);
     if (!info.teamCodeSourcePath) {
       return {

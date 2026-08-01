@@ -1,9 +1,10 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { OfficialFtcProjectAdapter } from "../../adapters/official-ftc-project-adapter.js";
+import { resolveProjectAdapter } from "../../adapters/resolve-project-adapter.js";
 import { extractWebcamDevicesFromXml } from "../endpoints/discover-devices.js";
 import { detectFtcDashboardDependency } from "../dashboard/detect-dependency.js";
 import { listRobotConfigs } from "../../robot-config/list.js";
+import type { ProjectAdapter } from "../../types/project.js";
 import { DEFAULT_VISION_CODEGEN_PACKAGE, VISION_CODEGEN_LANGUAGE } from "./constants.js";
 import type { VisionCodegenKindDescriptor } from "./types.js";
 
@@ -24,6 +25,7 @@ export interface ResolveVisionCodegenContextOptions {
   packageName?: string;
   cameraName?: string;
   configName?: string;
+  adapter?: ProjectAdapter;
 }
 
 async function loadRobotConfigWebcams(
@@ -61,7 +63,7 @@ export async function resolveVisionCodegenContext(
 ): Promise<VisionCodegenContext> {
   const projectRoot = path.resolve(options.projectRoot);
   const packageName = (options.packageName ?? DEFAULT_VISION_CODEGEN_PACKAGE).trim();
-  const adapter = new OfficialFtcProjectAdapter();
+  const adapter = resolveProjectAdapter(options.adapter);
   const info = await adapter.inspect(projectRoot);
 
   const { names: webcamNames, configName: discoveredConfig } =

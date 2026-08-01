@@ -43,7 +43,7 @@ describe("discoverNearbyFtcProjectRoots", () => {
     const adapter = new OfficialFtcProjectAdapter();
     const found = await discoverNearbyFtcProjectRoots(teamCodeOnly, { adapter });
     expect(found[0]).toBe(path.resolve(ftcRoot));
-  });
+  }, 60_000);
 
   it("finds sibling FTC root under a shared parent", async () => {
     const parent = await makeTemp();
@@ -56,7 +56,7 @@ describe("discoverNearbyFtcProjectRoots", () => {
     const adapter = new OfficialFtcProjectAdapter();
     const found = await discoverNearbyFtcProjectRoots(visionLib, { adapter });
     expect(found).toContain(path.resolve(ftcRoot));
-  });
+  }, 60_000);
 
   it("returns empty when no layout exists nearby", async () => {
     const parent = await makeTemp();

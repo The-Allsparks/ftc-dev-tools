@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { OfficialFtcProjectAdapter } from "../adapters/official-ftc-project-adapter.js";
+import { resolveProjectAdapter } from "../adapters/resolve-project-adapter.js";
 import type { ProjectAdapter } from "../types/project.js";
 
 export interface DiscoverFtcProjectRootsOptions {
@@ -17,7 +17,7 @@ export async function discoverNearbyFtcProjectRoots(
   startDir: string,
   options?: DiscoverFtcProjectRootsOptions,
 ): Promise<string[]> {
-  const adapter = options?.adapter ?? new OfficialFtcProjectAdapter();
+  const adapter = resolveProjectAdapter(options?.adapter);
   const maxUpwardDepth = options?.maxUpwardDepth ?? 8;
   const start = path.resolve(startDir);
   const ranked: { root: string; rank: number }[] = [];

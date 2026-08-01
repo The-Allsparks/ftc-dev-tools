@@ -166,9 +166,13 @@ export {
   OfficialFtcProjectAdapter,
   readApplicationId,
 } from "./adapters/official-ftc-project-adapter.js";
+export { resolveProjectAdapter } from "./adapters/resolve-project-adapter.js";
 export { discoverNearbyFtcProjectRoots } from "./project/discover-ftc-root.js";
 export type { DiscoverFtcProjectRootsOptions } from "./project/discover-ftc-root.js";
 export { AdbDeviceProvider, parseAdbDevicesOutput } from "./devices/adb-device-provider.js";
+export { parseAdbInstallOutput, detectAdbInstallErrorCode } from "./devices/parse-adb-install.js";
+export type { AdbInstallParseResult } from "./devices/parse-adb-install.js";
+export { tryCreateOptionalDeviceProvider } from "./devices/optional-provider.js";
 export { MockDeviceProvider } from "./devices/mock-device-provider.js";
 export type { MockScenario, MockDeviceProviderOptions } from "./devices/mock-device-provider.js";
 export { selectDeploymentDevice, filterByPreferredConnection } from "./devices/selection.js";
@@ -176,6 +180,8 @@ export type { DeviceSelectionInput, DeviceSelectionResult } from "./devices/sele
 export { inferConnectionType, inferControlHubLikelihood } from "./devices/device-heuristics.js";
 
 export { parseLogcatLine, formatLogEntry } from "./logcat/parse.js";
+export { refuseMutationWithoutYes } from "./process/mutation-guard.js";
+export type { MutationRefusal } from "./process/mutation-guard.js";
 export { interpretError, interpretFromUnknown, listErrorRuleCodes } from "./errors/interpret.js";
 export { defaultConfig, loadProjectConfig } from "./config/load.js";
 export { runDoctor } from "./doctor/run-doctor.js";
@@ -667,7 +673,7 @@ export {
 } from "./registry/adapters/pedro-bridge.js";
 
 export type { ModuleManifest, ModuleRegistrySnapshot, ModuleLayer } from "./modules/types.js";
-export { MODULE_MANIFEST_SCHEMA_VERSION } from "./modules/types.js";
+export { MODULE_MANIFEST_SCHEMA_VERSION, MODULE_LAYERS, isModuleLayer } from "./modules/types.js";
 export {
   listModules,
   getModule,

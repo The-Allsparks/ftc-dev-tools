@@ -1,10 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { OfficialFtcProjectAdapter } from "../../adapters/official-ftc-project-adapter.js";
+import { resolveProjectAdapter } from "../../adapters/resolve-project-adapter.js";
 import { interpretFromUnknown } from "../../errors/interpret.js";
 import { isValidJavaPackageName } from "../../opmode/defaults.js";
 import { isGitWorkingTreeDirty } from "../../sdk/sync-sdk-update.js";
 import type { ProcessRunner } from "../../types/process.js";
+import type { ProjectAdapter } from "../../types/project.js";
 import { planVisionBridgeScaffoldPaths, resolveVisionBridgePackage } from "./status.js";
 import { discoverVisionPortalWorkspace } from "../visionportal/discover.js";
 import {
@@ -21,6 +22,7 @@ export interface ScaffoldVisionBridgeOptions {
   dryRun?: boolean;
   yes?: boolean;
   force?: boolean;
+  adapter?: ProjectAdapter;
 }
 
 export async function scaffoldVisionBridge(
@@ -52,7 +54,7 @@ export async function scaffoldVisionBridge(
   }
 
   try {
-    const adapter = new OfficialFtcProjectAdapter();
+    const adapter = resolveProjectAdapter(options.adapter);
     const info = await adapter.inspect(projectRoot);
     if (!info.teamCodeSourcePath) {
       return {

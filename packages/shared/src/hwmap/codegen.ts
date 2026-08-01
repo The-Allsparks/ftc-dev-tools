@@ -1,7 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { OfficialFtcProjectAdapter } from "../adapters/official-ftc-project-adapter.js";
+import { resolveProjectAdapter } from "../adapters/resolve-project-adapter.js";
 import { interpretFromUnknown } from "../errors/interpret.js";
+import { refuseMutationWithoutYes } from "../process/mutation-guard.js";
 import {
   DEFAULT_OPMODE_PACKAGE,
   isValidJavaClassName,
@@ -11,6 +12,7 @@ import {
 import type { OpModeKind, OpModeStyle } from "../opmode/types.js";
 import { isGitWorkingTreeDirty } from "../sdk/sync-sdk-update.js";
 import type { ProcessRunner } from "../types/process.js";
+import type { ProjectAdapter } from "../types/project.js";
 import { buildHardwareMapEntries, resolveConfigForHwMap } from "./resolve.js";
 import { renderHwMapOpModeSource } from "./templates.js";
 import type { HardwareMapCodegenResult } from "./types.js";
@@ -29,6 +31,7 @@ export interface CodegenHardwareMapOptions {
   dryRun?: boolean;
   yes?: boolean;
   force?: boolean;
+  adapter?: ProjectAdapter;
 }
 
 export async function codegenHardwareMapOpMode(
@@ -71,7 +74,7 @@ export async function codegenHardwareMapOpMode(
       };
     }
 
-    const adapter = new OfficialFtcProjectAdapter();
+    const adapter = resolveProjectAdapter(options.adapter);
     const info = await adapter.inspect(projectRoot);
     if (!info.teamCodeSourcePath) {
       return {
@@ -197,6 +200,10 @@ export async function codegenHardwareMapOpMode(
     }
 
     if (!options.yes) {
+      const refusal = refuseMutationWithoutYes({
+        actionDescription: "generate OpMode",
+        code: "HWMAP_ABORTED",
+      });
       return {
         success: false,
         dryRun: true,
@@ -206,12 +213,8 @@ export async function codegenHardwareMapOpMode(
         absolutePath,
         entryCount: codegenEntries.length,
         sourcePreview: source,
-        message: "Refusing to generate OpMode without --yes.",
-        error: interpretFromUnknown(
-          Object.assign(new Error("Hardware map codegen requires --yes."), {
-            code: "HWMAP_ABORTED",
-          }),
-        ),
+        message: refusal.message,
+        error: refusal.error,
       };
     }
 

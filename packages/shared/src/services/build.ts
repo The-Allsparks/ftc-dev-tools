@@ -22,15 +22,20 @@ export interface BuildServiceOutcome {
   friendlyError?: FriendlyError;
 }
 
-export async function buildProject(options: BuildServiceOptions): Promise<BuildServiceOutcome> {
+type GradleTask = "build" | "clean";
+
+async function executeGradleTask(
+  options: BuildServiceOptions,
+  task: GradleTask,
+): Promise<BuildServiceOutcome> {
   const started = Date.now();
   try {
     const project = await options.adapter.inspect(options.cwd);
-    const command = await withFtcJdkEnv(
-      await options.adapter.getBuildCommand(project),
-      options.runner,
-      options.env ?? process.env,
-    );
+    const rawCommand =
+      task === "build"
+        ? await options.adapter.getBuildCommand(project)
+        : await options.adapter.getCleanCommand(project);
+    const command = await withFtcJdkEnv(rawCommand, options.runner, options.env ?? process.env);
     if (command.env?.JAVA_HOME) {
       options.logger.info(`Using JAVA_HOME=${command.env.JAVA_HOME} for Gradle`);
     }
@@ -56,17 +61,19 @@ export async function buildProject(options: BuildServiceOptions): Promise<BuildS
       };
     }
 
-    const apkPath = await options.adapter.locateApk(project);
-    return {
-      result: {
-        success: true,
-        apkPath,
-        durationMs: Date.now() - started,
-        stdout: commandResult.stdout,
-        stderr: commandResult.stderr,
-        exitCode: commandResult.exitCode,
-      },
+    const successResult: BuildResult = {
+      success: true,
+      durationMs: Date.now() - started,
+      stdout: commandResult.stdout,
+      stderr: commandResult.stderr,
+      exitCode: commandResult.exitCode,
     };
+
+    if (task === "build") {
+      successResult.apkPath = await options.adapter.locateApk(project);
+    }
+
+    return { result: successResult };
   } catch (error) {
     return {
       result: {
@@ -81,55 +88,10 @@ export async function buildProject(options: BuildServiceOptions): Promise<BuildS
   }
 }
 
+export async function buildProject(options: BuildServiceOptions): Promise<BuildServiceOutcome> {
+  return executeGradleTask(options, "build");
+}
+
 export async function cleanProject(options: BuildServiceOptions): Promise<BuildServiceOutcome> {
-  const started = Date.now();
-  try {
-    const project = await options.adapter.inspect(options.cwd);
-    const command = await withFtcJdkEnv(
-      await options.adapter.getCleanCommand(project),
-      options.runner,
-      options.env ?? process.env,
-    );
-    if (command.env?.JAVA_HOME) {
-      options.logger.info(`Using JAVA_HOME=${command.env.JAVA_HOME} for Gradle`);
-    }
-    options.logger.info(`Running ${formatCommandForDisplay(command)}`);
-    const commandResult = await options.runner.run(command, {
-      timeoutMs: 30 * 60_000,
-      signal: options.signal,
-      inheritStdio: options.verbose === true,
-    });
-    if (commandResult.exitCode !== 0) {
-      return {
-        result: {
-          success: false,
-          durationMs: Date.now() - started,
-          stdout: commandResult.stdout,
-          stderr: commandResult.stderr,
-          exitCode: commandResult.exitCode,
-        },
-        friendlyError: interpretError(`${commandResult.stdout}\n${commandResult.stderr}`),
-      };
-    }
-    return {
-      result: {
-        success: true,
-        durationMs: Date.now() - started,
-        stdout: commandResult.stdout,
-        stderr: commandResult.stderr,
-        exitCode: commandResult.exitCode,
-      },
-    };
-  } catch (error) {
-    return {
-      result: {
-        success: false,
-        durationMs: Date.now() - started,
-        stdout: "",
-        stderr: error instanceof Error ? error.message : String(error),
-        exitCode: 1,
-      },
-      friendlyError: interpretFromUnknown(error),
-    };
-  }
+  return executeGradleTask(options, "clean");
 }

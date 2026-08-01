@@ -1,7 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { interpretFromUnknown } from "../errors/interpret.js";
+import { refuseMutationWithoutYes } from "../process/mutation-guard.js";
 import type { ProcessRunner } from "../types/process.js";
+import type { ProjectAdapter } from "../types/project.js";
 import { isGitWorkingTreeDirty } from "../sdk/sync-sdk-update.js";
 import type { FetchLike } from "../sdk/types.js";
 import { detectPedroStatus } from "./detect.js";
@@ -25,6 +27,7 @@ export interface AddPedroOptions {
   force?: boolean;
   /** When true, bump compileSdk to 34 in known gradle files if below minimum. */
   patchCompileSdk?: boolean;
+  adapter?: ProjectAdapter;
 }
 
 export async function addPedroPathing(options: AddPedroOptions): Promise<PedroAddResult> {
@@ -34,7 +37,7 @@ export async function addPedroPathing(options: AddPedroOptions): Promise<PedroAd
   const plan: PedroAddPlanEntry[] = [];
 
   try {
-    const status = await detectPedroStatus(projectRoot);
+    const status = await detectPedroStatus(projectRoot, { adapter: options.adapter });
     if (!status.dependenciesPath) {
       return {
         success: false,
@@ -129,16 +132,18 @@ export async function addPedroPathing(options: AddPedroOptions): Promise<PedroAd
     }
 
     if (!options.yes) {
+      const refusal = refuseMutationWithoutYes({
+        actionDescription: "add Pedro Pathing",
+        code: "PEDRO_ABORTED",
+      });
       return {
         success: false,
         dryRun: true,
         plan,
         ftcVersion,
-        message: "Refusing to add Pedro Pathing without --yes.",
+        message: refusal.message,
         warnings: [...warnings, ...status.warnings],
-        error: interpretFromUnknown(
-          Object.assign(new Error("Pedro add requires --yes."), { code: "PEDRO_ABORTED" }),
-        ),
+        error: refusal.error,
       };
     }
 

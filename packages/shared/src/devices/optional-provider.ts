@@ -2,7 +2,7 @@ import type { DeviceProvider } from "../types/device.js";
 
 /** Best-effort device provider creation; returns undefined when adb is unavailable. */
 export async function tryCreateOptionalDeviceProvider(
-  createDeviceProvider: () => Promise<DeviceProvider>,
+  createDeviceProvider: () => Promise<DeviceProvider | undefined>,
 ): Promise<DeviceProvider | undefined> {
   try {
     return await createDeviceProvider();

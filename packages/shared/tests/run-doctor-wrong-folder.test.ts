@@ -66,32 +66,28 @@ describe("runDoctor wrong folder", () => {
     expect(wrapperCheck?.friendlyError?.title).toMatch(/project folder not detected/i);
   });
 
-  it(
-    "suggests nearby FTC root when opened in TeamCode subfolder",
-    async () => {
-      const monorepo = await fs.mkdtemp(path.join(os.tmpdir(), "ftc-doctor-nested-"));
-      tempDirs.push(monorepo);
-      const ftcRoot = path.join(monorepo, "FtcRobotController");
-      await writeOfficialFtcRoot(ftcRoot);
-      const cwd = path.join(ftcRoot, "TeamCode");
+  it("suggests nearby FTC root when opened in TeamCode subfolder", async () => {
+    const monorepo = await fs.mkdtemp(path.join(os.tmpdir(), "ftc-doctor-nested-"));
+    tempDirs.push(monorepo);
+    const ftcRoot = path.join(monorepo, "FtcRobotController");
+    await writeOfficialFtcRoot(ftcRoot);
+    const cwd = path.join(ftcRoot, "TeamCode");
 
-      const report = await runDoctor({
-        cwd,
-        runner: new FakeRunner(),
-        projectAdapter: new OfficialFtcProjectAdapter(),
-        nodeVersion: "20.11.0",
-        platform: process.platform,
-        checkFtcSdkVersion: false,
-        checkWifi: false,
-      });
+    const report = await runDoctor({
+      cwd,
+      runner: new FakeRunner(),
+      projectAdapter: new OfficialFtcProjectAdapter(),
+      nodeVersion: "20.11.0",
+      platform: process.platform,
+      checkFtcSdkVersion: false,
+      checkWifi: false,
+    });
 
-      const projectCheck = report.checks.find((c) => c.id === "ftc-project");
-      expect(projectCheck?.suggestedProjectRoots?.[0]).toBe(path.resolve(ftcRoot));
-      expect(projectCheck?.friendlyError?.suggestedProjectRoots?.[0]).toBe(path.resolve(ftcRoot));
+    const projectCheck = report.checks.find((c) => c.id === "ftc-project");
+    expect(projectCheck?.suggestedProjectRoots?.[0]).toBe(path.resolve(ftcRoot));
+    expect(projectCheck?.friendlyError?.suggestedProjectRoots?.[0]).toBe(path.resolve(ftcRoot));
 
-      const wrapperCheck = report.checks.find((c) => c.id === "gradle-wrapper");
-      expect(wrapperCheck?.suggestedProjectRoots?.[0]).toBe(path.resolve(ftcRoot));
-    },
-    60_000,
-  );
+    const wrapperCheck = report.checks.find((c) => c.id === "gradle-wrapper");
+    expect(wrapperCheck?.suggestedProjectRoots?.[0]).toBe(path.resolve(ftcRoot));
+  }, 60_000);
 });

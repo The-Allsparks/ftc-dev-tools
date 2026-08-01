@@ -14,8 +14,6 @@ export function refuseMutationWithoutYes(options: {
   const errorMessage = `${options.actionDescription} requires --yes.`;
   return {
     message: `Refusing to ${options.actionDescription} without --yes.`,
-    error: interpretFromUnknown(
-      Object.assign(new Error(errorMessage), { code: options.code }),
-    ),
+    error: interpretFromUnknown(Object.assign(new Error(errorMessage), { code: options.code })),
   };
 }

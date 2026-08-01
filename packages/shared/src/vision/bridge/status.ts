@@ -1,7 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { OfficialFtcProjectAdapter } from "../../adapters/official-ftc-project-adapter.js";
+import { resolveProjectAdapter } from "../../adapters/resolve-project-adapter.js";
 import { DEFAULT_OPMODE_PACKAGE, packageToRelativePath } from "../../opmode/defaults.js";
+import type { ProjectAdapter } from "../../types/project.js";
 import { discoverVisionWorkspace } from "../discover.js";
 import { discoverVisionPortalWorkspace } from "../visionportal/discover.js";
 import { detectFtcDashboardDependency } from "../dashboard/detect-dependency.js";
@@ -113,11 +114,13 @@ function resolvePreferredTransports(ftcDashboardDetected: boolean): VisionBridge
 
 export async function getVisionBridgeStatus(
   projectRoot: string,
+  options?: { adapter?: ProjectAdapter },
 ): Promise<VisionBridgeStatusReport> {
   const root = path.resolve(projectRoot);
   const generatedAt = new Date().toISOString();
   const packageName = defaultBridgePackage();
-  const workspace = await discoverVisionWorkspace(root);
+  const adapter = resolveProjectAdapter(options?.adapter);
+  const workspace = await discoverVisionWorkspace(root, { adapter });
   const portalDiscovery = await discoverVisionPortalWorkspace(root);
   const dashboard = await detectFtcDashboardDependency(root);
   const visionPortalDetected = workspace.signals.some((signal) => signal.kind === "visionportal");
@@ -130,7 +133,6 @@ export async function getVisionBridgeStatus(
   );
   const ftcDashboardDetected = dashboard.detected;
 
-  const adapter = new OfficialFtcProjectAdapter();
   let isOfficial = false;
   try {
     const info = await adapter.inspect(root);

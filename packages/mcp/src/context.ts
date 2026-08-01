@@ -4,6 +4,7 @@ import {
   NodeProcessRunner,
   OfficialFtcProjectAdapter,
   discoverAdb,
+  tryCreateOptionalDeviceProvider,
 } from "@ftc-dev-tools/shared";
 import type { DeviceProvider, Logger, ProcessRunner, ProjectAdapter } from "@ftc-dev-tools/shared";
 import path from "node:path";
@@ -44,9 +45,5 @@ export function createMcpContext(projectRoot?: string, verbose = false): McpCont
 export async function tryCreateDeviceProvider(
   ctx: McpContext,
 ): Promise<DeviceProvider | undefined> {
-  try {
-    return await ctx.createDeviceProvider();
-  } catch {
-    return undefined;
-  }
+  return tryCreateOptionalDeviceProvider(() => ctx.createDeviceProvider());
 }

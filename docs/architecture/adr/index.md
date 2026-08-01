@@ -35,5 +35,6 @@ Full comparison: **[gap-analysis.md](./gap-analysis.md)**
 | [0011](./0011-workflow-module-composition.md)       | Workflow module composition                 | Accepted |
 | [0012](./0012-telemetry-recording-foundations.md)   | Telemetry and recording session foundations | Accepted |
 | [0013](./0013-public-api-versioning.md)             | Public API versioning                       | Accepted |
+| [0014](./0014-localize-platform-assumptions.md)     | Localize platform assumptions               | Accepted |
 
 Process: see [GOVERNANCE.md](../../../GOVERNANCE.md) and [coordination-ledger.md](../coordination-ledger.md).

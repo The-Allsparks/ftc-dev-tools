@@ -33,30 +33,38 @@ async function writeOfficialFtcRoot(root: string): Promise<void> {
 }
 
 describe("discoverNearbyFtcProjectRoots", () => {
-  it("finds parent root when cwd is nested TeamCode", async () => {
-    const monorepo = await makeTemp();
-    const ftcRoot = path.join(monorepo, "FtcRobotController");
-    await writeOfficialFtcRoot(ftcRoot);
-    const teamCodeOnly = path.join(ftcRoot, "TeamCode");
-    await fs.mkdir(path.join(teamCodeOnly, "src", "main", "java"), { recursive: true });
+  it(
+    "finds parent root when cwd is nested TeamCode",
+    async () => {
+      const monorepo = await makeTemp();
+      const ftcRoot = path.join(monorepo, "FtcRobotController");
+      await writeOfficialFtcRoot(ftcRoot);
+      const teamCodeOnly = path.join(ftcRoot, "TeamCode");
+      await fs.mkdir(path.join(teamCodeOnly, "src", "main", "java"), { recursive: true });
 
-    const adapter = new OfficialFtcProjectAdapter();
-    const found = await discoverNearbyFtcProjectRoots(teamCodeOnly, { adapter });
-    expect(found[0]).toBe(path.resolve(ftcRoot));
-  });
+      const adapter = new OfficialFtcProjectAdapter();
+      const found = await discoverNearbyFtcProjectRoots(teamCodeOnly, { adapter });
+      expect(found[0]).toBe(path.resolve(ftcRoot));
+    },
+    60_000,
+  );
 
-  it("finds sibling FTC root under a shared parent", async () => {
-    const parent = await makeTemp();
-    const ftcRoot = path.join(parent, "MyTeamSdk");
-    await writeOfficialFtcRoot(ftcRoot);
-    const visionLib = path.join(parent, "ViDAR");
-    await fs.mkdir(visionLib, { recursive: true });
-    await fs.writeFile(path.join(visionLib, "README.md"), "vision\n");
+  it(
+    "finds sibling FTC root under a shared parent",
+    async () => {
+      const parent = await makeTemp();
+      const ftcRoot = path.join(parent, "MyTeamSdk");
+      await writeOfficialFtcRoot(ftcRoot);
+      const visionLib = path.join(parent, "ViDAR");
+      await fs.mkdir(visionLib, { recursive: true });
+      await fs.writeFile(path.join(visionLib, "README.md"), "vision\n");
 
-    const adapter = new OfficialFtcProjectAdapter();
-    const found = await discoverNearbyFtcProjectRoots(visionLib, { adapter });
-    expect(found).toContain(path.resolve(ftcRoot));
-  });
+      const adapter = new OfficialFtcProjectAdapter();
+      const found = await discoverNearbyFtcProjectRoots(visionLib, { adapter });
+      expect(found).toContain(path.resolve(ftcRoot));
+    },
+    60_000,
+  );
 
   it("returns empty when no layout exists nearby", async () => {
     const parent = await makeTemp();

@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { createModuleRegistrySnapshot } from "@ftc-dev-tools/shared";
+import { createModuleRegistrySnapshot, isModuleLayer } from "@ftc-dev-tools/shared";
 
 export function registerModulesCommand(program: Command): void {
   const modules = program
@@ -13,9 +13,8 @@ export function registerModulesCommand(program: Command): void {
     .option("--layer <layer>", "Filter by layer: core, capability, workflow, adapter")
     .action((options: { json?: boolean; layer?: string }) => {
       const snapshot = createModuleRegistrySnapshot();
-      const validLayers = new Set(["core", "capability", "workflow", "adapter"]);
       const entries =
-        options.layer && validLayers.has(options.layer)
+        options.layer && isModuleLayer(options.layer)
           ? snapshot.modules.filter((entry) => entry.layer === options.layer)
           : snapshot.modules;
 

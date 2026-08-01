@@ -1,7 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { OfficialFtcProjectAdapter } from "../adapters/official-ftc-project-adapter.js";
+import { resolveProjectAdapter } from "../adapters/resolve-project-adapter.js";
 import { interpretFromUnknown } from "../errors/interpret.js";
+import type { ProjectAdapter } from "../types/project.js";
 import { TEAMCODE_RES_XML_RELATIVE, isValidAndroidXmlResourceName } from "./defaults.js";
 import { parseRobotConfigXml } from "./parse.js";
 import type {
@@ -11,8 +12,11 @@ import type {
   RobotConfigShowResult,
 } from "./types.js";
 
-export async function getTeamCodeResXmlDir(projectRoot: string): Promise<string | undefined> {
-  const adapter = new OfficialFtcProjectAdapter();
+export async function getTeamCodeResXmlDir(
+  projectRoot: string,
+  options?: { adapter?: ProjectAdapter },
+): Promise<string | undefined> {
+  const adapter = resolveProjectAdapter(options?.adapter);
   const info = await adapter.inspect(path.resolve(projectRoot));
   if (info.kind !== "official-ftc") {
     return undefined;

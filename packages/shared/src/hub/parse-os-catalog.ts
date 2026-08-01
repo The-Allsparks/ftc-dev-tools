@@ -1,5 +1,6 @@
 import { assertAllowedDownloadUrl } from "./allowlist.js";
 import { HUB_OS_CHANGELOG_URL, HUB_OS_TAG_PREFIX } from "./defaults.js";
+import { compareVersions } from "../sdk/compare-versions.js";
 import type { HubOsRelease } from "./types.js";
 
 /**
@@ -60,20 +61,10 @@ export function findHubOsReleaseByVersion(
 }
 
 function sortReleasesNewestFirst(releases: HubOsRelease[]): HubOsRelease[] {
-  return [...releases].sort((a, b) => compareLooseVersions(b.version, a.version));
-}
-
-function compareLooseVersions(a: string, b: string): number {
-  const pa = a.split(".").map((p) => Number.parseInt(p, 10) || 0);
-  const pb = b.split(".").map((p) => Number.parseInt(p, 10) || 0);
-  const len = Math.max(pa.length, pb.length);
-  for (let i = 0; i < len; i++) {
-    const d = (pa[i] ?? 0) - (pb[i] ?? 0);
-    if (d !== 0) {
-      return d;
-    }
-  }
-  return 0;
+  return [...releases].sort((a, b) => {
+    const cmp = compareVersions(b.version, a.version);
+    return cmp ?? b.version.localeCompare(a.version);
+  });
 }
 
 /** Best-effort OS version extraction from Robot Controller Console HTML. */

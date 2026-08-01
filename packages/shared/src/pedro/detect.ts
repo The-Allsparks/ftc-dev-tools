@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { OfficialFtcProjectAdapter } from "../adapters/official-ftc-project-adapter.js";
+import { resolveProjectAdapter } from "../adapters/resolve-project-adapter.js";
 import {
   PEDRO_FTC_COORD,
   PEDRO_FULLPANELS_COORD,
@@ -9,12 +9,20 @@ import {
 } from "./defaults.js";
 import { findCompileSdk, hasByalazarRepo, parseGradleDependencies } from "./gradle-patch.js";
 import type { PedroDependencyInfo, PedroStatusReport } from "./types.js";
+import type { ProjectAdapter } from "../types/project.js";
 
-export async function detectPedroStatus(projectRoot: string): Promise<PedroStatusReport> {
+export interface DetectPedroStatusOptions {
+  adapter?: ProjectAdapter;
+}
+
+export async function detectPedroStatus(
+  projectRoot: string,
+  options?: DetectPedroStatusOptions,
+): Promise<PedroStatusReport> {
   const generatedAt = new Date().toISOString();
   const root = path.resolve(projectRoot);
   const warnings: string[] = [];
-  const adapter = new OfficialFtcProjectAdapter();
+  const adapter = resolveProjectAdapter(options?.adapter);
   const info = await adapter.inspect(root);
 
   if (info.kind === "unknown") {

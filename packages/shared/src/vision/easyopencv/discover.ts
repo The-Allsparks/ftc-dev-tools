@@ -1,7 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { OfficialFtcProjectAdapter } from "../../adapters/official-ftc-project-adapter.js";
+import { resolveProjectAdapter } from "../../adapters/resolve-project-adapter.js";
 import { detectFtcDashboardDependency } from "../dashboard/detect-dependency.js";
+import type { ProjectAdapter } from "../../types/project.js";
 import { extractWebcamDevicesFromXml } from "../endpoints/discover-devices.js";
 import { detectEasyOpenCvDependency } from "./detect-dependency.js";
 import { scanEasyOpenCvTeamCode } from "./scan.js";
@@ -97,6 +98,7 @@ function resolveSelection(
 
 export async function discoverEasyOpenCvWorkspace(
   projectRoot: string,
+  options?: { adapter?: ProjectAdapter },
 ): Promise<EasyOpenCvWorkspaceDiscovery> {
   const root = path.resolve(projectRoot);
   const generatedAt = new Date().toISOString();
@@ -105,7 +107,7 @@ export async function discoverEasyOpenCvWorkspace(
   const gradleDependency = await detectEasyOpenCvDependency(root);
   const dashboardDependency = await detectFtcDashboardDependency(root);
 
-  const adapter = new OfficialFtcProjectAdapter();
+  const adapter = resolveProjectAdapter(options?.adapter);
   let isOfficial = false;
   let teamCodeJavaRoot: string | undefined;
 

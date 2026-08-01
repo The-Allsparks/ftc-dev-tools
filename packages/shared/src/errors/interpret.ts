@@ -1,4 +1,5 @@
 import type { FriendlyError } from "../types/errors.js";
+import { detectAdbInstallErrorCode } from "../devices/parse-adb-install.js";
 import { VISION_DIAGNOSTIC_CODES } from "../vision/diagnostics/codes.js";
 import { FRIENDLY_BY_CODE } from "../vision/diagnostics/friendly.js";
 
@@ -171,7 +172,7 @@ const RULES: ErrorRule[] = [
     code: "INSTALL_SIGNATURE_CONFLICT",
     test: ({ text, codeHint }) =>
       codeHint === "INSTALL_SIGNATURE_CONFLICT" ||
-      /INSTALL_FAILED_UPDATE_INCOMPATIBLE|signatures do not match/i.test(text),
+      detectAdbInstallErrorCode(text) === "INSTALL_SIGNATURE_CONFLICT",
     title: "Installation signature conflict",
     summary:
       "The APK on the device was signed differently from the one you are installing. Automatic uninstall is never performed.",
@@ -184,7 +185,8 @@ const RULES: ErrorRule[] = [
   {
     code: "INSUFFICIENT_STORAGE",
     test: ({ text, codeHint }) =>
-      codeHint === "INSUFFICIENT_STORAGE" || /INSTALL_FAILED_INSUFFICIENT_STORAGE/i.test(text),
+      codeHint === "INSUFFICIENT_STORAGE" ||
+      detectAdbInstallErrorCode(text) === "INSUFFICIENT_STORAGE",
     title: "Not enough storage on the device",
     summary: "The Android device does not have enough free space to install the APK.",
     suggestedActions: [

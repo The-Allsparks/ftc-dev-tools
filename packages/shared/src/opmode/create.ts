@@ -1,9 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { OfficialFtcProjectAdapter } from "../adapters/official-ftc-project-adapter.js";
+import { resolveProjectAdapter } from "../adapters/resolve-project-adapter.js";
 import { interpretFromUnknown } from "../errors/interpret.js";
+import { refuseMutationWithoutYes } from "../process/mutation-guard.js";
 import { isGitWorkingTreeDirty } from "../sdk/sync-sdk-update.js";
 import type { ProcessRunner } from "../types/process.js";
+import type { ProjectAdapter } from "../types/project.js";
 import { DEFAULT_OPMODE_PACKAGE, isValidJavaClassName, packageToRelativePath } from "./defaults.js";
 import { renderOpModeSource } from "./templates.js";
 import type { CreateOpModeResult, OpModeKind, OpModeStyle } from "./types.js";
@@ -21,6 +23,7 @@ export interface CreateOpModeOptions {
   dryRun?: boolean;
   yes?: boolean;
   force?: boolean;
+  adapter?: ProjectAdapter;
 }
 
 export async function createOpMode(options: CreateOpModeOptions): Promise<CreateOpModeResult> {
@@ -46,7 +49,7 @@ export async function createOpMode(options: CreateOpModeOptions): Promise<Create
       };
     }
 
-    const adapter = new OfficialFtcProjectAdapter();
+    const adapter = resolveProjectAdapter(options.adapter);
     const info = await adapter.inspect(projectRoot);
     if (!info.teamCodeSourcePath) {
       return {
@@ -117,16 +120,18 @@ export async function createOpMode(options: CreateOpModeOptions): Promise<Create
     }
 
     if (!options.yes) {
+      const refusal = refuseMutationWithoutYes({
+        actionDescription: "create OpMode",
+        code: "OPMODE_ABORTED",
+      });
       return {
         success: false,
         dryRun: true,
         className,
         relativePath,
         absolutePath,
-        message: "Refusing to create OpMode without --yes.",
-        error: interpretFromUnknown(
-          Object.assign(new Error("OpMode create requires --yes."), { code: "OPMODE_ABORTED" }),
-        ),
+        message: refusal.message,
+        error: refusal.error,
       };
     }
 

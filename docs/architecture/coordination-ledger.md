@@ -51,13 +51,13 @@ This ledger tracks workstreams, review gates, and phase status for the modular a
 
 ## Phase 4 deliverables (active)
 
-| Deliverable                                 | Status      | Issue / PR                                                                                                                                            |
-| ------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| IntegrationAdapter interface + registration | **Shipped** | [#235 ADAPT-01](https://github.com/The-Allsparks/ftc-dev-tools/issues/235) closed via [#239](https://github.com/The-Allsparks/ftc-dev-tools/pull/239) |
-| Pedro reference adapter                     | **Shipped** | `packages/shared/src/registry/adapters/pedro-integration-adapter.ts`                                                                                  |
-| `ftc integrations list --with-adapters`     | **Shipped** | adapter operation readiness in CLI                                                                                                                    |
-| Pedro migration to adapter contract         | Pending     | #149                                                                                                                                                  |
-| Registry-driven integration docs            | Pending     | ADAPT-03 (not filed)                                                                                                                                  |
+| Deliverable                                 | Status      | Issue / PR                                                                                                                                                      |
+| ------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| IntegrationAdapter interface + registration | **Shipped** | [#235 ADAPT-01](https://github.com/The-Allsparks/ftc-dev-tools/issues/235) closed via [#239](https://github.com/The-Allsparks/ftc-dev-tools/pull/239)           |
+| Pedro reference adapter                     | **Shipped** | `packages/shared/src/registry/adapters/pedro-integration-adapter.ts`                                                                                            |
+| `ftc integrations list --with-adapters`     | **Shipped** | adapter operation readiness in CLI                                                                                                                              |
+| Pedro migration to adapter contract         | **Shipped** | [#149](https://github.com/The-Allsparks/ftc-dev-tools/issues/149) via [#245](https://github.com/The-Allsparks/ftc-dev-tools/pull/245) — CLI + MCP thin wrappers |
+| Registry-driven integration docs            | Pending     | ADAPT-03 (not filed)                                                                                                                                            |
 
 ---
 

@@ -61,7 +61,7 @@ export class AdbDeviceProvider implements DeviceProvider {
           technicalDetails: combined,
         });
       }
-      throw Object.assign(new Error("APK installation failed."), {
+      throw Object.assign(new Error("App installation failed."), {
         code: "INSTALL_FAILED",
         technicalDetails: combined,
       });

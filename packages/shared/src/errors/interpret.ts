@@ -100,8 +100,8 @@ const RULES: ErrorRule[] = [
     code: "NO_DEVICES",
     test: ({ text, codeHint }) =>
       codeHint === "NO_DEVICES" || /no devices\/emulators found|no connected devices/i.test(text),
-    title: "No Android devices found",
-    summary: "adb did not see any connected Android devices.",
+    title: "No robot devices found",
+    summary: "No connected robot devices were detected (adb reported none).",
     suggestedActions: [
       "Connect the Control Hub or Robot Controller phone with a data USB cable.",
       "Accept the USB debugging prompt if shown.",
@@ -137,7 +137,7 @@ const RULES: ErrorRule[] = [
       codeHint === "MULTIPLE_DEVICES" || /more than one device|multiple devices/i.test(text),
     title: "Multiple devices connected",
     summary:
-      "More than one Android device is connected. FTC Dev Tools will not guess which one to use.",
+      "More than one robot device is connected. FTC Dev Tools will not guess which one to use.",
     suggestedActions: [
       "Run `ftc devices` to list serials.",
       "Deploy with `ftc deploy --device <serial>`.",

@@ -30,7 +30,7 @@ describe("parseAdbInstallOutput", () => {
     expect(parseAdbInstallOutput(output)).toEqual({
       success: false,
       code: "INSTALL_FAILED",
-      message: "APK installation failed.",
+      message: "App installation failed.",
     });
   });
 

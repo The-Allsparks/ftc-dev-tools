@@ -24,7 +24,7 @@ export function parseAdbInstallOutput(combined: string): AdbInstallParseResult {
     return {
       success: false,
       code: "INSTALL_FAILED",
-      message: "APK installation failed.",
+      message: "App installation failed.",
     };
   }
   return { success: true };

@@ -439,7 +439,7 @@ async function showDevicesCommand(): Promise<void> {
   const devices = await provider.listDevices();
   output.clear();
   if (devices.length === 0) {
-    output.appendLine("No Android devices found.");
+    output.appendLine("No robot devices found.");
     setBarState("no-device");
   } else {
     for (const device of devices) {
@@ -537,7 +537,7 @@ async function selectDeviceCommand(): Promise<void> {
   const devices = await provider.listDevices();
   if (devices.length === 0) {
     setBarState("no-device");
-    vscode.window.showWarningMessage("No Android devices found.");
+    vscode.window.showWarningMessage("No robot devices found.");
     return;
   }
   const picked = await vscode.window.showQuickPick(

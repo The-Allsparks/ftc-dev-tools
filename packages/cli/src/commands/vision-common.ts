@@ -1,8 +1,6 @@
 import {
   VISION_CLI_EXIT,
   wrapVisionCliJson,
-  tryCreateOptionalDeviceProvider,
-  type DeviceProvider,
   type VisionCliDeferredResult,
 } from "@ftc-dev-tools/shared";
 import type { Command } from "commander";
@@ -51,10 +49,4 @@ export function emitDeferredVisionCommand(
     }
   }
   process.exitCode = result.exitCode ?? VISION_CLI_EXIT.DEFERRED;
-}
-
-export async function tryCreateVisionDeviceProvider(
-  createDeviceProvider: () => Promise<DeviceProvider | undefined>,
-): Promise<DeviceProvider | undefined> {
-  return tryCreateOptionalDeviceProvider(createDeviceProvider);
 }

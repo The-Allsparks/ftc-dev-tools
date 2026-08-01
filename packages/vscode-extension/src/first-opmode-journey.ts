@@ -51,7 +51,7 @@ export async function firstOpModeJourneyCommand(deps: FirstOpModeJourneyDeps): P
   }
 
   const deployReady = await vscode.window.showInformationMessage(
-    "Build and install the APK on your selected deployment device?",
+    "Build and install on your selected deployment device?",
     "Build and deploy",
     "Not yet",
   );

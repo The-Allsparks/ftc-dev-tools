@@ -52,7 +52,7 @@ export class MockDeviceProvider implements DeviceProvider {
       throw Object.assign(new Error("device offline"), { code: "DEVICE_OFFLINE" });
     }
     if (this.scenario === "install-fail") {
-      throw Object.assign(new Error("APK installation failed."), {
+      throw Object.assign(new Error("App installation failed."), {
         code: "INSTALL_FAILED",
         technicalDetails: "Failure [INSTALL_FAILED_INVALID_APK]",
       });

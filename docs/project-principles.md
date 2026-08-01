@@ -1,5 +1,7 @@
 # Project Principles
 
+For product philosophy, success metrics, and contributor evaluation criteria, see [Product philosophy](./architecture/product-philosophy.md).
+
 ## Built from real team needs
 
 Features should solve problems experienced by FTC students, coaches, mentors, and teams.

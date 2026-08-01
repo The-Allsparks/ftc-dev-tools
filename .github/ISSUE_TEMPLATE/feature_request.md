@@ -10,6 +10,19 @@ assignees: ""
 
 What FTC workflow problem does this solve for students, coaches, or mentors?
 
+## Product alignment
+
+1. **Student/mentor goal:** (get robot running, write code, diagnose, configure hardware, vision, autonomous, tune, review session, …)
+2. **Friction reduction:** How does this reduce toolchain friction?
+3. **Wrap vs rewrite:** Is there an existing tool FTC Dev Tools should integrate instead of reimplementing?
+4. **Upstream ownership:** What owns the underlying functionality today?
+5. **Validation evidence:** What will prove this works on real hardware or with real teams?
+6. **New assumptions:** Platform, language, framework, vendor, or tool lock-in?
+7. **Mutation/safety risks:** What could change on a robot, network, or project without explicit consent?
+8. **Safe failure:** How should ambiguous or unsupported cases behave?
+
+See [docs/architecture/product-philosophy.md](../../docs/architecture/product-philosophy.md).
+
 ## Scope
 
 - Is this specific to one team, or generally useful to other FTC teams?

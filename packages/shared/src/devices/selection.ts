@@ -30,7 +30,7 @@ export function selectDeploymentDevice(input: DeviceSelectionInput): DeviceSelec
   const { devices, explicitSerial, preferredSerial, preferredConnection = "any" } = input;
 
   if (devices.length === 0) {
-    return { ok: false, code: "NO_DEVICES", message: "No Android devices are connected." };
+    return { ok: false, code: "NO_DEVICES", message: "No robot devices are connected." };
   }
 
   if (explicitSerial) {
@@ -71,7 +71,7 @@ export function selectDeploymentDevice(input: DeviceSelectionInput): DeviceSelec
         message: "Connected device(s) are offline.",
       };
     }
-    return { ok: false, code: "NO_DEVICES", message: "No usable Android devices are connected." };
+    return { ok: false, code: "NO_DEVICES", message: "No usable robot devices are connected." };
   }
 
   const candidates = filterByPreferredConnection(onlineAuthorized, preferredConnection);
@@ -96,7 +96,7 @@ export function selectDeploymentDevice(input: DeviceSelectionInput): DeviceSelec
     code: "MULTIPLE_DEVICES",
     message:
       preferredConnection === "any"
-        ? "Multiple Android devices are connected. Specify --device <serial>."
+        ? "Multiple robot devices are connected. Specify --device <serial>."
         : `Multiple ${preferredConnection} devices are connected. Specify --device <serial>.`,
   };
 }

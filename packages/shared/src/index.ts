@@ -639,7 +639,10 @@ export type {
   AdapterValidateResult,
 } from "./registry/adapter-types.js";
 export { INTEGRATION_MANIFEST_SCHEMA_VERSION } from "./registry/types.js";
-export { INTEGRATION_ADAPTER_SCHEMA_VERSION, isAdapterUnsupportedResult } from "./registry/adapter-types.js";
+export {
+  INTEGRATION_ADAPTER_SCHEMA_VERSION,
+  isAdapterUnsupportedResult,
+} from "./registry/adapter-types.js";
 export {
   listIntegrations,
   getIntegration,

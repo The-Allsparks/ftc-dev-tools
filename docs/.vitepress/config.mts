@@ -121,6 +121,17 @@ export default defineConfig({
         ],
       },
       {
+        text: "Validation",
+        collapsed: false,
+        items: [
+          { text: "Golden-path protocol", link: "/testing/golden-path" },
+          { text: "Validation matrix", link: "/testing/validation-matrix" },
+          { text: "Hardware test report", link: "/testing/hardware-test-report-template" },
+          { text: "Supported alpha config", link: "/testing/supported-alpha-configuration" },
+          { text: "External alpha gate", link: "/testing/external-alpha-gate" },
+        ],
+      },
+      {
         text: "Architecture",
         items: [
           { text: "Product philosophy", link: "/architecture/product-philosophy" },

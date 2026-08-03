@@ -1,0 +1,2 @@
+Performing Streamed Install
+adb: failed to install TeamCode-debug.apk: Failure [INSTALL_FAILED_UPDATE_INCOMPATIBLE: Package com.qualcomm.ftcrobotcontroller signatures do not match previously installed version; ignoring!]

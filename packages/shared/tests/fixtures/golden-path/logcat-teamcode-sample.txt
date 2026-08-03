@@ -1,0 +1,4 @@
+08-01 14:23:01.234  4521  4521 I TeamCode: OpMode TeleOpDrive initialized
+08-01 14:23:01.456  4521  4521 D RobotCore: Starting OpMode TeleOpDrive
+08-01 14:23:02.112  4521  4521 I FtcRobotController: OpMode started: TeleOpDrive
+08-01 14:23:05.789  4521  4521 W TeamCode: Drive loop tick took 42ms

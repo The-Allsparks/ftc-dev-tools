@@ -22,6 +22,7 @@ import { registerModulesCommand } from "./commands/modules.js";
 import { registerProvidersCommand } from "./commands/providers.js";
 import { registerVisionCommand } from "./commands/vision.js";
 import { registerReplayCommand } from "./commands/replay.js";
+import { registerValidationCommand } from "./commands/validation.js";
 
 export async function runCli(argv: string[]): Promise<void> {
   const program = new Command();
@@ -51,6 +52,7 @@ export async function runCli(argv: string[]): Promise<void> {
   registerProvidersCommand(program);
   registerVisionCommand(program);
   registerReplayCommand(program);
+  registerValidationCommand(program);
 
   await program.parseAsync(argv);
 }

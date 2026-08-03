@@ -1,0 +1,2 @@
+List of devices attached
+AH7A12CD device usb:2-1 product:controlhub model:Control_Hub device:controlhub transport_id:3

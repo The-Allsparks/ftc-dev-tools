@@ -1,0 +1,3 @@
+List of devices attached
+AH7A12CD device usb:2-1 product:controlhub model:Control_Hub device:controlhub transport_id:3
+BH8B23DE device usb:2-2 product:phone model:Pixel_7a device:panther transport_id:4

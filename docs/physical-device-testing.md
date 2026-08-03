@@ -12,6 +12,8 @@ Ordinary CI and unit tests use mocked processes and `MockDeviceProvider`. They d
 
 Do not blur these layers in docs or release notes.
 
+For the end-to-end **golden path** (install → doctor → build → deploy → logs on a Control Hub), use the dedicated [golden-path test protocol](testing/golden-path.md) and [validation matrix](testing/validation-matrix.md).
+
 ## Optional local Android device checklist
 
 1. `adb devices` shows one authorized device

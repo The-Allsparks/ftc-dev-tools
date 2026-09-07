@@ -523,8 +523,8 @@
     "@ftc-dev-tools/shared": "0.1.0"
   },
   "devDependencies": {
-    "@types/vscode": "^1.85.0",
+    "@types/vscode": "^1.136.0",
     "@vscode/vsce": "^3.2.2",
-    "esbuild": "^0.28.1"
+    "esbuild": "^0.28.2"
   }
 }

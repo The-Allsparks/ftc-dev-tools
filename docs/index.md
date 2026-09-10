@@ -50,6 +50,7 @@ features:
 | Windows-specific tips                    | [Windows setup](./windows-setup.md)                                   |
 | Something failed                         | [Troubleshooting](./troubleshooting.md)                               |
 | Environment checklist                    | [`ftc doctor`](./doctor.md)                                           |
+| Cursor agent (deploy / crash logs)       | [Cursor agent skills](./cursor-agent-skills.md)                       |
 
 ## Community
 

@@ -291,6 +291,7 @@ Official-style Android Studio projects with:
 - [Hardware map](docs/hwmap.md)
 - [Vision Lab](docs/vision-lab.md)
 - [MCP server](docs/mcp.md)
+- [Cursor agent skills](docs/cursor-agent-skills.md)
 - [Maintainer MCP (optional)](docs/maintainer-mcp.md)
 - [Vision sessions / replay schema](docs/vision-sessions.md)
 - [Snippets](docs/snippets.md)

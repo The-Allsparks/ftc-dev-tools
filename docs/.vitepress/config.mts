@@ -109,6 +109,7 @@ export default defineConfig({
           { text: "Control Hub OS", link: "/hub-update" },
           { text: "Pedro Pathing", link: "/pedro-pathing" },
           { text: "MCP (Cursor agents)", link: "/mcp" },
+          { text: "Cursor agent skills", link: "/cursor-agent-skills" },
           { text: "Maintainer MCP", link: "/maintainer-mcp" },
         ],
       },

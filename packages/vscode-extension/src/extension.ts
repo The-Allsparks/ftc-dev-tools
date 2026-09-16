@@ -65,6 +65,7 @@ import type {
 } from "@ftc-dev-tools/shared";
 import { FtcRobotTreeProvider } from "./views/robot-tree.js";
 import { StatusController, type StatusState } from "./status-controller.js";
+import { shouldPollRobotStatus } from "./robot-status-poll.js";
 import {
   configureRecommendedExtensionsCommand,
   installFtcCliCommand,
@@ -204,37 +205,38 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(robotView);
 
   let pollInterval: ReturnType<typeof setInterval> | undefined;
-  const startPolling = (): void => {
-    if (pollInterval) {
+  const syncPolling = (): void => {
+    if (shouldPollRobotStatus(robotView.visible, vscode.window.state.focused)) {
+      if (!pollInterval) {
+        void refreshStatus();
+        pollInterval = setInterval(() => {
+          void refreshStatus();
+        }, 15_000);
+      }
       return;
     }
-    pollInterval = setInterval(() => {
-      void refreshStatus();
-    }, 15_000);
-  };
-  const stopPolling = (): void => {
     if (pollInterval) {
       clearInterval(pollInterval);
       pollInterval = undefined;
     }
   };
   context.subscriptions.push({
-    dispose: () => stopPolling(),
+    dispose: () => {
+      if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = undefined;
+      }
+    },
   });
   context.subscriptions.push(
-    robotView.onDidChangeVisibility((event) => {
-      if (event.visible) {
-        void refreshStatus();
-        startPolling();
-      } else {
-        stopPolling();
-      }
+    robotView.onDidChangeVisibility(() => {
+      syncPolling();
+    }),
+    vscode.window.onDidChangeWindowState(() => {
+      syncPolling();
     }),
   );
-  if (robotView.visible) {
-    void refreshStatus();
-    startPolling();
-  }
+  syncPolling();
 
   registerFtcTaskProvider(context);
 
@@ -1994,7 +1996,13 @@ async function resetCompetitionChecklistCommand(): Promise<void> {
   }
 }
 
+let refreshStatusInFlight = false;
+
 async function refreshStatus(): Promise<void> {
+  if (refreshStatusInFlight) {
+    return;
+  }
+  refreshStatusInFlight = true;
   try {
     const provider = await createDeviceProvider();
     const devices = await provider.listDevices();
@@ -2021,6 +2029,8 @@ async function refreshStatus(): Promise<void> {
     await refreshSdkStatus(false);
     await refreshWifiStatus(false);
     tree.refresh();
+  } finally {
+    refreshStatusInFlight = false;
   }
 }
 

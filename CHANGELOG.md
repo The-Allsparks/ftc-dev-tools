@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Robot-view ADB polling stays at 15s, but now pauses when the Cursor/VS Code window is unfocused. Overlapping `adb devices` refreshes are skipped so a slow poll cannot queue another.
+
 ### Added
 
 - **Vision Lab documentation** — student/mentor guides (`docs/vision-lab.md`, provider pages, configuration, security, sessions, hardware testing)

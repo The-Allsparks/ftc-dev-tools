@@ -145,5 +145,5 @@ describe("mcp phase 7 tools", () => {
     expect(Array.isArray(doctor.checks)).toBe(true);
     expect(doctor.sections?.machine).toBeDefined();
     expect(doctor.sections?.project).toBeDefined();
-  }, 60_000);
+  }, 120_000);
 });

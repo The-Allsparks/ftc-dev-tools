@@ -101,5 +101,6 @@ Confirm the plan if the tool returns one.
 ## Related
 
 - Connection and ADB recovery: [troubleshooting.md](troubleshooting.md)
+- Copy logs off the Hub, then ask before deleting them: [ftc-collect-logs](../ftc-collect-logs/SKILL.md)
 - Crash logs after a bad run: [ftc-crash-diagnose](../ftc-crash-diagnose/SKILL.md)
 - MCP tool catalog: [docs/mcp.md](../../docs/mcp.md)

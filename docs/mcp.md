@@ -141,7 +141,7 @@ Maintainers: optional GitHub triage MCP is documented in [maintainer-mcp.md](mai
 
 ## Related
 
-- [Cursor agent skills](./cursor-agent-skills.md) (Hub deploy + crash log diagnose)
+- [Cursor agent skills](./cursor-agent-skills.md) (Hub deploy, log collect, crash diagnose)
 - [Vision Lab](./vision-lab.md)
 - [Architecture](architecture.md)
 - [CLI / extension roadmap](../README.md#roadmap-not-all-shipped)

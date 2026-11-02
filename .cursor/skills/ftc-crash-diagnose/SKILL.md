@@ -99,6 +99,10 @@ Shop-proven classes of failure:
 
 Do **not** auto-fix. After the identification, offer the next step (edit config, code, then [ftc-build-deploy](../ftc-build-deploy/SKILL.md)) only if they want it.
 
+## Related
+
+- Copy logs and then ask before deleting them on the Hub: [ftc-collect-logs](../ftc-collect-logs/SKILL.md)
+
 ## Do not
 
 - Diagnose from laptop Java without Hub files when the Hub is reachable
